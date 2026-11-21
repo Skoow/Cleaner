@@ -12,13 +12,17 @@ public sealed partial class ProcessRunner : IProcessRunner
 {
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromHours(1);
 
+    /// <summary>Seuls sous-dossiers de System32 autorisés (chemins fixes, jamais fournis par une donnée).</summary>
+    private static readonly HashSet<string> AllowedSubPaths = new(StringComparer.OrdinalIgnoreCase) { @"WindowsPowerShell\v1.0\powershell.exe" };
+
     static ProcessRunner() => Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
     public async Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken,
         TimeSpan? timeout = null)
     {
-        if (string.IsNullOrWhiteSpace(system32Tool) || system32Tool.IndexOfAny(['\\', '/', ':', '"']) >= 0
-            || !system32Tool.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        if (!AllowedSubPaths.Contains(system32Tool)
+            && (string.IsNullOrWhiteSpace(system32Tool) || system32Tool.IndexOfAny(['\\', '/', ':', '"']) >= 0
+                || !system32Tool.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
         {
             throw new ArgumentException("Only a System32 executable name is allowed", nameof(system32Tool));
         }

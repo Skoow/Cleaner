@@ -11,6 +11,12 @@
       "pcdoc.core": {
         "type": "Project"
       },
+      "pcdoc.modules.apps": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )"
+        }
+      },
       "pcdoc.modules.cleanup": {
         "type": "Project",
         "dependencies": {

@@ -1,0 +1,33 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Apps/Resources/Strings.tsv src/PCDoc.Modules.Apps/Resources
+Module.apps	Applications	Applications
+Finding.Apps.Uninstall.Title	Uninstall {0}	Désinstaller {0}
+Finding.Apps.Leftover.Title	Leftover folder: {0}	Dossier restant : {0}
+Apps.Reason.Promo	Preinstalled for advertising. Uninstalling it breaks nothing.	Préinstallée pour la publicité. La désinstaller ne casse rien.
+Apps.Reason.Unused	Preinstalled app that most people never use. It can be reinstalled from the Microsoft Store.	Application préinstallée que la plupart des gens n'utilisent jamais. Elle peut être réinstallée depuis le Microsoft Store.
+Apps.Reason.Oem	Tool added by the PC manufacturer. Keep it if you use its features (updates, warranty, security).	Outil ajouté par le fabricant du PC. Gardez-le si vous utilisez ses fonctions (mises à jour, garantie, sécurité).
+Apps.Reason.Keep	Needed by Windows or by other programs: keep it.	Nécessaire à Windows ou à d'autres programmes : gardez-le.
+Apps.Explanation.Silent	Uninstalled without any window. A restore point is created first.	Désinstallé sans aucune fenêtre. Un point de restauration est créé avant.
+Apps.Explanation.Interactive	This program has no silent mode: its own uninstaller window will open, follow its steps.	Ce programme n'a pas de mode silencieux : sa propre fenêtre de désinstallation va s'ouvrir, suivez ses étapes.
+Apps.Explanation.Provisioned	Also removed from Windows so that it does not come back for new accounts.	Retirée aussi de Windows pour qu'elle ne revienne pas sur les nouveaux comptes.
+Apps.Explanation.Leftover	Folder left by an uninstalled program. It is moved to quarantine (restorable from History) and deleted after 7 days.	Dossier laissé par un programme désinstallé. Il est mis en quarantaine (restaurable depuis l'Historique) et supprimé après 7 jours.
+Apps.Title	Applications	Applications
+Apps.Intro	Uninstall programs cleanly, remove preinstalled apps, and put leftover folders in quarantine.	Désinstallez proprement, retirez les applications préinstallées et mettez les dossiers restants en quarantaine.
+Apps.Analyze	Refresh	Actualiser
+Apps.Search	Search an application	Rechercher une application
+Apps.Tab.Installed	Installed	Installées
+Apps.Tab.Preinstalled	Preinstalled	Préinstallées
+Apps.PreinstalledIntro	Apps added by Microsoft or the PC manufacturer. The safe ones are already ticked.	Applications ajoutées par Microsoft ou le fabricant du PC. Celles qui ne risquent rien sont déjà cochées.
+Apps.Uninstall	Uninstall	Désinstaller
+Apps.RemoveSelected	Remove the selection	Retirer la sélection
+Apps.Leftovers.Title	Folders left by uninstalled programs	Dossiers laissés par des programmes désinstallés
+Apps.Leftovers.Quarantine	Put in quarantine	Mettre en quarantaine
+Apps.Count	{0} applications	{0} applications
+Apps.Kind.Store	Store	Store
+Apps.Kind.Win32	Program	Programme
+Apps.NotSupported	Installed for your account only: uninstall it from Windows Settings.	Installé pour votre compte seulement : désinstallez-le depuis les Paramètres de Windows.
+Column.Name	Name	Nom
+Column.Publisher	Publisher	Éditeur
+Column.Version	Version	Version
+Column.Kind	Type	Type
+Column.Risk	Level	Niveau
+Column.InstallDate	Installed on	Installée le

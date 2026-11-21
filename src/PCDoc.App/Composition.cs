@@ -24,6 +24,8 @@ using PCDoc.Modules.Diagnostic.Repairs;
 using PCDoc.Presentation.Diagnostic;
 using PCDoc.Modules.Cleanup;
 using PCDoc.Presentation.Cleanup;
+using PCDoc.Modules.Apps;
+using PCDoc.Presentation.Apps;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -95,6 +97,20 @@ internal static class Composition
         services.AddSingleton<IScanner>(sp => new CleanupScanner(sp.GetRequiredService<ICleanupSource>()));
         services.AddSingleton<IFixer>(sp => new CleanupFixer(sp.GetRequiredService<CleanupEngine>(), sp.GetRequiredService<IProcessRunner>()));
 
+        // Applications (v0.5).
+        services.AddSingleton<IUninstallLauncher, UninstallLauncher>();
+        services.AddSingleton<IQuarantine, Quarantine>();
+        services.AddSingleton<IAppDisplayNames, AppDisplayNames>();
+        services.AddSingleton(sp => new AppsEngine(
+            new Win32AppReader(sp.GetRequiredService<IRegistryReader>()),
+            new StoreAppReader(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IAppDisplayNames>(), sp.GetRequiredService<IUserProfileResolver>()),
+            BloatwareCatalog.Default, sp.GetRequiredService<IUninstallLauncher>(), sp.GetRequiredService<IProcessRunner>(),
+            sp.GetRequiredService<IQuarantine>(), sp.GetRequiredService<IUserProfileResolver>()));
+        services.AddSingleton<IAppsSource>(sp => sp.GetRequiredService<AppsEngine>());
+        services.AddSingleton<IScanner>(sp => new AppsScanner(sp.GetRequiredService<IAppsSource>()));
+        services.AddSingleton<IFixer>(sp => new UninstallFixer(sp.GetRequiredService<AppsEngine>()));
+        services.AddSingleton<IFixer>(sp => new LeftoversFixer(sp.GetRequiredService<AppsEngine>(), sp.GetRequiredService<IQuarantine>()));
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
@@ -135,6 +151,8 @@ internal static class Composition
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services)),
         PageId.Cleanup => new CleanupPageViewModel(services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services)),
+        PageId.Apps => new AppsPageViewModel(services.GetRequiredService<IAppsSource>(), services.GetRequiredService<ILocalizer>(),
+            NewFixPanel(services), Mode(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],
         _ => new SettingsPageViewModel(

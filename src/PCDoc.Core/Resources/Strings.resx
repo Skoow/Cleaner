@@ -130,4 +130,5 @@
   <data name="Module.diagnostic" xml:space="preserve"><value>Diagnostics</value></data>
   <data name="Nav.Cleanup" xml:space="preserve"><value>Cleanup</value></data>
   <data name="Module.cleanup" xml:space="preserve"><value>Cleanup</value></data>
+  <data name="Nav.Apps" xml:space="preserve"><value>Applications</value></data>
 </root>

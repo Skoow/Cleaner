@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.apps" xml:space="preserve"><value>Applications</value></data>
+  <data name="Finding.Apps.Uninstall.Title" xml:space="preserve"><value>Désinstaller {0}</value></data>
+  <data name="Finding.Apps.Leftover.Title" xml:space="preserve"><value>Dossier restant : {0}</value></data>
+  <data name="Apps.Reason.Promo" xml:space="preserve"><value>Préinstallée pour la publicité. La désinstaller ne casse rien.</value></data>
+  <data name="Apps.Reason.Unused" xml:space="preserve"><value>Application préinstallée que la plupart des gens n'utilisent jamais. Elle peut être réinstallée depuis le Microsoft Store.</value></data>
+  <data name="Apps.Reason.Oem" xml:space="preserve"><value>Outil ajouté par le fabricant du PC. Gardez-le si vous utilisez ses fonctions (mises à jour, garantie, sécurité).</value></data>
+  <data name="Apps.Reason.Keep" xml:space="preserve"><value>Nécessaire à Windows ou à d'autres programmes : gardez-le.</value></data>
+  <data name="Apps.Explanation.Silent" xml:space="preserve"><value>Désinstallé sans aucune fenêtre. Un point de restauration est créé avant.</value></data>
+  <data name="Apps.Explanation.Interactive" xml:space="preserve"><value>Ce programme n'a pas de mode silencieux : sa propre fenêtre de désinstallation va s'ouvrir, suivez ses étapes.</value></data>
+  <data name="Apps.Explanation.Provisioned" xml:space="preserve"><value>Retirée aussi de Windows pour qu'elle ne revienne pas sur les nouveaux comptes.</value></data>
+  <data name="Apps.Explanation.Leftover" xml:space="preserve"><value>Dossier laissé par un programme désinstallé. Il est mis en quarantaine (restaurable depuis l'Historique) et supprimé après 7 jours.</value></data>
+  <data name="Apps.Title" xml:space="preserve"><value>Applications</value></data>
+  <data name="Apps.Intro" xml:space="preserve"><value>Désinstallez proprement, retirez les applications préinstallées et mettez les dossiers restants en quarantaine.</value></data>
+  <data name="Apps.Analyze" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="Apps.Search" xml:space="preserve"><value>Rechercher une application</value></data>
+  <data name="Apps.Tab.Installed" xml:space="preserve"><value>Installées</value></data>
+  <data name="Apps.Tab.Preinstalled" xml:space="preserve"><value>Préinstallées</value></data>
+  <data name="Apps.PreinstalledIntro" xml:space="preserve"><value>Applications ajoutées par Microsoft ou le fabricant du PC. Celles qui ne risquent rien sont déjà cochées.</value></data>
+  <data name="Apps.Uninstall" xml:space="preserve"><value>Désinstaller</value></data>
+  <data name="Apps.RemoveSelected" xml:space="preserve"><value>Retirer la sélection</value></data>
+  <data name="Apps.Leftovers.Title" xml:space="preserve"><value>Dossiers laissés par des programmes désinstallés</value></data>
+  <data name="Apps.Leftovers.Quarantine" xml:space="preserve"><value>Mettre en quarantaine</value></data>
+  <data name="Apps.Count" xml:space="preserve"><value>{0} applications</value></data>
+  <data name="Apps.Kind.Store" xml:space="preserve"><value>Store</value></data>
+  <data name="Apps.Kind.Win32" xml:space="preserve"><value>Programme</value></data>
+  <data name="Apps.NotSupported" xml:space="preserve"><value>Installé pour votre compte seulement : désinstallez-le depuis les Paramètres de Windows.</value></data>
+  <data name="Column.Name" xml:space="preserve"><value>Nom</value></data>
+  <data name="Column.Publisher" xml:space="preserve"><value>Éditeur</value></data>
+  <data name="Column.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Column.Kind" xml:space="preserve"><value>Type</value></data>
+  <data name="Column.Risk" xml:space="preserve"><value>Niveau</value></data>
+  <data name="Column.InstallDate" xml:space="preserve"><value>Installée le</value></data>
+</root>

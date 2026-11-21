@@ -39,6 +39,7 @@ public partial class App : Application
         SystemModule.RegisterResources(localizer);
         PCDoc.Modules.Diagnostic.DiagnosticModule.RegisterResources(localizer);
         PCDoc.Modules.Cleanup.CleanupModule.RegisterResources(localizer);
+        PCDoc.Modules.Apps.AppsModule.RegisterResources(localizer);
         localizer.Language = settings.Language;
         Loc.Instance = localizer;
 
@@ -56,6 +57,22 @@ public partial class App : Application
         }
 
         _services = Composition.Build(_logger, localizer, store, journalPath);
+        if (journalPath is not null)
+        {
+            // Restes mis en quarantaine il y a plus de 7 jours : supprimés définitivement.
+            var quarantine = _services.GetRequiredService<PCDoc.Core.Abstractions.IQuarantine>();
+            _ = System.Threading.Tasks.Task.Run(() =>
+            {
+                try
+                {
+                    quarantine.PurgeOlderThan(TimeSpan.FromDays(7));
+                }
+                catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException or PCDoc.Infrastructure.Writes.UnsafeFolderException)
+                {
+                    _logger.Warning(ex, "Quarantine purge failed");
+                }
+            });
+        }
         var theme = _services.GetRequiredService<ThemeApplier>();
         theme.Apply(settings.Theme);
         ThemeApplier.Hook(theme);

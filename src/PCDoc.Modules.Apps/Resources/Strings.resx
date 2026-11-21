@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.apps" xml:space="preserve"><value>Applications</value></data>
+  <data name="Finding.Apps.Uninstall.Title" xml:space="preserve"><value>Uninstall {0}</value></data>
+  <data name="Finding.Apps.Leftover.Title" xml:space="preserve"><value>Leftover folder: {0}</value></data>
+  <data name="Apps.Reason.Promo" xml:space="preserve"><value>Preinstalled for advertising. Uninstalling it breaks nothing.</value></data>
+  <data name="Apps.Reason.Unused" xml:space="preserve"><value>Preinstalled app that most people never use. It can be reinstalled from the Microsoft Store.</value></data>
+  <data name="Apps.Reason.Oem" xml:space="preserve"><value>Tool added by the PC manufacturer. Keep it if you use its features (updates, warranty, security).</value></data>
+  <data name="Apps.Reason.Keep" xml:space="preserve"><value>Needed by Windows or by other programs: keep it.</value></data>
+  <data name="Apps.Explanation.Silent" xml:space="preserve"><value>Uninstalled without any window. A restore point is created first.</value></data>
+  <data name="Apps.Explanation.Interactive" xml:space="preserve"><value>This program has no silent mode: its own uninstaller window will open, follow its steps.</value></data>
+  <data name="Apps.Explanation.Provisioned" xml:space="preserve"><value>Also removed from Windows so that it does not come back for new accounts.</value></data>
+  <data name="Apps.Explanation.Leftover" xml:space="preserve"><value>Folder left by an uninstalled program. It is moved to quarantine (restorable from History) and deleted after 7 days.</value></data>
+  <data name="Apps.Title" xml:space="preserve"><value>Applications</value></data>
+  <data name="Apps.Intro" xml:space="preserve"><value>Uninstall programs cleanly, remove preinstalled apps, and put leftover folders in quarantine.</value></data>
+  <data name="Apps.Analyze" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Apps.Search" xml:space="preserve"><value>Search an application</value></data>
+  <data name="Apps.Tab.Installed" xml:space="preserve"><value>Installed</value></data>
+  <data name="Apps.Tab.Preinstalled" xml:space="preserve"><value>Preinstalled</value></data>
+  <data name="Apps.PreinstalledIntro" xml:space="preserve"><value>Apps added by Microsoft or the PC manufacturer. The safe ones are already ticked.</value></data>
+  <data name="Apps.Uninstall" xml:space="preserve"><value>Uninstall</value></data>
+  <data name="Apps.RemoveSelected" xml:space="preserve"><value>Remove the selection</value></data>
+  <data name="Apps.Leftovers.Title" xml:space="preserve"><value>Folders left by uninstalled programs</value></data>
+  <data name="Apps.Leftovers.Quarantine" xml:space="preserve"><value>Put in quarantine</value></data>
+  <data name="Apps.Count" xml:space="preserve"><value>{0} applications</value></data>
+  <data name="Apps.Kind.Store" xml:space="preserve"><value>Store</value></data>
+  <data name="Apps.Kind.Win32" xml:space="preserve"><value>Program</value></data>
+  <data name="Apps.NotSupported" xml:space="preserve"><value>Installed for your account only: uninstall it from Windows Settings.</value></data>
+  <data name="Column.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Column.Publisher" xml:space="preserve"><value>Publisher</value></data>
+  <data name="Column.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Column.Kind" xml:space="preserve"><value>Type</value></data>
+  <data name="Column.Risk" xml:space="preserve"><value>Level</value></data>
+  <data name="Column.InstallDate" xml:space="preserve"><value>Installed on</value></data>
+</root>

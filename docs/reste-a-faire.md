@@ -1,6 +1,6 @@
 # Ce qui reste à faire
 
-Mis à jour le 2026-11-21, après la v0.4. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
+Mis à jour le 2026-11-21, après la v0.5. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
 
 ## Fait
 | Version | Contenu |
@@ -9,12 +9,12 @@ Mis à jour le 2026-11-21, après la v0.4. Détail des décisions : `docs/superp
 | v0.2 | Corrections sûres : conseiller, activer/désactiver, points de restauration, sauvegardes .reg, Historique, modes novice/expert, assistant de premier lancement |
 | v0.3 | Diagnostic : écrans bleus, plantages, périphériques, santé des disques, redémarrage en attente, pilotes anciens, réparations DNS/SFC/DISM |
 | v0.4 | Nettoyage : temporaires, caches (Windows Update, navigateurs, graphiques), rapports d'erreurs, vidages, corbeille, anciennes mises à jour, gros fichiers |
+| v0.5 | Applications : liste Win32 + Store, désinstallation silencieuse quand possible, applications préinstallées (paquets provisionnés compris), restes en quarantaine 7 jours |
 
 ## Prochaines versions
 | Version | Contenu prévu |
 |---|---|
-| v0.5 | **Applications** : liste Win32 + Store, désinstallation propre (silencieuse quand possible), restes en quarantaine 7 jours, bloatwares Microsoft et fabricants (paquets provisionnés compris), installation groupée via winget |
-| v0.6 | **Centre de mises à jour** (Windows Update, pilotes, Store, logiciels via winget) + **Optimisation** (mode d'alimentation, mémoire virtuelle, démarrage rapide, hibernation, effets visuels, profils Jeu/Bureautique/Batterie, mesure avant/après) + page Activité réseau + maintenance planifiée |
+| v0.6 | **Centre de mises à jour** (Windows Update, pilotes, Store, logiciels via winget, installation groupée via winget) + **Optimisation** (mode d'alimentation, mémoire virtuelle, démarrage rapide, hibernation, effets visuels, profils Jeu/Bureautique/Batterie, mesure avant/après) + page Activité réseau + maintenance planifiée |
 | v0.7 | **Sécurité** (Defender, AdwCleaner/Emsisoft cachés, VirusTotal par empreinte, cachettes de malwares, audit de sécurité, extensions des navigateurs) + **Protection USB** |
 | v0.8 | **Confidentialité** Windows, Office et logiciels tiers (catalogue de l'annexe) + recherche globale |
 | v0.9 | **Traces et données** + effacement sécurisé |
@@ -26,6 +26,7 @@ Mis à jour le 2026-11-21, après la v0.4. Détail des décisions : `docs/superp
 - Nettoyage : doublons, carte de l'espace disque, gestion des points de restauration, Windows.old, cache des miniatures.
 - Système : liste exacte des processeurs compatibles Windows 11 (aujourd'hui par familles), carte « disque système » qui prend le premier disque, cas Secure Boot « capable mais désactivé ».
 - Interface : couleurs qui ne suivent pas un changement de thème à chaud sur les lignes déjà affichées, boutons « Corriger » non rafraîchis après un changement de mode tant que la page n'est pas réanalysée, Tab qui atteint le menu derrière l'assistant.
+- Applications : programmes installés pour un seul compte (HKCU, à lancer sans élévation), restes dans le registre, nom affiché des paquets provisionnés non installés.
 - Corrections : deux pages peuvent lancer des corrections en même temps ; conditions du conseiller mises en cache pour la session ; service désactivé mais pas arrêté avant redémarrage (non indiqué).
 
 ## À faire par toi

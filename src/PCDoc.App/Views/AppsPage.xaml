@@ -1,0 +1,105 @@
+<UserControl x:Class="PCDoc.App.Views.AppsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:a="clr-namespace:PCDoc.Presentation.Apps;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Right" Content="{app:T Apps.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T Apps.Analyze}" />
+      <TextBlock Text="{app:T Apps.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Apps.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+
+    <!-- Restes à mettre en quarantaine (affiché seulement après une désinstallation qui en a laissé). -->
+    <Border DockPanel.Dock="Top" Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,8" Padding="12"
+            Visibility="{Binding HasLeftovers, Converter={StaticResource BoolToVisibility}}">
+      <DockPanel>
+        <Button DockPanel.Dock="Right" Content="{app:T Apps.Leftovers.Quarantine}" Command="{Binding QuarantineLeftoversCommand}"
+                VerticalAlignment="Top" AutomationProperties.Name="{app:T Apps.Leftovers.Quarantine}" />
+        <StackPanel>
+          <TextBlock Text="{app:T Apps.Leftovers.Title}" FontWeight="SemiBold" />
+          <TextBlock Text="{app:T Apps.Explanation.Leftover}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+          <ItemsControl ItemsSource="{Binding Leftovers}" Focusable="False" Margin="0,6,0,0">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type a:LeftoverRow}">
+                <TextBlock Text="{Binding Path}" FontFamily="Consolas" FontSize="12" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <TabControl>
+      <TabItem Header="{app:T Apps.Tab.Installed}">
+        <DockPanel Margin="0,12,0,0">
+          <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+            <TextBlock DockPanel.Dock="Right" Text="{Binding CountText}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center"
+                       Margin="12,0,0,0" />
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}" AutomationProperties.Name="{app:T Apps.Search}"
+                     ToolTip="{app:T Apps.Search}" MaxWidth="360" HorizontalAlignment="Left" MinWidth="240" />
+          </DockPanel>
+          <DataGrid ItemsSource="{Binding Installed}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T Apps.Tab.Installed}" EnableRowVirtualization="True">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.Name}" Binding="{Binding Name}" Width="3*" />
+              <DataGridTextColumn Header="{app:T Column.Publisher}" Binding="{Binding Publisher}" Width="2*" />
+              <DataGridTextColumn Header="{app:T Column.Version}" Binding="{Binding Version}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Kind}" Binding="{Binding Kind}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Size}" Binding="{Binding Size}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.InstallDate}" Binding="{Binding Date}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Risk}" Binding="{Binding RiskLabel}" Width="Auto" />
+              <DataGridTemplateColumn Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate DataType="{x:Type a:AppRow}">
+                    <Button Content="{app:T Apps.Uninstall}" Margin="4,2" IsEnabled="{Binding CanUninstall}" ToolTip="{Binding Reason}"
+                            ToolTipService.ShowOnDisabled="True" AutomationProperties.Name="{Binding Name}"
+                            Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Apps.Tab.Preinstalled}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Apps.PreinstalledIntro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8" />
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Apps.RemoveSelected}" Command="{Binding RemoveSelectedCommand}"
+                    AutomationProperties.Name="{app:T Apps.RemoveSelected}" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Preinstalled}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type a:AppRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                              Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                      </Border>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanUninstall}" VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding Name}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                          <TextBlock Text="{Binding Reason}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

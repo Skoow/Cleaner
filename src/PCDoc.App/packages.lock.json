@@ -35,6 +35,12 @@
           "TaskScheduler": "[2.12.2, )"
         }
       },
+      "pcdoc.modules.apps": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )"
+        }
+      },
       "pcdoc.modules.cleanup": {
         "type": "Project",
         "dependencies": {
@@ -58,6 +64,7 @@
         "dependencies": {
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "PCDoc.Core": "[0.4.0, )",
+          "PCDoc.Modules.Apps": "[0.4.0, )",
           "PCDoc.Modules.Cleanup": "[0.4.0, )",
           "PCDoc.Modules.Diagnostic": "[0.4.0, )",
           "PCDoc.Modules.System": "[0.4.0, )"

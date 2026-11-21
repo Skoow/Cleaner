@@ -7,6 +7,7 @@ public enum PageId
     System,
     Diagnostic,
     Cleanup,
+    Apps,
     History,
     Settings,
 }

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
+    <InternalsVisibleTo Include="PCDoc.Modules.Apps.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\PCDoc.Definitions\bloatware.json" LogicalName="PCDoc.Definitions.bloatware.json" />
+    <None Include="..\PCDoc.Definitions\bloatware.json" Link="Definitions\bloatware.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
