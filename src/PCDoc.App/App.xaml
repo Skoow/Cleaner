@@ -14,6 +14,9 @@
       <conv:BoolToVisibilityConverter x:Key="InverseBoolToVisibility" Invert="True" />
       <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibility" />
       <conv:EqualsConverter x:Key="Equals" />
+      <conv:RatioToLengthConverter x:Key="RatioToLength" />
+      <conv:BadgeToBrushConverter x:Key="BadgeBrush" />
+      <conv:BadgeToBrushConverter x:Key="BadgeBackground" Suffix=".Background" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

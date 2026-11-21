@@ -11,6 +11,8 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <!-- CA1720 : « Signed », « Unsigned » sont des termes du domaine (signatures numériques). -->
+    <NoWarn>$(NoWarn);CA1720</NoWarn>
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)'=='true'">true</ContinuousIntegrationBuild>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>

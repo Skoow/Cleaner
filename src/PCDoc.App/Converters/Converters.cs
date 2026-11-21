@@ -53,3 +53,34 @@ public sealed class EqualsConverter : IValueConverter
     public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         value is true && parameter is string name && targetType.IsEnum ? Enum.Parse(targetType, name) : Binding.DoNothing;
 }
+
+/// <summary>Rapport 0–1 → hauteur en pixels (paramètre = hauteur maximale).</summary>
+public sealed class RatioToLengthConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Math.Max(2, (value is double r ? r : 0) * double.Parse((string)parameter, CultureInfo.InvariantCulture));
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+/// <summary>Pastille (signature, contrôle Windows 11) → pinceau du thème ; Suffix « .Background » pour le fond.</summary>
+public sealed class BadgeToBrushConverter : IValueConverter
+{
+    public string Suffix { get; set; } = string.Empty;
+
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var key = value?.ToString() switch
+        {
+            "Signed" or "Pass" => "Pcdoc.Ok",
+            "Unsigned" or "Unknown" => "Pcdoc.Warning",
+            "Missing" or "Fail" => "Pcdoc.Critical",
+            _ => null,
+        };
+        return key is null ? null : Application.Current.TryFindResource(key + Suffix);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}

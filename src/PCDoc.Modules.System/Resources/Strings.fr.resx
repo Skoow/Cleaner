@@ -38,4 +38,118 @@
   <data name="Kind.ScheduledTask" xml:space="preserve"><value>tâche planifiée</value></data>
   <data name="Kind.Service" xml:space="preserve"><value>service</value></data>
   <data name="Kind.Driver" xml:space="preserve"><value>pilote</value></data>
+  <data name="System.Title" xml:space="preserve"><value>Système</value></data>
+  <data name="System.ReadOnly" xml:space="preserve"><value>Lecture seule</value></data>
+  <data name="System.Refresh" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="System.Loading" xml:space="preserve"><value>Lecture des informations du système…</value></data>
+  <data name="System.Tab.Overview" xml:space="preserve"><value>Vue d'ensemble</value></data>
+  <data name="System.Tab.Hardware" xml:space="preserve"><value>Matériel</value></data>
+  <data name="System.Tab.Disks" xml:space="preserve"><value>Disques</value></data>
+  <data name="System.Tab.Boot" xml:space="preserve"><value>Démarrage</value></data>
+  <data name="System.Tab.Startup" xml:space="preserve"><value>Programmes au démarrage</value></data>
+  <data name="System.Tab.Tasks" xml:space="preserve"><value>Tâches planifiées</value></data>
+  <data name="System.Tab.Services" xml:space="preserve"><value>Services</value></data>
+  <data name="System.Unavailable" xml:space="preserve"><value>Non disponible : {0}</value></data>
+  <data name="Reason.access-denied" xml:space="preserve"><value>accès refusé</value></data>
+  <data name="Reason.not-available" xml:space="preserve"><value>ce PC ne fournit pas cette information</value></data>
+  <data name="Reason.no-data" xml:space="preserve"><value>aucune donnée</value></data>
+  <data name="Reason.error" xml:space="preserve"><value>la lecture a échoué</value></data>
+  <data name="Card.Windows" xml:space="preserve"><value>Windows</value></data>
+  <data name="Card.Cpu" xml:space="preserve"><value>Processeur</value></data>
+  <data name="Card.Memory" xml:space="preserve"><value>Mémoire</value></data>
+  <data name="Card.Gpu" xml:space="preserve"><value>Carte graphique</value></data>
+  <data name="Card.Disk" xml:space="preserve"><value>Disque {0}</value></data>
+  <data name="Card.Battery" xml:space="preserve"><value>Batterie</value></data>
+  <data name="Card.Win11" xml:space="preserve"><value>Compatibilité Windows 11</value></data>
+  <data name="Card.Board" xml:space="preserve"><value>Carte mère et BIOS</value></data>
+  <data name="Card.Modules" xml:space="preserve"><value>Barrettes de mémoire</value></data>
+  <data name="Card.Displays" xml:space="preserve"><value>Écrans</value></data>
+  <data name="Label.Edition" xml:space="preserve"><value>Édition</value></data>
+  <data name="Label.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Label.InstalledOn" xml:space="preserve"><value>Installé le</value></data>
+  <data name="Label.Activation" xml:space="preserve"><value>Activation</value></data>
+  <data name="Label.Model" xml:space="preserve"><value>Modèle</value></data>
+  <data name="Label.CoresThreads" xml:space="preserve"><value>Cœurs / threads</value></data>
+  <data name="Label.Frequency" xml:space="preserve"><value>Fréquence</value></data>
+  <data name="Label.Modules" xml:space="preserve"><value>Barrettes</value></data>
+  <data name="Label.Driver" xml:space="preserve"><value>Pilote</value></data>
+  <data name="Label.VideoMemory" xml:space="preserve"><value>Mémoire</value></data>
+  <data name="Label.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Label.Board" xml:space="preserve"><value>Carte mère</value></data>
+  <data name="Label.Bios" xml:space="preserve"><value>BIOS</value></data>
+  <data name="Label.BiosDate" xml:space="preserve"><value>Date du BIOS</value></data>
+  <data name="Label.Wear" xml:space="preserve"><value>Usure</value></data>
+  <data name="Label.Diagonal" xml:space="preserve"><value>Taille</value></data>
+  <data name="Value.Activated" xml:space="preserve"><value>Activé</value></data>
+  <data name="Value.NotActivated" xml:space="preserve"><value>Non activé</value></data>
+  <data name="Value.Unknown" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Value.Version" xml:space="preserve"><value>{0} (build {1}.{2})</value></data>
+  <data name="Value.MemoryUsed" xml:space="preserve"><value>{0:0.0} Go utilisés sur {1:0} Go</value></data>
+  <data name="Value.FreeOf" xml:space="preserve"><value>{0:0.#} Go libres sur {1:0} Go</value></data>
+  <data name="Value.GB" xml:space="preserve"><value>{0:0.#} Go</value></data>
+  <data name="Value.TB" xml:space="preserve"><value>{0:0.##} To</value></data>
+  <data name="Value.GHz" xml:space="preserve"><value>{0:0.00} GHz</value></data>
+  <data name="Value.CoresThreads" xml:space="preserve"><value>{0} / {1}</value></data>
+  <data name="Value.ModuleLine" xml:space="preserve"><value>{0:0} Go · {1} MHz · {2}</value></data>
+  <data name="Value.Ssd" xml:space="preserve"><value>SSD</value></data>
+  <data name="Value.SsdNvme" xml:space="preserve"><value>SSD NVMe</value></data>
+  <data name="Value.Hdd" xml:space="preserve"><value>Disque dur (HDD)</value></data>
+  <data name="Value.Inches" xml:space="preserve"><value>{0:0.#} po</value></data>
+  <data name="Value.Percent" xml:space="preserve"><value>{0:0} %</value></data>
+  <data name="Value.NoName" xml:space="preserve"><value>Nom non fourni</value></data>
+  <data name="Check.Pass" xml:space="preserve"><value>Oui</value></data>
+  <data name="Check.Fail" xml:space="preserve"><value>Non</value></data>
+  <data name="Check.Unknown" xml:space="preserve"><value>?</value></data>
+  <data name="Win11.Tpm20" xml:space="preserve"><value>TPM 2.0</value></data>
+  <data name="Win11.SecureBoot" xml:space="preserve"><value>Secure Boot</value></data>
+  <data name="Win11.Uefi" xml:space="preserve"><value>Démarrage UEFI</value></data>
+  <data name="Win11.SystemDiskGpt" xml:space="preserve"><value>Disque système GPT</value></data>
+  <data name="Win11.CpuSupported" xml:space="preserve"><value>Processeur pris en charge</value></data>
+  <data name="Win11.Ram4GB" xml:space="preserve"><value>RAM ≥ 4 Go</value></data>
+  <data name="Win11.Storage64GB" xml:space="preserve"><value>Stockage ≥ 64 Go</value></data>
+  <data name="System.NoBattery" xml:space="preserve"><value>Aucune batterie détectée (PC fixe).</value></data>
+  <data name="Disks.SmartLater" xml:space="preserve"><value>La santé SMART des disques arrive en v0.2 (Diagnostic).</value></data>
+  <data name="Column.Disk" xml:space="preserve"><value>Disque</value></data>
+  <data name="Column.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Column.Size" xml:space="preserve"><value>Taille</value></data>
+  <data name="Column.Volume" xml:space="preserve"><value>Volume</value></data>
+  <data name="Column.FileSystem" xml:space="preserve"><value>Système de fichiers</value></data>
+  <data name="Column.Free" xml:space="preserve"><value>Espace libre</value></data>
+  <data name="Boot.Last" xml:space="preserve"><value>dernier démarrage</value></data>
+  <data name="Boot.Median" xml:space="preserve"><value>médiane des 5 derniers</value></data>
+  <data name="Boot.TrendLabel" xml:space="preserve"><value>tendance</value></data>
+  <data name="Trend.Up" xml:space="preserve"><value>En hausse</value></data>
+  <data name="Trend.Down" xml:space="preserve"><value>En baisse</value></data>
+  <data name="Trend.Stable" xml:space="preserve"><value>Stable</value></data>
+  <data name="Trend.Unknown" xml:space="preserve"><value>Pas assez de données</value></data>
+  <data name="Boot.NoData" xml:space="preserve"><value>Aucune donnée de démarrage : Windows n'a pas encore enregistré de démarrage, ou le journal a été vidé.</value></data>
+  <data name="Boot.Degradations" xml:space="preserve"><value>Ce qui a ralenti le dernier démarrage</value></data>
+  <data name="Boot.NoDegradation" xml:space="preserve"><value>Rien n'a nettement ralenti le dernier démarrage.</value></data>
+  <data name="Boot.ChartAlt" xml:space="preserve"><value>{0} démarrages, médiane {1:0} s, tendance : {2}</value></data>
+  <data name="Boot.Seconds" xml:space="preserve"><value>{0:0} s</value></data>
+  <data name="Boot.SecondsPrecise" xml:space="preserve"><value>{0:0.0} s</value></data>
+  <data name="Boot.Oldest" xml:space="preserve"><value>il y a {0} démarrages</value></data>
+  <data name="Boot.Newest" xml:space="preserve"><value>dernier</value></data>
+  <data name="Column.Item" xml:space="preserve"><value>Élément</value></data>
+  <data name="Column.Delay" xml:space="preserve"><value>Retard</value></data>
+  <data name="Degradation.Application" xml:space="preserve"><value>Application</value></data>
+  <data name="Degradation.Driver" xml:space="preserve"><value>Pilote</value></data>
+  <data name="Degradation.Service" xml:space="preserve"><value>Service</value></data>
+  <data name="Degradation.Other" xml:space="preserve"><value>Autre</value></data>
+  <data name="List.Search" xml:space="preserve"><value>Rechercher un nom ou un éditeur</value></data>
+  <data name="List.UnsignedOnly" xml:space="preserve"><value>Non signés uniquement</value></data>
+  <data name="List.Count" xml:space="preserve"><value>{0} élément(s) · lecture seule</value></data>
+  <data name="List.Empty" xml:space="preserve"><value>Aucun élément ne correspond.</value></data>
+  <data name="Column.Name" xml:space="preserve"><value>Nom</value></data>
+  <data name="Column.Publisher" xml:space="preserve"><value>Éditeur</value></data>
+  <data name="Column.Location" xml:space="preserve"><value>Emplacement</value></data>
+  <data name="Column.Signature" xml:space="preserve"><value>Signature</value></data>
+  <data name="Column.State" xml:space="preserve"><value>État</value></data>
+  <data name="Column.Command" xml:space="preserve"><value>Commande</value></data>
+  <data name="Sig.Signed" xml:space="preserve"><value>Signé</value></data>
+  <data name="Sig.Unsigned" xml:space="preserve"><value>Non signé</value></data>
+  <data name="Sig.Missing" xml:space="preserve"><value>Introuvable</value></data>
+  <data name="Sig.NotApplicable" xml:space="preserve"><value>Sans objet</value></data>
+  <data name="State.Enabled" xml:space="preserve"><value>Activé</value></data>
+  <data name="State.Disabled" xml:space="preserve"><value>Désactivé</value></data>
 </root>

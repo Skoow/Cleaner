@@ -5,7 +5,11 @@ using PCDoc.Core.Localization;
 using PCDoc.Core.Settings;
 using PCDoc.Infrastructure;
 using PCDoc.Infrastructure.Signatures;
+using PCDoc.Modules.System.Autoruns;
+using PCDoc.Modules.System.Boot;
+using PCDoc.Modules.System.Inventory;
 using PCDoc.Presentation;
+using PCDoc.Presentation.SystemPage;
 using Serilog.Core;
 
 namespace PCDoc.App;
@@ -31,6 +35,14 @@ internal static class Composition
         services.AddSingleton<IScheduledTaskReader, ScheduledTaskReader>();
         services.AddSingleton<IServiceReader, ServiceReader>();
 
+        // Module Système (lecture seule).
+        services.AddSingleton<IInventorySource>(sp => new InventoryCollector(
+            sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>(), Win11CpuList.Default));
+        services.AddSingleton<IBootSource>(sp => new BootPerformanceReader(sp.GetRequiredService<IEventLogQuery>()));
+        services.AddSingleton<IAutorunSource>(sp => new AutorunCollector(
+            sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IFileProbe>(), sp.GetRequiredService<IUserProfileResolver>(),
+            sp.GetRequiredService<ISignatureVerifier>(), sp.GetRequiredService<IScheduledTaskReader>(), sp.GetRequiredService<IServiceReader>()));
+
         // Interface.
         services.AddSingleton<ThemeApplier>();
         services.AddSingleton<IThemeApplier>(sp => sp.GetRequiredService<ThemeApplier>());
@@ -44,6 +56,10 @@ internal static class Composition
 
     private static object CreatePage(IServiceProvider services, PageId page) => page switch
     {
+        PageId.System => new SystemPageViewModel(
+            services.GetRequiredService<IInventorySource>(), services.GetRequiredService<IBootSource>(),
+            services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
+            services.GetRequiredService<IClipboardService>()),
         _ => services.GetRequiredService<ILocalizer>()[$"Nav.{page}"],
     };
 }

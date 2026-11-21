@@ -33,3 +33,117 @@ Kind.Startup	startup program	programme au démarrage
 Kind.ScheduledTask	scheduled task	tâche planifiée
 Kind.Service	service	service
 Kind.Driver	driver	pilote
+System.Title	System	Système
+System.ReadOnly	Read-only	Lecture seule
+System.Refresh	Refresh	Actualiser
+System.Loading	Reading system information…	Lecture des informations du système…
+System.Tab.Overview	Overview	Vue d'ensemble
+System.Tab.Hardware	Hardware	Matériel
+System.Tab.Disks	Disks	Disques
+System.Tab.Boot	Startup time	Démarrage
+System.Tab.Startup	Startup programs	Programmes au démarrage
+System.Tab.Tasks	Scheduled tasks	Tâches planifiées
+System.Tab.Services	Services	Services
+System.Unavailable	Not available: {0}	Non disponible : {0}
+Reason.access-denied	access denied	accès refusé
+Reason.not-available	this PC does not provide this information	ce PC ne fournit pas cette information
+Reason.no-data	no data	aucune donnée
+Reason.error	reading failed	la lecture a échoué
+Card.Windows	Windows	Windows
+Card.Cpu	Processor	Processeur
+Card.Memory	Memory	Mémoire
+Card.Gpu	Graphics card	Carte graphique
+Card.Disk	Drive {0}	Disque {0}
+Card.Battery	Battery	Batterie
+Card.Win11	Windows 11 compatibility	Compatibilité Windows 11
+Card.Board	Motherboard and BIOS	Carte mère et BIOS
+Card.Modules	Memory modules	Barrettes de mémoire
+Card.Displays	Displays	Écrans
+Label.Edition	Edition	Édition
+Label.Version	Version	Version
+Label.InstalledOn	Installed on	Installé le
+Label.Activation	Activation	Activation
+Label.Model	Model	Modèle
+Label.CoresThreads	Cores / threads	Cœurs / threads
+Label.Frequency	Frequency	Fréquence
+Label.Modules	Modules	Barrettes
+Label.Driver	Driver	Pilote
+Label.VideoMemory	Memory	Mémoire
+Label.Type	Type	Type
+Label.Board	Motherboard	Carte mère
+Label.Bios	BIOS	BIOS
+Label.BiosDate	BIOS date	Date du BIOS
+Label.Wear	Wear	Usure
+Label.Diagonal	Size	Taille
+Value.Activated	Activated	Activé
+Value.NotActivated	Not activated	Non activé
+Value.Unknown	Unknown	Inconnu
+Value.Version	{0} (build {1}.{2})	{0} (build {1}.{2})
+Value.MemoryUsed	{0:0.0} GB used of {1:0} GB	{0:0.0} Go utilisés sur {1:0} Go
+Value.FreeOf	{0:0.#} GB free of {1:0} GB	{0:0.#} Go libres sur {1:0} Go
+Value.GB	{0:0.#} GB	{0:0.#} Go
+Value.TB	{0:0.##} TB	{0:0.##} To
+Value.GHz	{0:0.00} GHz	{0:0.00} GHz
+Value.CoresThreads	{0} / {1}	{0} / {1}
+Value.ModuleLine	{0:0} GB · {1} MHz · {2}	{0:0} Go · {1} MHz · {2}
+Value.Ssd	SSD	SSD
+Value.SsdNvme	NVMe SSD	SSD NVMe
+Value.Hdd	Hard disk (HDD)	Disque dur (HDD)
+Value.Inches	{0:0.#} in	{0:0.#} po
+Value.Percent	{0:0} %	{0:0} %
+Value.NoName	Name not provided	Nom non fourni
+Check.Pass	Yes	Oui
+Check.Fail	No	Non
+Check.Unknown	?	?
+Win11.Tpm20	TPM 2.0	TPM 2.0
+Win11.SecureBoot	Secure Boot	Secure Boot
+Win11.Uefi	UEFI boot	Démarrage UEFI
+Win11.SystemDiskGpt	GPT system disk	Disque système GPT
+Win11.CpuSupported	Supported processor	Processeur pris en charge
+Win11.Ram4GB	RAM ≥ 4 GB	RAM ≥ 4 Go
+Win11.Storage64GB	Storage ≥ 64 GB	Stockage ≥ 64 Go
+System.NoBattery	No battery detected (desktop PC).	Aucune batterie détectée (PC fixe).
+Disks.SmartLater	Disk health (SMART) arrives in version 0.2 (Diagnostics).	La santé SMART des disques arrive en v0.2 (Diagnostic).
+Column.Disk	Disk	Disque
+Column.Type	Type	Type
+Column.Size	Size	Taille
+Column.Volume	Volume	Volume
+Column.FileSystem	File system	Système de fichiers
+Column.Free	Free space	Espace libre
+Boot.Last	last startup	dernier démarrage
+Boot.Median	median of the last 5	médiane des 5 derniers
+Boot.TrendLabel	trend	tendance
+Trend.Up	Increasing	En hausse
+Trend.Down	Decreasing	En baisse
+Trend.Stable	Stable	Stable
+Trend.Unknown	Not enough data	Pas assez de données
+Boot.NoData	No startup data yet: Windows has not recorded a startup, or the log was cleared.	Aucune donnée de démarrage : Windows n'a pas encore enregistré de démarrage, ou le journal a été vidé.
+Boot.Degradations	What slowed down the last startup	Ce qui a ralenti le dernier démarrage
+Boot.NoDegradation	Nothing noticeably slowed down the last startup.	Rien n'a nettement ralenti le dernier démarrage.
+Boot.ChartAlt	{0} startups, median {1:0} s, trend: {2}	{0} démarrages, médiane {1:0} s, tendance : {2}
+Boot.Seconds	{0:0} s	{0:0} s
+Boot.SecondsPrecise	{0:0.0} s	{0:0.0} s
+Boot.Oldest	{0} startups ago	il y a {0} démarrages
+Boot.Newest	latest	dernier
+Column.Item	Item	Élément
+Column.Delay	Delay	Retard
+Degradation.Application	Application	Application
+Degradation.Driver	Driver	Pilote
+Degradation.Service	Service	Service
+Degradation.Other	Other	Autre
+List.Search	Search a name or a publisher	Rechercher un nom ou un éditeur
+List.UnsignedOnly	Unsigned only	Non signés uniquement
+List.Count	{0} item(s) · read-only	{0} élément(s) · lecture seule
+List.Empty	No item matches.	Aucun élément ne correspond.
+Column.Name	Name	Nom
+Column.Publisher	Publisher	Éditeur
+Column.Location	Location	Emplacement
+Column.Signature	Signature	Signature
+Column.State	State	État
+Column.Command	Command	Commande
+Sig.Signed	Signed	Signé
+Sig.Unsigned	Unsigned	Non signé
+Sig.Missing	Not found	Introuvable
+Sig.NotApplicable	Not applicable	Sans objet
+State.Enabled	Enabled	Activé
+State.Disabled	Disabled	Désactivé

@@ -2,10 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:app="clr-namespace:PCDoc.App"
+        xmlns:views="clr-namespace:PCDoc.App.Views"
+        xmlns:sp="clr-namespace:PCDoc.Presentation.SystemPage;assembly=PCDoc.Presentation"
         Title="PCDoc"
         Icon="Assets/pcdoc.ico"
         Width="1180" Height="760" MinWidth="960" MinHeight="600"
         WindowStartupLocation="CenterScreen">
+
+  <Window.Resources>
+    <!-- Chaque ViewModel de page s'affiche avec sa vue. -->
+    <DataTemplate DataType="{x:Type sp:SystemPageViewModel}"><views:SystemPage /></DataTemplate>
+  </Window.Resources>
 
   <Grid>
     <Grid.ColumnDefinitions>
