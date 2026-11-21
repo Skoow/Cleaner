@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.diagnostic" xml:space="preserve"><value>Diagnostic</value></data>
+  <data name="Diag.Bsod.Title" xml:space="preserve"><value>{0} écran(s) bleu(s) ces 30 derniers jours</value></data>
+  <data name="Diag.Bsod.Explanation.Driver" xml:space="preserve"><value>Le plus souvent causé par un pilote défectueux ou ancien (carte graphique, réseau, chipset). Mettre à jour les pilotes corrige souvent le problème.</value></data>
+  <data name="Diag.Bsod.Explanation.Memory" xml:space="preserve"><value>Souvent lié à la mémoire (RAM) ou à un pilote qui la corrompt. Testez la mémoire avec le Diagnostic de mémoire Windows.</value></data>
+  <data name="Diag.Bsod.Explanation.Disk" xml:space="preserve"><value>Windows n'a pas pu lire correctement le disque. Vérifiez la santé du disque et sauvegardez vos fichiers.</value></data>
+  <data name="Diag.Bsod.Explanation.Hardware" xml:space="preserve"><value>Le matériel a signalé une erreur (processeur, surchauffe, alimentation). Vérifiez les températures et la propreté du PC.</value></data>
+  <data name="Diag.Bsod.Explanation.System" xml:space="preserve"><value>Un processus essentiel de Windows s'est arrêté. Vérifier les fichiers système (réparation ci-dessous) peut aider.</value></data>
+  <data name="Diag.Bsod.Explanation.Unknown" xml:space="preserve"><value>Windows s'est arrêté pour se protéger. Les détails techniques donnent le code d'arrêt.</value></data>
+  <data name="Diag.Shutdowns.Title" xml:space="preserve"><value>{0} arrêts brutaux ces 30 derniers jours</value></data>
+  <data name="Diag.Shutdowns.Explanation" xml:space="preserve"><value>Le PC s'est éteint sans s'arrêter correctement (coupure de courant, bouton maintenu, alimentation ou surchauffe).</value></data>
+  <data name="Diag.AppCrash.Title" xml:space="preserve"><value>« {0} » a planté {1} fois en 30 jours</value></data>
+  <data name="Diag.AppCrash.Explanation" xml:space="preserve"><value>Mettre à jour ou réinstaller ce programme corrige généralement les plantages répétés.</value></data>
+  <data name="Diag.Device.Title" xml:space="preserve"><value>Périphérique en erreur : {0} (code {1})</value></data>
+  <data name="Diag.Device.Code.1" xml:space="preserve"><value>Le périphérique n'est pas configuré correctement. Réinstallez son pilote.</value></data>
+  <data name="Diag.Device.Code.3" xml:space="preserve"><value>Le pilote est peut-être endommagé, ou la mémoire manque. Réinstallez le pilote.</value></data>
+  <data name="Diag.Device.Code.10" xml:space="preserve"><value>Le périphérique ne peut pas démarrer. Mettez à jour son pilote ou rebranchez-le.</value></data>
+  <data name="Diag.Device.Code.12" xml:space="preserve"><value>Pas assez de ressources libres pour ce périphérique. Désactivez-en un autre ou mettez à jour le BIOS.</value></data>
+  <data name="Diag.Device.Code.14" xml:space="preserve"><value>Le périphérique a besoin d'un redémarrage du PC.</value></data>
+  <data name="Diag.Device.Code.18" xml:space="preserve"><value>Réinstallez le pilote de ce périphérique.</value></data>
+  <data name="Diag.Device.Code.19" xml:space="preserve"><value>Sa configuration dans le registre est endommagée. Désinstallez le périphérique, puis redémarrez.</value></data>
+  <data name="Diag.Device.Code.21" xml:space="preserve"><value>Windows est en train de retirer ce périphérique. Redémarrez le PC.</value></data>
+  <data name="Diag.Device.Code.24" xml:space="preserve"><value>Le périphérique est absent ou ne fonctionne pas. Vérifiez le branchement.</value></data>
+  <data name="Diag.Device.Code.28" xml:space="preserve"><value>Aucun pilote n'est installé. Installez-le depuis Windows Update ou le site du fabricant.</value></data>
+  <data name="Diag.Device.Code.31" xml:space="preserve"><value>Windows ne peut pas charger le pilote. Mettez-le à jour.</value></data>
+  <data name="Diag.Device.Code.32" xml:space="preserve"><value>Un pilote nécessaire est désactivé.</value></data>
+  <data name="Diag.Device.Code.37" xml:space="preserve"><value>Le pilote n'a pas réussi à démarrer. Réinstallez-le.</value></data>
+  <data name="Diag.Device.Code.39" xml:space="preserve"><value>Le pilote est absent ou endommagé. Réinstallez-le.</value></data>
+  <data name="Diag.Device.Code.43" xml:space="preserve"><value>Windows a arrêté le périphérique car il a signalé un problème (souvent une panne matérielle ou un mauvais pilote).</value></data>
+  <data name="Diag.Device.Code.47" xml:space="preserve"><value>Le périphérique a été préparé pour être retiré. Débranchez-le et rebranchez-le.</value></data>
+  <data name="Diag.Device.Code.48" xml:space="preserve"><value>Le pilote est bloqué car il pose problème. Obtenez une version plus récente auprès du fabricant.</value></data>
+  <data name="Diag.Device.Code.52" xml:space="preserve"><value>La signature du pilote ne peut pas être vérifiée. Installez un pilote signé du fabricant.</value></data>
+  <data name="Diag.Device.Code.Other" xml:space="preserve"><value>Le périphérique signale une erreur. Mettre à jour ou réinstaller son pilote aide généralement.</value></data>
+  <data name="Diag.Disk.Title" xml:space="preserve"><value>Le disque « {0} » montre des signes de faiblesse</value></data>
+  <data name="Diag.Disk.Explanation.Warning" xml:space="preserve"><value>Windows signale que ce disque s'use. Sauvegardez vos fichiers et prévoyez son remplacement.</value></data>
+  <data name="Diag.Disk.Explanation.Critical" xml:space="preserve"><value>Ce disque est défaillant : sauvegardez vos fichiers maintenant et remplacez-le.</value></data>
+  <data name="Diag.Reboot.Title" xml:space="preserve"><value>Un redémarrage est en attente</value></data>
+  <data name="Diag.Reboot.Explanation" xml:space="preserve"><value>Des mises à jour ou installations se termineront après un redémarrage.</value></data>
+  <data name="Diag.OldDrivers.Title" xml:space="preserve"><value>{0} pilote(s) de plus de 5 ans</value></data>
+  <data name="Diag.OldDrivers.Explanation" xml:space="preserve"><value>Les pilotes anciens peuvent causer des instabilités. Cherchez une mise à jour sur le site du fabricant (mises à jour automatiques dans une prochaine version).</value></data>
+  <data name="Repair.FlushDns.Title" xml:space="preserve"><value>Vider le cache DNS</value></data>
+  <data name="Repair.FlushDns.Explanation" xml:space="preserve"><value>Corrige les sites qui ne s'ouvrent pas alors qu'Internet marche. Instantané et sans risque.</value></data>
+  <data name="Repair.SystemFiles.Title" xml:space="preserve"><value>Vérifier les fichiers système de Windows (SFC)</value></data>
+  <data name="Repair.SystemFiles.Explanation" xml:space="preserve"><value>Recherche et répare les fichiers de Windows endommagés. Dure 10 à 30 minutes.</value></data>
+  <data name="Repair.WindowsImage.Title" xml:space="preserve"><value>Réparer l'image de Windows (DISM)</value></data>
+  <data name="Repair.WindowsImage.Explanation" xml:space="preserve"><value>Télécharge depuis Windows Update des copies saines des composants endommagés. À lancer si SFC n'a pas tout réparé. Dure 10 à 40 minutes.</value></data>
+</root>

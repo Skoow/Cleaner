@@ -23,9 +23,13 @@ public static class FixPolicy
         return finding.FixAvailable && finding.Risk == RiskLevel.Safe;
     }
 
+    /// <summary>
+    /// 🔴, ou non annulable sans être 🟢 (ex. suppression définitive de données). Une réparation 🟢 non annulable
+    /// par nature (vider le cache DNS, SFC) n'en a pas besoin.
+    /// </summary>
     public static bool NeedsStrongConfirmation(Finding finding)
     {
         ArgumentNullException.ThrowIfNull(finding);
-        return finding.Risk == RiskLevel.Discouraged || !finding.Reversible;
+        return finding.Risk == RiskLevel.Discouraged || (!finding.Reversible && finding.Risk != RiskLevel.Safe);
     }
 }

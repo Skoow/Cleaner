@@ -105,11 +105,18 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
         return new FixSessionResult(restore, false, Ordered(findings, outcomes));
     }
 
+    /// <summary>Vrai si un correcteur sait annuler ce type d'entrée.</summary>
+    public bool CanUndo(UndoEntry entry)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        return _fixers.FirstOrDefault(f => f.UndoKind == entry.Kind) is { SupportsUndo: true };
+    }
+
     public async Task<UndoOutcome> UndoAsync(UndoEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);
         var fixer = _fixers.FirstOrDefault(f => f.UndoKind == entry.Kind);
-        if (fixer is null)
+        if (fixer is not { SupportsUndo: true })
         {
             return UndoOutcome.NoFixer;
         }

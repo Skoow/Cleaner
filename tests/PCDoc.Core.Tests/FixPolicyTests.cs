@@ -33,7 +33,8 @@ public class FixPolicyTests
     public void StrongConfirmation_ForDiscouragedOrIrreversible()
     {
         FixPolicy.NeedsStrongConfirmation(F(RiskLevel.Discouraged)).Should().BeTrue();
-        FixPolicy.NeedsStrongConfirmation(F(RiskLevel.Safe, reversible: false)).Should().BeTrue();
+        FixPolicy.NeedsStrongConfirmation(F(RiskLevel.Conditional, reversible: false)).Should().BeTrue();
+        FixPolicy.NeedsStrongConfirmation(F(RiskLevel.Safe, reversible: false)).Should().BeFalse("réparation sûre non annulable par nature");
         FixPolicy.NeedsStrongConfirmation(F(RiskLevel.Safe)).Should().BeFalse();
     }
 

@@ -11,6 +11,9 @@ public interface IFixer
     /// <summary>Type des entrées d'annulation produites (pour retrouver le correcteur qui sait annuler).</summary>
     string UndoKind { get; }
 
+    /// <summary>Faux pour une réparation non annulable par nature (ex. vider le cache DNS) : pas de bouton « Annuler ».</summary>
+    bool SupportsUndo => true;
+
     bool CanFix(Finding finding);
 
     Task<UndoEntry> PrepareAsync(Finding finding, CancellationToken cancellationToken);

@@ -1,0 +1,46 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Diagnostic/Resources/Strings.tsv src/PCDoc.Modules.Diagnostic/Resources
+Module.diagnostic	Diagnostics	Diagnostic
+Diag.Bsod.Title	{0} blue screen(s) in the last 30 days	{0} écran(s) bleu(s) ces 30 derniers jours
+Diag.Bsod.Explanation.Driver	Usually caused by a faulty or outdated driver (graphics card, network, chipset). Updating drivers often fixes it.	Le plus souvent causé par un pilote défectueux ou ancien (carte graphique, réseau, chipset). Mettre à jour les pilotes corrige souvent le problème.
+Diag.Bsod.Explanation.Memory	Often linked to memory (RAM) or a driver that corrupts it. Test the memory with the Windows Memory Diagnostic.	Souvent lié à la mémoire (RAM) ou à un pilote qui la corrompt. Testez la mémoire avec le Diagnostic de mémoire Windows.
+Diag.Bsod.Explanation.Disk	Windows could not read the disk properly. Check disk health and back up your files.	Windows n'a pas pu lire correctement le disque. Vérifiez la santé du disque et sauvegardez vos fichiers.
+Diag.Bsod.Explanation.Hardware	The hardware reported an error (processor, overheating, power supply). Check temperatures and cleanliness of the PC.	Le matériel a signalé une erreur (processeur, surchauffe, alimentation). Vérifiez les températures et la propreté du PC.
+Diag.Bsod.Explanation.System	An essential Windows process stopped. Checking system files (repair below) can help.	Un processus essentiel de Windows s'est arrêté. Vérifier les fichiers système (réparation ci-dessous) peut aider.
+Diag.Bsod.Explanation.Unknown	Windows stopped to protect itself. The technical details give the stop code.	Windows s'est arrêté pour se protéger. Les détails techniques donnent le code d'arrêt.
+Diag.Shutdowns.Title	{0} unexpected shutdowns in the last 30 days	{0} arrêts brutaux ces 30 derniers jours
+Diag.Shutdowns.Explanation	The PC turned off without shutting down properly (power cut, power button held, power supply or overheating).	Le PC s'est éteint sans s'arrêter correctement (coupure de courant, bouton maintenu, alimentation ou surchauffe).
+Diag.AppCrash.Title	"{0}" crashed {1} times in 30 days	« {0} » a planté {1} fois en 30 jours
+Diag.AppCrash.Explanation	Updating or reinstalling this program usually fixes repeated crashes.	Mettre à jour ou réinstaller ce programme corrige généralement les plantages répétés.
+Diag.Device.Title	Device in error: {0} (code {1})	Périphérique en erreur : {0} (code {1})
+Diag.Device.Code.1	The device is not configured correctly. Reinstall its driver.	Le périphérique n'est pas configuré correctement. Réinstallez son pilote.
+Diag.Device.Code.3	The driver may be damaged, or the PC is low on memory. Reinstall the driver.	Le pilote est peut-être endommagé, ou la mémoire manque. Réinstallez le pilote.
+Diag.Device.Code.10	The device cannot start. Update its driver or reconnect it.	Le périphérique ne peut pas démarrer. Mettez à jour son pilote ou rebranchez-le.
+Diag.Device.Code.12	Not enough free resources for this device. Disable another device or update the BIOS.	Pas assez de ressources libres pour ce périphérique. Désactivez-en un autre ou mettez à jour le BIOS.
+Diag.Device.Code.14	The device needs the PC to restart.	Le périphérique a besoin d'un redémarrage du PC.
+Diag.Device.Code.18	Reinstall the driver of this device.	Réinstallez le pilote de ce périphérique.
+Diag.Device.Code.19	Its configuration in the registry is damaged. Uninstall the device, then restart.	Sa configuration dans le registre est endommagée. Désinstallez le périphérique, puis redémarrez.
+Diag.Device.Code.21	Windows is removing this device. Restart the PC.	Windows est en train de retirer ce périphérique. Redémarrez le PC.
+Diag.Device.Code.24	The device is missing or not working. Check the connection.	Le périphérique est absent ou ne fonctionne pas. Vérifiez le branchement.
+Diag.Device.Code.28	No driver is installed. Install it from Windows Update or the manufacturer's site.	Aucun pilote n'est installé. Installez-le depuis Windows Update ou le site du fabricant.
+Diag.Device.Code.31	Windows cannot load the driver. Update it.	Windows ne peut pas charger le pilote. Mettez-le à jour.
+Diag.Device.Code.32	A required driver is disabled.	Un pilote nécessaire est désactivé.
+Diag.Device.Code.37	The driver failed to start. Reinstall it.	Le pilote n'a pas réussi à démarrer. Réinstallez-le.
+Diag.Device.Code.39	The driver is missing or damaged. Reinstall it.	Le pilote est absent ou endommagé. Réinstallez-le.
+Diag.Device.Code.43	Windows stopped the device because it reported a problem (often a hardware fault or a bad driver).	Windows a arrêté le périphérique car il a signalé un problème (souvent une panne matérielle ou un mauvais pilote).
+Diag.Device.Code.47	The device was prepared for safe removal. Unplug and plug it back.	Le périphérique a été préparé pour être retiré. Débranchez-le et rebranchez-le.
+Diag.Device.Code.48	The driver is blocked because it causes problems. Get a newer version from the manufacturer.	Le pilote est bloqué car il pose problème. Obtenez une version plus récente auprès du fabricant.
+Diag.Device.Code.52	The driver signature cannot be verified. Install a signed driver from the manufacturer.	La signature du pilote ne peut pas être vérifiée. Installez un pilote signé du fabricant.
+Diag.Device.Code.Other	The device reports an error. Updating or reinstalling its driver usually helps.	Le périphérique signale une erreur. Mettre à jour ou réinstaller son pilote aide généralement.
+Diag.Disk.Title	Disk "{0}" shows signs of failure	Le disque « {0} » montre des signes de faiblesse
+Diag.Disk.Explanation.Warning	Windows reports that this disk is wearing out. Back up your files and plan to replace it.	Windows signale que ce disque s'use. Sauvegardez vos fichiers et prévoyez son remplacement.
+Diag.Disk.Explanation.Critical	This disk is failing: back up your files now and replace it.	Ce disque est défaillant : sauvegardez vos fichiers maintenant et remplacez-le.
+Diag.Reboot.Title	A restart is pending	Un redémarrage est en attente
+Diag.Reboot.Explanation	Updates or installations will finish after a restart.	Des mises à jour ou installations se termineront après un redémarrage.
+Diag.OldDrivers.Title	{0} driver(s) older than 5 years	{0} pilote(s) de plus de 5 ans
+Diag.OldDrivers.Explanation	Old drivers can cause instability. Look for updates on the manufacturer's site (automatic updates arrive in a later version).	Les pilotes anciens peuvent causer des instabilités. Cherchez une mise à jour sur le site du fabricant (mises à jour automatiques dans une prochaine version).
+Repair.FlushDns.Title	Clear the DNS cache	Vider le cache DNS
+Repair.FlushDns.Explanation	Fixes websites that do not open while the Internet works. Instant and harmless.	Corrige les sites qui ne s'ouvrent pas alors qu'Internet marche. Instantané et sans risque.
+Repair.SystemFiles.Title	Check Windows system files (SFC)	Vérifier les fichiers système de Windows (SFC)
+Repair.SystemFiles.Explanation	Finds and repairs damaged Windows files. Takes 10 to 30 minutes.	Recherche et répare les fichiers de Windows endommagés. Dure 10 à 30 minutes.
+Repair.WindowsImage.Title	Repair the Windows image (DISM)	Réparer l'image de Windows (DISM)
+Repair.WindowsImage.Explanation	Downloads healthy copies of damaged components from Windows Update. Run it if SFC could not repair everything. Takes 10 to 40 minutes.	Télécharge depuis Windows Update des copies saines des composants endommagés. À lancer si SFC n'a pas tout réparé. Dure 10 à 40 minutes.
