@@ -154,7 +154,8 @@
           "Serilog": "[4.4.0, )",
           "Serilog.Sinks.File": "[7.0.0, )",
           "System.Diagnostics.EventLog": "[10.0.15, )",
-          "System.Management": "[10.0.15, )"
+          "System.Management": "[10.0.15, )",
+          "TaskScheduler": "[2.12.2, )"
         }
       },
       "Serilog": {
@@ -185,6 +186,15 @@
         "contentHash": "U21LynVbH2ayLFLTqlLnd3hx52Fe/acpCXO4BAUIqfWs8CwFWT0zxlg8WR2+LZ7zcLgi/d08eq7rp4iLMMt+4w==",
         "dependencies": {
           "System.CodeDom": "10.0.15"
+        }
+      },
+      "TaskScheduler": {
+        "type": "CentralTransitive",
+        "requested": "[2.12.2, )",
+        "resolved": "2.12.2",
+        "contentHash": "glpAb3VrwfdAofp6PIyAzL0ZeTV7XUJ8muu0oZoTeyU5jtk2sMJ6QAMRRuFbovcaj+SBJiEUGklxIWOqQoxshA==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "9.0.2"
         }
       }
     }

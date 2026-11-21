@@ -9,6 +9,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Management" />
+    <PackageReference Include="TaskScheduler" />
     <PackageReference Include="System.Diagnostics.EventLog" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.Sinks.File" />
