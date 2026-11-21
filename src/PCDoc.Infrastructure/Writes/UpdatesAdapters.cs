@@ -13,35 +13,103 @@ public sealed class WindowsUpdate : IWindowsUpdate
 {
     private const string Criteria = "IsInstalled=0 and IsHidden=0";
 
-    public Task<IReadOnlyList<WindowsUpdateItem>> SearchAsync(CancellationToken cancellationToken) => Task.Run(() =>
+    // Catégorie « Upgrades » : passage à une nouvelle version de Windows, jamais proposé ici.
+    private const string UpgradesCategory = "3689bdc8-b205-4af4-8d4a-a63924c5e9d5";
+
+    private static readonly Guid SessionClsid = new("4CB43D7F-7EEE-4906-8698-60DA1C38F2FE");
+    private static readonly Guid CollectionClsid = new("13639463-00DB-4646-803D-528026140D88");
+    private static readonly TimeSpan SearchTimeout = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan CacheLifetime = TimeSpan.FromMinutes(30);
+
+    private readonly Lock _gate = new();
+    private (dynamic Session, dynamic Updates, DateTime At)? _last;
+
+    public async Task<IReadOnlyList<WindowsUpdateItem>> SearchAsync(CancellationToken cancellationToken)
     {
-        var (_, updates) = Search();
+        var (_, updates) = await SearchWithTimeoutAsync(fresh: true, cancellationToken).ConfigureAwait(false);
         var items = new List<WindowsUpdateItem>();
         for (var i = 0; i < (int)updates.Count; i++)
         {
             var u = updates[i];
-            if ((bool)u.InstallationBehavior.CanRequestUserInput)
+            if ((bool)u.InstallationBehavior.CanRequestUserInput || IsUpgrade(u))
             {
                 continue;
             }
 
             string? kb = (int)u.KBArticleIDs.Count > 0 ? (string)u.KBArticleIDs[0] : null;
             items.Add(new WindowsUpdateItem((string)u.Identity.UpdateID, (string)u.Title, (int)u.Type == 2, (bool)u.BrowseOnly,
-                (long)Convert.ToDecimal(u.MaxDownloadSize, System.Globalization.CultureInfo.InvariantCulture), kb));
+                (long)Convert.ToDecimal(u.MaxDownloadSize, System.Globalization.CultureInfo.InvariantCulture), kb,
+                Exclusive: (int)u.InstallationBehavior.Impact == 2));
         }
 
-        return (IReadOnlyList<WindowsUpdateItem>)items;
-    }, cancellationToken);
+        return items;
+    }
 
-    public Task<WindowsUpdateResult> InstallAsync(IReadOnlyCollection<string> updateIds, CancellationToken cancellationToken) => Task.Run(() =>
+    private static bool IsUpgrade(dynamic update)
+    {
+        for (var i = 0; i < (int)update.Categories.Count; i++)
+        {
+            if (string.Equals((string)update.Categories[i].CategoryID, UpgradesCategory, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Recherche (plusieurs minutes possibles) réutilisée 30 min : installer plusieurs mises à jour ne relance pas tout.</summary>
+    private async Task<(dynamic Session, dynamic Updates)> SearchWithTimeoutAsync(bool fresh, CancellationToken cancellationToken)
+    {
+        lock (_gate)
+        {
+            if (!fresh && _last is { } cached && DateTime.UtcNow - cached.At < CacheLifetime)
+            {
+                return (cached.Session, cached.Updates);
+            }
+        }
+
+        var search = Task.Run(Search, cancellationToken);
+        var done = await Task.WhenAny(search, Task.Delay(SearchTimeout, cancellationToken)).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        if (done != search)
+        {
+            throw new TimeoutException("Windows Update search did not finish within 10 minutes");
+        }
+
+        var result = await search.ConfigureAwait(false);
+        lock (_gate)
+        {
+            _last = (result.Session, result.Updates, DateTime.UtcNow);
+        }
+
+        return result;
+    }
+
+    public async Task<WindowsUpdateResult> InstallAsync(IReadOnlyCollection<string> updateIds, CancellationToken cancellationToken)
+    {
+        var (session, updates) = await SearchWithTimeoutAsync(fresh: false, cancellationToken).ConfigureAwait(false);
+        var result = await Task.Run(() => Install(session, updates, updateIds, cancellationToken), cancellationToken).ConfigureAwait(false);
+        if (result.RebootRequired)
+        {
+            lock (_gate)
+            {
+                _last = null; // après un redémarrage demandé, la liste n'est plus fiable
+            }
+        }
+
+        return result;
+    }
+
+    private static WindowsUpdateResult Install(dynamic session, dynamic updates, IReadOnlyCollection<string> updateIds, CancellationToken cancellationToken)
     {
         var wanted = new HashSet<string>(updateIds, StringComparer.OrdinalIgnoreCase);
-        var (session, updates) = Search();
-        dynamic collection = Create("Microsoft.Update.UpdateColl");
+        dynamic collection = Create(CollectionClsid);
         for (var i = 0; i < (int)updates.Count; i++)
         {
             var u = updates[i];
-            if (wanted.Contains((string)u.Identity.UpdateID) && !(bool)u.InstallationBehavior.CanRequestUserInput)
+            if (wanted.Contains((string)u.Identity.UpdateID) && !(bool)u.InstallationBehavior.CanRequestUserInput && !(bool)u.IsInstalled
+                && !IsUpgrade(u))
             {
                 if (!(bool)u.EulaAccepted)
                 {
@@ -60,7 +128,12 @@ public sealed class WindowsUpdate : IWindowsUpdate
         cancellationToken.ThrowIfCancellationRequested();
         var downloader = session.CreateUpdateDownloader();
         downloader.Updates = collection;
-        downloader.Download();
+        var download = downloader.Download();
+        if ((int)download.ResultCode is not (2 or 3))
+        {
+            throw new InvalidOperationException($"Windows Update download failed (code {(int)download.ResultCode})");
+        }
+
         cancellationToken.ThrowIfCancellationRequested();
 
         var installer = session.CreateUpdateInstaller();
@@ -86,20 +159,21 @@ public sealed class WindowsUpdate : IWindowsUpdate
         }
 
         return new WindowsUpdateResult(installed, (int)collection.Count - installed, (bool)result.RebootRequired);
-    }, cancellationToken);
+    }
 
     private static (dynamic Session, dynamic Updates) Search()
     {
-        dynamic session = Create("Microsoft.Update.Session");
+        dynamic session = Create(SessionClsid);
         session.ClientApplicationID = Core.AppInfo.ProductName;
         var searcher = session.CreateUpdateSearcher();
         var result = searcher.Search(Criteria);
         return (session, result.Updates);
     }
 
-    private static dynamic Create(string progId) =>
-        Activator.CreateInstance(Type.GetTypeFromProgID(progId, throwOnError: true)!)
-        ?? throw new InvalidOperationException($"{progId} unavailable");
+    /// <summary>Par CLSID (pas par nom) : un nom de programme peut être redéfini dans le registre de l'utilisateur.</summary>
+    private static dynamic Create(Guid clsid) =>
+        Activator.CreateInstance(Type.GetTypeFromCLSID(clsid, throwOnError: true)!)
+        ?? throw new InvalidOperationException($"{clsid} unavailable");
 }
 
 /// <summary>
@@ -110,7 +184,7 @@ public sealed class WingetRunner(IProcessRunner runner) : IWingetRunner, IDispos
 {
     private const string Locate = "$env:PSModulePath = $PSHOME + '\\Modules'\n"
                                   + "Import-Module ($PSHOME + '\\Modules\\Appx') -ErrorAction Stop\n"
-                                  + "$p = Get-AppxPackage -AllUsers -Name Microsoft.DesktopAppInstaller | Sort-Object Version -Descending | Select-Object -First 1\n"
+                                  + "$p = Get-AppxPackage -AllUsers -Name Microsoft.DesktopAppInstaller | Where-Object { $_.PackageFamilyName -eq 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe' -and $_.SignatureKind -ne 'Developer' } | Sort-Object { [version]$_.Version } -Descending | Select-Object -First 1\n"
                                   + "'PCDOC:' + $p.InstallLocation";
 
     private readonly SemaphoreSlim _gate = new(1, 1);
@@ -132,6 +206,12 @@ public sealed class WingetRunner(IProcessRunner runner) : IWingetRunner, IDispos
             StandardErrorEncoding = Encoding.UTF8,
             WorkingDirectory = Environment.SystemDirectory,
         };
+
+        // Dossier temporaire réservé aux administrateurs : l'installateur téléchargé ne peut pas être remplacé entre la
+        // vérification de son empreinte par winget et son lancement.
+        var temp = SecureFolders.EnsureChild("temp");
+        start.Environment["TEMP"] = temp;
+        start.Environment["TMP"] = temp;
         var output = new List<string>();
         using var process = new Process { StartInfo = start };
         process.OutputDataReceived += (_, e) => Add(output, e.Data);

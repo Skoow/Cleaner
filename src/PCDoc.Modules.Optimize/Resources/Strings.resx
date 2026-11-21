@@ -12,9 +12,9 @@
   <data name="Optimize.startup-delay-off.Title" xml:space="preserve"><value>Start your programs sooner</value></data>
   <data name="Optimize.startup-delay-off.Explanation" xml:space="preserve"><value>Removes the delay Windows adds before starting programs after you sign in.</value></data>
   <data name="Optimize.menu-delay.Title" xml:space="preserve"><value>Faster menus</value></data>
-  <data name="Optimize.menu-delay.Explanation" xml:space="preserve"><value>Submenus open after 0.1 s instead of 0.4 s.</value></data>
+  <data name="Optimize.menu-delay.Explanation" xml:space="preserve"><value>Submenus open after 0.1 s instead of 0.4 s. Applies after you sign in again.</value></data>
   <data name="Optimize.transparency-off.Title" xml:space="preserve"><value>Turn off transparency effects</value></data>
-  <data name="Optimize.transparency-off.Explanation" xml:space="preserve"><value>Saves a little graphics power and battery. The look becomes slightly plainer.</value></data>
+  <data name="Optimize.transparency-off.Explanation" xml:space="preserve"><value>Saves a little graphics power and battery. The look becomes slightly plainer. May need you to sign in again.</value></data>
   <data name="Optimize.animations-off.Title" xml:space="preserve"><value>Turn off window animations</value></data>
   <data name="Optimize.animations-off.Explanation" xml:space="preserve"><value>Windows open and minimize instantly. Applies after you sign in again.</value></data>
   <data name="Optimize.fast-startup-off.Title" xml:space="preserve"><value>Turn off Fast Startup</value></data>

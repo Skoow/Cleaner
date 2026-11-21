@@ -12,9 +12,9 @@
   <data name="Optimize.startup-delay-off.Title" xml:space="preserve"><value>Lancer vos programmes plus tôt</value></data>
   <data name="Optimize.startup-delay-off.Explanation" xml:space="preserve"><value>Supprime l'attente que Windows ajoute avant de lancer les programmes après l'ouverture de session.</value></data>
   <data name="Optimize.menu-delay.Title" xml:space="preserve"><value>Menus plus rapides</value></data>
-  <data name="Optimize.menu-delay.Explanation" xml:space="preserve"><value>Les sous-menus s'ouvrent après 0,1 s au lieu de 0,4 s.</value></data>
+  <data name="Optimize.menu-delay.Explanation" xml:space="preserve"><value>Les sous-menus s'ouvrent après 0,1 s au lieu de 0,4 s. Appliqué à la prochaine ouverture de session.</value></data>
   <data name="Optimize.transparency-off.Title" xml:space="preserve"><value>Désactiver les effets de transparence</value></data>
-  <data name="Optimize.transparency-off.Explanation" xml:space="preserve"><value>Économise un peu de puissance graphique et de batterie. L'apparence devient un peu plus simple.</value></data>
+  <data name="Optimize.transparency-off.Explanation" xml:space="preserve"><value>Économise un peu de puissance graphique et de batterie. L'apparence devient un peu plus simple. Peut demander de rouvrir la session.</value></data>
   <data name="Optimize.animations-off.Title" xml:space="preserve"><value>Désactiver les animations des fenêtres</value></data>
   <data name="Optimize.animations-off.Explanation" xml:space="preserve"><value>Les fenêtres s'ouvrent et se réduisent instantanément. Appliqué à la prochaine ouverture de session.</value></data>
   <data name="Optimize.fast-startup-off.Title" xml:space="preserve"><value>Désactiver le démarrage rapide</value></data>

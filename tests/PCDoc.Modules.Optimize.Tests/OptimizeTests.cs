@@ -25,8 +25,12 @@ public class OptimizeTests
     {
         public List<string> Saved { get; } = [];
 
+        public HashSet<string> Names { get; } = [];
+
         public string SaveRegistryBackup(string name, string regFileContent)
         {
+            Names.Add(name).Should().BeTrue("deux sauvegardes ne doivent pas s'écraser");
+            name.Should().EndWith(".reg");
             Saved.Add(regFileContent);
             return name;
         }
@@ -160,5 +164,32 @@ public class OptimizeTests
         var findings = await new OptimizeScanner(engine).ScanAsync(CancellationToken.None);
 
         findings.Select(f => f.Id).Should().BeEquivalentTo(["optimize.game-dvr-off", "optimize.startup-delay-off"]);
+    }
+
+    [Fact]
+    public async Task ExistingValueOfAnotherType_IsNotOffered()
+    {
+        var (engine, fixer, registry, _, _) = Create(laptop: true);
+        registry.Set(RegistryHive.TargetUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize", "StartupDelayInMSec", "500", RegistryView.Registry64);
+
+        var finding = await FindingAsync(engine, "startup-delay-off");
+
+        finding.FixAvailable.Should().BeFalse();
+        fixer.CanFix(finding with { FixAvailable = true }).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Defaults_HibernateAndGameMode_BackupsAreDistinct()
+    {
+        var (engine, fixer, registry, _, backups) = Create(laptop: true);
+        registry.Set(RegistryHive.LocalMachine, OptimizeEngine.PowerKey, "HibernateEnabled", null, RegistryView.Registry64);
+        registry.Set(RegistryHive.LocalMachine, OptimizeEngine.PowerKey, "HibernateEnabledDefault", 1, RegistryView.Registry64);
+
+        var states = await engine.AnalyzeAsync(CancellationToken.None);
+
+        states.Single(s => s.Tweak.Id == "hibernate-off").Applied.Should().BeFalse("activée par défaut");
+        states.Single(s => s.Tweak.Id == "game-mode").Applied.Should().BeTrue("le mode Jeu est actif par défaut");
+        await fixer.PrepareAsync(await FindingAsync(engine, "game-dvr-off"), CancellationToken.None);
+        backups.Saved.Should().HaveCount(2);
     }
 }

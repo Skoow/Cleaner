@@ -6,7 +6,7 @@
       "values": [
         { "hive": "TargetUser", "path": "System\\GameConfigStore", "name": "GameDVR_Enabled", "dword": 0 },
         { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR", "name": "AppCaptureEnabled", "dword": 0 } ] },
-    { "id": "game-mode", "risk": "Safe", "profiles": ["gaming"],
+    { "id": "game-mode", "risk": "Safe", "profiles": ["gaming"], "absentIsApplied": true,
       "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\GameBar", "name": "AutoGameModeEnabled", "dword": 1 } ] },
     { "id": "startup-delay-off", "risk": "Safe", "bilan": true, "profiles": ["gaming", "office"],
       "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize", "name": "StartupDelayInMSec", "dword": 0 } ] },

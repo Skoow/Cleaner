@@ -56,7 +56,11 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
         Fixes = fixes;
         if (fixes is not null)
         {
-            fixes.Completed += (_, _) => _ = AnalyzeAsync();
+            fixes.Completed += (_, _) =>
+            {
+                RebootRequired = _rebootCheck();
+                _ = AnalyzeAsync();
+            };
         }
 
         localizer.PropertyChanged += (_, _) => Build();
@@ -77,6 +81,11 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
     [RelayCommand]
     private async Task AnalyzeAsync()
     {
+        if (IsLoading)
+        {
+            return; // une recherche est déjà en cours (elle peut durer plusieurs minutes)
+        }
+
         IsLoading = true;
         try
         {
@@ -144,7 +153,9 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
         }
 
         WindowsStatus = report.WindowsUpdateFailed ? _localizer["Updates.WindowsFailed"] : report.Windows.Count == 0 ? _localizer["Updates.None"] : null;
-        SoftwareStatus = report.WingetMissing ? _localizer["Updates.WingetMissing"] : report.Software.Count == 0 ? _localizer["Updates.None"] : null;
+        SoftwareStatus = report.WingetMissing ? _localizer["Updates.WingetMissing"]
+            : report.WingetFailed ? _localizer["Updates.WingetFailed"]
+            : report.Software.Count == 0 ? _localizer["Updates.None"] : null;
         RebootRequired = _rebootCheck();
         OnPropertyChanged(nameof(HasLoaded));
     }

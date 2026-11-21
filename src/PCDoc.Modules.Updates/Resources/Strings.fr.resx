@@ -24,6 +24,7 @@
   <data name="Updates.None" xml:space="preserve"><value>Tout est à jour.</value></data>
   <data name="Updates.WindowsFailed" xml:space="preserve"><value>Windows Update n'a pas répondu. Réessayez plus tard.</value></data>
   <data name="Updates.WingetMissing" xml:space="preserve"><value>winget (Programme d'installation d'application) n'est pas installé : installez « Programme d'installation d'application » depuis le Microsoft Store pour mettre à jour vos logiciels.</value></data>
+  <data name="Updates.WingetFailed" xml:space="preserve"><value>winget n'a pas répondu (problème de réseau ou de source). Réessayez plus tard.</value></data>
   <data name="Updates.Reboot" xml:space="preserve"><value>Redémarrez le PC pour terminer l'installation des mises à jour.</value></data>
   <data name="Updates.Searching" xml:space="preserve"><value>La recherche Windows Update peut prendre quelques minutes…</value></data>
   <data name="Updates.Category.browser" xml:space="preserve"><value>Navigateurs</value></data>

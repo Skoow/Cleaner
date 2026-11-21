@@ -24,6 +24,7 @@
   <data name="Updates.None" xml:space="preserve"><value>Everything is up to date.</value></data>
   <data name="Updates.WindowsFailed" xml:space="preserve"><value>Windows Update did not answer. Try again later.</value></data>
   <data name="Updates.WingetMissing" xml:space="preserve"><value>winget (App Installer) is not installed: install "App Installer" from the Microsoft Store to update your software.</value></data>
+  <data name="Updates.WingetFailed" xml:space="preserve"><value>winget did not answer (network or source problem). Try again later.</value></data>
   <data name="Updates.Reboot" xml:space="preserve"><value>Restart the PC to finish installing the updates.</value></data>
   <data name="Updates.Searching" xml:space="preserve"><value>Searching Windows Update can take a few minutes…</value></data>
   <data name="Updates.Category.browser" xml:space="preserve"><value>Browsers</value></data>

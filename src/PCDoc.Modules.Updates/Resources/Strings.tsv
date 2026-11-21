@@ -19,6 +19,7 @@ Updates.UpgradeSelected	Update the selection	Mettre à jour la sélection
 Updates.None	Everything is up to date.	Tout est à jour.
 Updates.WindowsFailed	Windows Update did not answer. Try again later.	Windows Update n'a pas répondu. Réessayez plus tard.
 Updates.WingetMissing	winget (App Installer) is not installed: install "App Installer" from the Microsoft Store to update your software.	winget (Programme d'installation d'application) n'est pas installé : installez « Programme d'installation d'application » depuis le Microsoft Store pour mettre à jour vos logiciels.
+Updates.WingetFailed	winget did not answer (network or source problem). Try again later.	winget n'a pas répondu (problème de réseau ou de source). Réessayez plus tard.
 Updates.Reboot	Restart the PC to finish installing the updates.	Redémarrez le PC pour terminer l'installation des mises à jour.
 Updates.Searching	Searching Windows Update can take a few minutes…	La recherche Windows Update peut prendre quelques minutes…
 Updates.Category.browser	Browsers	Navigateurs

@@ -282,7 +282,7 @@ public sealed class Quarantine(IClock clock) : IQuarantine
         "Google", "Mozilla Maintenance Service", "Java", "Oracle", "Package Cache", "Installer", "MSBuild",
     };
 
-    private static string Root => SecureFolders.Ensure(Path.Combine(SecureFolders.Root, "quarantine"));
+    private static string Root => SecureFolders.EnsureChild("quarantine");
 
     public string PlanFor(string originalPath)
     {

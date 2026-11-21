@@ -7,9 +7,9 @@ Optimize.game-mode.Explanation	Windows gives priority to the game you are playin
 Optimize.startup-delay-off.Title	Start your programs sooner	Lancer vos programmes plus tôt
 Optimize.startup-delay-off.Explanation	Removes the delay Windows adds before starting programs after you sign in.	Supprime l'attente que Windows ajoute avant de lancer les programmes après l'ouverture de session.
 Optimize.menu-delay.Title	Faster menus	Menus plus rapides
-Optimize.menu-delay.Explanation	Submenus open after 0.1 s instead of 0.4 s.	Les sous-menus s'ouvrent après 0,1 s au lieu de 0,4 s.
+Optimize.menu-delay.Explanation	Submenus open after 0.1 s instead of 0.4 s. Applies after you sign in again.	Les sous-menus s'ouvrent après 0,1 s au lieu de 0,4 s. Appliqué à la prochaine ouverture de session.
 Optimize.transparency-off.Title	Turn off transparency effects	Désactiver les effets de transparence
-Optimize.transparency-off.Explanation	Saves a little graphics power and battery. The look becomes slightly plainer.	Économise un peu de puissance graphique et de batterie. L'apparence devient un peu plus simple.
+Optimize.transparency-off.Explanation	Saves a little graphics power and battery. The look becomes slightly plainer. May need you to sign in again.	Économise un peu de puissance graphique et de batterie. L'apparence devient un peu plus simple. Peut demander de rouvrir la session.
 Optimize.animations-off.Title	Turn off window animations	Désactiver les animations des fenêtres
 Optimize.animations-off.Explanation	Windows open and minimize instantly. Applies after you sign in again.	Les fenêtres s'ouvrent et se réduisent instantanément. Appliqué à la prochaine ouverture de session.
 Optimize.fast-startup-off.Title	Turn off Fast Startup	Désactiver le démarrage rapide

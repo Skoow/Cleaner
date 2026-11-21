@@ -47,6 +47,13 @@ public static class SecureFolders
         }
     }
 
+    /// <summary>Sous-dossier protégé de <see cref="Root"/> (le dossier racine est protégé d'abord).</summary>
+    public static string EnsureChild(string name)
+    {
+        Ensure(Root);
+        return Ensure(Path.Combine(Root, name));
+    }
+
     public static string Ensure(string path)
     {
         RemoveIfLink(path);

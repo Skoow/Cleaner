@@ -7,7 +7,8 @@ public sealed record WindowsUpdateItem(
     bool IsDriver,
     bool IsOptional,
     long SizeBytes,
-    string? KbArticle = null);
+    string? KbArticle = null,
+    bool Exclusive = false);
 
 public sealed record WindowsUpdateResult(int Installed, int Failed, bool RebootRequired);
 

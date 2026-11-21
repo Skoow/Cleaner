@@ -43,6 +43,8 @@ public class UpdatesTests
 
         public bool Missing { get; init; }
 
+        public int ListExit { get; init; }
+
         public Task<(int ExitCode, IReadOnlyList<string> Output)> RunAsync(string arguments, TimeSpan timeout, CancellationToken cancellationToken)
         {
             if (Missing)
@@ -51,7 +53,9 @@ public class UpdatesTests
             }
 
             Calls.Add(arguments);
-            return Task.FromResult<(int, IReadOnlyList<string>)>(arguments.StartsWith("upgrade --accept", StringComparison.Ordinal) ? (0, FrenchOutput) : (exit, ["Done"]));
+            return Task.FromResult<(int, IReadOnlyList<string>)>(arguments.StartsWith("upgrade --scope", StringComparison.Ordinal)
+                ? (ListExit, ListExit == 0 ? FrenchOutput : ["Failed"])
+                : (exit, ["Done"]));
         }
     }
 
@@ -61,9 +65,25 @@ public class UpdatesTests
         var upgrades = Winget.ParseUpgrades(FrenchOutput);
 
         upgrades.Should().Equal(
-            new WingetUpgrade("Mozilla Firefox (x64 fr)", "Mozilla.Firefox", "131.0", "132.0.1"),
-            new WingetUpgrade("7-Zip 23.01 (x64)", "7zip.7zip", "23.01", "24.08"));
+            new WingetUpgrade("Mozilla Firefox (x64 fr)", "Mozilla.Firefox", "131.0", "132.0.1", "winget"),
+            new WingetUpgrade("7-Zip 23.01 (x64)", "7zip.7zip", "23.01", "24.08", "winget"));
         Winget.ParseUpgrades(["No installed package found matching input criteria."]).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Parser_SkipsTruncatedRows_AndMeasuresWideCharacters()
+    {
+        string[] output =
+        [
+            "名前       ID                 バージョン 利用可能 ソース",
+            "------------------------------------------------------",
+            "ランタイム Microsoft.VCRedi…   14.0       14.4     winget",
+            "火狐       Mozilla.Firefox    1.0        2.0      winget",
+        ];
+
+        Winget.ParseUpgrades(output).Should().ContainSingle().Which.Id.Should().Be("Mozilla.Firefox");
+        Winget.IsSuccess(unchecked((int)0x8A150109)).Should().BeTrue();
+        Winget.NeedsReboot(unchecked((int)0x8A150109)).Should().BeTrue();
     }
 
     [Theory]
@@ -77,7 +97,7 @@ public class UpdatesTests
         var act = () => Winget.UpgradeArguments(id);
         if (valid)
         {
-            act().Should().Be($"upgrade --id {id} --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity");
+            act().Should().Be($"upgrade --id {id} --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --scope machine");
         }
         else
         {
@@ -108,7 +128,9 @@ public class UpdatesTests
         await fixer.ApplyAsync(firefox, CancellationToken.None);
         await fixer.ApplyAsync(UpdateFixer.ForWindows(report.Windows[0]), CancellationToken.None);
 
-        winget.Calls[^1].Should().StartWith("upgrade --id Mozilla.Firefox --exact --silent");
+        winget.Calls[^1].Should().StartWith("upgrade --id Mozilla.Firefox --exact --silent").And.Contain("--scope machine --source winget");
+        await engine.InstallAsync(new WingetPackage("VideoLAN.VLC", "VLC", "media"), CancellationToken.None);
+        winget.Calls[^1].Should().Contain("--scope machine --source winget");
         wu.Installed.Should().Equal("aaa");
         engine.RebootRequired.Should().BeTrue();
     }
@@ -124,6 +146,8 @@ public class UpdatesTests
         await act.Should().ThrowAsync<InvalidOperationException>();
         (await new UpdatesEngine(new FakeWindowsUpdate(), new FakeWinget { Missing = true }).AnalyzeAsync(false, CancellationToken.None))
             .WingetMissing.Should().BeTrue();
+        (await new UpdatesEngine(new FakeWindowsUpdate(), new FakeWinget { ListExit = unchecked((int)0x8A15000F) }).AnalyzeAsync(false, CancellationToken.None))
+            .WingetFailed.Should().BeTrue("erreur de source : pas « tout est à jour »");
     }
 
     [Fact]

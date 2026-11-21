@@ -34,8 +34,8 @@ public sealed partial class OptimizeEngine(
         {
             TweakKind.PowerPlan => t.Plan == active,
             TweakKind.Hibernate => !HibernateEnabled(),
-            _ => t.Values.All(v => Equals(Read(v), v.Target)),
-        }, t.Kind != TweakKind.PowerPlan || plans.Contains(t.Plan!)))];
+            _ => IsApplied(t),
+        }, t.Kind == TweakKind.PowerPlan ? plans.Contains(t.Plan!) : t.Kind != TweakKind.Registry || IsCompatible(t)))];
     }
 
     public RiskLevel RiskOf(Tweak tweak)
@@ -71,7 +71,29 @@ public sealed partial class OptimizeEngine(
         writer.SetValue(value.Hive, value.Path, value.Name, data);
     }
 
-    public bool HibernateEnabled() => reader.GetValue(RegistryHive.LocalMachine, PowerKey, "HibernateEnabled", RegistryView.Registry64) is int v && v != 0;
+    public bool IsApplied(Tweak tweak)
+    {
+        ArgumentNullException.ThrowIfNull(tweak);
+        return tweak.Values.All(v => Read(v) is { } current ? Equals(current, v.Target) : tweak.AbsentIsApplied);
+    }
+
+    /// <summary>
+    /// Chaque valeur existante a le type de la valeur cible (DWORD ou texte) : sinon le réglage n'est pas proposé, car
+    /// l'annulation ne saurait pas remettre exactement l'ancien type.
+    /// </summary>
+    public bool IsCompatible(Tweak tweak)
+    {
+        ArgumentNullException.ThrowIfNull(tweak);
+        return tweak.Values.All(v => Read(v) is not { } current || current.GetType() == v.Target.GetType());
+    }
+
+    /// <summary>HibernateEnabled, à défaut HibernateEnabledDefault ; inconnu → considérée active.</summary>
+    public bool HibernateEnabled()
+    {
+        var value = reader.GetValue(RegistryHive.LocalMachine, PowerKey, "HibernateEnabled", RegistryView.Registry64)
+                    ?? reader.GetValue(RegistryHive.LocalMachine, PowerKey, "HibernateEnabledDefault", RegistryView.Registry64);
+        return value is not int v || v != 0;
+    }
 
     public Task SetHibernateAsync(bool enabled, CancellationToken cancellationToken) =>
         Powercfg(enabled ? "/hibernate on" : "/hibernate off", cancellationToken);

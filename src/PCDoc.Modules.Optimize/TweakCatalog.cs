@@ -24,7 +24,8 @@ public sealed record Tweak(
     bool InBilan,
     IReadOnlyList<string> Profiles,
     IReadOnlyList<TweakValue> Values,
-    string? Plan);
+    string? Plan,
+    bool AbsentIsApplied = false);
 
 public sealed class TweakCatalog
 {
@@ -62,7 +63,7 @@ public sealed class TweakCatalog
             };
             if (valid && !string.IsNullOrWhiteSpace(t.Id) && t.Risk is not RiskLevel.Locked)
             {
-                tweaks.Add(new Tweak(t.Id, t.Kind, t.Risk, t.DesktopRisk, t.Bilan, t.Profiles ?? [], values, t.Plan?.ToLowerInvariant()));
+                tweaks.Add(new Tweak(t.Id, t.Kind, t.Risk, t.DesktopRisk, t.Bilan, t.Profiles ?? [], values, t.Plan?.ToLowerInvariant(), t.AbsentIsApplied));
             }
         }
 
@@ -81,7 +82,7 @@ public sealed class TweakCatalog
     private sealed record CatalogFile(int Version, Item[]? Tweaks);
 
     private sealed record Item(string Id, TweakKind Kind, RiskLevel Risk, RiskLevel? DesktopRisk, bool Bilan, string[]? Profiles, ValueItem[]? Values,
-        string? Plan);
+        string? Plan, bool AbsentIsApplied);
 
     private sealed record ValueItem(RegistryHive Hive, string? Path, string? Name, int? Dword, string? Text);
 #pragma warning restore CA1812

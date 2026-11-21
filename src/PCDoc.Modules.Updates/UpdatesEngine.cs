@@ -7,7 +7,8 @@ public sealed record UpdatesReport(
     IReadOnlyList<WindowsUpdateItem> Windows,
     IReadOnlyList<WingetUpgrade> Software,
     bool WindowsUpdateFailed,
-    bool WingetMissing);
+    bool WingetMissing,
+    bool WingetFailed = false);
 
 public interface IUpdatesSource
 {
@@ -45,23 +46,33 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
             {
                 windows = await windowsUpdate.SearchAsync(cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException or TimeoutException)
+#pragma warning disable CA1031 // Windows Update peut échouer de bien des façons (COM, droits, délai) : signalé, jamais bloquant
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 windowsFailed = true;
             }
+#pragma warning restore CA1031
         }
 
         IReadOnlyList<WingetUpgrade> software = [];
         var missing = false;
+        var wingetFailed = false;
         try
         {
-            var (_, output) = await winget.RunAsync(Winget.ListUpgradesArguments, ListTimeout, cancellationToken).ConfigureAwait(false);
+            var (exit, output) = await winget.RunAsync(Winget.ListUpgradesArguments, ListTimeout, cancellationToken).ConfigureAwait(false);
             software = Winget.ParseUpgrades(output);
+            wingetFailed = software.Count == 0 && !Winget.IsSuccess(exit);
         }
-        catch (Exception ex) when (ex is FileNotFoundException or InvalidOperationException or TimeoutException)
+        catch (FileNotFoundException)
         {
             missing = true;
         }
+#pragma warning disable CA1031 // winget qui ne démarre pas ou dépasse le délai : signalé comme un échec
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            wingetFailed = true;
+        }
+#pragma warning restore CA1031
 
         lock (_gate)
         {
@@ -70,19 +81,19 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
                 _windows = windows.GroupBy(w => w.Id, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
             }
 
-            if (!missing)
+            if (!missing && !wingetFailed)
             {
                 _software = software.GroupBy(s => s.Id, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
             }
         }
 
-        return new UpdatesReport(windows, software, windowsFailed, missing);
+        return new UpdatesReport(windows, software, windowsFailed, missing, wingetFailed);
     }
 
     public static RiskLevel RiskOf(WindowsUpdateItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
-        return item.IsDriver || item.IsOptional ? RiskLevel.Conditional : RiskLevel.Safe;
+        return item.IsDriver || item.IsOptional || item.Exclusive ? RiskLevel.Conditional : RiskLevel.Safe;
     }
 
     public WindowsUpdateItem? FindWindows(string id)
@@ -117,7 +128,7 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
     public Task UpgradeAsync(WingetUpgrade upgrade, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(upgrade);
-        return RunAsync(Winget.UpgradeArguments(upgrade.Id), cancellationToken);
+        return RunAsync(Winget.UpgradeArguments(upgrade.Id, upgrade.Source), cancellationToken);
     }
 
     public Task InstallAsync(WingetPackage package, CancellationToken cancellationToken)
@@ -129,6 +140,7 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
     private async Task RunAsync(string arguments, CancellationToken cancellationToken)
     {
         var (exit, output) = await winget.RunAsync(arguments, InstallTimeout, cancellationToken).ConfigureAwait(false);
+        RebootRequired |= Winget.NeedsReboot(exit);
         if (!Winget.IsSuccess(exit))
         {
             throw new InvalidOperationException($"winget exited with code 0x{exit:X8}: {output.LastOrDefault(l => l.Trim().Length > 0)?.Trim()}");
