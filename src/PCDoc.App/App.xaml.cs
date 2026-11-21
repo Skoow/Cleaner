@@ -38,6 +38,7 @@ public partial class App : Application
         localizer.Register(CoreResources.Manager);
         SystemModule.RegisterResources(localizer);
         PCDoc.Modules.Diagnostic.DiagnosticModule.RegisterResources(localizer);
+        PCDoc.Modules.Cleanup.CleanupModule.RegisterResources(localizer);
         localizer.Language = settings.Language;
         Loc.Instance = localizer;
 

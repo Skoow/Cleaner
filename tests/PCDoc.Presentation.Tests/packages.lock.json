@@ -142,25 +142,32 @@
       "pcdoc.core": {
         "type": "Project"
       },
+      "pcdoc.modules.cleanup": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )"
+        }
+      },
       "pcdoc.modules.diagnostic": {
         "type": "Project",
         "dependencies": {
-          "PCDoc.Core": "[0.3.0, )"
+          "PCDoc.Core": "[0.4.0, )"
         }
       },
       "pcdoc.modules.system": {
         "type": "Project",
         "dependencies": {
-          "PCDoc.Core": "[0.3.0, )"
+          "PCDoc.Core": "[0.4.0, )"
         }
       },
       "pcdoc.presentation": {
         "type": "Project",
         "dependencies": {
           "CommunityToolkit.Mvvm": "[8.4.2, )",
-          "PCDoc.Core": "[0.3.0, )",
-          "PCDoc.Modules.Diagnostic": "[0.3.0, )",
-          "PCDoc.Modules.System": "[0.3.0, )"
+          "PCDoc.Core": "[0.4.0, )",
+          "PCDoc.Modules.Cleanup": "[0.4.0, )",
+          "PCDoc.Modules.Diagnostic": "[0.4.0, )",
+          "PCDoc.Modules.System": "[0.4.0, )"
         }
       },
       "CommunityToolkit.Mvvm": {

@@ -6,6 +6,7 @@
     <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.System\PCDoc.Modules.System.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Diagnostic\PCDoc.Modules.Diagnostic.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Cleanup\PCDoc.Modules.Cleanup.csproj" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
 </Project>

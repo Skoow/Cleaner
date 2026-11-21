@@ -123,3 +123,5 @@ Fix.Disabled	Fixes are turned off: the PCDoc backup folder (C:\ProgramData\PCDoc
 History.InterruptedBanner	A change by PCDoc was interrupted (power cut or crash). Check it on the History page.	Une modification de PCDoc a été interrompue (coupure de courant ou plantage). Vérifiez-la dans la page Historique.
 Nav.Diagnostic	Diagnostics	Diagnostic
 Module.diagnostic	Diagnostics	Diagnostic
+Nav.Cleanup	Cleanup	Nettoyage
+Module.cleanup	Cleanup	Nettoyage

@@ -150,7 +150,7 @@
       "pcdoc.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "PCDoc.Core": "[0.3.0, )",
+          "PCDoc.Core": "[0.4.0, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Sinks.File": "[7.0.0, )",
           "System.Diagnostics.EventLog": "[10.0.15, )",
@@ -158,10 +158,16 @@
           "TaskScheduler": "[2.12.2, )"
         }
       },
+      "pcdoc.modules.cleanup": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )"
+        }
+      },
       "pcdoc.modules.diagnostic": {
         "type": "Project",
         "dependencies": {
-          "PCDoc.Core": "[0.3.0, )"
+          "PCDoc.Core": "[0.4.0, )"
         }
       },
       "Serilog": {

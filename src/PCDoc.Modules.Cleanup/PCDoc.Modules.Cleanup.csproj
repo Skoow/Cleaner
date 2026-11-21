@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
+    <InternalsVisibleTo Include="PCDoc.Modules.Cleanup.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\PCDoc.Definitions\cleanup.json" LogicalName="PCDoc.Definitions.cleanup.json" />
+    <None Include="..\PCDoc.Definitions\cleanup.json" Link="Definitions\cleanup.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -387,12 +387,13 @@ Chaque version a son plan d'implémentation et livre une version utilisable. À 
 | **v0.1** | M0 Socle (lecture seule : fenêtre, langues, thème, journal, profil cible, paramètres) + M2 Système (lecture seule, avec compatibilité Windows 11) + M1 Bilan minimal |
 | v0.2 | Sécurité des actions (§4) + niveaux et **modes novice/expert** (§5) + assistant de premier lancement + conseiller et activer/désactiver (M2) + Historique |
 | v0.3 | M3 Diagnostic |
-| v0.4 | M4 Nettoyage + M5 Applications (désinstallation propre, bloatwares, quarantaine) |
-| v0.5 | M6 Centre de mises à jour + M14 Optimisation + Activité réseau + maintenance planifiée |
-| v0.6 | M7 Sécurité + M13 Moteurs externes + M15 Protection USB |
-| v0.7 | M8 Confidentialité + recherche globale |
-| v0.8 | M9 Traces et données |
-| v0.9 | M10 Réseau + M11 Licences + M12 Rapport |
+| v0.4 | M4 Nettoyage (catégories, corbeille, anciennes mises à jour, gros fichiers) |
+| v0.5 | M5 Applications (désinstallation propre avec quarantaine, bloatwares, installation groupée) |
+| v0.6 | M6 Centre de mises à jour + M14 Optimisation + Activité réseau + maintenance planifiée |
+| v0.7 | M7 Sécurité + M13 Moteurs externes + M15 Protection USB |
+| v0.8 | M8 Confidentialité + recherche globale |
+| v0.9 | M9 Traces et données |
+| v0.10 | M10 Réseau + M11 Licences + M12 Rapport |
 | **v1.0** | Signature du code, installateur MSI *PerMachine*, tâche planifiée élevée, mise à jour automatique, page de téléchargement, mode portable pour dépanneurs |
 | après v1.0 | Import de liste de corrections (expert), traductions communautaires (Weblate) |
 

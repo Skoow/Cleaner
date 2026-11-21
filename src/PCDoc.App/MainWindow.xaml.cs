@@ -43,6 +43,7 @@ public partial class MainWindow : Window
         _shell.NavigateCommand.Execute(
             MainNav.SelectedItem == SystemItem ? PageId.System
             : MainNav.SelectedItem == DiagnosticItem ? PageId.Diagnostic
+            : MainNav.SelectedItem == CleanupItem ? PageId.Cleanup
             : MainNav.SelectedItem == HistoryItem ? PageId.History
             : PageId.Bilan);
     }
@@ -64,6 +65,7 @@ public partial class MainWindow : Window
             PageId.Bilan => BilanItem,
             PageId.System => SystemItem,
             PageId.Diagnostic => DiagnosticItem,
+            PageId.Cleanup => CleanupItem,
             PageId.History => HistoryItem,
             _ => null,
         };

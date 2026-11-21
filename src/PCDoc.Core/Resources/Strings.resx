@@ -128,4 +128,6 @@
   <data name="History.InterruptedBanner" xml:space="preserve"><value>A change by PCDoc was interrupted (power cut or crash). Check it on the History page.</value></data>
   <data name="Nav.Diagnostic" xml:space="preserve"><value>Diagnostics</value></data>
   <data name="Module.diagnostic" xml:space="preserve"><value>Diagnostics</value></data>
+  <data name="Nav.Cleanup" xml:space="preserve"><value>Cleanup</value></data>
+  <data name="Module.cleanup" xml:space="preserve"><value>Cleanup</value></data>
 </root>

@@ -41,6 +41,7 @@ public sealed partial class ShellViewModel : ObservableObject
         new(PageId.Bilan, "Nav.Bilan", ""),
         new(PageId.System, "Nav.System", ""),
         new(PageId.Diagnostic, "Nav.Diagnostic", "\uE9D9"),
+        new(PageId.Cleanup, "Nav.Cleanup", "\uE74D"),
         new(PageId.History, "Nav.History", "\uE81C"),
         new(PageId.Settings, "Nav.Settings", ""),
     ];

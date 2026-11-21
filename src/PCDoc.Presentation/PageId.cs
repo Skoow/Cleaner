@@ -6,6 +6,7 @@ public enum PageId
     Bilan,
     System,
     Diagnostic,
+    Cleanup,
     History,
     Settings,
 }

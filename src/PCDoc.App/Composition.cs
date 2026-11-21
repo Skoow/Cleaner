@@ -22,6 +22,8 @@ using PCDoc.Modules.System.Fixes;
 using PCDoc.Modules.Diagnostic;
 using PCDoc.Modules.Diagnostic.Repairs;
 using PCDoc.Presentation.Diagnostic;
+using PCDoc.Modules.Cleanup;
+using PCDoc.Presentation.Cleanup;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -81,6 +83,16 @@ internal static class Composition
         services.AddSingleton(sp => new RepairFixer(sp.GetRequiredService<IProcessRunner>()));
         services.AddSingleton<IFixer>(sp => sp.GetRequiredService<RepairFixer>());
 
+        // Nettoyage (v0.4).
+        services.AddSingleton<IFileSystem, CleanupFileSystem>();
+        services.AddSingleton<IRecycleBin, RecycleBin>();
+        services.AddSingleton(sp => new CleanupEngine(CleanupCatalog.Default, sp.GetRequiredService<IFileSystem>(),
+            sp.GetRequiredService<IRecycleBin>(), sp.GetRequiredService<IFileProbe>(), sp.GetRequiredService<IUserProfileResolver>(),
+            sp.GetRequiredService<IClock>()));
+        services.AddSingleton<ICleanupSource>(sp => sp.GetRequiredService<CleanupEngine>());
+        services.AddSingleton<IScanner>(sp => new CleanupScanner(sp.GetRequiredService<ICleanupSource>()));
+        services.AddSingleton<IFixer>(sp => new CleanupFixer(sp.GetRequiredService<CleanupEngine>(), sp.GetRequiredService<IProcessRunner>()));
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
@@ -119,6 +131,8 @@ internal static class Composition
             NewFixPanel(services), Mode(services)),
         PageId.Diagnostic => new DiagnosticPageViewModel(services.GetRequiredService<IDiagnosticSource>(),
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services)),
+        PageId.Cleanup => new CleanupPageViewModel(services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<ILocalizer>(),
+            NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],
         _ => new SettingsPageViewModel(

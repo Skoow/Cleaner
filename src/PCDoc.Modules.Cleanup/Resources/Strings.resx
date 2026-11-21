@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.cleanup" xml:space="preserve"><value>Cleanup</value></data>
+  <data name="Cleanup.windows-temp.Title" xml:space="preserve"><value>Windows temporary files</value></data>
+  <data name="Cleanup.windows-temp.Explanation" xml:space="preserve"><value>Files left by installations and updates. Files from the last 24 hours are kept.</value></data>
+  <data name="Cleanup.user-temp.Title" xml:space="preserve"><value>Your temporary files</value></data>
+  <data name="Cleanup.user-temp.Explanation" xml:space="preserve"><value>Files left by programs in your temporary folder. Files from the last 24 hours are kept.</value></data>
+  <data name="Cleanup.wu-download.Title" xml:space="preserve"><value>Downloaded Windows updates</value></data>
+  <data name="Cleanup.wu-download.Explanation" xml:space="preserve"><value>Installation files of updates already installed. Windows downloads them again if needed.</value></data>
+  <data name="Cleanup.delivery-optimization.Title" xml:space="preserve"><value>Delivery Optimization cache</value></data>
+  <data name="Cleanup.delivery-optimization.Explanation" xml:space="preserve"><value>Copies of updates kept to share them with other PCs.</value></data>
+  <data name="Cleanup.error-reports.Title" xml:space="preserve"><value>Error reports</value></data>
+  <data name="Cleanup.error-reports.Explanation" xml:space="preserve"><value>Reports kept after program crashes.</value></data>
+  <data name="Cleanup.crash-dumps.Title" xml:space="preserve"><value>Crash dumps</value></data>
+  <data name="Cleanup.crash-dumps.Explanation" xml:space="preserve"><value>Memory copies made during blue screens. Keep them if you want to analyse a recent blue screen.</value></data>
+  <data name="Cleanup.shader-caches.Title" xml:space="preserve"><value>Graphics caches (DirectX, NVIDIA, AMD)</value></data>
+  <data name="Cleanup.shader-caches.Explanation" xml:space="preserve"><value>Rebuilt automatically; games may load a little slower the first time.</value></data>
+  <data name="Cleanup.chrome-cache.Title" xml:space="preserve"><value>Chrome cache</value></data>
+  <data name="Cleanup.chrome-cache.Explanation" xml:space="preserve"><value>Copies of visited pages. Your history, passwords and sessions are kept. Close Chrome for a complete cleanup.</value></data>
+  <data name="Cleanup.edge-cache.Title" xml:space="preserve"><value>Edge cache</value></data>
+  <data name="Cleanup.edge-cache.Explanation" xml:space="preserve"><value>Copies of visited pages. Your history, passwords and sessions are kept. Close Edge for a complete cleanup.</value></data>
+  <data name="Cleanup.firefox-cache.Title" xml:space="preserve"><value>Firefox cache</value></data>
+  <data name="Cleanup.firefox-cache.Explanation" xml:space="preserve"><value>Copies of visited pages. Your history, passwords and sessions are kept. Close Firefox for a complete cleanup.</value></data>
+  <data name="Cleanup.recycle-bin.Title" xml:space="preserve"><value>Recycle Bin</value></data>
+  <data name="Cleanup.recycle-bin.Explanation" xml:space="preserve"><value>Files you deleted. Emptying the Recycle Bin is permanent: check it first.</value></data>
+  <data name="Cleanup.component-store.Title" xml:space="preserve"><value>Old Windows updates</value></data>
+  <data name="Cleanup.component-store.Explanation" xml:space="preserve"><value>Removes old versions of components replaced by updates (DISM). Takes several minutes; the updates can no longer be uninstalled afterwards.</value></data>
+  <data name="Finding.Cleanup.Title" xml:space="preserve"><value>{0}: {1:0.#} GB can be freed</value></data>
+  <data name="Size.MB" xml:space="preserve"><value>{0:0} MB</value></data>
+  <data name="Size.GB" xml:space="preserve"><value>{0:0.#} GB</value></data>
+  <data name="Cleanup.Title" xml:space="preserve"><value>Cleanup</value></data>
+  <data name="Cleanup.Intro" xml:space="preserve"><value>Choose what to remove. Only temporary files and caches are deleted; your documents are never touched.</value></data>
+  <data name="Cleanup.Analyze" xml:space="preserve"><value>Analyze</value></data>
+  <data name="Cleanup.CleanSelected" xml:space="preserve"><value>Clean the selection</value></data>
+  <data name="Cleanup.Total" xml:space="preserve"><value>Selected: {0}</value></data>
+  <data name="Cleanup.Tab.Categories" xml:space="preserve"><value>What can be cleaned</value></data>
+  <data name="Cleanup.Tab.BigFiles" xml:space="preserve"><value>Big files</value></data>
+  <data name="Cleanup.BigFilesIntro" xml:space="preserve"><value>The 30 biggest files (over 500 MB) in your Downloads, Desktop, Documents and Videos. PCDoc never deletes them: decide for yourself.</value></data>
+  <data name="Cleanup.CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="Column.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Column.Size" xml:space="preserve"><value>Size</value></data>
+  <data name="Column.Risk" xml:space="preserve"><value>Risk</value></data>
+  <data name="Column.File" xml:space="preserve"><value>File</value></data>
+</root>

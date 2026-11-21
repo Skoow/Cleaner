@@ -1,0 +1,42 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Cleanup/Resources/Strings.tsv src/PCDoc.Modules.Cleanup/Resources
+Module.cleanup	Cleanup	Nettoyage
+Cleanup.windows-temp.Title	Windows temporary files	Fichiers temporaires de Windows
+Cleanup.windows-temp.Explanation	Files left by installations and updates. Files from the last 24 hours are kept.	Fichiers laissés par les installations et les mises à jour. Ceux des dernières 24 h sont conservés.
+Cleanup.user-temp.Title	Your temporary files	Vos fichiers temporaires
+Cleanup.user-temp.Explanation	Files left by programs in your temporary folder. Files from the last 24 hours are kept.	Fichiers laissés par les programmes dans votre dossier temporaire. Ceux des dernières 24 h sont conservés.
+Cleanup.wu-download.Title	Downloaded Windows updates	Mises à jour de Windows téléchargées
+Cleanup.wu-download.Explanation	Installation files of updates already installed. Windows downloads them again if needed.	Fichiers d'installation de mises à jour déjà installées. Windows les retélécharge si besoin.
+Cleanup.delivery-optimization.Title	Delivery Optimization cache	Cache de l'Optimisation de la distribution
+Cleanup.delivery-optimization.Explanation	Copies of updates kept to share them with other PCs.	Copies de mises à jour gardées pour les partager avec d'autres PC.
+Cleanup.error-reports.Title	Error reports	Rapports d'erreurs
+Cleanup.error-reports.Explanation	Reports kept after program crashes.	Rapports conservés après des plantages de programmes.
+Cleanup.crash-dumps.Title	Crash dumps	Vidages après plantage
+Cleanup.crash-dumps.Explanation	Memory copies made during blue screens. Keep them if you want to analyse a recent blue screen.	Copies de la mémoire faites lors des écrans bleus. Gardez-les si vous voulez analyser un écran bleu récent.
+Cleanup.shader-caches.Title	Graphics caches (DirectX, NVIDIA, AMD)	Caches graphiques (DirectX, NVIDIA, AMD)
+Cleanup.shader-caches.Explanation	Rebuilt automatically; games may load a little slower the first time.	Recréés automatiquement ; les jeux peuvent charger un peu plus lentement la première fois.
+Cleanup.chrome-cache.Title	Chrome cache	Cache de Chrome
+Cleanup.chrome-cache.Explanation	Copies of visited pages. Your history, passwords and sessions are kept. Close Chrome for a complete cleanup.	Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Chrome pour un nettoyage complet.
+Cleanup.edge-cache.Title	Edge cache	Cache d'Edge
+Cleanup.edge-cache.Explanation	Copies of visited pages. Your history, passwords and sessions are kept. Close Edge for a complete cleanup.	Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Edge pour un nettoyage complet.
+Cleanup.firefox-cache.Title	Firefox cache	Cache de Firefox
+Cleanup.firefox-cache.Explanation	Copies of visited pages. Your history, passwords and sessions are kept. Close Firefox for a complete cleanup.	Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Firefox pour un nettoyage complet.
+Cleanup.recycle-bin.Title	Recycle Bin	Corbeille
+Cleanup.recycle-bin.Explanation	Files you deleted. Emptying the Recycle Bin is permanent: check it first.	Les fichiers que vous avez supprimés. Vider la corbeille est définitif : vérifiez-la avant.
+Cleanup.component-store.Title	Old Windows updates	Anciennes mises à jour de Windows
+Cleanup.component-store.Explanation	Removes old versions of components replaced by updates (DISM). Takes several minutes; the updates can no longer be uninstalled afterwards.	Supprime les anciennes versions de composants remplacées par des mises à jour (DISM). Dure plusieurs minutes ; ces mises à jour ne pourront plus être désinstallées.
+Finding.Cleanup.Title	{0}: {1:0.#} GB can be freed	{0} : {1:0.#} Go peuvent être libérés
+Size.MB	{0:0} MB	{0:0} Mo
+Size.GB	{0:0.#} GB	{0:0.#} Go
+Cleanup.Title	Cleanup	Nettoyage
+Cleanup.Intro	Choose what to remove. Only temporary files and caches are deleted; your documents are never touched.	Choisissez ce qu'il faut supprimer. Seuls des fichiers temporaires et des caches sont effacés ; vos documents ne sont jamais touchés.
+Cleanup.Analyze	Analyze	Analyser
+Cleanup.CleanSelected	Clean the selection	Nettoyer la sélection
+Cleanup.Total	Selected: {0}	Sélection : {0}
+Cleanup.Tab.Categories	What can be cleaned	Ce qui peut être nettoyé
+Cleanup.Tab.BigFiles	Big files	Gros fichiers
+Cleanup.BigFilesIntro	The 30 biggest files (over 500 MB) in your Downloads, Desktop, Documents and Videos. PCDoc never deletes them: decide for yourself.	Les 30 plus gros fichiers (plus de 500 Mo) de vos Téléchargements, Bureau, Documents et Vidéos. PCDoc ne les supprime jamais : à vous de décider.
+Cleanup.CopyPath	Copy path	Copier le chemin
+Column.Category	Category	Catégorie
+Column.Size	Size	Taille
+Column.Risk	Risk	Risque
+Column.File	File	Fichier

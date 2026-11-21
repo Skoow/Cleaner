@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "note": "Catégories de nettoyage. root : %SystemRoot%, %ProgramData% ou %LOCALAPPDATA% (profil cible) ; « * » dans un segment = tous les sous-dossiers (profils de navigateur). risk : Safe | Conditional. Seuls les fichiers sont supprimés.",
+  "categories": [
+    { "id": "windows-temp", "roots": ["%SystemRoot%\\Temp"], "minAgeHours": 24, "risk": "Safe" },
+    { "id": "user-temp", "roots": ["%LOCALAPPDATA%\\Temp"], "minAgeHours": 24, "risk": "Safe" },
+    { "id": "wu-download", "roots": ["%SystemRoot%\\SoftwareDistribution\\Download"], "minAgeHours": 24, "risk": "Safe" },
+    { "id": "delivery-optimization", "roots": ["%SystemRoot%\\ServiceProfiles\\NetworkService\\AppData\\Local\\Microsoft\\Windows\\DeliveryOptimization\\Cache"], "minAgeHours": 0, "risk": "Safe" },
+    { "id": "error-reports", "roots": ["%ProgramData%\\Microsoft\\Windows\\WER\\ReportArchive", "%ProgramData%\\Microsoft\\Windows\\WER\\ReportQueue", "%LOCALAPPDATA%\\CrashDumps"], "minAgeHours": 0, "risk": "Safe" },
+    { "id": "crash-dumps", "roots": ["%SystemRoot%\\Minidump", "%SystemRoot%\\LiveKernelReports"], "files": ["%SystemRoot%\\MEMORY.DMP"], "minAgeHours": 0, "risk": "Conditional" },
+    { "id": "shader-caches", "roots": ["%LOCALAPPDATA%\\D3DSCache", "%LOCALAPPDATA%\\NVIDIA\\DXCache", "%LOCALAPPDATA%\\NVIDIA\\GLCache", "%LOCALAPPDATA%\\AMD\\DxCache", "%LOCALAPPDATA%\\AMD\\GLCache"], "minAgeHours": 0, "risk": "Safe" },
+    { "id": "chrome-cache", "roots": ["%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Cache\\Cache_Data", "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Code Cache"], "minAgeHours": 0, "risk": "Safe" },
+    { "id": "edge-cache", "roots": ["%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Cache\\Cache_Data", "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Code Cache"], "minAgeHours": 0, "risk": "Safe" },
+    { "id": "firefox-cache", "roots": ["%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cache2"], "minAgeHours": 0, "risk": "Safe" }
+  ]
+}

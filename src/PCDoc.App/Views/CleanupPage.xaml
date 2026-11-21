@@ -1,0 +1,74 @@
+<UserControl x:Class="PCDoc.App.Views.CleanupPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:c="clr-namespace:PCDoc.Presentation.Cleanup;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Right" Content="{app:T Cleanup.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T Cleanup.Analyze}" />
+      <TextBlock Text="{app:T Cleanup.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Cleanup.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <TabControl>
+      <TabItem Header="{app:T Cleanup.Tab.Categories}">
+        <DockPanel Margin="0,12,0,0">
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Cleanup.CleanSelected}" Command="{Binding CleanSelectedCommand}"
+                    AutomationProperties.Name="{app:T Cleanup.CleanSelected}" />
+            <TextBlock Text="{Binding TotalText}" VerticalAlignment="Center" FontWeight="SemiBold" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Categories}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type c:CategoryRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <TextBlock DockPanel.Dock="Right" Text="{Binding Size}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0" />
+                      <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                              Margin="12,0,0,0">
+                        <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                      </Border>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                          <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Cleanup.Tab.BigFiles}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Cleanup.BigFilesIntro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8" />
+          <DataGrid ItemsSource="{Binding BigFiles}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T Cleanup.Tab.BigFiles}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.File}" Binding="{Binding Path}" Width="4*" />
+              <DataGridTextColumn Header="{app:T Column.Size}" Binding="{Binding Size}" Width="Auto" />
+              <DataGridTemplateColumn Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate DataType="{x:Type c:BigFileRow}">
+                    <Button Content="{app:T Cleanup.CopyPath}" Margin="4,2" AutomationProperties.Name="{app:T Cleanup.CopyPath}"
+                            Command="{Binding DataContext.CopyPathCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

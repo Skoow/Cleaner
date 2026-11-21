@@ -128,4 +128,6 @@
   <data name="History.InterruptedBanner" xml:space="preserve"><value>Une modification de PCDoc a été interrompue (coupure de courant ou plantage). Vérifiez-la dans la page Historique.</value></data>
   <data name="Nav.Diagnostic" xml:space="preserve"><value>Diagnostic</value></data>
   <data name="Module.diagnostic" xml:space="preserve"><value>Diagnostic</value></data>
+  <data name="Nav.Cleanup" xml:space="preserve"><value>Nettoyage</value></data>
+  <data name="Module.cleanup" xml:space="preserve"><value>Nettoyage</value></data>
 </root>

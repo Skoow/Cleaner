@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Cleanup\PCDoc.Modules.Cleanup.csproj" />
+    <!-- Faux adaptateurs partagés avec les tests du module Système. -->
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeWmiQuery.cs" Link="Fakes\FakeWmiQuery.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeRegistryReader.cs" Link="Fakes\FakeRegistryReader.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeEventLogQuery.cs" Link="Fakes\FakeEventLogQuery.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeFileProbe.cs" Link="Fakes\FakeFileProbe.cs" />
+  </ItemGroup>
+</Project>

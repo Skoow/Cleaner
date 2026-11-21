@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.cleanup" xml:space="preserve"><value>Nettoyage</value></data>
+  <data name="Cleanup.windows-temp.Title" xml:space="preserve"><value>Fichiers temporaires de Windows</value></data>
+  <data name="Cleanup.windows-temp.Explanation" xml:space="preserve"><value>Fichiers laissés par les installations et les mises à jour. Ceux des dernières 24 h sont conservés.</value></data>
+  <data name="Cleanup.user-temp.Title" xml:space="preserve"><value>Vos fichiers temporaires</value></data>
+  <data name="Cleanup.user-temp.Explanation" xml:space="preserve"><value>Fichiers laissés par les programmes dans votre dossier temporaire. Ceux des dernières 24 h sont conservés.</value></data>
+  <data name="Cleanup.wu-download.Title" xml:space="preserve"><value>Mises à jour de Windows téléchargées</value></data>
+  <data name="Cleanup.wu-download.Explanation" xml:space="preserve"><value>Fichiers d'installation de mises à jour déjà installées. Windows les retélécharge si besoin.</value></data>
+  <data name="Cleanup.delivery-optimization.Title" xml:space="preserve"><value>Cache de l'Optimisation de la distribution</value></data>
+  <data name="Cleanup.delivery-optimization.Explanation" xml:space="preserve"><value>Copies de mises à jour gardées pour les partager avec d'autres PC.</value></data>
+  <data name="Cleanup.error-reports.Title" xml:space="preserve"><value>Rapports d'erreurs</value></data>
+  <data name="Cleanup.error-reports.Explanation" xml:space="preserve"><value>Rapports conservés après des plantages de programmes.</value></data>
+  <data name="Cleanup.crash-dumps.Title" xml:space="preserve"><value>Vidages après plantage</value></data>
+  <data name="Cleanup.crash-dumps.Explanation" xml:space="preserve"><value>Copies de la mémoire faites lors des écrans bleus. Gardez-les si vous voulez analyser un écran bleu récent.</value></data>
+  <data name="Cleanup.shader-caches.Title" xml:space="preserve"><value>Caches graphiques (DirectX, NVIDIA, AMD)</value></data>
+  <data name="Cleanup.shader-caches.Explanation" xml:space="preserve"><value>Recréés automatiquement ; les jeux peuvent charger un peu plus lentement la première fois.</value></data>
+  <data name="Cleanup.chrome-cache.Title" xml:space="preserve"><value>Cache de Chrome</value></data>
+  <data name="Cleanup.chrome-cache.Explanation" xml:space="preserve"><value>Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Chrome pour un nettoyage complet.</value></data>
+  <data name="Cleanup.edge-cache.Title" xml:space="preserve"><value>Cache d'Edge</value></data>
+  <data name="Cleanup.edge-cache.Explanation" xml:space="preserve"><value>Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Edge pour un nettoyage complet.</value></data>
+  <data name="Cleanup.firefox-cache.Title" xml:space="preserve"><value>Cache de Firefox</value></data>
+  <data name="Cleanup.firefox-cache.Explanation" xml:space="preserve"><value>Copies des pages visitées. Historique, mots de passe et connexions sont conservés. Fermez Firefox pour un nettoyage complet.</value></data>
+  <data name="Cleanup.recycle-bin.Title" xml:space="preserve"><value>Corbeille</value></data>
+  <data name="Cleanup.recycle-bin.Explanation" xml:space="preserve"><value>Les fichiers que vous avez supprimés. Vider la corbeille est définitif : vérifiez-la avant.</value></data>
+  <data name="Cleanup.component-store.Title" xml:space="preserve"><value>Anciennes mises à jour de Windows</value></data>
+  <data name="Cleanup.component-store.Explanation" xml:space="preserve"><value>Supprime les anciennes versions de composants remplacées par des mises à jour (DISM). Dure plusieurs minutes ; ces mises à jour ne pourront plus être désinstallées.</value></data>
+  <data name="Finding.Cleanup.Title" xml:space="preserve"><value>{0} : {1:0.#} Go peuvent être libérés</value></data>
+  <data name="Size.MB" xml:space="preserve"><value>{0:0} Mo</value></data>
+  <data name="Size.GB" xml:space="preserve"><value>{0:0.#} Go</value></data>
+  <data name="Cleanup.Title" xml:space="preserve"><value>Nettoyage</value></data>
+  <data name="Cleanup.Intro" xml:space="preserve"><value>Choisissez ce qu'il faut supprimer. Seuls des fichiers temporaires et des caches sont effacés ; vos documents ne sont jamais touchés.</value></data>
+  <data name="Cleanup.Analyze" xml:space="preserve"><value>Analyser</value></data>
+  <data name="Cleanup.CleanSelected" xml:space="preserve"><value>Nettoyer la sélection</value></data>
+  <data name="Cleanup.Total" xml:space="preserve"><value>Sélection : {0}</value></data>
+  <data name="Cleanup.Tab.Categories" xml:space="preserve"><value>Ce qui peut être nettoyé</value></data>
+  <data name="Cleanup.Tab.BigFiles" xml:space="preserve"><value>Gros fichiers</value></data>
+  <data name="Cleanup.BigFilesIntro" xml:space="preserve"><value>Les 30 plus gros fichiers (plus de 500 Mo) de vos Téléchargements, Bureau, Documents et Vidéos. PCDoc ne les supprime jamais : à vous de décider.</value></data>
+  <data name="Cleanup.CopyPath" xml:space="preserve"><value>Copier le chemin</value></data>
+  <data name="Column.Category" xml:space="preserve"><value>Catégorie</value></data>
+  <data name="Column.Size" xml:space="preserve"><value>Taille</value></data>
+  <data name="Column.Risk" xml:space="preserve"><value>Risque</value></data>
+  <data name="Column.File" xml:space="preserve"><value>Fichier</value></data>
+</root>
