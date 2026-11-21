@@ -45,6 +45,17 @@ public sealed class JsonSettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void SaveThenLoad_RoundTripsWindowPlacement()
+    {
+        var store = new JsonSettingsStore(FilePath, CultureInfo.InvariantCulture);
+        var settings = new AppSettings(AppLanguage.French, ThemeChoice.Light, new WindowPlacement(10, 20, 1100, 700, true));
+
+        store.Save(settings);
+
+        store.Load().Should().Be(settings);
+    }
+
+    [Fact]
     public void SaveThenLoad_RoundTrips()
     {
         var store = new JsonSettingsStore(FilePath, CultureInfo.InvariantCulture);

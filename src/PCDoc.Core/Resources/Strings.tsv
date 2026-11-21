@@ -13,3 +13,5 @@ Bilan.ModuleError	Incomplete analysis: {0}	Analyse incomplète : {0}
 Common.NotAvailable	Not available	Non disponible
 Common.Copy	Copy	Copier
 Common.Copied	Copied	Copié
+Error.Unexpected	Something went wrong. The details were written to the log; you can keep using PCDoc.	Un problème inattendu est survenu. Les détails ont été écrits dans le journal ; vous pouvez continuer à utiliser PCDoc.
+Common.Close	Close	Fermer

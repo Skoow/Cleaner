@@ -18,4 +18,6 @@
   <data name="Common.NotAvailable" xml:space="preserve"><value>Non disponible</value></data>
   <data name="Common.Copy" xml:space="preserve"><value>Copier</value></data>
   <data name="Common.Copied" xml:space="preserve"><value>Copié</value></data>
+  <data name="Error.Unexpected" xml:space="preserve"><value>Un problème inattendu est survenu. Les détails ont été écrits dans le journal ; vous pouvez continuer à utiliser PCDoc.</value></data>
+  <data name="Common.Close" xml:space="preserve"><value>Fermer</value></data>
 </root>

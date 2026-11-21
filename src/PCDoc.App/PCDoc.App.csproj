@@ -4,12 +4,24 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>PCDoc</AssemblyName>
+    <RootNamespace>PCDoc.App</RootNamespace>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\pcdoc.ico</ApplicationIcon>
+    <!-- WPF0001 : ThemeMode (thème Fluent) est marqué expérimental par Microsoft ; usage voulu (spec v2 §9). -->
+    <NoWarn>$(NoWarn);WPF0001;CA1859</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
     <ProjectReference Include="..\PCDoc.Infrastructure\PCDoc.Infrastructure.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.System\PCDoc.Modules.System.csproj" />
     <ProjectReference Include="..\PCDoc.Presentation\PCDoc.Presentation.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\pcdoc.ico" />
+    <None Include="..\..\LICENSE" Link="LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

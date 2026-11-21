@@ -1,0 +1,65 @@
+<Window x:Class="PCDoc.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="clr-namespace:PCDoc.App"
+        Title="PCDoc"
+        Icon="Assets/pcdoc.ico"
+        Width="1180" Height="760" MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="220" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <!-- Menu latéral : ListBox = navigation au clavier (flèches) et lecteurs d'écran. -->
+    <DockPanel Grid.Column="0" Margin="6,8,6,8">
+      <ListBox x:Name="SettingsNav" DockPanel.Dock="Bottom" BorderThickness="0" Background="Transparent"
+               AutomationProperties.Name="{app:T Nav.Settings}"
+               SelectionChanged="OnBottomNavChanged">
+        <ListBoxItem x:Name="SettingsItem" AutomationProperties.Name="{app:T Nav.Settings}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE713;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Settings}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+      </ListBox>
+      <ListBox x:Name="MainNav" BorderThickness="0" Background="Transparent"
+               AutomationProperties.Name="Menu"
+               SelectionChanged="OnMainNavChanged">
+        <ListBoxItem x:Name="BilanItem" AutomationProperties.Name="{app:T Nav.Bilan}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE9D9;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Bilan}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+        <ListBoxItem x:Name="SystemItem" AutomationProperties.Name="{app:T Nav.System}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.System}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+      </ListBox>
+    </DockPanel>
+
+    <DockPanel Grid.Column="1">
+      <!-- Bandeau d'erreur (remplace toute boîte de dialogue). -->
+      <Border DockPanel.Dock="Top" Margin="16,12,16,0" Padding="12,8" CornerRadius="6"
+              Background="{DynamicResource Pcdoc.Critical.Background}"
+              Visibility="{Binding ErrorBanner, Converter={StaticResource NotNullToVisibility}}"
+              AutomationProperties.LiveSetting="Assertive">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Content="{app:T Common.Close}" Command="{Binding DismissErrorCommand}"
+                  AutomationProperties.Name="{app:T Common.Close}" />
+          <TextBlock Text="{Binding ErrorBanner}" Foreground="{DynamicResource Pcdoc.Critical}"
+                     TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
+        </DockPanel>
+      </Border>
+      <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
+    </DockPanel>
+  </Grid>
+</Window>
