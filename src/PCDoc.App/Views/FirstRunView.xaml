@@ -1,0 +1,48 @@
+<UserControl x:Class="PCDoc.App.Views.FirstRunView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:s="clr-namespace:PCDoc.Core.Settings;assembly=PCDoc.Core"
+             xmlns:l="clr-namespace:PCDoc.Core.Localization;assembly=PCDoc.Core">
+  <!-- Assistant du premier lancement, affiché dans la fenêtre par-dessus les pages. -->
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Border Style="{StaticResource Pcdoc.Card}" MaxWidth="640" Margin="28" VerticalAlignment="Center" Padding="28">
+      <StackPanel>
+        <TextBlock Text="{app:T FirstRun.Title}" FontSize="24" FontWeight="SemiBold" />
+        <TextBlock Text="{app:T FirstRun.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,4,0,20" />
+
+        <TextBlock Text="{app:T Settings.Language}" Style="{StaticResource Pcdoc.SectionTitle}" />
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+          <RadioButton GroupName="frlang" Content="Français" Margin="0,0,16,0"
+                       IsChecked="{Binding Language, Converter={StaticResource Equals}, ConverterParameter={x:Static l:AppLanguage.French}}" />
+          <RadioButton GroupName="frlang" Content="English"
+                       IsChecked="{Binding Language, Converter={StaticResource Equals}, ConverterParameter={x:Static l:AppLanguage.English}}" />
+        </StackPanel>
+
+        <TextBlock Text="{app:T Settings.Mode}" Style="{StaticResource Pcdoc.SectionTitle}" />
+        <RadioButton GroupName="frmode" Margin="0,0,0,6" AutomationProperties.Name="{app:T Settings.Mode.Novice}"
+                     IsChecked="{Binding Mode, Converter={StaticResource Equals}, ConverterParameter={x:Static s:AppMode.Novice}}">
+          <TextBlock Text="{app:T FirstRun.ModeNovice}" TextWrapping="Wrap" />
+        </RadioButton>
+        <RadioButton GroupName="frmode" Margin="0,0,0,16" AutomationProperties.Name="{app:T Settings.Mode.Expert}"
+                     IsChecked="{Binding Mode, Converter={StaticResource Equals}, ConverterParameter={x:Static s:AppMode.Expert}}">
+          <TextBlock Text="{app:T FirstRun.ModeExpert}" TextWrapping="Wrap" />
+        </RadioButton>
+
+        <TextBlock Text="{app:T FirstRun.Protection}" Style="{StaticResource Pcdoc.SectionTitle}" />
+        <TextBlock Text="{app:T FirstRun.ProtectionOn}" TextWrapping="Wrap" Foreground="{DynamicResource Pcdoc.Ok}"
+                   Visibility="{Binding ProtectionEnabled, Converter={StaticResource BoolToVisibility}}" />
+        <DockPanel Visibility="{Binding ProtectionEnabled, Converter={StaticResource InverseBoolToVisibility}}">
+          <Button DockPanel.Dock="Right" Content="{app:T FirstRun.EnableProtection}" Command="{Binding EnableProtectionCommand}"
+                  AutomationProperties.Name="{app:T FirstRun.EnableProtection}" />
+          <TextBlock Text="{app:T FirstRun.ProtectionOff}" TextWrapping="Wrap" Margin="0,0,12,0" VerticalAlignment="Center" />
+        </DockPanel>
+        <TextBlock Text="{app:T FirstRun.ProtectionFailed}" Foreground="{DynamicResource Pcdoc.Critical}" Margin="0,6,0,0"
+                   Visibility="{Binding ProtectionFailed, Converter={StaticResource BoolToVisibility}}" />
+
+        <Button Content="{app:T FirstRun.Finish}" Command="{Binding FinishCommand}" HorizontalAlignment="Right" Margin="0,24,0,0"
+                Padding="24,8" IsDefault="True" AutomationProperties.Name="{app:T FirstRun.Finish}" />
+      </StackPanel>
+    </Border>
+  </ScrollViewer>
+</UserControl>

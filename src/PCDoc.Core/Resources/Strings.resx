@@ -123,4 +123,5 @@
   <data name="FirstRun.EnableProtection" xml:space="preserve"><value>Turn on</value></data>
   <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows refused to turn on system protection.</value></data>
   <data name="FirstRun.Finish" xml:space="preserve"><value>Start</value></data>
+  <data name="Bilan.FooterSafe" xml:space="preserve"><value>Fix all applies only safe changes (green). A restore point is created first.</value></data>
 </root>

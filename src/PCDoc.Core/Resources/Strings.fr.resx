@@ -123,4 +123,5 @@
   <data name="FirstRun.EnableProtection" xml:space="preserve"><value>Activer</value></data>
   <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows a refusé d'activer la protection du système.</value></data>
   <data name="FirstRun.Finish" xml:space="preserve"><value>Commencer</value></data>
+  <data name="Bilan.FooterSafe" xml:space="preserve"><value>« Tout corriger » n'applique que les modifications sûres (vertes). Un point de restauration est créé avant.</value></data>
 </root>

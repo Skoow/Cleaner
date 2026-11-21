@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- Nom du produit : défini UNE SEULE FOIS ici (spec v2 §0). -->
     <Product>PCDoc</Product>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>PCDoc contributors</Authors>
     <Copyright>Copyright © 2026 PCDoc contributors</Copyright>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>

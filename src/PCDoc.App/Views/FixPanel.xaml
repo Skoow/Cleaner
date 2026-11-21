@@ -1,0 +1,49 @@
+<UserControl x:Class="PCDoc.App.Views.FixPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:f="clr-namespace:PCDoc.Presentation.Fixing;assembly=PCDoc.Presentation">
+  <!-- Confirmation dans la page (jamais de boîte de dialogue). DataContext = FixConfirmationViewModel. -->
+  <StackPanel>
+    <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,12" BorderThickness="2"
+            BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+            Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}"
+            AutomationProperties.LiveSetting="Assertive" AutomationProperties.Name="{app:T Fix.Title}">
+      <StackPanel>
+        <TextBlock Text="{app:T Fix.Title}" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock Text="{app:T Fix.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,4,0,8" />
+        <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type f:FixItem}">
+              <DockPanel Margin="0,2">
+                <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}">
+                  <TextBlock Text="{Binding RiskLabel}" FontSize="12" FontWeight="SemiBold" />
+                </Border>
+                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="0,0,12,0" />
+              </DockPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <CheckBox Content="{app:T Fix.Acknowledge}" IsChecked="{Binding RiskAcknowledged}" Margin="0,10,0,0"
+                  AutomationProperties.Name="{app:T Fix.Acknowledge}"
+                  Visibility="{Binding NeedsStrongConfirmation, Converter={StaticResource BoolToVisibility}}" />
+        <Border Margin="0,10,0,0" Padding="10" CornerRadius="6" Background="{DynamicResource Pcdoc.Warning.Background}"
+                Visibility="{Binding AwaitingNoRestorePointConfirmation, Converter={StaticResource BoolToVisibility}}">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="{app:T Fix.ConfirmWithoutRestorePoint}" Command="{Binding ConfirmWithoutRestorePointCommand}" />
+            <TextBlock Text="{Binding RestorePointText}" TextWrapping="Wrap" Margin="0,0,12,0" VerticalAlignment="Center" />
+          </DockPanel>
+        </Border>
+        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+          <Button Content="{app:T Fix.Confirm}" Command="{Binding ConfirmCommand}" MinWidth="110" Margin="0,0,8,0"
+                  AutomationProperties.Name="{app:T Fix.Confirm}" />
+          <Button Content="{app:T Common.Cancel}" Command="{Binding CancelCommand}" AutomationProperties.Name="{app:T Common.Cancel}" />
+          <TextBlock Text="{app:T Fix.Running}" Margin="12,0,0,0" VerticalAlignment="Center"
+                     Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+    <TextBlock Text="{Binding ResultText}" Foreground="{DynamicResource Pcdoc.Ok}" TextWrapping="Wrap" Margin="0,0,0,8"
+               Visibility="{Binding ResultText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.LiveSetting="Polite" />
+  </StackPanel>
+</UserControl>

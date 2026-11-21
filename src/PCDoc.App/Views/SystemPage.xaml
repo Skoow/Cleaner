@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
              xmlns:sp="clr-namespace:PCDoc.Presentation.SystemPage;assembly=PCDoc.Presentation">
   <UserControl.Resources>
     <!-- Une carte : titre + icône, lignes libellé/valeur (pastille pour Windows 11), jauge, note. -->
@@ -90,6 +91,23 @@
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
             <DataGridTextColumn Header="{app:T Column.State}" Binding="{Binding StateLabel}" Width="Auto" />
+            <DataGridTemplateColumn Header="{app:T Column.Advice}" Width="Auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="{x:Type sp:AutorunRow}">
+                  <TextBlock Text="{Binding AdviceLabel}" ToolTip="{Binding AdviceReason}" AutomationProperties.HelpText="{Binding AdviceReason}" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Width="Auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="{x:Type sp:AutorunRow}">
+                  <Button Content="{Binding ToggleLabel}" Margin="4,2" AutomationProperties.Name="{Binding ToggleLabel}"
+                          Visibility="{Binding CanToggle, Converter={StaticResource BoolToVisibility}}"
+                          Command="{Binding DataContext.ToggleCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          CommandParameter="{Binding}" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTextColumn Header="{app:T Column.Command}" Binding="{Binding CommandLine}" Width="3*"
                                 FontFamily="{StaticResource Pcdoc.Mono}" />
           </DataGrid.Columns>
@@ -100,7 +118,10 @@
                         AutomationProperties.Name="{app:T Common.Copy}"
                         Command="{Binding DataContext.CopyDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         CommandParameter="{Binding}" />
-                <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding Details, Mode=OneWay}" AutomationProperties.Name="{app:T Column.Command}" />
+                <StackPanel>
+                  <TextBlock Text="{Binding AdviceReason}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                  <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding Details, Mode=OneWay}" AutomationProperties.Name="{app:T Column.Command}" />
+                </StackPanel>
               </DockPanel>
             </DataTemplate>
           </DataGrid.RowDetailsTemplate>
@@ -117,6 +138,8 @@
       <TextBlock DockPanel.Dock="Right" Text="{app:T System.ReadOnly}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Bottom" Margin="0,0,16,4" />
       <TextBlock Text="{app:T System.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
     </DockPanel>
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}"
+                Visibility="{Binding Fixes, Converter={StaticResource NotNullToVisibility}}" />
     <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
                  Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"
                  AutomationProperties.Name="{app:T System.Loading}" />

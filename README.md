@@ -9,14 +9,17 @@ optimiser, sécuriser et rendre confidentiel votre PC. Une seule fenêtre, aucun
 secure and de-track your PC. One window, no ads, no telemetry.
 
 ## État / Status
-Version 0.1 (prérelease) : informations système en lecture seule et Bilan. Aucune modification du PC.
-Version 0.1 (prerelease): read-only system information and health check. Nothing on the PC is changed.
+Version 0.2 (prérelease) : Bilan, informations système, et premières corrections sûres et annulables.
+Version 0.2 (prerelease): health check, system information and first safe, undoable fixes.
 
 ## Fonctions de la v0.1 / v0.1 features
 - **Bilan** : « Analyser mon PC », note sur 100, problèmes classés Critique / Attention / Info, détails techniques.
 - **Système** (lecture seule) : Windows, matériel, disques, compatibilité Windows 11, temps de démarrage,
   programmes au démarrage, tâches planifiées, services et pilotes avec vérification des signatures numériques.
-- **Paramètres** : français / anglais, thème clair / sombre / système, journal, effacement des données.
+- **Paramètres** : français / anglais, thème clair / sombre / système, mode novice / expert, journal, effacement des données.
+- **v0.2 — corrections sûres** : conseiller (sûr / selon l'usage / déconseillé / verrouillé), désactiver ou réactiver
+  programmes au démarrage, services et tâches, point de restauration avant chaque série, sauvegarde .reg,
+  page Historique pour tout annuler, assistant de premier lancement.
 
 Guide pas à pas (GitHub, téléchargement) : [docs/guide-debutant.md](docs/guide-debutant.md).
 Tests manuels : [docs/tests-manuels-v0.1.md](docs/tests-manuels-v0.1.md).

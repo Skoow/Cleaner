@@ -13,6 +13,12 @@ using PCDoc.Presentation;
 using PCDoc.Presentation.Bilan;
 using PCDoc.Presentation.SystemPage;
 using PCDoc.Presentation.Settings;
+using PCDoc.Presentation.Fixing;
+using PCDoc.Presentation.History;
+using PCDoc.Core.Fixing;
+using PCDoc.Infrastructure.Writes;
+using PCDoc.Modules.System.Advisor;
+using PCDoc.Modules.System.Fixes;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -49,10 +55,29 @@ internal static class Composition
             sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IFileProbe>(), sp.GetRequiredService<IUserProfileResolver>(),
             sp.GetRequiredService<ISignatureVerifier>(), sp.GetRequiredService<IScheduledTaskReader>(), sp.GetRequiredService<IServiceReader>()));
 
+        // Corrections (v0.2) : conseiller, correcteurs, points de restauration, journal d'annulation protégé.
+        services.AddSingleton<IConditionProbe>(sp => new ConditionProbe(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>()));
+        services.AddSingleton(sp => new AutorunAdvisor(AdvisorCatalog.Default, sp.GetRequiredService<IConditionProbe>()));
+        services.AddSingleton<IRegistryWriter, RegistryWriter>();
+        services.AddSingleton<IServiceControl, ServiceControl>();
+        services.AddSingleton<ITaskControl, TaskControl>();
+        services.AddSingleton<IBackupStore, BackupStore>();
+        services.AddSingleton<IRestorePointService, RestorePointService>();
+        services.AddSingleton<IProtectionService, ProtectionService>();
+        services.AddSingleton<IFixer>(sp => new AutorunToggleFixer(
+            sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryWriter>(), sp.GetRequiredService<IServiceControl>(),
+            sp.GetRequiredService<ITaskControl>(), sp.GetRequiredService<IBackupStore>(), () => DateTimeOffset.Now));
+        services.AddSingleton(sp => new UndoJournal(Path.Combine(SecureFolders.Backup, "undo.jsonl"), sp.GetRequiredService<IClock>()));
+        services.AddSingleton(sp => new FixPipeline(
+            sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
+
         services.AddSingleton<IScanner>(sp => new SystemScanner(
             sp.GetRequiredService<IInventorySource>(), sp.GetRequiredService<IBootSource>(), sp.GetRequiredService<IAutorunSource>(),
             sp.GetRequiredService<IClock>(),
-            (source, ex) => sp.GetRequiredService<Logger>().Warning(ex, "System scan source {Source} failed", source)));
+            (source, ex) => sp.GetRequiredService<Logger>().Warning(ex, "System scan source {Source} failed", source))
+        {
+            Advisor = sp.GetRequiredService<AutorunAdvisor>(),
+        });
         services.AddSingleton(sp => new BilanOrchestrator(
             sp.GetServices<IScanner>(), sp.GetRequiredService<IClock>(), BilanOrchestrator.DefaultPerModuleTimeout));
 
@@ -72,17 +97,29 @@ internal static class Composition
     {
         PageId.Bilan => new BilanPageViewModel(
             services.GetRequiredService<BilanOrchestrator>(), services.GetRequiredService<ILocalizer>(),
-            services.GetRequiredService<IClipboardService>()),
+            services.GetRequiredService<IClipboardService>(), NewFixPanel(services), Mode(services)),
         PageId.System => new SystemPageViewModel(
             services.GetRequiredService<IInventorySource>(), services.GetRequiredService<IBootSource>(),
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
-            services.GetRequiredService<IClipboardService>()),
+            services.GetRequiredService<IClipboardService>(), services.GetRequiredService<AutorunAdvisor>(),
+            NewFixPanel(services), Mode(services)),
+        PageId.History => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         _ => new SettingsPageViewModel(
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<ISettingsStore>(),
             services.GetRequiredService<IThemeApplier>(), services.GetRequiredService<IUserProfileResolver>(),
             services.GetRequiredService<IAppDataCleaner>(), services.GetRequiredService<IClipboardService>(),
             AppPaths.LogsDir, ReadLicense),
     };
+
+    /// <summary>Mode actuel, relu à chaque fois (il peut changer dans les Paramètres).</summary>
+    private static Func<AppMode> Mode(IServiceProvider services)
+    {
+        var store = services.GetRequiredService<ISettingsStore>();
+        return () => store.Load().Mode;
+    }
+
+    private static FixConfirmationViewModel NewFixPanel(IServiceProvider services) =>
+        new(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(), Mode(services));
 
     /// <summary>Texte de la licence GPL-3.0 livré à côté de l'exécutable (affiché dans la fenêtre).</summary>
     private static string? ReadLicense()

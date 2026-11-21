@@ -118,3 +118,4 @@ FirstRun.ProtectionOff	Off: Windows cannot create restore points. Turning it on 
 FirstRun.EnableProtection	Turn on	Activer
 FirstRun.ProtectionFailed	Windows refused to turn on system protection.	Windows a refusé d'activer la protection du système.
 FirstRun.Finish	Start	Commencer
+Bilan.FooterSafe	Fix all applies only safe changes (green). A restore point is created first.	« Tout corriger » n'applique que les modifications sûres (vertes). Un point de restauration est créé avant.

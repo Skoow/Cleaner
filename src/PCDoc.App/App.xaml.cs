@@ -48,6 +48,16 @@ public partial class App : Application
         var shell = _services.GetRequiredService<ShellViewModel>();
         HookErrors(shell, localizer);
 
+        if (!settings.FirstRunCompleted)
+        {
+            shell.ShowFirstRun(new FirstRunViewModel(localizer, store, _services.GetRequiredService<IProtectionService>()));
+        }
+
+        foreach (var interrupted in _services.GetRequiredService<PCDoc.Core.Fixing.UndoJournal>().Interrupted())
+        {
+            _logger.Warning("Interrupted change found at startup: {Kind} {Finding}", interrupted.Kind, interrupted.FindingId);
+        }
+
         var window = new MainWindow(shell, store, _services.GetRequiredService<IAppDataCleaner>());
         MainWindow = window;
         window.Show();

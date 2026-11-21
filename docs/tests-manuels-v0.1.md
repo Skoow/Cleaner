@@ -47,3 +47,13 @@ Cochez chaque case. Notez tout ce qui ne va pas (capture d'écran + le fichier d
 
 ## Version ARM64
 - [ ] Si un PC à processeur Snapdragon est disponible : mêmes vérifications avec la version `win-arm64`.
+
+## v0.2 — corrections (à faire dans une machine virtuelle d'abord)
+- [ ] Premier lancement : l'assistant s'affiche (langue, mode, protection du système) ; « Activer » active la protection.
+- [ ] Bilan : « Corriger » et « Tout corriger (sûr uniquement) » ouvrent une confirmation dans la page, avec la liste exacte.
+- [ ] Après confirmation : un point de restauration apparaît dans Windows (rstrui) ou PCDoc indique qu'un point récent est réutilisé.
+- [ ] Le service ou programme est réellement désactivé (Gestionnaire des tâches → Démarrage, services.msc).
+- [ ] Un fichier .reg est créé dans `C:\ProgramData\PCDoc\backup` ; ce dossier n'est pas lisible par un compte standard.
+- [ ] Historique : « Annuler » remet l'élément dans son état d'origine.
+- [ ] Mode novice : aucune action 🔴 proposée ; mode expert (avec confirmation) : 🔴 proposées, case « Je comprends le risque » obligatoire ; 🔒 jamais.
+- [ ] Coupure pendant une correction (éteindre la VM au mauvais moment) : au redémarrage, l'Historique signale la modification interrompue.

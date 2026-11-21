@@ -6,6 +6,8 @@
         xmlns:sp="clr-namespace:PCDoc.Presentation.SystemPage;assembly=PCDoc.Presentation"
         xmlns:b="clr-namespace:PCDoc.Presentation.Bilan;assembly=PCDoc.Presentation"
         xmlns:st="clr-namespace:PCDoc.Presentation.Settings;assembly=PCDoc.Presentation"
+        xmlns:hi="clr-namespace:PCDoc.Presentation.History;assembly=PCDoc.Presentation"
+        xmlns:pr="clr-namespace:PCDoc.Presentation;assembly=PCDoc.Presentation"
         Title="PCDoc"
         Icon="Assets/pcdoc.ico"
         Width="1180" Height="760" MinWidth="960" MinHeight="600"
@@ -16,6 +18,8 @@
     <DataTemplate DataType="{x:Type sp:SystemPageViewModel}"><views:SystemPage /></DataTemplate>
     <DataTemplate DataType="{x:Type b:BilanPageViewModel}"><views:BilanPage /></DataTemplate>
     <DataTemplate DataType="{x:Type st:SettingsPageViewModel}"><views:SettingsPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type hi:HistoryPageViewModel}"><views:HistoryPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type pr:FirstRunViewModel}"><views:FirstRunView /></DataTemplate>
   </Window.Resources>
 
   <Grid>
@@ -54,6 +58,12 @@
             <TextBlock Text="{app:T Nav.System}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
+        <ListBoxItem x:Name="HistoryItem" AutomationProperties.Name="{app:T Nav.History}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE81C;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.History}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
       </ListBox>
     </DockPanel>
 
@@ -72,5 +82,11 @@
       </Border>
       <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
     </DockPanel>
+
+    <!-- Assistant du premier lancement : couvre la fenêtre jusqu'à « Commencer ». -->
+    <Border Grid.ColumnSpan="2" Background="{DynamicResource ApplicationBackgroundBrush}"
+            Visibility="{Binding FirstRun, Converter={StaticResource NotNullToVisibility}}">
+      <ContentControl Content="{Binding FirstRun}" Focusable="False" />
+    </Border>
   </Grid>
 </Window>

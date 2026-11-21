@@ -42,6 +42,32 @@
         </DockPanel>
       </Border>
 
+      <!-- Mode novice / expert (passer en expert demande une confirmation dans la page) -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <StackPanel>
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+              <RadioButton GroupName="mode" Content="{app:T Settings.Mode.Novice}" Margin="0,0,16,0" Command="{Binding SetNoviceCommand}"
+                           IsChecked="{Binding IsExpert, Mode=OneWay, Converter={StaticResource Equals}, ConverterParameter=False}" />
+              <RadioButton GroupName="mode" Content="{app:T Settings.Mode.Expert}" Command="{Binding RequestExpertCommand}"
+                           IsChecked="{Binding IsExpert, Mode=OneWay}" />
+            </StackPanel>
+            <StackPanel>
+              <TextBlock Text="{app:T Settings.Mode}" FontSize="14" />
+              <TextBlock Text="{app:T Settings.ModeHint}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+            </StackPanel>
+          </DockPanel>
+          <Border Margin="0,12,0,0" Padding="12" CornerRadius="6" Background="{DynamicResource Pcdoc.Warning.Background}"
+                  Visibility="{Binding ConfirmingExpert, Converter={StaticResource BoolToVisibility}}">
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Content="{app:T Common.Cancel}" Command="{Binding CancelExpertCommand}" Margin="8,0,0,0" />
+              <Button DockPanel.Dock="Right" Content="{app:T Settings.ExpertYes}" Command="{Binding ConfirmExpertCommand}" />
+              <TextBlock Text="{app:T Settings.ExpertConfirm}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
+            </DockPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
       <!-- Compte analysé -->
       <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
         <StackPanel>

@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
              xmlns:b="clr-namespace:PCDoc.Presentation.Bilan;assembly=PCDoc.Presentation">
 
   <DockPanel Margin="28,20,28,20">
@@ -36,6 +37,8 @@
       <TextBlock DockPanel.Dock="Right" Text="{Binding CompletedText}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Bottom" Margin="0,0,16,4" />
       <TextBlock Text="{app:T Nav.Bilan}" Style="{StaticResource Pcdoc.PageTitle}" />
     </DockPanel>
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}"
+                        Visibility="{Binding Fixes, Converter={StaticResource NotNullToVisibility}}" />
 
     <Grid>
       <!-- 1. Avant analyse -->
@@ -113,10 +116,10 @@
           <DockPanel>
             <Button DockPanel.Dock="Right" Content="{app:T Bilan.CopyReport}" Command="{Binding CopyReportCommand}"
                     AutomationProperties.Name="{app:T Bilan.CopyReport}" />
-            <Button DockPanel.Dock="Right" Content="{app:T Bilan.FixAllSafe}" Margin="0,0,8,0" IsEnabled="False"
+            <Button DockPanel.Dock="Right" Content="{app:T Bilan.FixAllSafe}" Margin="0,0,8,0" Command="{Binding FixAllCommand}"
+                    AutomationProperties.Name="{app:T Bilan.FixAllSafe}"
                     Visibility="{Binding AnyFixAvailable, Converter={StaticResource BoolToVisibility}}" />
-            <TextBlock Text="{app:T Bilan.FooterNoFix}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center"
-                       Visibility="{Binding AnyFixAvailable, Converter={StaticResource InverseBoolToVisibility}}" />
+            <TextBlock Text="{app:T Bilan.FooterSafe}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" TextWrapping="Wrap" />
           </DockPanel>
         </Border>
 
@@ -175,7 +178,10 @@
                     <Expander IsExpanded="{Binding IsExpanded}" Padding="12,8" AutomationProperties.Name="{Binding AccessibleName}">
                       <Expander.Header>
                         <DockPanel>
-                          <Button DockPanel.Dock="Right" Content="{app:T Bilan.Fix}" Margin="8,0,0,0" IsEnabled="False"
+                          <Button DockPanel.Dock="Right" Content="{app:T Bilan.Fix}" Margin="8,0,0,0"
+                                  AutomationProperties.Name="{app:T Bilan.Fix}"
+                                  Command="{Binding DataContext.FixCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  CommandParameter="{Binding}"
                                   Visibility="{Binding ShowFixButton, Converter={StaticResource BoolToVisibility}}" />
                           <Border DockPanel.Dock="Left" Style="{StaticResource Pcdoc.Pill}" Margin="0,0,12,0"
                                   Background="{Binding Severity, Converter={StaticResource SeverityBackground}}">

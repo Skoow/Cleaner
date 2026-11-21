@@ -40,7 +40,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        _shell.NavigateCommand.Execute(MainNav.SelectedItem == SystemItem ? PageId.System : PageId.Bilan);
+        _shell.NavigateCommand.Execute(
+            MainNav.SelectedItem == SystemItem ? PageId.System
+            : MainNav.SelectedItem == HistoryItem ? PageId.History
+            : PageId.Bilan);
     }
 
     private void OnBottomNavChanged(object sender, SelectionChangedEventArgs e)
@@ -59,6 +62,7 @@ public partial class MainWindow : Window
         {
             PageId.Bilan => BilanItem,
             PageId.System => SystemItem,
+            PageId.History => HistoryItem,
             _ => null,
         };
         SettingsNav.SelectedItem = _shell.CurrentPage == PageId.Settings ? SettingsItem : null;
