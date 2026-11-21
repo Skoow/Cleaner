@@ -4,7 +4,12 @@ using PCDoc.Core.Localization;
 namespace PCDoc.Core.Settings;
 
 /// <summary>Paramètres de l'utilisateur.</summary>
-public sealed record AppSettings(AppLanguage Language, ThemeChoice Theme, WindowPlacement? Window = null)
+public sealed record AppSettings(
+    AppLanguage Language,
+    ThemeChoice Theme,
+    WindowPlacement? Window = null,
+    AppMode Mode = AppMode.Novice,
+    bool FirstRunCompleted = false)
 {
     /// <summary>Français si Windows est en français, sinon anglais ; thème du système.</summary>
     public static AppSettings DefaultsFor(CultureInfo uiCulture)

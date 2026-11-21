@@ -31,7 +31,7 @@ public sealed class JsonSettingsStore(string filePath, CultureInfo uiCulture) : 
             }
 
             var loaded = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(filePath), Options);
-            return loaded is not null && Enum.IsDefined(loaded.Language) && Enum.IsDefined(loaded.Theme)
+            return loaded is not null && Enum.IsDefined(loaded.Language) && Enum.IsDefined(loaded.Theme) && Enum.IsDefined(loaded.Mode)
                 ? loaded
                 : defaults;
         }

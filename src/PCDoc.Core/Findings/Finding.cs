@@ -9,6 +9,6 @@ public sealed record Finding(
     LocalizedText Explanation,
     string TechnicalDetails,
     bool FixAvailable = false,
-    FixRisk FixRisk = FixRisk.Safe,
+    RiskLevel Risk = RiskLevel.Safe,
     bool Reversible = true,
     string? EstimatedGain = null);
