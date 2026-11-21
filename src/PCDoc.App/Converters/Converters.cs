@@ -84,3 +84,45 @@ public sealed class BadgeToBrushConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+/// <summary>Note 0–100 → arc de cercle (anneau de 120 px, épaisseur 10).</summary>
+public sealed class ScoreToArcConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var score = Math.Clamp(value is int s ? s : 0, 0, 100);
+        const double Center = 60, Radius = 50;
+        if (score >= 100)
+        {
+            return new System.Windows.Media.EllipseGeometry(new Point(Center, Center), Radius, Radius);
+        }
+
+        var angle = score / 100.0 * 2 * Math.PI;
+        var start = new Point(Center, Center - Radius);
+        var end = new Point(Center + (Radius * Math.Sin(angle)), Center - (Radius * Math.Cos(angle)));
+        var figure = new System.Windows.Media.PathFigure { StartPoint = start, IsClosed = false };
+        figure.Segments.Add(new System.Windows.Media.ArcSegment(end, new Size(Radius, Radius), 0, score > 50,
+            System.Windows.Media.SweepDirection.Clockwise, true));
+        var geometry = new System.Windows.Media.PathGeometry([figure]);
+        geometry.Freeze();
+        return geometry;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+/// <summary>Note → couleur (≥ 80 vert, 50–79 orange, &lt; 50 rouge).</summary>
+public sealed class ScoreToBrushConverter : IValueConverter
+{
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Application.Current.TryFindResource((value is int s ? s : 0) switch
+        {
+            >= 80 => "Pcdoc.Ok",
+            >= 50 => "Pcdoc.Warning",
+            _ => "Pcdoc.Critical",
+        });
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}

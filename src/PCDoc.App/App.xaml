@@ -15,6 +15,8 @@
       <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibility" />
       <conv:EqualsConverter x:Key="Equals" />
       <conv:RatioToLengthConverter x:Key="RatioToLength" />
+      <conv:ScoreToArcConverter x:Key="ScoreToArc" />
+      <conv:ScoreToBrushConverter x:Key="ScoreToBrush" />
       <conv:BadgeToBrushConverter x:Key="BadgeBrush" />
       <conv:BadgeToBrushConverter x:Key="BadgeBackground" Suffix=".Background" />
     </ResourceDictionary>

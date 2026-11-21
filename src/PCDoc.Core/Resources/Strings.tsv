@@ -15,3 +15,29 @@ Common.Copy	Copy	Copier
 Common.Copied	Copied	Copié
 Error.Unexpected	Something went wrong. The details were written to the log; you can keep using PCDoc.	Un problème inattendu est survenu. Les détails ont été écrits dans le journal ; vous pouvez continuer à utiliser PCDoc.
 Common.Close	Close	Fermer
+Module.system	System	Système
+Bilan.Hero.Title	Let's check your PC	Vérifions l'état de votre PC
+Bilan.Hero.Text	The analysis reads Windows information without changing anything. It takes less than a minute.	L'analyse lit les informations de Windows sans rien modifier. Elle dure moins d'une minute.
+Bilan.Analyze	Analyze my PC	Analyser mon PC
+Bilan.AnalyzeAgain	Analyze again	Analyser à nouveau
+Bilan.Cancel	Cancel	Annuler
+Bilan.NoAnalysis	No analysis during this session	Aucune analyse pendant cette session
+Bilan.Running	Analysis in progress…	Analyse en cours…
+Bilan.StepDone	Done	Terminé
+Bilan.StepRunning	In progress	En cours
+Bilan.Completed	Analysis finished at {0:HH:mm} · {1:0} s	Analyse terminée à {0:HH:mm} · {1:0} s
+Bilan.Count.Critical	{0} critical	{0} critique(s)
+Bilan.Count.Warning	{0} warning(s)	{0} attention
+Bilan.Count.Info	{0} info	{0} info
+Bilan.ScoreOutOf	out of 100	sur 100
+Bilan.ScoreAlt	Score {0} out of 100: {1}	Note {0} sur 100 : {1}
+Bilan.AllModules	All	Tous
+Bilan.FilterLabel	Filter by module	Filtrer par module
+Bilan.TechDetails	Technical details · module {0}	Détails techniques · module {0}
+Bilan.FooterNoFix	Automatic fixes arrive in the next version. Nothing was changed on your PC.	Les corrections automatiques arrivent dans la prochaine version. Rien n'a été modifié sur votre PC.
+Bilan.CopyReport	Copy report	Copier le rapport
+Bilan.Fix	Fix	Corriger
+Bilan.FixAllSafe	Fix all (safe only)	Tout corriger (sûr uniquement)
+Bilan.Empty	No problem found. Your PC is in good condition.	Aucun problème trouvé. Votre PC est en bon état.
+Bilan.ReportHeader	{0} report {1} — {2:g}	Rapport {0} {1} — {2:g}
+Bilan.ShowDetails	Show details	Afficher les détails

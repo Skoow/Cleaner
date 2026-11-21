@@ -20,4 +20,30 @@
   <data name="Common.Copied" xml:space="preserve"><value>Copié</value></data>
   <data name="Error.Unexpected" xml:space="preserve"><value>Un problème inattendu est survenu. Les détails ont été écrits dans le journal ; vous pouvez continuer à utiliser PCDoc.</value></data>
   <data name="Common.Close" xml:space="preserve"><value>Fermer</value></data>
+  <data name="Module.system" xml:space="preserve"><value>Système</value></data>
+  <data name="Bilan.Hero.Title" xml:space="preserve"><value>Vérifions l'état de votre PC</value></data>
+  <data name="Bilan.Hero.Text" xml:space="preserve"><value>L'analyse lit les informations de Windows sans rien modifier. Elle dure moins d'une minute.</value></data>
+  <data name="Bilan.Analyze" xml:space="preserve"><value>Analyser mon PC</value></data>
+  <data name="Bilan.AnalyzeAgain" xml:space="preserve"><value>Analyser à nouveau</value></data>
+  <data name="Bilan.Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Bilan.NoAnalysis" xml:space="preserve"><value>Aucune analyse pendant cette session</value></data>
+  <data name="Bilan.Running" xml:space="preserve"><value>Analyse en cours…</value></data>
+  <data name="Bilan.StepDone" xml:space="preserve"><value>Terminé</value></data>
+  <data name="Bilan.StepRunning" xml:space="preserve"><value>En cours</value></data>
+  <data name="Bilan.Completed" xml:space="preserve"><value>Analyse terminée à {0:HH:mm} · {1:0} s</value></data>
+  <data name="Bilan.Count.Critical" xml:space="preserve"><value>{0} critique(s)</value></data>
+  <data name="Bilan.Count.Warning" xml:space="preserve"><value>{0} attention</value></data>
+  <data name="Bilan.Count.Info" xml:space="preserve"><value>{0} info</value></data>
+  <data name="Bilan.ScoreOutOf" xml:space="preserve"><value>sur 100</value></data>
+  <data name="Bilan.ScoreAlt" xml:space="preserve"><value>Note {0} sur 100 : {1}</value></data>
+  <data name="Bilan.AllModules" xml:space="preserve"><value>Tous</value></data>
+  <data name="Bilan.FilterLabel" xml:space="preserve"><value>Filtrer par module</value></data>
+  <data name="Bilan.TechDetails" xml:space="preserve"><value>Détails techniques · module {0}</value></data>
+  <data name="Bilan.FooterNoFix" xml:space="preserve"><value>Les corrections automatiques arrivent dans la prochaine version. Rien n'a été modifié sur votre PC.</value></data>
+  <data name="Bilan.CopyReport" xml:space="preserve"><value>Copier le rapport</value></data>
+  <data name="Bilan.Fix" xml:space="preserve"><value>Corriger</value></data>
+  <data name="Bilan.FixAllSafe" xml:space="preserve"><value>Tout corriger (sûr uniquement)</value></data>
+  <data name="Bilan.Empty" xml:space="preserve"><value>Aucun problème trouvé. Votre PC est en bon état.</value></data>
+  <data name="Bilan.ReportHeader" xml:space="preserve"><value>Rapport {0} {1} — {2:g}</value></data>
+  <data name="Bilan.ShowDetails" xml:space="preserve"><value>Afficher les détails</value></data>
 </root>

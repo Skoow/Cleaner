@@ -9,7 +9,11 @@ using PCDoc.Modules.System.Autoruns;
 using PCDoc.Modules.System.Boot;
 using PCDoc.Modules.System.Inventory;
 using PCDoc.Presentation;
+using PCDoc.Presentation.Bilan;
 using PCDoc.Presentation.SystemPage;
+using PCDoc.Core.Bilan;
+using PCDoc.Core.Modules;
+using PCDoc.Modules.System;
 using Serilog.Core;
 
 namespace PCDoc.App;
@@ -43,6 +47,13 @@ internal static class Composition
             sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IFileProbe>(), sp.GetRequiredService<IUserProfileResolver>(),
             sp.GetRequiredService<ISignatureVerifier>(), sp.GetRequiredService<IScheduledTaskReader>(), sp.GetRequiredService<IServiceReader>()));
 
+        services.AddSingleton<IScanner>(sp => new SystemScanner(
+            sp.GetRequiredService<IInventorySource>(), sp.GetRequiredService<IBootSource>(), sp.GetRequiredService<IAutorunSource>(),
+            sp.GetRequiredService<IClock>(),
+            (source, ex) => sp.GetRequiredService<Logger>().Warning(ex, "System scan source {Source} failed", source)));
+        services.AddSingleton(sp => new BilanOrchestrator(
+            sp.GetServices<IScanner>(), sp.GetRequiredService<IClock>(), BilanOrchestrator.DefaultPerModuleTimeout));
+
         // Interface.
         services.AddSingleton<ThemeApplier>();
         services.AddSingleton<IThemeApplier>(sp => sp.GetRequiredService<ThemeApplier>());
@@ -56,6 +67,9 @@ internal static class Composition
 
     private static object CreatePage(IServiceProvider services, PageId page) => page switch
     {
+        PageId.Bilan => new BilanPageViewModel(
+            services.GetRequiredService<BilanOrchestrator>(), services.GetRequiredService<ILocalizer>(),
+            services.GetRequiredService<IClipboardService>()),
         PageId.System => new SystemPageViewModel(
             services.GetRequiredService<IInventorySource>(), services.GetRequiredService<IBootSource>(),
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),

@@ -25,6 +25,9 @@ public sealed class BilanOrchestrator
         _perModuleTimeout = perModuleTimeout;
     }
 
+    /// <summary>Identifiants des modules analysés (pour afficher la progression).</summary>
+    public IReadOnlyList<string> ModuleIds => [.. _scanners.Select(s => s.ModuleId)];
+
     public async Task<BilanResult> RunAsync(IProgress<string>? progress, CancellationToken cancellationToken)
     {
         var outcomes = await Task.WhenAll(_scanners.Select(s => RunOneAsync(s, progress, cancellationToken)))
