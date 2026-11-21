@@ -44,7 +44,27 @@ public sealed class DiagnosticCollector(IEventLogQuery log, IWmiQuery wmi, IRegi
 
     private DateTimeOffset Since => clock.Now - Window;
 
-    private IReadOnlyList<BlueScreen> ReadBlueScreens() =>
+    /// <summary>
+    /// Écrans bleus : rapports WER 1001, plus Kernel-Power 41 avec un code d'arrêt (quand le vidage n'a pas pu être écrit,
+    /// c'est la seule trace) ; un 41 à moins de 15 min d'un 1001 est le même écran bleu.
+    /// </summary>
+    private IReadOnlyList<BlueScreen> ReadBlueScreens()
+    {
+        var wer = ReadWerBlueScreens();
+        var kernel = log.Query("System", [41], 100, KernelPowerProvider)
+            .Where(e => e.TimeCreated >= Since && e.Data.TryGetValue("BugcheckCode", out var b)
+                        && uint.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out var code) && code != 0)
+            .Select(e =>
+            {
+                var code = uint.Parse(e.Data["BugcheckCode"], CultureInfo.InvariantCulture);
+                var (name, category) = BugCheckCodes.Describe(code);
+                return new BlueScreen(e.TimeCreated, code, name, category, string.Empty, null);
+            })
+            .Where(k => !wer.Any(w => (w.Date - k.Date).Duration() < TimeSpan.FromMinutes(15)));
+        return [.. wer.Concat(kernel).OrderByDescending(b => b.Date)];
+    }
+
+    private IReadOnlyList<BlueScreen> ReadWerBlueScreens() =>
     [
         .. log.Query("System", [1001], 100, WerProvider)
             .Where(e => e.TimeCreated >= Since && e.Data.ContainsKey("param1"))
@@ -70,7 +90,7 @@ public sealed class DiagnosticCollector(IEventLogQuery log, IWmiQuery wmi, IRegi
             .Select(e => (App: e.Data.GetValueOrDefault("AppName") ?? e.Data.GetValueOrDefault("#0"),
                 Module: e.Data.GetValueOrDefault("ModuleName") ?? e.Data.GetValueOrDefault("#3"), Hang: false, e.TimeCreated));
         var hangs = log.Query("Application", [1002], 500, AppHangProvider).Where(e => e.TimeCreated >= Since)
-            .Select(e => (App: e.Data.GetValueOrDefault("#0"), Module: (string?)null, Hang: true, e.TimeCreated));
+            .Select(e => (App: e.Data.GetValueOrDefault("AppName") ?? e.Data.GetValueOrDefault("#0"), Module: (string?)null, Hang: true, e.TimeCreated));
 
         return [.. crashes.Concat(hangs)
             .Where(x => !string.IsNullOrWhiteSpace(x.App))
@@ -98,21 +118,13 @@ public sealed class DiagnosticCollector(IEventLogQuery log, IWmiQuery wmi, IRegi
 
     private IReadOnlyList<DiskHealth> ReadDisks()
     {
-        var disks = wmi.Query(Storage, "SELECT DeviceId, FriendlyName, HealthStatus FROM MSFT_PhysicalDisk");
-        IReadOnlyList<IReadOnlyDictionary<string, object?>> counters;
-        try
-        {
-            counters = wmi.Query(Storage, "SELECT DeviceId, Temperature, Wear, ReadErrorsUncorrected FROM MSFT_StorageReliabilityCounter");
-        }
-        catch (WmiUnavailableException)
-        {
-            counters = [];
-        }
-
+        var disks = wmi.Query(Storage, "SELECT DeviceId, ObjectId, FriendlyName, HealthStatus FROM MSFT_PhysicalDisk");
         return [.. disks.Select(d =>
         {
             var id = Convert.ToString(d.GetValueOrDefault("DeviceId"), CultureInfo.InvariantCulture);
-            var c = counters.FirstOrDefault(x => Convert.ToString(x.GetValueOrDefault("DeviceId"), CultureInfo.InvariantCulture) == id);
+            var c = Counters(d.GetValueOrDefault("ObjectId") as string)
+                .OrderByDescending(x => Convert.ToString(x.GetValueOrDefault("DeviceId"), CultureInfo.InvariantCulture) == id)
+                .FirstOrDefault();
             return new DiskHealth(
                 d.GetValueOrDefault("FriendlyName") as string ?? "?",
                 Number(d.GetValueOrDefault("HealthStatus")) switch { 0 => DiskHealthStatus.Healthy, 1 => DiskHealthStatus.Warning, 2 => DiskHealthStatus.Unhealthy, _ => DiskHealthStatus.Unknown },
@@ -120,6 +132,26 @@ public sealed class DiagnosticCollector(IEventLogQuery log, IWmiQuery wmi, IRegi
                 (int?)Number(c?.GetValueOrDefault("Temperature")) is { } t and > 0 ? t : null,
                 Number(c?.GetValueOrDefault("ReadErrorsUncorrected")));
         })];
+    }
+
+    /// <summary>Les compteurs de fiabilité ne s'obtiennent que par l'association avec le disque physique.</summary>
+    private IReadOnlyList<IReadOnlyDictionary<string, object?>> Counters(string? objectId)
+    {
+        if (string.IsNullOrEmpty(objectId))
+        {
+            return [];
+        }
+
+        var escaped = objectId.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
+        try
+        {
+            return wmi.Query(Storage,
+                $"ASSOCIATORS OF {{MSFT_PhysicalDisk.ObjectId=\"{escaped}\"}} WHERE AssocClass = MSFT_PhysicalDiskToStorageReliabilityCounter ResultClass = MSFT_StorageReliabilityCounter");
+        }
+        catch (WmiUnavailableException)
+        {
+            return [];
+        }
     }
 
     private bool ReadRebootPending() =>

@@ -158,6 +158,12 @@
           "TaskScheduler": "[2.12.2, )"
         }
       },
+      "pcdoc.modules.diagnostic": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.3.0, )"
+        }
+      },
       "Serilog": {
         "type": "CentralTransitive",
         "requested": "[4.4.0, )",

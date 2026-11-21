@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Globalization;
 using System.Text;
 using PCDoc.Core.Abstractions;
 
@@ -9,13 +8,14 @@ namespace PCDoc.Infrastructure;
 /// Lance un outil de System32 sans fenêtre (CreateNoWindow, aucune console visible), avec un chemin complet
 /// (jamais le PATH) et lit sa sortie ligne par ligne.
 /// </summary>
-public sealed class ProcessRunner : IProcessRunner
+public sealed partial class ProcessRunner : IProcessRunner
 {
-    private static readonly TimeSpan Timeout = TimeSpan.FromHours(1);
+    private static readonly TimeSpan DefaultTimeout = TimeSpan.FromHours(1);
 
     static ProcessRunner() => Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-    public async Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken)
+    public async Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken,
+        TimeSpan? timeout = null)
     {
         if (string.IsNullOrWhiteSpace(system32Tool) || system32Tool.IndexOfAny(['\\', '/', ':', '"']) >= 0
             || !system32Tool.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
@@ -35,7 +35,7 @@ public sealed class ProcessRunner : IProcessRunner
             // SFC écrit en UTF-16 quand sa sortie est redirigée ; les autres outils dans la page de code OEM.
             StandardOutputEncoding = system32Tool.Equals("sfc.exe", StringComparison.OrdinalIgnoreCase)
                 ? Encoding.Unicode
-                : Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
+                : Encoding.GetEncoding((int)GetOEMCP()),
         };
 
         using var process = new Process { StartInfo = start, EnableRaisingEvents = true };
@@ -45,20 +45,36 @@ public sealed class ProcessRunner : IProcessRunner
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
 
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeout.CancelAfter(Timeout);
+        using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        limit.CancelAfter(timeout ?? DefaultTimeout);
         try
         {
-            await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+            await process.WaitForExitAsync(limit.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
-            process.Kill(entireProcessTree: true);
-            throw;
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch (InvalidOperationException)
+            {
+                // Le processus s'est terminé entre-temps.
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
+            throw new TimeoutException($"{system32Tool} did not finish within {(timeout ?? DefaultTimeout).TotalMinutes:0} minutes");
         }
 
         return process.ExitCode;
     }
+
+    [System.Runtime.InteropServices.LibraryImport("kernel32.dll")]
+    private static partial uint GetOEMCP();
 
     private static void Forward(string? line, Action<string>? onOutput)
     {

@@ -67,6 +67,28 @@ public class DiagnosticCollectorTests
     }
 
     [Fact]
+    public void KernelPowerBugcheck_CountsAsBlueScreen_DedupedWithWer()
+    {
+        var log = new FakeEventLogQuery(
+            Event(41, Today.AddDays(-4), ("BugcheckCode", "159")) with { Provider = DiagnosticCollector.KernelPowerProvider },
+            Event(41, Today.AddDays(-2).AddMinutes(1), ("BugcheckCode", "59")) with { Provider = DiagnosticCollector.KernelPowerProvider },
+            BugCheck(2, "0x0000003b (0x0)"));
+
+        var crashes = Make(log).Collect().BlueScreens.Value!;
+
+        crashes.Select(c => c.Code).Should().BeEquivalentTo(new uint[] { 0x9F, 0x3B }, "le 41 à 1 min du 1001 est le même écran bleu");
+    }
+
+    [Fact]
+    public void AppHang_NamedField_IsRead()
+    {
+        var log = new FakeEventLogQuery(
+            Event(1002, Today.AddDays(-1), ("AppName", "word.exe")) with { Provider = DiagnosticCollector.AppHangProvider });
+
+        Make(log).Collect().AppCrashes.Value!.Single().App.Should().Be("word.exe");
+    }
+
+    [Fact]
     public void AppCrashes_GroupedByApp_WithHangs()
     {
         var log = new FakeEventLogQuery(
@@ -103,8 +125,8 @@ public class DiagnosticCollectorTests
     {
         var wmi = new FakeWmiQuery()
             .Add(Storage, "MSFT_PhysicalDisk",
-                Row.Of(("DeviceId", "0"), ("FriendlyName", "Samsung 980"), ("HealthStatus", (ushort)0), ("MediaType", (ushort)4)),
-                Row.Of(("DeviceId", "1"), ("FriendlyName", "WDC HDD"), ("HealthStatus", (ushort)1), ("MediaType", (ushort)3)))
+                Row.Of(("DeviceId", "0"), ("ObjectId", "{1}\\\\PC\\root/Microsoft/Windows/Storage/Providers_v2\\SPACES_PhysicalDisk.ObjectId=\"{a}:PD:{b}\""), ("FriendlyName", "Samsung 980"), ("HealthStatus", (ushort)0), ("MediaType", (ushort)4)),
+                Row.Of(("DeviceId", "1"), ("ObjectId", "y"), ("FriendlyName", "WDC HDD"), ("HealthStatus", (ushort)1), ("MediaType", (ushort)3)))
             .Add(Storage, "MSFT_StorageReliabilityCounter",
                 Row.Of(("DeviceId", "0"), ("Temperature", (ushort)41), ("Wear", (byte)93), ("ReadErrorsUncorrected", 0ul)),
                 Row.Of(("DeviceId", "1"), ("Temperature", (ushort)35), ("Wear", (byte)0), ("ReadErrorsUncorrected", 12ul)));

@@ -73,6 +73,7 @@ public partial class App : Application
         }
         else
         {
+            _services.GetRequiredService<PCDoc.Core.Fixing.FixPipeline>().ResolveInterrupted();
             var interrupted = _services.GetRequiredService<PCDoc.Core.Fixing.UndoJournal>().Interrupted();
             foreach (var entry in interrupted)
             {

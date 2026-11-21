@@ -12,8 +12,12 @@ public class RepairFixerTests
 
         public int ExitCode { get; set; }
 
-        public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken)
+        public TimeSpan? LastTimeout { get; private set; }
+
+        public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken,
+            TimeSpan? timeout = null)
         {
+            LastTimeout = timeout;
             Calls.Add((system32Tool, arguments));
             onOutput?.Invoke("Vérification 100 % effectuée.");
             return Task.FromResult(ExitCode);
@@ -38,6 +42,39 @@ public class RepairFixerTests
 
         runner.Calls.Should().Equal((tool, args));
         lines.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Dism3010_IsSuccess_AndAnnouncesRestart()
+    {
+        var fixer = new RepairFixer(new FakeRunner { ExitCode = 3010 });
+        var reboot = false;
+        fixer.RebootRequired += (_, _) => reboot = true;
+
+        await fixer.ApplyAsync(RepairFixer.FindingFor(RepairKind.WindowsImage), CancellationToken.None);
+
+        reboot.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Dism_SourceNotFound_HasClearError()
+    {
+        var fixer = new RepairFixer(new FakeRunner { ExitCode = unchecked((int)0x800F081F) });
+
+        var act = () => fixer.ApplyAsync(RepairFixer.FindingFor(RepairKind.WindowsImage), CancellationToken.None);
+
+        (await act.Should().ThrowAsync<InvalidOperationException>()).WithMessage("*0x800F081F*");
+    }
+
+    [Fact]
+    public async Task LongRepairs_GetLongTimeouts()
+    {
+        var runner = new FakeRunner();
+        var fixer = new RepairFixer(runner);
+
+        await fixer.ApplyAsync(RepairFixer.FindingFor(RepairKind.WindowsImage), CancellationToken.None);
+
+        runner.LastTimeout.Should().BeGreaterThanOrEqualTo(TimeSpan.FromHours(3));
     }
 
     [Fact]

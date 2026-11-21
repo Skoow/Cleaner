@@ -6,5 +6,7 @@ namespace PCDoc.Core.Abstractions;
 public interface IProcessRunner
 {
     /// <param name="system32Tool">Nom d'un exécutable de System32 (jamais un chemin libre).</param>
-    Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken);
+    /// <param name="timeout">Durée maximale (1 h par défaut) ; dépassée → <see cref="TimeoutException"/>.</param>
+    Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken,
+        TimeSpan? timeout = null);
 }

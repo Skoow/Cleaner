@@ -198,6 +198,38 @@ public sealed class FixPipelineTests : IDisposable
         new UndoJournal(path, new Clock()).Interrupted().Should().ContainSingle(e => e.FindingId == "fake.a");
     }
 
+    private sealed class NoUndoFixer : IFixer
+    {
+        public string UndoKind => "repair";
+
+        public bool SupportsUndo => false;
+
+        public bool CanFix(Finding finding) => false;
+
+        public Task<UndoEntry> PrepareAsync(Finding finding, CancellationToken ct) => throw new NotSupportedException();
+
+        public Task ApplyAsync(Finding finding, CancellationToken ct) => throw new NotSupportedException();
+
+        public Task<bool> IsUnchangedSinceAsync(UndoEntry entry, CancellationToken ct) => Task.FromResult(false);
+
+        public Task UndoAsync(UndoEntry entry, CancellationToken ct) => throw new NotSupportedException();
+    }
+
+    [Fact]
+    public void ResolveInterrupted_MarksNonUndoableAsFailed_KeepsUndoable()
+    {
+        var journal = new UndoJournal(Path.Combine(_dir, "undo.jsonl"), new Clock());
+        var (_, fixer, _, _, _) = Make();
+        var sut = new FixPipeline([fixer, new NoUndoFixer()], new FakeRestore(RestorePointOutcome.Created), journal);
+        journal.Begin(UndoEntry.Create("repair.sfc", "repair", "", "T", []));
+        journal.Begin(UndoEntry.Create("fake.a", "fake", "on", "T", []));
+
+        sut.ResolveInterrupted();
+
+        journal.Interrupted().Select(e => e.FindingId).Should().Equal("fake.a");
+        journal.Entries().Single(e => e.FindingId == "repair.sfc").Status.Should().Be(UndoStatus.Failed);
+    }
+
     [Fact]
     public void Journal_CorruptLine_IsSkipped()
     {

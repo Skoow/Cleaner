@@ -42,7 +42,9 @@ public sealed partial class FakeWmiQuery : IWmiQuery
 
     public IReadOnlyList<IReadOnlyDictionary<string, object?>> Query(string ns, string wql)
     {
-        var className = FromClause().Match(wql).Groups[1].Value;
+        var className = wql.TrimStart().StartsWith("ASSOCIATORS", StringComparison.OrdinalIgnoreCase)
+            ? ResultClause().Match(wql).Groups[1].Value
+            : FromClause().Match(wql).Groups[1].Value;
         if (_throwingNamespaces.TryGetValue(ns, out var denied) || _throwingClasses.TryGetValue(className, out denied))
         {
             throw new WmiUnavailableException(ns, wql, new InvalidOperationException("fake"), denied);
@@ -53,6 +55,9 @@ public sealed partial class FakeWmiQuery : IWmiQuery
 
     [GeneratedRegex(@"FROM\s+(\w+)", RegexOptions.IgnoreCase)]
     private static partial Regex FromClause();
+
+    [GeneratedRegex(@"ResultClass\s*=\s*(\w+)", RegexOptions.IgnoreCase)]
+    private static partial Regex ResultClause();
 }
 
 /// <summary>Raccourci pour écrire une ligne WMI.</summary>

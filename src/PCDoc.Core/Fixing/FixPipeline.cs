@@ -105,6 +105,18 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
         return new FixSessionResult(restore, false, Ordered(findings, outcomes));
     }
 
+    /// <summary>
+    /// Au démarrage : une réparation non annulable restée « en attente » (coupure pendant SFC…) est marquée « échec »,
+    /// pour ne pas signaler indéfiniment une modification que personne ne peut annuler.
+    /// </summary>
+    public void ResolveInterrupted()
+    {
+        foreach (var entry in journal.Interrupted().Where(e => !CanUndo(e)))
+        {
+            journal.Mark(entry.Id, UndoStatus.Failed);
+        }
+    }
+
     /// <summary>Vrai si un correcteur sait annuler ce type d'entrée.</summary>
     public bool CanUndo(UndoEntry entry)
     {

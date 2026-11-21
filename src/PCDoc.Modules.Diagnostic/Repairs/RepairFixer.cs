@@ -21,15 +21,21 @@ public sealed class RepairFixer(IProcessRunner runner) : IFixer
 {
     public const string Kind = "diagnostic.repair";
 
-    private static readonly Dictionary<RepairKind, (string Tool, string Arguments)> Commands = new()
+    private const int RebootRequiredCode = 3010; // ERROR_SUCCESS_REBOOT_REQUIRED
+    private const int SourceNotFound = unchecked((int)0x800F081F);
+
+    private static readonly Dictionary<RepairKind, (string Tool, string Arguments, TimeSpan Timeout)> Commands = new()
     {
-        [RepairKind.FlushDns] = ("ipconfig.exe", "/flushdns"),
-        [RepairKind.SystemFiles] = ("sfc.exe", "/scannow"),
-        [RepairKind.WindowsImage] = ("dism.exe", "/Online /Cleanup-Image /RestoreHealth"),
+        [RepairKind.FlushDns] = ("ipconfig.exe", "/flushdns", TimeSpan.FromMinutes(2)),
+        [RepairKind.SystemFiles] = ("sfc.exe", "/scannow", TimeSpan.FromHours(2)),
+        [RepairKind.WindowsImage] = ("dism.exe", "/Online /Cleanup-Image /RestoreHealth", TimeSpan.FromHours(4)),
     };
 
     /// <summary>Chaque ligne affichée par l'outil (progression dans la page).</summary>
     public event EventHandler<string>? Output;
+
+    /// <summary>La réparation a réussi mais demande un redémarrage.</summary>
+    public event EventHandler? RebootRequired;
 
     public string UndoKind => Kind;
 
@@ -53,11 +59,20 @@ public sealed class RepairFixer(IProcessRunner runner) : IFixer
     public async Task ApplyAsync(Finding finding, CancellationToken cancellationToken)
     {
         var repair = Parse(finding) ?? throw new InvalidOperationException("Not a repair");
-        var (tool, arguments) = Commands[repair];
-        var exit = await runner.RunHiddenAsync(tool, arguments, line => Output?.Invoke(this, line), cancellationToken).ConfigureAwait(false);
-        if (exit != 0)
+        var (tool, arguments, timeout) = Commands[repair];
+        var exit = await runner.RunHiddenAsync(tool, arguments, line => Output?.Invoke(this, line), cancellationToken, timeout)
+            .ConfigureAwait(false);
+        switch (exit)
         {
-            throw new InvalidOperationException($"{tool} exited with code {exit}");
+            case 0:
+                return;
+            case RebootRequiredCode when repair != RepairKind.FlushDns:
+                RebootRequired?.Invoke(this, EventArgs.Empty);
+                return;
+            case SourceNotFound:
+                throw new InvalidOperationException($"{tool}: repair source not found (0x800F081F) — Windows Update could not provide healthy files");
+            default:
+                throw new InvalidOperationException($"{tool} exited with code {exit} (0x{exit:X8})");
         }
     }
 

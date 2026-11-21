@@ -22,6 +22,7 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
 {
     private readonly IDiagnosticSource _source;
     private readonly ILocalizer _localizer;
+    private readonly Lock _outputGate = new();
     private DiagnosticReport? _report;
     private int _loading;
 
@@ -50,7 +51,19 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
         Fixes = fixes;
         if (repairs is not null)
         {
-            repairs.Output += (_, line) => RepairOutput = (RepairOutput.Length > 4000 ? RepairOutput[^3000..] : RepairOutput) + line + "\n";
+            repairs.Output += (_, line) =>
+            {
+                lock (_outputGate) // stdout et stderr arrivent sur deux fils différents
+                {
+                    RepairOutput = (RepairOutput.Length > 4000 ? RepairOutput[^3000..] : RepairOutput) + line + "\n";
+                }
+            };
+            repairs.RebootRequired += (_, _) => RebootPending = true;
+        }
+
+        if (fixes is not null)
+        {
+            fixes.PropertyChanged += (_, _) => RunRepairCommand.NotifyCanExecuteChanged();
         }
 
         localizer.PropertyChanged += (_, _) => Build();
@@ -95,7 +108,9 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    private bool CanRunRepair(RepairKind kind) => Fixes is { IsOpen: false, IsRunning: false };
+
+    [RelayCommand(CanExecute = nameof(CanRunRepair))]
     private void RunRepair(RepairKind kind)
     {
         RepairOutput = string.Empty;
@@ -130,7 +145,7 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
             d.Device, d.Provider, d.Version ?? string.Empty));
         DisksUnavailable = !r.Disks.Available;
         DevicesUnavailable = !r.Devices.Available;
-        RebootPending = r.RebootPending.Value;
+        RebootPending = RebootPending || r.RebootPending.Value;
         ShutdownsText = T("Diag.ShutdownsCount", r.UnexpectedShutdowns.Value);
         OnPropertyChanged(nameof(HasLoaded));
     }

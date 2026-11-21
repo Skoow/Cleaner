@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\PCDoc.Infrastructure\PCDoc.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Diagnostic\PCDoc.Modules.Diagnostic.csproj" />
   </ItemGroup>
 </Project>

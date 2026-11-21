@@ -31,7 +31,8 @@ public sealed class DiagnosticPageViewModelTests : IDisposable
     {
         public string? Last;
 
-        public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken)
+        public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken,
+            TimeSpan? timeout = null)
         {
             Last = system32Tool;
             onOutput?.Invoke("Vérification 100 % effectuée.");
@@ -90,5 +91,15 @@ public sealed class DiagnosticPageViewModelTests : IDisposable
 
         runner.Last.Should().Be("sfc.exe");
         vm.RepairOutput.Should().Contain("100 %");
+    }
+
+    [Fact]
+    public void RunRepair_DisabledWhileConfirmationOpen()
+    {
+        var (vm, _, _) = Make();
+
+        vm.RunRepairCommand.Execute(RepairKind.FlushDns);
+
+        vm.RunRepairCommand.CanExecute(RepairKind.SystemFiles).Should().BeFalse();
     }
 }
