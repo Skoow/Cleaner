@@ -30,7 +30,7 @@ public class DiagnosticOnWindowsTests
     public void ReliabilityCounters_AssociatorQuery_DoesNotThrow()
     {
         var wmi = new WmiQuery();
-        var disk = wmi.Query(@"root\Microsoft\Windows\Storage", "SELECT ObjectId FROM MSFT_PhysicalDisk").First();
+        var disk = wmi.Query(@"root\Microsoft\Windows\Storage", "SELECT ObjectId FROM MSFT_PhysicalDisk")[0];
         var id = ((string)disk["ObjectId"]!).Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
 
         var act = () => wmi.Query(@"root\Microsoft\Windows\Storage",
