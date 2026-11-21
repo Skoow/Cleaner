@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PCDoc.App/PCDoc.App.csproj" />
+    <Project Path="src/PCDoc.Core/PCDoc.Core.csproj" />
+    <Project Path="src/PCDoc.Infrastructure/PCDoc.Infrastructure.csproj" />
+    <Project Path="src/PCDoc.Modules.System/PCDoc.Modules.System.csproj" />
+    <Project Path="src/PCDoc.Presentation/PCDoc.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PCDoc.Core.Tests/PCDoc.Core.Tests.csproj" />
+    <Project Path="tests/PCDoc.Infrastructure.IntegrationTests/PCDoc.Infrastructure.IntegrationTests.csproj" />
+    <Project Path="tests/PCDoc.Modules.System.Tests/PCDoc.Modules.System.Tests.csproj" />
+    <Project Path="tests/PCDoc.Presentation.Tests/PCDoc.Presentation.Tests.csproj" />
+  </Folder>
+</Solution>

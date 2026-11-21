@@ -1,0 +1,11 @@
+# Build
+bin/
+obj/
+out/
+TestResults/
+*.user
+*.suo
+.vs/
+*.trx
+# Espace de travail des plans (local)
+.superpowers/

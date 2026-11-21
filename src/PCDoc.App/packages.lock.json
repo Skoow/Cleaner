@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0-windows7.0": {
+      "pcdoc.core": {
+        "type": "Project"
+      },
+      "pcdoc.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.1.0, )"
+        }
+      },
+      "pcdoc.modules.system": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.1.0, )"
+        }
+      },
+      "pcdoc.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.1.0, )",
+          "PCDoc.Modules.System": "[0.1.0, )"
+        }
+      }
+    },
+    "net10.0-windows7.0/win-arm64": {},
+    "net10.0-windows7.0/win-x64": {}
+  }
+}
