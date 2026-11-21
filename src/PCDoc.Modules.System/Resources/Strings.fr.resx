@@ -152,4 +152,38 @@
   <data name="Sig.NotApplicable" xml:space="preserve"><value>Sans objet</value></data>
   <data name="State.Enabled" xml:space="preserve"><value>Activé</value></data>
   <data name="State.Disabled" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Finding.Advice.Title" xml:space="preserve"><value>« {0} » peut être désactivé sans risque</value></data>
+  <data name="Undo.Disabled" xml:space="preserve"><value>« {0} » désactivé</value></data>
+  <data name="Undo.Enabled" xml:space="preserve"><value>« {0} » réactivé</value></data>
+  <data name="Advice.Fax" xml:space="preserve"><value>Le service de télécopie n'est presque jamais utilisé.</value></data>
+  <data name="Advice.RetailDemo" xml:space="preserve"><value>Ne sert qu'aux PC de démonstration en magasin.</value></data>
+  <data name="Advice.MapsBroker" xml:space="preserve"><value>Ne sert qu'aux cartes hors connexion de l'application Cartes.</value></data>
+  <data name="Advice.RemoteRegistry" xml:space="preserve"><value>Permet à d'autres ordinateurs de lire le registre : mieux vaut le garder coupé.</value></data>
+  <data name="Advice.DiagTrack" xml:space="preserve"><value>Envoie des données d'utilisation à Microsoft (télémétrie).</value></data>
+  <data name="Advice.Insider" xml:space="preserve"><value>Utile seulement si vous testez les versions préliminaires de Windows (Windows Insider).</value></data>
+  <data name="Advice.Spooler" xml:space="preserve"><value>Service d'impression : inutile sans imprimante, et le couper ferme une faille connue.</value></data>
+  <data name="Advice.Bluetooth" xml:space="preserve"><value>Prise en charge du Bluetooth : inutile si le PC n'en a pas.</value></data>
+  <data name="Advice.Biometric" xml:space="preserve"><value>Connexion par empreinte ou visage (Windows Hello) : inutile si elle n'est pas utilisée.</value></data>
+  <data name="Advice.SmartCard" xml:space="preserve"><value>Lecteurs de carte à puce : inutile sans lecteur.</value></data>
+  <data name="Advice.Xbox" xml:space="preserve"><value>Services Xbox : PCDoc ne peut pas savoir si vous utilisez les applications Xbox ou le Game Pass.</value></data>
+  <data name="Advice.Location" xml:space="preserve"><value>Localisation : sert à la météo, à l'heure et à Localiser mon appareil.</value></data>
+  <data name="Advice.Parental" xml:space="preserve"><value>Contrôle parental : nécessaire s'il existe un compte enfant.</value></data>
+  <data name="Advice.RemoteDesktop" xml:space="preserve"><value>Bureau à distance : le couper est plus sûr si vous ne l'utilisez jamais.</value></data>
+  <data name="Advice.TouchKeyboard" xml:space="preserve"><value>Clavier tactile : sous Windows 11, la saisie ne marche plus dans certaines applications sans lui.</value></data>
+  <data name="Advice.Diagnostics" xml:space="preserve"><value>Les outils de dépannage de Windows en ont besoin.</value></data>
+  <data name="Advice.Search" xml:space="preserve"><value>Sans indexation, la recherche devient très lente.</value></data>
+  <data name="Advice.SysMain" xml:space="preserve"><value>Accélère l'ouverture des applications ; à garder sauf disque bloqué à 100 %.</value></data>
+  <data name="Advice.Telemetry" xml:space="preserve"><value>Collecte des données d'utilisation pour Microsoft.</value></data>
+  <data name="Advice.Feedback" xml:space="preserve"><value>Demande et envoie vos commentaires à Microsoft.</value></data>
+  <data name="Advice.SecurityHealth" xml:space="preserve"><value>Icône Sécurité Windows : nécessaire aux alertes de sécurité.</value></data>
+  <data name="Advice.OneDrive" xml:space="preserve"><value>Arrête la synchronisation des fichiers avec OneDrive.</value></data>
+  <data name="Advice.EdgeAutoLaunch" xml:space="preserve"><value>Précharge Edge à l'ouverture de session pour l'ouvrir plus vite.</value></data>
+  <data name="Advice.Teams" xml:space="preserve"><value>Lance Teams avec Windows ; il s'ouvre quand même quand vous en avez besoin.</value></data>
+  <data name="Advice.RunOnce" xml:space="preserve"><value>Ne se lance qu'une fois à la prochaine ouverture de session : rien à désactiver.</value></data>
+  <data name="Advice.Driver" xml:space="preserve"><value>Les pilotes ne sont jamais désactivés par PCDoc.</value></data>
+  <data name="Advice.Essential" xml:space="preserve"><value>Indispensable à Windows : jamais désactivé.</value></data>
+  <data name="Advice.UnknownService" xml:space="preserve"><value>Service inconnu : réservé aux experts.</value></data>
+  <data name="Advice.UnknownTask" xml:space="preserve"><value>Tâche inconnue : réservée aux experts.</value></data>
+  <data name="Advice.UnknownMicrosoftStartup" xml:space="preserve"><value>Composant de Windows : réservé aux experts.</value></data>
+  <data name="Advice.ThirdPartyStartup" xml:space="preserve"><value>Se lance avec Windows ; le désactiver est réversible et le programme marche quand vous l'ouvrez.</value></data>
 </root>

@@ -152,4 +152,38 @@
   <data name="Sig.NotApplicable" xml:space="preserve"><value>Not applicable</value></data>
   <data name="State.Enabled" xml:space="preserve"><value>Enabled</value></data>
   <data name="State.Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Finding.Advice.Title" xml:space="preserve"><value>"{0}" can be safely disabled</value></data>
+  <data name="Undo.Disabled" xml:space="preserve"><value>Disabled "{0}"</value></data>
+  <data name="Undo.Enabled" xml:space="preserve"><value>Re-enabled "{0}"</value></data>
+  <data name="Advice.Fax" xml:space="preserve"><value>The fax service is almost never used.</value></data>
+  <data name="Advice.RetailDemo" xml:space="preserve"><value>Only used by demo PCs in stores.</value></data>
+  <data name="Advice.MapsBroker" xml:space="preserve"><value>Only used by the offline maps of the Maps app.</value></data>
+  <data name="Advice.RemoteRegistry" xml:space="preserve"><value>Lets other computers read the registry: better kept off.</value></data>
+  <data name="Advice.DiagTrack" xml:space="preserve"><value>Sends usage data to Microsoft (telemetry).</value></data>
+  <data name="Advice.Insider" xml:space="preserve"><value>Only needed if you test preview versions of Windows (Windows Insider).</value></data>
+  <data name="Advice.Spooler" xml:space="preserve"><value>Print service: useless without a printer, and its absence closes a known security hole.</value></data>
+  <data name="Advice.Bluetooth" xml:space="preserve"><value>Bluetooth support: useless if the PC has no Bluetooth.</value></data>
+  <data name="Advice.Biometric" xml:space="preserve"><value>Fingerprint and face sign-in (Windows Hello): useless if not used.</value></data>
+  <data name="Advice.SmartCard" xml:space="preserve"><value>Smart card readers: useless without a reader.</value></data>
+  <data name="Advice.Xbox" xml:space="preserve"><value>Xbox services: PCDoc cannot tell whether you use Xbox apps or Game Pass.</value></data>
+  <data name="Advice.Location" xml:space="preserve"><value>Location: used by weather, the clock and Find my device.</value></data>
+  <data name="Advice.Parental" xml:space="preserve"><value>Parental controls: needed if a child account exists.</value></data>
+  <data name="Advice.RemoteDesktop" xml:space="preserve"><value>Remote Desktop: turning it off is safer if you never use it.</value></data>
+  <data name="Advice.TouchKeyboard" xml:space="preserve"><value>Touch keyboard: on Windows 11, typing breaks in some apps without it.</value></data>
+  <data name="Advice.Diagnostics" xml:space="preserve"><value>Windows troubleshooters need it.</value></data>
+  <data name="Advice.Search" xml:space="preserve"><value>Without indexing, searching becomes very slow.</value></data>
+  <data name="Advice.SysMain" xml:space="preserve"><value>Speeds up app launches; keep it unless the disk is stuck at 100%.</value></data>
+  <data name="Advice.Telemetry" xml:space="preserve"><value>Collects usage data for Microsoft.</value></data>
+  <data name="Advice.Feedback" xml:space="preserve"><value>Asks for and sends your feedback to Microsoft.</value></data>
+  <data name="Advice.SecurityHealth" xml:space="preserve"><value>Windows Security icon: needed for security alerts.</value></data>
+  <data name="Advice.OneDrive" xml:space="preserve"><value>Stops file synchronization with OneDrive.</value></data>
+  <data name="Advice.EdgeAutoLaunch" xml:space="preserve"><value>Preloads Edge at sign-in to open it faster.</value></data>
+  <data name="Advice.Teams" xml:space="preserve"><value>Starts Teams with Windows; it still opens when you need it.</value></data>
+  <data name="Advice.RunOnce" xml:space="preserve"><value>Runs only once at the next sign-in: nothing to disable.</value></data>
+  <data name="Advice.Driver" xml:space="preserve"><value>Drivers are never disabled by PCDoc.</value></data>
+  <data name="Advice.Essential" xml:space="preserve"><value>Essential for Windows: never disabled.</value></data>
+  <data name="Advice.UnknownService" xml:space="preserve"><value>Unknown service: only for experts.</value></data>
+  <data name="Advice.UnknownTask" xml:space="preserve"><value>Unknown task: only for experts.</value></data>
+  <data name="Advice.UnknownMicrosoftStartup" xml:space="preserve"><value>Windows component: only for experts.</value></data>
+  <data name="Advice.ThirdPartyStartup" xml:space="preserve"><value>Starts with Windows; disabling it is reversible and the program still works when you open it.</value></data>
 </root>

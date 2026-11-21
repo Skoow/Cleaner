@@ -97,6 +97,21 @@ public class AdvisorTests
         Make().Advise(E(AutorunKind.Service, "WUAUSERV", microsoft: true)).Level.Should().Be(RiskLevel.Locked);
 
     [Fact]
+    public void AllReasonKeys_ExistInBothLanguages()
+    {
+        var catalog = AdvisorCatalog.Default;
+        var keys = catalog.Services.Values.Concat(catalog.Tasks.Values).Concat(catalog.Startup).Select(i => i.Reason)
+            .Concat(["Advice.RunOnce", "Advice.Driver", "Advice.Essential", "Advice.UnknownService", "Advice.UnknownTask",
+                     "Advice.UnknownMicrosoftStartup", "Advice.ThirdPartyStartup"]).Distinct();
+
+        foreach (var culture in new[] { global::System.Globalization.CultureInfo.InvariantCulture, global::System.Globalization.CultureInfo.GetCultureInfo("fr") })
+        {
+            var set = SystemModule.Resources.GetResourceSet(culture, true, false)!;
+            keys.Should().OnlyContain(k => set.GetString(k) != null, culture.Name);
+        }
+    }
+
+    [Fact]
     public void CatalogFile_ParsesFromOutputFolder()
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Definitions", "advisor.json");

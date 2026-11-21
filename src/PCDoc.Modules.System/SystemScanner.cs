@@ -1,6 +1,7 @@
 using PCDoc.Core.Abstractions;
 using PCDoc.Core.Findings;
 using PCDoc.Core.Modules;
+using PCDoc.Modules.System.Advisor;
 using PCDoc.Modules.System.Autoruns;
 using PCDoc.Modules.System.Boot;
 using PCDoc.Modules.System.Inventory;
@@ -20,6 +21,9 @@ public sealed class SystemScanner(
     Action<string, Exception>? onSourceError = null) : IScanner
 {
     public string ModuleId => SystemModule.Id;
+
+    /// <summary>Conseiller : rend corrigeables les éléments sûrs (null = aucune correction proposée).</summary>
+    public AutorunAdvisor? Advisor { get; init; }
 
     public async Task<IReadOnlyList<Finding>> ScanAsync(CancellationToken cancellationToken)
     {
@@ -55,7 +59,12 @@ public sealed class SystemScanner(
 
         if (await Try("autoruns", autorunTask, failed).ConfigureAwait(false) is { } collection)
         {
-            findings.AddRange(AutorunSignatureRule.Evaluate(collection.Entries));
+            findings.AddRange(AutorunSignatureRule.Evaluate(collection.Entries, Advisor));
+            if (Advisor is not null)
+            {
+                findings.AddRange(AdviceRule.Evaluate(collection.Entries, Advisor));
+            }
+
             failed.AddRange(collection.FailedSources.Select(s => "autoruns." + s));
         }
 

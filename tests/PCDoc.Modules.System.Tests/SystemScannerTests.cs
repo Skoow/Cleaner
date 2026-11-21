@@ -282,6 +282,56 @@ public class SystemScannerTests
         localizer.Format(finding.Explanation).Should().StartWith("Contrôles en échec : TPM 2.0 absent ou désactivé, Secure Boot désactivé.");
     }
 
+    private sealed class NoConditions : global::PCDoc.Modules.System.Advisor.IConditionProbe
+    {
+        public bool? Check(string condition) => condition == "no-printer" ? true : null;
+    }
+
+    private static async Task<IReadOnlyList<Finding>> ScanWithAdvisor(params AutorunEntry[] entries)
+    {
+        var advisor = new global::PCDoc.Modules.System.Advisor.AutorunAdvisor(
+            global::PCDoc.Modules.System.Advisor.AdvisorCatalog.Default, new NoConditions());
+        var sut = new SystemScanner(new Inventory(() => Pc()), new Boots(History()), new Autoruns(entries), new FixedClock(Today))
+        {
+            Advisor = advisor,
+        };
+        return await sut.ScanAsync(CancellationToken.None);
+    }
+
+    private static AutorunEntry Service(string name, bool enabled = true) =>
+        new(AutorunKind.Service, name, $@"HKLM\SYSTEM\CurrentControlSet\Services\{name}", "", @"C:\Windows\x.exe", enabled,
+            new SignatureInfo(SignatureStatus.Signed, "Microsoft Windows", false), true) { ServiceName = name };
+
+    [Fact]
+    public async Task Advice_SafeCatalogServiceEnabled_IsFixableInfo()
+    {
+        var finding = (await ScanWithAdvisor(Service("Spooler"))).Single();
+
+        finding.Id.Should().Be("system.advice.service.spooler");
+        finding.Severity.Should().Be(Severity.Info);
+        finding.FixAvailable.Should().BeTrue();
+        finding.Risk.Should().Be(RiskLevel.Safe);
+        global::PCDoc.Modules.System.Fixes.ToggleRequest.Parse(finding.FixData)!.Name.Should().Be("Spooler");
+    }
+
+    [Fact]
+    public async Task Advice_DisabledOrLockedOrUnknown_NoFinding() =>
+        (await ScanWithAdvisor(Service("Fax", enabled: false), Service("wuauserv"), Service("rgbsvc"))).Should().BeEmpty();
+
+    [Fact]
+    public async Task Unsigned_ThirdPartyStartup_IsFixableSafe()
+    {
+        var entry = Entry("UpdaterHelper", SignatureStatus.Unsigned) with
+        {
+            Startup = new StartupToggleTarget(RegistryHive.TargetUser, "Run", "UpdaterHelper"),
+        };
+
+        var finding = (await ScanWithAdvisor(entry)).Single();
+
+        finding.FixAvailable.Should().BeTrue();
+        finding.Risk.Should().Be(RiskLevel.Safe);
+    }
+
     [Fact]
     public async Task AllFindingKeys_ExistInBothLanguages()
     {
@@ -292,7 +342,9 @@ public class SystemScannerTests
             new BootHistory([new BootRecord(Today, TimeSpan.FromSeconds(130), TimeSpan.Zero, TimeSpan.Zero,
                 [.. Enum.GetValues<DegradationKind>().Select(k => new BootDegradation(k, k.ToString(), k.ToString(), TimeSpan.FromSeconds(9), TimeSpan.FromSeconds(8)))])]),
             [.. Enum.GetValues<AutorunKind>().SelectMany(k => new[] { Entry("u" + k, SignatureStatus.Unsigned, kind: k), Entry("o" + k, SignatureStatus.FileNotFound, kind: k) })]);
-        var withWin11Ready = await Scan(Pc(build: 19045));
+        var withWin11Ready = (await Scan(Pc(build: 19045))).Concat(await ScanWithAdvisor(Service("Spooler"), Service("Fax"),
+            new AutorunEntry(AutorunKind.ScheduledTask, @"\Microsoft\Windows\Feedback\Siuf\DmClient", "", "", @"C:\x.exe", true,
+                new SignatureInfo(SignatureStatus.Signed, "Microsoft Windows", false), true))).ToList();
 
         var keys = findings.Concat(withWin11Ready).SelectMany(f => Keys(f.Title).Concat(Keys(f.Explanation))).Distinct().ToList();
         var english = ResourceKeys(CultureInfo.InvariantCulture);

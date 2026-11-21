@@ -147,3 +147,37 @@ Sig.Missing	Not found	Introuvable
 Sig.NotApplicable	Not applicable	Sans objet
 State.Enabled	Enabled	Activé
 State.Disabled	Disabled	Désactivé
+Finding.Advice.Title	"{0}" can be safely disabled	« {0} » peut être désactivé sans risque
+Undo.Disabled	Disabled "{0}"	« {0} » désactivé
+Undo.Enabled	Re-enabled "{0}"	« {0} » réactivé
+Advice.Fax	The fax service is almost never used.	Le service de télécopie n'est presque jamais utilisé.
+Advice.RetailDemo	Only used by demo PCs in stores.	Ne sert qu'aux PC de démonstration en magasin.
+Advice.MapsBroker	Only used by the offline maps of the Maps app.	Ne sert qu'aux cartes hors connexion de l'application Cartes.
+Advice.RemoteRegistry	Lets other computers read the registry: better kept off.	Permet à d'autres ordinateurs de lire le registre : mieux vaut le garder coupé.
+Advice.DiagTrack	Sends usage data to Microsoft (telemetry).	Envoie des données d'utilisation à Microsoft (télémétrie).
+Advice.Insider	Only needed if you test preview versions of Windows (Windows Insider).	Utile seulement si vous testez les versions préliminaires de Windows (Windows Insider).
+Advice.Spooler	Print service: useless without a printer, and its absence closes a known security hole.	Service d'impression : inutile sans imprimante, et le couper ferme une faille connue.
+Advice.Bluetooth	Bluetooth support: useless if the PC has no Bluetooth.	Prise en charge du Bluetooth : inutile si le PC n'en a pas.
+Advice.Biometric	Fingerprint and face sign-in (Windows Hello): useless if not used.	Connexion par empreinte ou visage (Windows Hello) : inutile si elle n'est pas utilisée.
+Advice.SmartCard	Smart card readers: useless without a reader.	Lecteurs de carte à puce : inutile sans lecteur.
+Advice.Xbox	Xbox services: PCDoc cannot tell whether you use Xbox apps or Game Pass.	Services Xbox : PCDoc ne peut pas savoir si vous utilisez les applications Xbox ou le Game Pass.
+Advice.Location	Location: used by weather, the clock and Find my device.	Localisation : sert à la météo, à l'heure et à Localiser mon appareil.
+Advice.Parental	Parental controls: needed if a child account exists.	Contrôle parental : nécessaire s'il existe un compte enfant.
+Advice.RemoteDesktop	Remote Desktop: turning it off is safer if you never use it.	Bureau à distance : le couper est plus sûr si vous ne l'utilisez jamais.
+Advice.TouchKeyboard	Touch keyboard: on Windows 11, typing breaks in some apps without it.	Clavier tactile : sous Windows 11, la saisie ne marche plus dans certaines applications sans lui.
+Advice.Diagnostics	Windows troubleshooters need it.	Les outils de dépannage de Windows en ont besoin.
+Advice.Search	Without indexing, searching becomes very slow.	Sans indexation, la recherche devient très lente.
+Advice.SysMain	Speeds up app launches; keep it unless the disk is stuck at 100%.	Accélère l'ouverture des applications ; à garder sauf disque bloqué à 100 %.
+Advice.Telemetry	Collects usage data for Microsoft.	Collecte des données d'utilisation pour Microsoft.
+Advice.Feedback	Asks for and sends your feedback to Microsoft.	Demande et envoie vos commentaires à Microsoft.
+Advice.SecurityHealth	Windows Security icon: needed for security alerts.	Icône Sécurité Windows : nécessaire aux alertes de sécurité.
+Advice.OneDrive	Stops file synchronization with OneDrive.	Arrête la synchronisation des fichiers avec OneDrive.
+Advice.EdgeAutoLaunch	Preloads Edge at sign-in to open it faster.	Précharge Edge à l'ouverture de session pour l'ouvrir plus vite.
+Advice.Teams	Starts Teams with Windows; it still opens when you need it.	Lance Teams avec Windows ; il s'ouvre quand même quand vous en avez besoin.
+Advice.RunOnce	Runs only once at the next sign-in: nothing to disable.	Ne se lance qu'une fois à la prochaine ouverture de session : rien à désactiver.
+Advice.Driver	Drivers are never disabled by PCDoc.	Les pilotes ne sont jamais désactivés par PCDoc.
+Advice.Essential	Essential for Windows: never disabled.	Indispensable à Windows : jamais désactivé.
+Advice.UnknownService	Unknown service: only for experts.	Service inconnu : réservé aux experts.
+Advice.UnknownTask	Unknown task: only for experts.	Tâche inconnue : réservée aux experts.
+Advice.UnknownMicrosoftStartup	Windows component: only for experts.	Composant de Windows : réservé aux experts.
+Advice.ThirdPartyStartup	Starts with Windows; disabling it is reversible and the program still works when you open it.	Se lance avec Windows ; le désactiver est réversible et le programme marche quand vous l'ouvrez.
