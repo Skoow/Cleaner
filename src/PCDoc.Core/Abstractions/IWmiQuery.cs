@@ -11,11 +11,12 @@ public interface IWmiQuery
 /// <summary>Classe ou espace de noms WMI indisponible (absent, accès refusé, service arrêté).</summary>
 public sealed class WmiUnavailableException : Exception
 {
-    public WmiUnavailableException(string ns, string query, Exception inner)
+    public WmiUnavailableException(string ns, string query, Exception inner, bool isAccessDenied = false)
         : base($"WMI unavailable: {ns} / {query}: {inner?.Message}", inner)
     {
         Namespace = ns;
         QueryText = query;
+        IsAccessDenied = isAccessDenied;
     }
 
     public WmiUnavailableException()
@@ -38,4 +39,7 @@ public sealed class WmiUnavailableException : Exception
     public string Namespace { get; }
 
     public string QueryText { get; }
+
+    /// <summary>Vrai si l'accès a été refusé (la donnée existe peut-être), faux si elle est absente.</summary>
+    public bool IsAccessDenied { get; }
 }

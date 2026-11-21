@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "note": "Approximation par familles de processeurs, établie à partir des listes officielles de Microsoft. Un processeur qui ne correspond à aucune règle est « inconnu » (aucun avertissement). À remplacer progressivement par la liste exacte.",
+  "source": [
+    "https://learn.microsoft.com/windows-hardware/design/minimum/supported/windows-11-supported-intel-processors",
+    "https://learn.microsoft.com/windows-hardware/design/minimum/supported/windows-11-supported-amd-processors",
+    "https://learn.microsoft.com/windows-hardware/design/minimum/supported/windows-11-supported-qualcomm-processors"
+  ],
+  "supported": [
+    "Core\\(TM\\) i[3579]-(?:[89]\\d{3}|1[0-4]\\d{3})(?!\\d)",
+    "Core\\(TM\\) i[3579]-1[0-4]\\d{2}[A-Z]",
+    "Core\\(TM\\) Ultra [3579]",
+    "Core\\(TM\\) [357] 1\\d{2}[A-Z]",
+    "Ryzen [3579] (?:PRO )?[3-9]\\d{3}",
+    "Ryzen [57] (?:PRO )?2[67]00(?:X|E)?\\b",
+    "Ryzen Threadripper (?:PRO )?[2-9]\\d{3}",
+    "Ryzen AI",
+    "Snapdragon"
+  ],
+  "unsupported": [
+    "Core\\(TM\\)2",
+    "Core\\(TM\\) i[3579]-[2-7]\\d{3}(?!\\d)",
+    "Core\\(TM\\) i[3579] CPU",
+    "Ryzen [357] (?:PRO )?1\\d{3}",
+    "Ryzen [35] (?:PRO )?2[24]00G",
+    "FX\\(tm\\)",
+    "Phenom",
+    "Athlon\\(tm\\) (?:II|64)"
+  ]
+}

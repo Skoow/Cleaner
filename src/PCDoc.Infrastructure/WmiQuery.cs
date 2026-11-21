@@ -38,7 +38,9 @@ public sealed class WmiQuery : IWmiQuery
         catch (Exception ex) when (ex is ManagementException or COMException or UnauthorizedAccessException
                                        or ArgumentException or TimeoutException)
         {
-            throw new WmiUnavailableException(ns, wql, ex);
+            var denied = ex is UnauthorizedAccessException
+                         || (ex is ManagementException me && me.ErrorCode == ManagementStatus.AccessDenied);
+            throw new WmiUnavailableException(ns, wql, ex, denied);
         }
     }
 }

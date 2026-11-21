@@ -6,4 +6,9 @@
     <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
     <InternalsVisibleTo Include="PCDoc.Modules.System.Tests" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Liste intégrée (repli) + copie dans la sortie (remplaçable par une mise à jour des définitions). -->
+    <EmbeddedResource Include="..\PCDoc.Definitions\win11-supported-cpus.json" LogicalName="PCDoc.Definitions.win11-supported-cpus.json" />
+    <None Include="..\PCDoc.Definitions\win11-supported-cpus.json" Link="Definitions\win11-supported-cpus.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
