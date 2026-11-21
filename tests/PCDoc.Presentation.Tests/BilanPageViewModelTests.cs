@@ -121,14 +121,14 @@ public class BilanPageViewModelTests
     }
 
     [Fact]
-    public async Task FixAvailable_ShowsFixButton()
+    public async Task WithoutFixPipeline_NoFixButtons()
     {
         var (vm, _) = Make(Returning("system", F("a", "system", Severity.Warning, fix: true)));
 
         await vm.AnalyzeCommand.ExecuteAsync(null);
 
-        vm.AnyFixAvailable.Should().BeTrue();
-        vm.Findings[0].ShowFixButton.Should().BeTrue();
+        vm.AnyFixAvailable.Should().BeFalse();
+        vm.Findings[0].ShowFixButton.Should().BeFalse();
     }
 
     [Fact]
@@ -149,6 +149,69 @@ public class BilanPageViewModelTests
         vm.Findings[0].SeverityLabel.Should().Be("Warning");
         vm.ScoreLabel.Should().Be("Good condition");
         calls.Should().Be(1);
+    }
+
+    private static (BilanPageViewModel Vm, FixConfirmationViewModelTests.Fixer Fixer, Func<int> Calls) MakeWithFixes(PCDoc.Core.Settings.AppMode mode)
+    {
+        var calls = 0;
+        var scanner = new Scanner("system", _ =>
+        {
+            calls++;
+            return Task.FromResult<IReadOnlyList<Finding>>(
+            [
+                F("safe", "system", Severity.Info, fix: true),
+                F("risky", "system", Severity.Info, fix: true) with { Risk = PCDoc.Core.Findings.RiskLevel.Discouraged },
+                F("nofix", "system", Severity.Warning),
+            ]);
+        });
+        var localizer = new Localizer();
+        localizer.Register(CoreResources.Manager);
+        SystemModule.RegisterResources(localizer);
+        var fixer = new FixConfirmationViewModelTests.Fixer();
+        var pipeline = new PCDoc.Core.Fixing.FixPipeline([fixer], new FixConfirmationViewModelTests.Restore(PCDoc.Core.Fixing.RestorePointOutcome.Created),
+            new PCDoc.Core.Fixing.UndoJournal(Path.Combine(Path.GetTempPath(), "pcdoc-b-" + Guid.NewGuid().ToString("N"), "u.jsonl"), new FixConfirmationViewModelTests.Clock()));
+        var fixes = new PCDoc.Presentation.Fixing.FixConfirmationViewModel(pipeline, localizer, () => mode);
+        var vm = new BilanPageViewModel(new BilanOrchestrator([scanner], new Clock(), TimeSpan.FromSeconds(5)), localizer, null, fixes, () => mode);
+        return (vm, fixer, () => calls);
+    }
+
+    [Fact]
+    public async Task FixButtons_FollowMode()
+    {
+        var (novice, _, _) = MakeWithFixes(PCDoc.Core.Settings.AppMode.Novice);
+        await novice.AnalyzeCommand.ExecuteAsync(null);
+        novice.Findings.Where(f => f.ShowFixButton).Select(f => f.Id).Should().Equal("safe");
+
+        var (expert, _, _) = MakeWithFixes(PCDoc.Core.Settings.AppMode.Expert);
+        await expert.AnalyzeCommand.ExecuteAsync(null);
+        expert.Findings.Where(f => f.ShowFixButton).Select(f => f.Id).Should().BeEquivalentTo("safe", "risky");
+    }
+
+    [Fact]
+    public async Task FixAll_RequestsSafeOnly_ThenReanalyzes()
+    {
+        var (vm, fixer, calls) = MakeWithFixes(PCDoc.Core.Settings.AppMode.Expert);
+        await vm.AnalyzeCommand.ExecuteAsync(null);
+
+        vm.FixAllCommand.Execute(null);
+        vm.Fixes!.Items.Select(i => i.Id).Should().Equal("safe");
+        await vm.Fixes.ConfirmCommand.ExecuteAsync(null);
+        await vm.LastAnalysis!;
+
+        fixer.Applied.Should().Equal("safe");
+        calls().Should().Be(2, "le Bilan est relancé après les corrections");
+    }
+
+    [Fact]
+    public async Task FixOne_OpensConfirmationForThatFinding()
+    {
+        var (vm, _, _) = MakeWithFixes(PCDoc.Core.Settings.AppMode.Novice);
+        await vm.AnalyzeCommand.ExecuteAsync(null);
+
+        vm.FixCommand.Execute(vm.Findings.Single(f => f.Id == "safe"));
+
+        vm.Fixes!.IsOpen.Should().BeTrue();
+        vm.Fixes.Items.Single().Id.Should().Be("safe");
     }
 
     [Fact]

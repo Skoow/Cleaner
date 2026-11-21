@@ -70,3 +70,19 @@ About.ShowLicense	Read the GPL-3.0 license	Lire la licence GPL-3.0
 Nav.Menu	Menu	Menu
 About.Url	Website	Site
 About.LicenseText	License text	Texte de la licence
+Risk.Safe	Safe	Sûr
+Risk.Conditional	Depends on use	Selon l'usage
+Risk.Discouraged	Not recommended	Déconseillé
+Risk.Locked	Locked	Verrouillé
+Fix.Title	Confirm the changes	Confirmer les modifications
+Fix.Intro	PCDoc will make these changes. A restore point is created first, and each change can be undone from the History page.	PCDoc va faire ces modifications. Un point de restauration est créé avant, et chaque modification peut être annulée depuis la page Historique.
+Fix.Acknowledge	I understand that this change is not recommended and may cause problems.	Je comprends que cette modification est déconseillée et peut causer des problèmes.
+Fix.Confirm	Apply	Appliquer
+Fix.ConfirmWithoutRestorePoint	Apply without a restore point	Appliquer sans point de restauration
+Fix.Running	Applying changes…	Modifications en cours…
+Fix.Result	{0} change(s) applied. They can be undone from the History page.	{0} modification(s) appliquée(s). Elles peuvent être annulées depuis la page Historique.
+Fix.ResultWithFailures	{0} change(s) applied, {1} failed (see the log).	{0} modification(s) appliquée(s), {1} en échec (voir le journal).
+Fix.RestorePoint.Created	A restore point was created.	Un point de restauration a été créé.
+Fix.RestorePoint.ReusedRecent	A restore point from the last 24 hours is used.	Un point de restauration de moins de 24 h est utilisé.
+Fix.RestorePoint.ProtectionDisabled	System protection is turned off: no restore point can be created. Each change can still be undone from the History page.	La protection du système est désactivée : aucun point de restauration ne peut être créé. Chaque modification reste annulable depuis la page Historique.
+Fix.RestorePoint.Failed	Windows could not create a restore point. Each change can still be undone from the History page.	Windows n'a pas pu créer de point de restauration. Chaque modification reste annulable depuis la page Historique.

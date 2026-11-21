@@ -12,10 +12,11 @@ public sealed partial class FindingRowViewModel : ObservableObject
     [ObservableProperty]
     private bool _isExpanded;
 
-    public FindingRowViewModel(Finding finding, ILocalizer localizer)
+    public FindingRowViewModel(Finding finding, ILocalizer localizer, bool showFixButton)
     {
         Finding = finding;
         _localizer = localizer;
+        ShowFixButton = showFixButton;
     }
 
     public Finding Finding { get; }
@@ -36,7 +37,10 @@ public sealed partial class FindingRowViewModel : ObservableObject
 
     public string TechnicalDetails => Finding.TechnicalDetails;
 
-    public bool ShowFixButton => Finding.FixAvailable;
+    /// <summary>Correction proposée dans le mode actuel (novice : 🟢 seulement).</summary>
+    public bool ShowFixButton { get; }
+
+    public string RiskLabel => _localizer[$"Risk.{Finding.Risk}"];
 
     /// <summary>Texte lu par les lecteurs d'écran pour la ligne entière.</summary>
     public string AccessibleName => $"{SeverityLabel} : {Title}";

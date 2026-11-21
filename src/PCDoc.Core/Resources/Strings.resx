@@ -75,4 +75,20 @@
   <data name="Nav.Menu" xml:space="preserve"><value>Menu</value></data>
   <data name="About.Url" xml:space="preserve"><value>Website</value></data>
   <data name="About.LicenseText" xml:space="preserve"><value>License text</value></data>
+  <data name="Risk.Safe" xml:space="preserve"><value>Safe</value></data>
+  <data name="Risk.Conditional" xml:space="preserve"><value>Depends on use</value></data>
+  <data name="Risk.Discouraged" xml:space="preserve"><value>Not recommended</value></data>
+  <data name="Risk.Locked" xml:space="preserve"><value>Locked</value></data>
+  <data name="Fix.Title" xml:space="preserve"><value>Confirm the changes</value></data>
+  <data name="Fix.Intro" xml:space="preserve"><value>PCDoc will make these changes. A restore point is created first, and each change can be undone from the History page.</value></data>
+  <data name="Fix.Acknowledge" xml:space="preserve"><value>I understand that this change is not recommended and may cause problems.</value></data>
+  <data name="Fix.Confirm" xml:space="preserve"><value>Apply</value></data>
+  <data name="Fix.ConfirmWithoutRestorePoint" xml:space="preserve"><value>Apply without a restore point</value></data>
+  <data name="Fix.Running" xml:space="preserve"><value>Applying changes…</value></data>
+  <data name="Fix.Result" xml:space="preserve"><value>{0} change(s) applied. They can be undone from the History page.</value></data>
+  <data name="Fix.ResultWithFailures" xml:space="preserve"><value>{0} change(s) applied, {1} failed (see the log).</value></data>
+  <data name="Fix.RestorePoint.Created" xml:space="preserve"><value>A restore point was created.</value></data>
+  <data name="Fix.RestorePoint.ReusedRecent" xml:space="preserve"><value>A restore point from the last 24 hours is used.</value></data>
+  <data name="Fix.RestorePoint.ProtectionDisabled" xml:space="preserve"><value>System protection is turned off: no restore point can be created. Each change can still be undone from the History page.</value></data>
+  <data name="Fix.RestorePoint.Failed" xml:space="preserve"><value>Windows could not create a restore point. Each change can still be undone from the History page.</value></data>
 </root>

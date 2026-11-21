@@ -75,4 +75,20 @@
   <data name="Nav.Menu" xml:space="preserve"><value>Menu</value></data>
   <data name="About.Url" xml:space="preserve"><value>Site</value></data>
   <data name="About.LicenseText" xml:space="preserve"><value>Texte de la licence</value></data>
+  <data name="Risk.Safe" xml:space="preserve"><value>Sûr</value></data>
+  <data name="Risk.Conditional" xml:space="preserve"><value>Selon l'usage</value></data>
+  <data name="Risk.Discouraged" xml:space="preserve"><value>Déconseillé</value></data>
+  <data name="Risk.Locked" xml:space="preserve"><value>Verrouillé</value></data>
+  <data name="Fix.Title" xml:space="preserve"><value>Confirmer les modifications</value></data>
+  <data name="Fix.Intro" xml:space="preserve"><value>PCDoc va faire ces modifications. Un point de restauration est créé avant, et chaque modification peut être annulée depuis la page Historique.</value></data>
+  <data name="Fix.Acknowledge" xml:space="preserve"><value>Je comprends que cette modification est déconseillée et peut causer des problèmes.</value></data>
+  <data name="Fix.Confirm" xml:space="preserve"><value>Appliquer</value></data>
+  <data name="Fix.ConfirmWithoutRestorePoint" xml:space="preserve"><value>Appliquer sans point de restauration</value></data>
+  <data name="Fix.Running" xml:space="preserve"><value>Modifications en cours…</value></data>
+  <data name="Fix.Result" xml:space="preserve"><value>{0} modification(s) appliquée(s). Elles peuvent être annulées depuis la page Historique.</value></data>
+  <data name="Fix.ResultWithFailures" xml:space="preserve"><value>{0} modification(s) appliquée(s), {1} en échec (voir le journal).</value></data>
+  <data name="Fix.RestorePoint.Created" xml:space="preserve"><value>Un point de restauration a été créé.</value></data>
+  <data name="Fix.RestorePoint.ReusedRecent" xml:space="preserve"><value>Un point de restauration de moins de 24 h est utilisé.</value></data>
+  <data name="Fix.RestorePoint.ProtectionDisabled" xml:space="preserve"><value>La protection du système est désactivée : aucun point de restauration ne peut être créé. Chaque modification reste annulable depuis la page Historique.</value></data>
+  <data name="Fix.RestorePoint.Failed" xml:space="preserve"><value>Windows n'a pas pu créer de point de restauration. Chaque modification reste annulable depuis la page Historique.</value></data>
 </root>

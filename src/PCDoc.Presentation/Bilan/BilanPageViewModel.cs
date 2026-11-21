@@ -7,6 +7,8 @@ using PCDoc.Core;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Findings;
 using PCDoc.Core.Localization;
+using PCDoc.Core.Settings;
+using PCDoc.Presentation.Fixing;
 
 namespace PCDoc.Presentation.Bilan;
 
@@ -53,13 +55,34 @@ public sealed partial class BilanPageViewModel : ObservableObject
     [ObservableProperty]
     private IReadOnlyList<ProgressStep> _steps = [];
 
-    public BilanPageViewModel(BilanOrchestrator orchestrator, ILocalizer localizer, IClipboardService? clipboard = null)
+    private readonly Func<AppMode> _mode;
+
+    public BilanPageViewModel(
+        BilanOrchestrator orchestrator,
+        ILocalizer localizer,
+        IClipboardService? clipboard = null,
+        FixConfirmationViewModel? fixes = null,
+        Func<AppMode>? mode = null)
     {
         _orchestrator = orchestrator;
         _localizer = localizer;
         _clipboard = clipboard;
+        _mode = mode ?? (() => AppMode.Novice);
+        Fixes = fixes;
+        if (fixes is not null)
+        {
+            // Après des corrections, le Bilan est relancé pour montrer l'état réel.
+            fixes.Completed += (_, _) => LastAnalysis = AnalyzeCommand.ExecuteAsync(null);
+        }
+
         localizer.PropertyChanged += (_, _) => RefreshTexts();
     }
+
+    /// <summary>Panneau de confirmation des corrections (null si les corrections ne sont pas disponibles).</summary>
+    public FixConfirmationViewModel? Fixes { get; }
+
+    /// <summary>Dernière analyse relancée automatiquement (pour les tests et l'interface).</summary>
+    public Task? LastAnalysis { get; private set; }
 
     public ObservableCollection<FindingRowViewModel> Findings { get; } = [];
 
@@ -92,7 +115,9 @@ public sealed partial class BilanPageViewModel : ObservableObject
             string.Join(", ", r.Errors.Select(e => _localizer[$"Module.{e.Module}"]))))
         : null;
 
-    public bool AnyFixAvailable => _result?.Findings.Any(f => f.FixAvailable) == true;
+    public bool AnyFixAvailable => Fixes is not null && _result?.Findings.Any(FixPolicy.IsInFixAll) == true;
+
+    public bool FixesAvailableInThisVersion => Fixes is not null;
 
     public bool HasNoFindings => State == BilanState.Done && _result is { Findings.Count: 0 };
 
@@ -128,6 +153,18 @@ public sealed partial class BilanPageViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void Fix(FindingRowViewModel? row)
+    {
+        if (row is not null)
+        {
+            Fixes?.Request([row.Finding]);
+        }
+    }
+
+    [RelayCommand]
+    private void FixAll() => Fixes?.Request(_result?.Findings.Where(FixPolicy.IsInFixAll) ?? []);
+
+    [RelayCommand]
     private void CopyFinding(FindingRowViewModel? row)
     {
         if (row is not null)
@@ -155,7 +192,7 @@ public sealed partial class BilanPageViewModel : ObservableObject
 
         foreach (var f in _result.Findings)
         {
-            var row = new FindingRowViewModel(f, _localizer);
+            var row = new FindingRowViewModel(f, _localizer, false);
             text.AppendLine().Append('[').Append(row.SeverityLabel).Append("] ").AppendLine(row.Title)
                 .AppendLine(row.Explanation)
                 .AppendLine(row.TechnicalDetails);
@@ -189,7 +226,10 @@ public sealed partial class BilanPageViewModel : ObservableObject
 
         foreach (var f in _result.Findings.Where(f => ModuleFilter is null || f.Module == ModuleFilter))
         {
-            Findings.Add(new FindingRowViewModel(f, _localizer) { IsExpanded = Findings.Count == 0 });
+            Findings.Add(new FindingRowViewModel(f, _localizer, Fixes is not null && FixPolicy.IsOffered(f, _mode()))
+            {
+                IsExpanded = Findings.Count == 0,
+            });
         }
     }
 
