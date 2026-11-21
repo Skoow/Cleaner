@@ -1,6 +1,6 @@
 namespace PCDoc.Core.Findings;
 
-/// <summary>Un problème trouvé par une analyse (spec v2 §3.3).</summary>
+/// <summary>Un problème trouvé par une analyse (spec v2 §3.3). <c>FixData</c> : données opaques pour le correcteur.</summary>
 public sealed record Finding(
     string Id,
     string Module,
@@ -11,4 +11,5 @@ public sealed record Finding(
     bool FixAvailable = false,
     RiskLevel Risk = RiskLevel.Safe,
     bool Reversible = true,
-    string? EstimatedGain = null);
+    string? EstimatedGain = null,
+    string? FixData = null);
