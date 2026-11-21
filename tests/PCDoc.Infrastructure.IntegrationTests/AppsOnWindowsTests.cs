@@ -18,7 +18,15 @@ public sealed class AppsOnWindowsTests
         File.WriteAllText(temp, "x");
         try
         {
-            launcher.IsTrusted(Path.Combine(Environment.SystemDirectory, "cmd.exe")).Should().BeTrue();
+            launcher.IsTrusted(Path.Combine(Environment.SystemDirectory, "cmd.exe")).Should().BeFalse("jamais un hôte de Windows (cmd, rundll32…)");
+            var dotnet = Path.Combine(ProgramFiles, "dotnet", "dotnet.exe");
+            if (File.Exists(dotnet))
+            {
+                launcher.IsTrusted(dotnet).Should().BeTrue();
+            }
+
+            launcher.AreArgumentsTrusted(@"/x C:\ProgramData\Vendor\x.dll,Uninstall").Should().BeFalse();
+            launcher.AreArgumentsTrusted("/S").Should().BeTrue();
             launcher.IsTrusted(temp).Should().BeFalse("le dossier temporaire est modifiable par l'utilisateur");
             launcher.IsTrusted(@"\\server\share\u.exe").Should().BeFalse();
             launcher.IsTrusted(Path.Combine(ProgramFiles, "..", "Windows", "System32", "cmd.exe")).Should().BeFalse();
