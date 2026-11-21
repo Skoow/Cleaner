@@ -1,0 +1,137 @@
+using PCDoc.Core.Abstractions;
+using PCDoc.Core.Findings;
+
+namespace PCDoc.Modules.Updates;
+
+public sealed record UpdatesReport(
+    IReadOnlyList<WindowsUpdateItem> Windows,
+    IReadOnlyList<WingetUpgrade> Software,
+    bool WindowsUpdateFailed,
+    bool WingetMissing);
+
+public interface IUpdatesSource
+{
+    /// <param name="includeWindows">Faux pour le Bilan : la recherche Windows Update peut durer plusieurs minutes.</param>
+    Task<UpdatesReport> AnalyzeAsync(bool includeWindows, CancellationToken cancellationToken);
+
+    IReadOnlyList<WingetPackage> Catalog { get; }
+}
+
+/// <summary>
+/// Recherche et installation. Les derniers résultats servent à revalider chaque correction : on n'installe que ce qui a
+/// été trouvé (Windows Update, winget upgrade) ou ce qui figure au catalogue (installation groupée).
+/// </summary>
+public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner winget, IReadOnlyList<WingetPackage>? catalog = null) : IUpdatesSource
+{
+    private static readonly TimeSpan ListTimeout = TimeSpan.FromMinutes(3);
+    private static readonly TimeSpan InstallTimeout = TimeSpan.FromMinutes(30);
+
+    private readonly Lock _gate = new();
+    private Dictionary<string, WindowsUpdateItem> _windows = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, WingetUpgrade> _software = new(StringComparer.OrdinalIgnoreCase);
+
+    public IReadOnlyList<WingetPackage> Catalog { get; } = catalog ?? Winget.DefaultCatalog;
+
+    /// <summary>Vrai si une mise à jour installée demande un redémarrage.</summary>
+    public bool RebootRequired { get; private set; }
+
+    public async Task<UpdatesReport> AnalyzeAsync(bool includeWindows, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<WindowsUpdateItem> windows = [];
+        var windowsFailed = false;
+        if (includeWindows)
+        {
+            try
+            {
+                windows = await windowsUpdate.SearchAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException or TimeoutException)
+            {
+                windowsFailed = true;
+            }
+        }
+
+        IReadOnlyList<WingetUpgrade> software = [];
+        var missing = false;
+        try
+        {
+            var (_, output) = await winget.RunAsync(Winget.ListUpgradesArguments, ListTimeout, cancellationToken).ConfigureAwait(false);
+            software = Winget.ParseUpgrades(output);
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or InvalidOperationException or TimeoutException)
+        {
+            missing = true;
+        }
+
+        lock (_gate)
+        {
+            if (includeWindows && !windowsFailed)
+            {
+                _windows = windows.GroupBy(w => w.Id, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+            }
+
+            if (!missing)
+            {
+                _software = software.GroupBy(s => s.Id, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
+        return new UpdatesReport(windows, software, windowsFailed, missing);
+    }
+
+    public static RiskLevel RiskOf(WindowsUpdateItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        return item.IsDriver || item.IsOptional ? RiskLevel.Conditional : RiskLevel.Safe;
+    }
+
+    public WindowsUpdateItem? FindWindows(string id)
+    {
+        lock (_gate)
+        {
+            return _windows.GetValueOrDefault(id);
+        }
+    }
+
+    public WingetUpgrade? FindUpgrade(string id)
+    {
+        lock (_gate)
+        {
+            return _software.GetValueOrDefault(id);
+        }
+    }
+
+    public WingetPackage? FindPackage(string id) => Catalog.FirstOrDefault(p => p.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+    public async Task InstallWindowsAsync(WindowsUpdateItem item, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        var result = await windowsUpdate.InstallAsync([item.Id], cancellationToken).ConfigureAwait(false);
+        RebootRequired |= result.RebootRequired;
+        if (result.Installed == 0 || result.Failed > 0)
+        {
+            throw new InvalidOperationException($"Windows Update could not install {item.Title}");
+        }
+    }
+
+    public Task UpgradeAsync(WingetUpgrade upgrade, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(upgrade);
+        return RunAsync(Winget.UpgradeArguments(upgrade.Id), cancellationToken);
+    }
+
+    public Task InstallAsync(WingetPackage package, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(package);
+        return RunAsync(Winget.InstallArguments(package.Id), cancellationToken);
+    }
+
+    private async Task RunAsync(string arguments, CancellationToken cancellationToken)
+    {
+        var (exit, output) = await winget.RunAsync(arguments, InstallTimeout, cancellationToken).ConfigureAwait(false);
+        if (!Winget.IsSuccess(exit))
+        {
+            throw new InvalidOperationException($"winget exited with code 0x{exit:X8}: {output.LastOrDefault(l => l.Trim().Length > 0)?.Trim()}");
+        }
+    }
+}

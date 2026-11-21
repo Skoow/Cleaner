@@ -8,6 +8,8 @@
     <ProjectReference Include="..\PCDoc.Modules.Diagnostic\PCDoc.Modules.Diagnostic.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Cleanup\PCDoc.Modules.Cleanup.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Apps\PCDoc.Modules.Apps.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Updates\PCDoc.Modules.Updates.csproj" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
 </Project>

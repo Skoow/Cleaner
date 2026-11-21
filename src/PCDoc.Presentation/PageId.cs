@@ -8,6 +8,8 @@ public enum PageId
     Diagnostic,
     Cleanup,
     Apps,
+    Updates,
+    Optimize,
     History,
     Settings,
 }

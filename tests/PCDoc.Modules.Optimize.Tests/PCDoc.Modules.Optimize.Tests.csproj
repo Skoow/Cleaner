@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeRegistryReader.cs" Link="Fakes\FakeRegistryReader.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeWmiQuery.cs" Link="Fakes\FakeWmiQuery.cs" />
+  </ItemGroup>
+</Project>

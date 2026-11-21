@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "comment": "Logiciels gratuits courants installables en un clic (identifiants winget exacts).",
+  "packages": [
+    { "id": "Mozilla.Firefox", "name": "Firefox", "category": "browser" },
+    { "id": "Google.Chrome", "name": "Google Chrome", "category": "browser" },
+    { "id": "Brave.Brave", "name": "Brave", "category": "browser" },
+    { "id": "Mozilla.Thunderbird", "name": "Thunderbird", "category": "office" },
+    { "id": "TheDocumentFoundation.LibreOffice", "name": "LibreOffice", "category": "office" },
+    { "id": "SumatraPDF.SumatraPDF", "name": "SumatraPDF", "category": "office" },
+    { "id": "Notepad++.Notepad++", "name": "Notepad++", "category": "office" },
+    { "id": "7zip.7zip", "name": "7-Zip", "category": "tools" },
+    { "id": "voidtools.Everything", "name": "Everything", "category": "tools" },
+    { "id": "Microsoft.PowerToys", "name": "PowerToys", "category": "tools" },
+    { "id": "ShareX.ShareX", "name": "ShareX", "category": "tools" },
+    { "id": "KeePassXC.KeePassXC", "name": "KeePassXC", "category": "security" },
+    { "id": "Bitwarden.Bitwarden", "name": "Bitwarden", "category": "security" },
+    { "id": "VideoLAN.VLC", "name": "VLC", "category": "media" },
+    { "id": "Audacity.Audacity", "name": "Audacity", "category": "media" },
+    { "id": "OBSProject.OBSStudio", "name": "OBS Studio", "category": "media" },
+    { "id": "HandBrake.HandBrake", "name": "HandBrake", "category": "media" },
+    { "id": "Inkscape.Inkscape", "name": "Inkscape", "category": "media" },
+    { "id": "Valve.Steam", "name": "Steam", "category": "games" },
+    { "id": "Discord.Discord", "name": "Discord", "category": "communication" },
+    { "id": "Zoom.Zoom", "name": "Zoom", "category": "communication" },
+    { "id": "Microsoft.VisualStudioCode", "name": "Visual Studio Code", "category": "dev" },
+    { "id": "Git.Git", "name": "Git", "category": "dev" },
+    { "id": "qBittorrent.qBittorrent", "name": "qBittorrent", "category": "tools" }
+  ]
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
+    <InternalsVisibleTo Include="PCDoc.Modules.Updates.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\PCDoc.Definitions\winget-catalog.json" LogicalName="PCDoc.Definitions.winget-catalog.json" />
+    <None Include="..\PCDoc.Definitions\winget-catalog.json" Link="Definitions\winget-catalog.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

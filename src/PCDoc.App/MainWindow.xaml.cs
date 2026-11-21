@@ -45,6 +45,8 @@ public partial class MainWindow : Window
             : MainNav.SelectedItem == DiagnosticItem ? PageId.Diagnostic
             : MainNav.SelectedItem == CleanupItem ? PageId.Cleanup
             : MainNav.SelectedItem == AppsItem ? PageId.Apps
+            : MainNav.SelectedItem == UpdatesItem ? PageId.Updates
+            : MainNav.SelectedItem == OptimizeItem ? PageId.Optimize
             : MainNav.SelectedItem == HistoryItem ? PageId.History
             : PageId.Bilan);
     }
@@ -68,6 +70,8 @@ public partial class MainWindow : Window
             PageId.Diagnostic => DiagnosticItem,
             PageId.Cleanup => CleanupItem,
             PageId.Apps => AppsItem,
+            PageId.Updates => UpdatesItem,
+            PageId.Optimize => OptimizeItem,
             PageId.History => HistoryItem,
             _ => null,
         };

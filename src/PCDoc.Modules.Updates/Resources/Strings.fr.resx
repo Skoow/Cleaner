@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.updates" xml:space="preserve"><value>Mises à jour</value></data>
+  <data name="Finding.Updates.Windows.Title" xml:space="preserve"><value>Installer : {0}</value></data>
+  <data name="Finding.Updates.Upgrade.Title" xml:space="preserve"><value>Mettre à jour {0} ({1} → {2})</value></data>
+  <data name="Finding.Updates.Install.Title" xml:space="preserve"><value>Installer {0}</value></data>
+  <data name="Updates.Explanation.Windows" xml:space="preserve"><value>Mise à jour proposée par Windows Update. Installée sans aucune fenêtre ; un point de restauration est créé avant.</value></data>
+  <data name="Updates.Explanation.Driver" xml:space="preserve"><value>Pilote proposé par Windows Update. En général sans souci, mais un nouveau pilote peut parfois poser problème : installez-le si un périphérique fonctionne mal.</value></data>
+  <data name="Updates.Explanation.Optional" xml:space="preserve"><value>Mise à jour facultative (préversion ou fonction en plus). Pas nécessaire à la sécurité.</value></data>
+  <data name="Updates.Explanation.Upgrade" xml:space="preserve"><value>Nouvelle version disponible via winget, le gestionnaire de paquets de Windows. Installée sans fenêtre.</value></data>
+  <data name="Updates.Explanation.Install" xml:space="preserve"><value>Logiciel gratuit installé depuis sa source officielle via winget, sans fenêtre.</value></data>
+  <data name="Updates.Title" xml:space="preserve"><value>Mises à jour</value></data>
+  <data name="Updates.Intro" xml:space="preserve"><value>Windows, les pilotes et vos logiciels, mis à jour depuis un seul endroit.</value></data>
+  <data name="Updates.Analyze" xml:space="preserve"><value>Rechercher les mises à jour</value></data>
+  <data name="Updates.Tab.Windows" xml:space="preserve"><value>Windows et pilotes</value></data>
+  <data name="Updates.Tab.Software" xml:space="preserve"><value>Logiciels</value></data>
+  <data name="Updates.Tab.Install" xml:space="preserve"><value>Installer des logiciels</value></data>
+  <data name="Updates.InstallSelected" xml:space="preserve"><value>Installer la sélection</value></data>
+  <data name="Updates.UpgradeSelected" xml:space="preserve"><value>Mettre à jour la sélection</value></data>
+  <data name="Updates.None" xml:space="preserve"><value>Tout est à jour.</value></data>
+  <data name="Updates.WindowsFailed" xml:space="preserve"><value>Windows Update n'a pas répondu. Réessayez plus tard.</value></data>
+  <data name="Updates.WingetMissing" xml:space="preserve"><value>winget (Programme d'installation d'application) n'est pas installé : installez « Programme d'installation d'application » depuis le Microsoft Store pour mettre à jour vos logiciels.</value></data>
+  <data name="Updates.Reboot" xml:space="preserve"><value>Redémarrez le PC pour terminer l'installation des mises à jour.</value></data>
+  <data name="Updates.Searching" xml:space="preserve"><value>La recherche Windows Update peut prendre quelques minutes…</value></data>
+  <data name="Updates.Category.browser" xml:space="preserve"><value>Navigateurs</value></data>
+  <data name="Updates.Category.office" xml:space="preserve"><value>Bureautique</value></data>
+  <data name="Updates.Category.tools" xml:space="preserve"><value>Outils</value></data>
+  <data name="Updates.Category.security" xml:space="preserve"><value>Sécurité</value></data>
+  <data name="Updates.Category.media" xml:space="preserve"><value>Photo, vidéo, audio</value></data>
+  <data name="Updates.Category.games" xml:space="preserve"><value>Jeux</value></data>
+  <data name="Updates.Category.communication" xml:space="preserve"><value>Communication</value></data>
+  <data name="Updates.Category.dev" xml:space="preserve"><value>Développement</value></data>
+  <data name="Updates.Driver" xml:space="preserve"><value>Pilote</value></data>
+  <data name="Updates.Optional" xml:space="preserve"><value>Facultative</value></data>
+</root>

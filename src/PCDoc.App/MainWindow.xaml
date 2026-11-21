@@ -11,6 +11,8 @@
         xmlns:dg="clr-namespace:PCDoc.Presentation.Diagnostic;assembly=PCDoc.Presentation"
         xmlns:cl="clr-namespace:PCDoc.Presentation.Cleanup;assembly=PCDoc.Presentation"
         xmlns:ap="clr-namespace:PCDoc.Presentation.Apps;assembly=PCDoc.Presentation"
+        xmlns:up="clr-namespace:PCDoc.Presentation.Updates;assembly=PCDoc.Presentation"
+        xmlns:op="clr-namespace:PCDoc.Presentation.Optimize;assembly=PCDoc.Presentation"
         Title="PCDoc"
         Icon="Assets/pcdoc.ico"
         Width="1180" Height="760" MinWidth="960" MinHeight="600"
@@ -25,6 +27,8 @@
     <DataTemplate DataType="{x:Type dg:DiagnosticPageViewModel}"><views:DiagnosticPage /></DataTemplate>
     <DataTemplate DataType="{x:Type cl:CleanupPageViewModel}"><views:CleanupPage /></DataTemplate>
     <DataTemplate DataType="{x:Type ap:AppsPageViewModel}"><views:AppsPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type up:UpdatesPageViewModel}"><views:UpdatesPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type op:OptimizePageViewModel}"><views:OptimizePage /></DataTemplate>
     <DataTemplate DataType="{x:Type pr:FirstRunViewModel}"><views:FirstRunView /></DataTemplate>
   </Window.Resources>
 
@@ -80,6 +84,18 @@
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE71D;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.Apps}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+        <ListBoxItem x:Name="UpdatesItem" AutomationProperties.Name="{app:T Nav.Updates}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE895;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Updates}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+        <ListBoxItem x:Name="OptimizeItem" AutomationProperties.Name="{app:T Nav.Optimize}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE945;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Optimize}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
         <ListBoxItem x:Name="HistoryItem" AutomationProperties.Name="{app:T Nav.History}">

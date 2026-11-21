@@ -5,8 +5,30 @@ using CoreHive = PCDoc.Core.Abstractions.RegistryHive;
 namespace PCDoc.Infrastructure.Writes;
 
 /// <summary>Écritures registre des correcteurs ; « TargetUser » = HKEY_USERS\&lt;SID du profil cible&gt;.</summary>
-public sealed class RegistryWriter(IUserProfileResolver profiles) : IRegistryWriter
+public sealed class RegistryWriter(IUserProfileResolver profiles) : IRegistryWriter, IRegistryValueWriter
 {
+    public void SetValue(CoreHive hive, string path, string name, object? value)
+    {
+        if (value is null)
+        {
+            DeleteValue(hive, path, name);
+            return;
+        }
+
+        using var key = Root(hive).CreateSubKey(Full(hive, path), writable: true);
+        switch (value)
+        {
+            case int dword:
+                key.SetValue(name, dword, RegistryValueKind.DWord);
+                break;
+            case string text:
+                key.SetValue(name, text, RegistryValueKind.String);
+                break;
+            default:
+                throw new ArgumentException("Only DWORD and string values are supported", nameof(value));
+        }
+    }
+
     public void SetBinary(CoreHive hive, string path, string name, byte[] value)
     {
         using var key = Root(hive).CreateSubKey(Full(hive, path), writable: true);

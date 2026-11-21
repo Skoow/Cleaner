@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.optimize" xml:space="preserve"><value>Optimization</value></data>
+  <data name="Optimize.game-dvr-off.Title" xml:space="preserve"><value>Turn off background game recording</value></data>
+  <data name="Optimize.game-dvr-off.Explanation" xml:space="preserve"><value>Xbox Game Bar records the last minutes of play all the time, which slows games down. Screenshots still work.</value></data>
+  <data name="Optimize.game-mode.Title" xml:space="preserve"><value>Turn on Game Mode</value></data>
+  <data name="Optimize.game-mode.Explanation" xml:space="preserve"><value>Windows gives priority to the game you are playing.</value></data>
+  <data name="Optimize.startup-delay-off.Title" xml:space="preserve"><value>Start your programs sooner</value></data>
+  <data name="Optimize.startup-delay-off.Explanation" xml:space="preserve"><value>Removes the delay Windows adds before starting programs after you sign in.</value></data>
+  <data name="Optimize.menu-delay.Title" xml:space="preserve"><value>Faster menus</value></data>
+  <data name="Optimize.menu-delay.Explanation" xml:space="preserve"><value>Submenus open after 0.1 s instead of 0.4 s.</value></data>
+  <data name="Optimize.transparency-off.Title" xml:space="preserve"><value>Turn off transparency effects</value></data>
+  <data name="Optimize.transparency-off.Explanation" xml:space="preserve"><value>Saves a little graphics power and battery. The look becomes slightly plainer.</value></data>
+  <data name="Optimize.animations-off.Title" xml:space="preserve"><value>Turn off window animations</value></data>
+  <data name="Optimize.animations-off.Explanation" xml:space="preserve"><value>Windows open and minimize instantly. Applies after you sign in again.</value></data>
+  <data name="Optimize.fast-startup-off.Title" xml:space="preserve"><value>Turn off Fast Startup</value></data>
+  <data name="Optimize.fast-startup-off.Explanation" xml:space="preserve"><value>Useful if updates or devices misbehave after a shutdown, or with dual boot. Startup becomes a few seconds slower.</value></data>
+  <data name="Optimize.power-high.Title" xml:space="preserve"><value>High performance power plan</value></data>
+  <data name="Optimize.power-high.Explanation" xml:space="preserve"><value>The processor stays at full speed. On a laptop, the battery drains faster.</value></data>
+  <data name="Optimize.power-balanced.Title" xml:space="preserve"><value>Balanced power plan</value></data>
+  <data name="Optimize.power-balanced.Explanation" xml:space="preserve"><value>The setting recommended by Windows: speed when needed, savings the rest of the time.</value></data>
+  <data name="Optimize.hibernate-off.Title" xml:space="preserve"><value>Turn off hibernation</value></data>
+  <data name="Optimize.hibernate-off.Explanation" xml:space="preserve"><value>Frees a file as large as your memory on the system disk. Also turns off Fast Startup. Keep it on a laptop.</value></data>
+  <data name="Optimize.Title" xml:space="preserve"><value>Optimization</value></data>
+  <data name="Optimize.Intro" xml:space="preserve"><value>Settings that speed up Windows. Each one can be undone from History.</value></data>
+  <data name="Optimize.Analyze" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Optimize.Apply" xml:space="preserve"><value>Apply the selection</value></data>
+  <data name="Optimize.Applied" xml:space="preserve"><value>Already applied</value></data>
+  <data name="Optimize.Unavailable" xml:space="preserve"><value>Not available on this PC</value></data>
+  <data name="Optimize.Profile" xml:space="preserve"><value>Profile:</value></data>
+  <data name="Optimize.Profile.gaming" xml:space="preserve"><value>Gaming</value></data>
+  <data name="Optimize.Profile.office" xml:space="preserve"><value>Office</value></data>
+  <data name="Optimize.Profile.battery" xml:space="preserve"><value>Battery</value></data>
+</root>

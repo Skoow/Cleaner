@@ -26,6 +26,10 @@ using PCDoc.Modules.Cleanup;
 using PCDoc.Presentation.Cleanup;
 using PCDoc.Modules.Apps;
 using PCDoc.Presentation.Apps;
+using PCDoc.Modules.Updates;
+using PCDoc.Presentation.Updates;
+using PCDoc.Modules.Optimize;
+using PCDoc.Presentation.Optimize;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -67,7 +71,9 @@ internal static class Composition
         // Corrections (v0.2) : conseiller, correcteurs, points de restauration, journal d'annulation protégé.
         services.AddSingleton<IConditionProbe>(sp => new ConditionProbe(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>()));
         services.AddSingleton(sp => new AutorunAdvisor(AdvisorCatalog.Default, sp.GetRequiredService<IConditionProbe>()));
-        services.AddSingleton<IRegistryWriter, RegistryWriter>();
+        services.AddSingleton<RegistryWriter>();
+        services.AddSingleton<IRegistryWriter>(sp => sp.GetRequiredService<RegistryWriter>());
+        services.AddSingleton<IRegistryValueWriter>(sp => sp.GetRequiredService<RegistryWriter>());
         services.AddSingleton<IServiceControl, ServiceControl>();
         services.AddSingleton<ITaskControl, TaskControl>();
         services.AddSingleton<IBackupStore, BackupStore>();
@@ -111,6 +117,20 @@ internal static class Composition
         services.AddSingleton<IFixer>(sp => new UninstallFixer(sp.GetRequiredService<AppsEngine>()));
         services.AddSingleton<IFixer>(sp => new LeftoversFixer(sp.GetRequiredService<AppsEngine>(), sp.GetRequiredService<IQuarantine>()));
 
+        // Mises à jour et optimisation (v0.6).
+        services.AddSingleton<IWindowsUpdate, WindowsUpdate>();
+        services.AddSingleton<IWingetRunner, WingetRunner>();
+        services.AddSingleton(sp => new UpdatesEngine(sp.GetRequiredService<IWindowsUpdate>(), sp.GetRequiredService<IWingetRunner>()));
+        services.AddSingleton<IUpdatesSource>(sp => sp.GetRequiredService<UpdatesEngine>());
+        services.AddSingleton<IScanner>(sp => new UpdatesScanner(sp.GetRequiredService<IUpdatesSource>()));
+        services.AddSingleton<IFixer>(sp => new UpdateFixer(sp.GetRequiredService<UpdatesEngine>()));
+        services.AddSingleton(sp => new OptimizeEngine(TweakCatalog.Default, sp.GetRequiredService<IRegistryReader>(),
+            sp.GetRequiredService<IRegistryValueWriter>(), sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IWmiQuery>()));
+        services.AddSingleton<IOptimizeSource>(sp => sp.GetRequiredService<OptimizeEngine>());
+        services.AddSingleton<IScanner>(sp => new OptimizeScanner(sp.GetRequiredService<IOptimizeSource>()));
+        services.AddSingleton<IFixer>(sp => new TweakFixer(sp.GetRequiredService<OptimizeEngine>(), sp.GetRequiredService<IRegistryWriter>(),
+            sp.GetRequiredService<IBackupStore>(), () => sp.GetRequiredService<IClock>().Now));
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
@@ -152,6 +172,10 @@ internal static class Composition
         PageId.Cleanup => new CleanupPageViewModel(services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services)),
         PageId.Apps => new AppsPageViewModel(services.GetRequiredService<IAppsSource>(), services.GetRequiredService<ILocalizer>(),
+            NewFixPanel(services), Mode(services)),
+        PageId.Updates => new UpdatesPageViewModel(services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ILocalizer>(),
+            NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired),
+        PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],

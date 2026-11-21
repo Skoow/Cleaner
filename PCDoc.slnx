@@ -5,6 +5,8 @@
     <Project Path="src/PCDoc.Infrastructure/PCDoc.Infrastructure.csproj" />
     <Project Path="src/PCDoc.Modules.Cleanup/PCDoc.Modules.Cleanup.csproj" />
     <Project Path="src/PCDoc.Modules.Apps/PCDoc.Modules.Apps.csproj" />
+    <Project Path="src/PCDoc.Modules.Optimize/PCDoc.Modules.Optimize.csproj" />
+    <Project Path="src/PCDoc.Modules.Updates/PCDoc.Modules.Updates.csproj" />
     <Project Path="src/PCDoc.Modules.Diagnostic/PCDoc.Modules.Diagnostic.csproj" />
     <Project Path="src/PCDoc.Modules.System/PCDoc.Modules.System.csproj" />
     <Project Path="src/PCDoc.Presentation/PCDoc.Presentation.csproj" />
@@ -14,6 +16,8 @@
     <Project Path="tests/PCDoc.Infrastructure.IntegrationTests/PCDoc.Infrastructure.IntegrationTests.csproj" />
     <Project Path="tests/PCDoc.Modules.Cleanup.Tests/PCDoc.Modules.Cleanup.Tests.csproj" />
     <Project Path="tests/PCDoc.Modules.Apps.Tests/PCDoc.Modules.Apps.Tests.csproj" />
+    <Project Path="tests/PCDoc.Modules.Optimize.Tests/PCDoc.Modules.Optimize.Tests.csproj" />
+    <Project Path="tests/PCDoc.Modules.Updates.Tests/PCDoc.Modules.Updates.Tests.csproj" />
     <Project Path="tests/PCDoc.Modules.Diagnostic.Tests/PCDoc.Modules.Diagnostic.Tests.csproj" />
     <Project Path="tests/PCDoc.Modules.System.Tests/PCDoc.Modules.System.Tests.csproj" />
     <Project Path="tests/PCDoc.Presentation.Tests/PCDoc.Presentation.Tests.csproj" />

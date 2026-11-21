@@ -126,3 +126,5 @@ Module.diagnostic	Diagnostics	Diagnostic
 Nav.Cleanup	Cleanup	Nettoyage
 Module.cleanup	Cleanup	Nettoyage
 Nav.Apps	Applications	Applications
+Nav.Updates	Updates	Mises à jour
+Nav.Optimize	Optimization	Optimisation

@@ -1,0 +1,61 @@
+<UserControl x:Class="PCDoc.App.Views.OptimizePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:u="clr-namespace:PCDoc.Presentation.Optimize;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Right" Content="{app:T Optimize.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T Optimize.Analyze}" />
+      <TextBlock Text="{app:T Optimize.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Optimize.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12">
+      <TextBlock Text="{app:T Optimize.Profile}" VerticalAlignment="Center" Margin="0,0,8,0" />
+      <ItemsControl ItemsSource="{Binding Profiles}" Focusable="False">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="{x:Type u:ProfileChoice}">
+            <Button Content="{Binding Label}" Margin="0,0,8,0" MinWidth="100" AutomationProperties.Name="{Binding Label}"
+                    Command="{Binding DataContext.ApplyProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding Id}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+    <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+      <Button DockPanel.Dock="Right" Content="{app:T Optimize.Apply}" Command="{Binding ApplySelectedCommand}"
+              AutomationProperties.Name="{app:T Optimize.Apply}" />
+    </DockPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <ItemsControl ItemsSource="{Binding Tweaks}" Focusable="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="{x:Type u:TweakRow}">
+            <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Status}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                        Margin="12,0,0,0" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                </Border>
+                <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center"
+                          AutomationProperties.Name="{Binding Title}">
+                  <StackPanel Margin="4,0,0,0">
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+                  </StackPanel>
+                </CheckBox>
+              </DockPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

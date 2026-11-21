@@ -79,6 +79,6 @@ jobs:
           global-json-file: global.json
       - name: Tests (net10.0 projects)
         run: |
-          for p in tests/PCDoc.Core.Tests tests/PCDoc.Modules.System.Tests tests/PCDoc.Modules.Diagnostic.Tests tests/PCDoc.Modules.Cleanup.Tests tests/PCDoc.Modules.Apps.Tests tests/PCDoc.Presentation.Tests; do
+          for p in tests/PCDoc.Core.Tests tests/PCDoc.Modules.System.Tests tests/PCDoc.Modules.Diagnostic.Tests tests/PCDoc.Modules.Cleanup.Tests tests/PCDoc.Modules.Apps.Tests tests/PCDoc.Modules.Optimize.Tests tests/PCDoc.Modules.Updates.Tests tests/PCDoc.Presentation.Tests; do
             dotnet test "$p" --filter "Category!=Windows" || exit 1
           done

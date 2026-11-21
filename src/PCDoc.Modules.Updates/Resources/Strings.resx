@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.updates" xml:space="preserve"><value>Updates</value></data>
+  <data name="Finding.Updates.Windows.Title" xml:space="preserve"><value>Install: {0}</value></data>
+  <data name="Finding.Updates.Upgrade.Title" xml:space="preserve"><value>Update {0} ({1} → {2})</value></data>
+  <data name="Finding.Updates.Install.Title" xml:space="preserve"><value>Install {0}</value></data>
+  <data name="Updates.Explanation.Windows" xml:space="preserve"><value>Update offered by Windows Update. Installed without any window; a restore point is created first.</value></data>
+  <data name="Updates.Explanation.Driver" xml:space="preserve"><value>Driver offered by Windows Update. Usually fine, but a new driver can sometimes cause problems: install it if a device misbehaves.</value></data>
+  <data name="Updates.Explanation.Optional" xml:space="preserve"><value>Optional update (preview or extra feature). Not needed for security.</value></data>
+  <data name="Updates.Explanation.Upgrade" xml:space="preserve"><value>New version available through winget, the Windows package manager. Installed silently.</value></data>
+  <data name="Updates.Explanation.Install" xml:space="preserve"><value>Free software installed from its official source through winget, without any window.</value></data>
+  <data name="Updates.Title" xml:space="preserve"><value>Updates</value></data>
+  <data name="Updates.Intro" xml:space="preserve"><value>Windows, drivers and your software, updated from one place.</value></data>
+  <data name="Updates.Analyze" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="Updates.Tab.Windows" xml:space="preserve"><value>Windows and drivers</value></data>
+  <data name="Updates.Tab.Software" xml:space="preserve"><value>Software</value></data>
+  <data name="Updates.Tab.Install" xml:space="preserve"><value>Install software</value></data>
+  <data name="Updates.InstallSelected" xml:space="preserve"><value>Install the selection</value></data>
+  <data name="Updates.UpgradeSelected" xml:space="preserve"><value>Update the selection</value></data>
+  <data name="Updates.None" xml:space="preserve"><value>Everything is up to date.</value></data>
+  <data name="Updates.WindowsFailed" xml:space="preserve"><value>Windows Update did not answer. Try again later.</value></data>
+  <data name="Updates.WingetMissing" xml:space="preserve"><value>winget (App Installer) is not installed: install "App Installer" from the Microsoft Store to update your software.</value></data>
+  <data name="Updates.Reboot" xml:space="preserve"><value>Restart the PC to finish installing the updates.</value></data>
+  <data name="Updates.Searching" xml:space="preserve"><value>Searching Windows Update can take a few minutes…</value></data>
+  <data name="Updates.Category.browser" xml:space="preserve"><value>Browsers</value></data>
+  <data name="Updates.Category.office" xml:space="preserve"><value>Office</value></data>
+  <data name="Updates.Category.tools" xml:space="preserve"><value>Tools</value></data>
+  <data name="Updates.Category.security" xml:space="preserve"><value>Security</value></data>
+  <data name="Updates.Category.media" xml:space="preserve"><value>Photo, video, audio</value></data>
+  <data name="Updates.Category.games" xml:space="preserve"><value>Games</value></data>
+  <data name="Updates.Category.communication" xml:space="preserve"><value>Communication</value></data>
+  <data name="Updates.Category.dev" xml:space="preserve"><value>Development</value></data>
+  <data name="Updates.Driver" xml:space="preserve"><value>Driver</value></data>
+  <data name="Updates.Optional" xml:space="preserve"><value>Optional</value></data>
+</root>

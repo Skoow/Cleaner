@@ -1,0 +1,120 @@
+<UserControl x:Class="PCDoc.App.Views.UpdatesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:u="clr-namespace:PCDoc.Presentation.Updates;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Right" Content="{app:T Updates.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T Updates.Analyze}" />
+      <TextBlock Text="{app:T Updates.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Updates.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Updates.Searching}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" Margin="0,0,0,8"
+               Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <Border DockPanel.Dock="Top" Margin="0,0,0,8" Padding="12,8" CornerRadius="6" Background="{DynamicResource Pcdoc.Warning.Background}"
+            Visibility="{Binding RebootRequired, Converter={StaticResource BoolToVisibility}}" AutomationProperties.LiveSetting="Polite">
+      <TextBlock Text="{app:T Updates.Reboot}" FontWeight="SemiBold" />
+    </Border>
+    <TabControl>
+      <TabItem Header="{app:T Updates.Tab.Windows}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{Binding WindowsStatus}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8" TextWrapping="Wrap"
+                     Visibility="{Binding WindowsStatus, Converter={StaticResource NotNullToVisibility}}" />
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Updates.InstallSelected}" Command="{Binding InstallWindowsCommand}" AutomationProperties.Name="{app:T Updates.InstallSelected}" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Windows}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type u:UpdateRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                              Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                      </Border>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Detail}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Updates.Tab.Software}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{Binding SoftwareStatus}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8" TextWrapping="Wrap"
+                     Visibility="{Binding SoftwareStatus, Converter={StaticResource NotNullToVisibility}}" />
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Updates.UpgradeSelected}" Command="{Binding UpgradeSoftwareCommand}" AutomationProperties.Name="{app:T Updates.UpgradeSelected}" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Software}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type u:UpdateRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                              Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                      </Border>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Detail}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Updates.Tab.Install}">
+        <DockPanel Margin="0,12,0,0">
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Updates.InstallSelected}" Command="{Binding InstallCatalogCommand}" AutomationProperties.Name="{app:T Updates.InstallSelected}" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Catalog}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type u:UpdateRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <Border DockPanel.Dock="Right" Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Warning.Background}"
+                              Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding RiskLabel}" FontSize="12" />
+                      </Border>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Detail}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

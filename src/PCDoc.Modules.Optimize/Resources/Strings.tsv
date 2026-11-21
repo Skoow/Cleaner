@@ -1,0 +1,32 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Optimize/Resources/Strings.tsv src/PCDoc.Modules.Optimize/Resources
+Module.optimize	Optimization	Optimisation
+Optimize.game-dvr-off.Title	Turn off background game recording	Désactiver l'enregistrement des jeux en arrière-plan
+Optimize.game-dvr-off.Explanation	Xbox Game Bar records the last minutes of play all the time, which slows games down. Screenshots still work.	La Xbox Game Bar enregistre en permanence les dernières minutes de jeu, ce qui ralentit les jeux. Les captures d'écran restent possibles.
+Optimize.game-mode.Title	Turn on Game Mode	Activer le mode Jeu
+Optimize.game-mode.Explanation	Windows gives priority to the game you are playing.	Windows donne la priorité au jeu en cours.
+Optimize.startup-delay-off.Title	Start your programs sooner	Lancer vos programmes plus tôt
+Optimize.startup-delay-off.Explanation	Removes the delay Windows adds before starting programs after you sign in.	Supprime l'attente que Windows ajoute avant de lancer les programmes après l'ouverture de session.
+Optimize.menu-delay.Title	Faster menus	Menus plus rapides
+Optimize.menu-delay.Explanation	Submenus open after 0.1 s instead of 0.4 s.	Les sous-menus s'ouvrent après 0,1 s au lieu de 0,4 s.
+Optimize.transparency-off.Title	Turn off transparency effects	Désactiver les effets de transparence
+Optimize.transparency-off.Explanation	Saves a little graphics power and battery. The look becomes slightly plainer.	Économise un peu de puissance graphique et de batterie. L'apparence devient un peu plus simple.
+Optimize.animations-off.Title	Turn off window animations	Désactiver les animations des fenêtres
+Optimize.animations-off.Explanation	Windows open and minimize instantly. Applies after you sign in again.	Les fenêtres s'ouvrent et se réduisent instantanément. Appliqué à la prochaine ouverture de session.
+Optimize.fast-startup-off.Title	Turn off Fast Startup	Désactiver le démarrage rapide
+Optimize.fast-startup-off.Explanation	Useful if updates or devices misbehave after a shutdown, or with dual boot. Startup becomes a few seconds slower.	Utile si des mises à jour ou des périphériques fonctionnent mal après un arrêt, ou en double démarrage. Le démarrage devient plus lent de quelques secondes.
+Optimize.power-high.Title	High performance power plan	Mode d'alimentation Performances élevées
+Optimize.power-high.Explanation	The processor stays at full speed. On a laptop, the battery drains faster.	Le processeur reste à pleine vitesse. Sur un portable, la batterie se vide plus vite.
+Optimize.power-balanced.Title	Balanced power plan	Mode d'alimentation Utilisation normale
+Optimize.power-balanced.Explanation	The setting recommended by Windows: speed when needed, savings the rest of the time.	Le réglage conseillé par Windows : de la vitesse quand il faut, des économies le reste du temps.
+Optimize.hibernate-off.Title	Turn off hibernation	Désactiver la mise en veille prolongée
+Optimize.hibernate-off.Explanation	Frees a file as large as your memory on the system disk. Also turns off Fast Startup. Keep it on a laptop.	Libère sur le disque système un fichier aussi gros que la mémoire. Désactive aussi le démarrage rapide. À garder sur un portable.
+Optimize.Title	Optimization	Optimisation
+Optimize.Intro	Settings that speed up Windows. Each one can be undone from History.	Des réglages qui accélèrent Windows. Chacun peut être annulé depuis l'Historique.
+Optimize.Analyze	Refresh	Actualiser
+Optimize.Apply	Apply the selection	Appliquer la sélection
+Optimize.Applied	Already applied	Déjà appliqué
+Optimize.Unavailable	Not available on this PC	Indisponible sur ce PC
+Optimize.Profile	Profile:	Profil :
+Optimize.Profile.gaming	Gaming	Jeu
+Optimize.Profile.office	Office	Bureautique
+Optimize.Profile.battery	Battery	Batterie

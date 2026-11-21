@@ -160,7 +160,20 @@
           "PCDoc.Core": "[0.4.0, )"
         }
       },
+      "pcdoc.modules.optimize": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )",
+          "PCDoc.Modules.System": "[0.4.0, )"
+        }
+      },
       "pcdoc.modules.system": {
+        "type": "Project",
+        "dependencies": {
+          "PCDoc.Core": "[0.4.0, )"
+        }
+      },
+      "pcdoc.modules.updates": {
         "type": "Project",
         "dependencies": {
           "PCDoc.Core": "[0.4.0, )"
@@ -174,7 +187,9 @@
           "PCDoc.Modules.Apps": "[0.4.0, )",
           "PCDoc.Modules.Cleanup": "[0.4.0, )",
           "PCDoc.Modules.Diagnostic": "[0.4.0, )",
-          "PCDoc.Modules.System": "[0.4.0, )"
+          "PCDoc.Modules.Optimize": "[0.4.0, )",
+          "PCDoc.Modules.System": "[0.4.0, )",
+          "PCDoc.Modules.Updates": "[0.4.0, )"
         }
       },
       "CommunityToolkit.Mvvm": {

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "comment": "Réglages réversibles. kind : registry (défaut), powerPlan, hibernate. desktopRisk : niveau sur un PC sans batterie. bilan : proposé dans le Bilan.",
+  "tweaks": [
+    { "id": "game-dvr-off", "risk": "Safe", "bilan": true, "profiles": ["gaming", "office", "battery"],
+      "values": [
+        { "hive": "TargetUser", "path": "System\\GameConfigStore", "name": "GameDVR_Enabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR", "name": "AppCaptureEnabled", "dword": 0 } ] },
+    { "id": "game-mode", "risk": "Safe", "profiles": ["gaming"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\GameBar", "name": "AutoGameModeEnabled", "dword": 1 } ] },
+    { "id": "startup-delay-off", "risk": "Safe", "bilan": true, "profiles": ["gaming", "office"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize", "name": "StartupDelayInMSec", "dword": 0 } ] },
+    { "id": "menu-delay", "risk": "Safe", "profiles": ["gaming", "office"],
+      "values": [ { "hive": "TargetUser", "path": "Control Panel\\Desktop", "name": "MenuShowDelay", "text": "100" } ] },
+    { "id": "transparency-off", "risk": "Safe", "profiles": ["battery"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "EnableTransparency", "dword": 0 } ] },
+    { "id": "animations-off", "risk": "Safe", "profiles": ["battery"],
+      "values": [ { "hive": "TargetUser", "path": "Control Panel\\Desktop\\WindowMetrics", "name": "MinAnimate", "text": "0" } ] },
+    { "id": "fast-startup-off", "risk": "Conditional", "profiles": [],
+      "values": [ { "hive": "LocalMachine", "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power", "name": "HiberbootEnabled", "dword": 0 } ] },
+    { "id": "power-high", "kind": "powerPlan", "plan": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c", "risk": "Conditional", "desktopRisk": "Safe", "profiles": ["gaming"] },
+    { "id": "power-balanced", "kind": "powerPlan", "plan": "381b4222-f694-41f0-9685-ff5bb260df2e", "risk": "Safe", "profiles": ["office", "battery"] },
+    { "id": "hibernate-off", "kind": "hibernate", "risk": "Conditional", "desktopRisk": "Safe", "profiles": [] }
+  ]
+}

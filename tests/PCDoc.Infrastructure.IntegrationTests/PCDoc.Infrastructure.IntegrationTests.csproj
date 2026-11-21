@@ -7,5 +7,7 @@
     <ProjectReference Include="..\..\src\PCDoc.Modules.Diagnostic\PCDoc.Modules.Diagnostic.csproj" />
     <ProjectReference Include="..\..\src\PCDoc.Modules.Cleanup\PCDoc.Modules.Cleanup.csproj" />
     <ProjectReference Include="..\..\src\PCDoc.Modules.Apps\PCDoc.Modules.Apps.csproj" />
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Updates\PCDoc.Modules.Updates.csproj" />
   </ItemGroup>
 </Project>

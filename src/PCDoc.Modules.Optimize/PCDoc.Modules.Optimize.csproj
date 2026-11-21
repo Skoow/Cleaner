@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.System\PCDoc.Modules.System.csproj" />
+    <InternalsVisibleTo Include="PCDoc.Modules.Optimize.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\PCDoc.Definitions\optimize.json" LogicalName="PCDoc.Definitions.optimize.json" />
+    <None Include="..\PCDoc.Definitions\optimize.json" Link="Definitions\optimize.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

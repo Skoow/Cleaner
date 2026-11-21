@@ -1,0 +1,33 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Updates/Resources/Strings.tsv src/PCDoc.Modules.Updates/Resources
+Module.updates	Updates	Mises à jour
+Finding.Updates.Windows.Title	Install: {0}	Installer : {0}
+Finding.Updates.Upgrade.Title	Update {0} ({1} → {2})	Mettre à jour {0} ({1} → {2})
+Finding.Updates.Install.Title	Install {0}	Installer {0}
+Updates.Explanation.Windows	Update offered by Windows Update. Installed without any window; a restore point is created first.	Mise à jour proposée par Windows Update. Installée sans aucune fenêtre ; un point de restauration est créé avant.
+Updates.Explanation.Driver	Driver offered by Windows Update. Usually fine, but a new driver can sometimes cause problems: install it if a device misbehaves.	Pilote proposé par Windows Update. En général sans souci, mais un nouveau pilote peut parfois poser problème : installez-le si un périphérique fonctionne mal.
+Updates.Explanation.Optional	Optional update (preview or extra feature). Not needed for security.	Mise à jour facultative (préversion ou fonction en plus). Pas nécessaire à la sécurité.
+Updates.Explanation.Upgrade	New version available through winget, the Windows package manager. Installed silently.	Nouvelle version disponible via winget, le gestionnaire de paquets de Windows. Installée sans fenêtre.
+Updates.Explanation.Install	Free software installed from its official source through winget, without any window.	Logiciel gratuit installé depuis sa source officielle via winget, sans fenêtre.
+Updates.Title	Updates	Mises à jour
+Updates.Intro	Windows, drivers and your software, updated from one place.	Windows, les pilotes et vos logiciels, mis à jour depuis un seul endroit.
+Updates.Analyze	Check for updates	Rechercher les mises à jour
+Updates.Tab.Windows	Windows and drivers	Windows et pilotes
+Updates.Tab.Software	Software	Logiciels
+Updates.Tab.Install	Install software	Installer des logiciels
+Updates.InstallSelected	Install the selection	Installer la sélection
+Updates.UpgradeSelected	Update the selection	Mettre à jour la sélection
+Updates.None	Everything is up to date.	Tout est à jour.
+Updates.WindowsFailed	Windows Update did not answer. Try again later.	Windows Update n'a pas répondu. Réessayez plus tard.
+Updates.WingetMissing	winget (App Installer) is not installed: install "App Installer" from the Microsoft Store to update your software.	winget (Programme d'installation d'application) n'est pas installé : installez « Programme d'installation d'application » depuis le Microsoft Store pour mettre à jour vos logiciels.
+Updates.Reboot	Restart the PC to finish installing the updates.	Redémarrez le PC pour terminer l'installation des mises à jour.
+Updates.Searching	Searching Windows Update can take a few minutes…	La recherche Windows Update peut prendre quelques minutes…
+Updates.Category.browser	Browsers	Navigateurs
+Updates.Category.office	Office	Bureautique
+Updates.Category.tools	Tools	Outils
+Updates.Category.security	Security	Sécurité
+Updates.Category.media	Photo, video, audio	Photo, vidéo, audio
+Updates.Category.games	Games	Jeux
+Updates.Category.communication	Communication	Communication
+Updates.Category.dev	Development	Développement
+Updates.Driver	Driver	Pilote
+Updates.Optional	Optional	Facultative
