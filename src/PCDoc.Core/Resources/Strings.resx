@@ -46,4 +46,30 @@
   <data name="Bilan.Empty" xml:space="preserve"><value>No problem found. Your PC is in good condition.</value></data>
   <data name="Bilan.ReportHeader" xml:space="preserve"><value>{0} report {1} — {2:g}</value></data>
   <data name="Bilan.ShowDetails" xml:space="preserve"><value>Show details</value></data>
+  <data name="Settings.Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings.LanguageHint" xml:space="preserve"><value>Applied immediately</value></data>
+  <data name="Settings.Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings.ThemeHint" xml:space="preserve"><value>Follows Windows by default</value></data>
+  <data name="Settings.Theme.Light" xml:space="preserve"><value>Light</value></data>
+  <data name="Settings.Theme.Dark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Settings.Theme.System" xml:space="preserve"><value>System</value></data>
+  <data name="Settings.Account" xml:space="preserve"><value>Analyzed account</value></data>
+  <data name="Settings.AccountHint" xml:space="preserve"><value>PCDoc reads the settings and programs of the person using this PC.</value></data>
+  <data name="Settings.AccountOther" xml:space="preserve"><value>{0} (PCDoc was authorized with another administrator account)</value></data>
+  <data name="Settings.Logs" xml:space="preserve"><value>Action log</value></data>
+  <data name="Settings.CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="Settings.Data" xml:space="preserve"><value>PCDoc data</value></data>
+  <data name="Settings.DataHint" xml:space="preserve"><value>Deletes the log and the settings of PCDoc on this PC.</value></data>
+  <data name="Settings.Clear" xml:space="preserve"><value>Clear PCDoc data</value></data>
+  <data name="Settings.ClearConfirm" xml:space="preserve"><value>Delete the log and the settings? This cannot be undone.</value></data>
+  <data name="Settings.ClearYes" xml:space="preserve"><value>Delete</value></data>
+  <data name="Settings.ClearDone" xml:space="preserve"><value>PCDoc data was deleted.</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="About.Title" xml:space="preserve"><value>About</value></data>
+  <data name="About.Tagline" xml:space="preserve"><value>Free software under the GPL-3.0 license · no ads, no telemetry</value></data>
+  <data name="About.Components" xml:space="preserve"><value>Components</value></data>
+  <data name="About.Component" xml:space="preserve"><value>Component</value></data>
+  <data name="About.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="About.License" xml:space="preserve"><value>License</value></data>
+  <data name="About.ShowLicense" xml:space="preserve"><value>Read the GPL-3.0 license</value></data>
 </root>

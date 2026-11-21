@@ -1,0 +1,116 @@
+<UserControl x:Class="PCDoc.App.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:s="clr-namespace:PCDoc.Core.Settings;assembly=PCDoc.Core"
+             xmlns:l="clr-namespace:PCDoc.Core.Localization;assembly=PCDoc.Core">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="28,20,28,28" MaxWidth="900" HorizontalAlignment="Left">
+      <TextBlock Text="{app:T Nav.Settings}" Style="{StaticResource Pcdoc.PageTitle}" Margin="0,0,0,16" />
+
+      <!-- Langue -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+            <RadioButton GroupName="lang" Content="Français" Margin="0,0,16,0" AutomationProperties.Name="Français"
+                         IsChecked="{Binding Language, Converter={StaticResource Equals}, ConverterParameter={x:Static l:AppLanguage.French}}" />
+            <RadioButton GroupName="lang" Content="English" AutomationProperties.Name="English"
+                         IsChecked="{Binding Language, Converter={StaticResource Equals}, ConverterParameter={x:Static l:AppLanguage.English}}" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Text="{app:T Settings.Language}" FontSize="14" />
+            <TextBlock Text="{app:T Settings.LanguageHint}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- Thème -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+            <RadioButton GroupName="theme" Content="{app:T Settings.Theme.Light}" Margin="0,0,16,0" AutomationProperties.Name="{app:T Settings.Theme.Light}"
+                         IsChecked="{Binding Theme, Converter={StaticResource Equals}, ConverterParameter={x:Static s:ThemeChoice.Light}}" />
+            <RadioButton GroupName="theme" Content="{app:T Settings.Theme.Dark}" Margin="0,0,16,0" AutomationProperties.Name="{app:T Settings.Theme.Dark}"
+                         IsChecked="{Binding Theme, Converter={StaticResource Equals}, ConverterParameter={x:Static s:ThemeChoice.Dark}}" />
+            <RadioButton GroupName="theme" Content="{app:T Settings.Theme.System}" AutomationProperties.Name="{app:T Settings.Theme.System}"
+                         IsChecked="{Binding Theme, Converter={StaticResource Equals}, ConverterParameter={x:Static s:ThemeChoice.System}}" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Text="{app:T Settings.Theme}" FontSize="14" />
+            <TextBlock Text="{app:T Settings.ThemeHint}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- Compte analysé -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <StackPanel>
+          <TextBlock Text="{app:T Settings.Account}" FontSize="14" />
+          <TextBlock Text="{Binding AnalyzedAccount}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,2" />
+          <TextBlock Text="{app:T Settings.AccountHint}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+        </StackPanel>
+      </Border>
+
+      <!-- Journal -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Content="{app:T Settings.CopyPath}" Command="{Binding CopyLogsPathCommand}" VerticalAlignment="Center"
+                  AutomationProperties.Name="{app:T Settings.CopyPath}" />
+          <StackPanel>
+            <TextBlock Text="{app:T Settings.Logs}" FontSize="14" />
+            <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding LogsPath, Mode=OneWay}" BorderThickness="0" Background="Transparent"
+                     AutomationProperties.Name="{app:T Settings.Logs}" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- Données de PCDoc (confirmation dans la page, jamais de boîte de dialogue) -->
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4">
+        <StackPanel>
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="{app:T Settings.Clear}" Command="{Binding RequestClearCommand}" VerticalAlignment="Center"
+                    AutomationProperties.Name="{app:T Settings.Clear}" />
+            <StackPanel>
+              <TextBlock Text="{app:T Settings.Data}" FontSize="14" />
+              <TextBlock Text="{app:T Settings.DataHint}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" />
+            </StackPanel>
+          </DockPanel>
+          <Border Margin="0,12,0,0" Padding="12" CornerRadius="6" Background="{DynamicResource Pcdoc.Warning.Background}"
+                  Visibility="{Binding ConfirmingClear, Converter={StaticResource BoolToVisibility}}">
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Content="{app:T Common.Cancel}" Command="{Binding CancelClearCommand}" Margin="8,0,0,0" />
+              <Button DockPanel.Dock="Right" Content="{app:T Settings.ClearYes}" Command="{Binding ConfirmClearCommand}" />
+              <TextBlock Text="{app:T Settings.ClearConfirm}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
+            </DockPanel>
+          </Border>
+          <TextBlock Text="{app:T Settings.ClearDone}" Foreground="{DynamicResource Pcdoc.Ok}" Margin="0,8,0,0"
+                     Visibility="{Binding ClearDone, Converter={StaticResource BoolToVisibility}}" />
+        </StackPanel>
+      </Border>
+
+      <!-- À propos -->
+      <TextBlock Text="{app:T About.Title}" Style="{StaticResource Pcdoc.SectionTitle}" Margin="0,20,0,8" />
+      <Border Style="{StaticResource Pcdoc.Card}">
+        <StackPanel>
+          <TextBlock Text="{Binding VersionText}" FontSize="16" FontWeight="SemiBold" />
+          <TextBlock Text="{app:T About.Tagline}" Style="{StaticResource Pcdoc.Muted}" Margin="0,2,0,12" />
+          <TextBlock Text="{app:T About.Components}" FontWeight="SemiBold" Margin="0,0,0,6" />
+          <DataGrid ItemsSource="{Binding Components}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T About.Components}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T About.Component}" Binding="{Binding Name}" Width="2*" />
+              <DataGridTextColumn Header="{app:T About.Version}" Binding="{Binding Version}" Width="*" />
+              <DataGridTextColumn Header="{app:T About.License}" Binding="{Binding License}" Width="*" />
+              <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="2*" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <Button Content="{app:T About.ShowLicense}" Command="{Binding ShowLicenseCommand}" HorizontalAlignment="Left" Margin="0,12,0,0"
+                  AutomationProperties.Name="{app:T About.ShowLicense}" />
+          <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding LicenseText, Mode=OneWay}" Margin="0,8,0,0" MaxHeight="360"
+                   VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
+                   Visibility="{Binding LicenseText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.Name="GPL-3.0" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

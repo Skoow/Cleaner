@@ -13,3 +13,9 @@ public interface IClipboardService
 {
     void SetText(string text);
 }
+
+/// <summary>Efface les journaux et les paramètres de PCDoc (implémenté par l'application).</summary>
+public interface IAppDataCleaner
+{
+    void Clear();
+}

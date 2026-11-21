@@ -5,6 +5,7 @@
         xmlns:views="clr-namespace:PCDoc.App.Views"
         xmlns:sp="clr-namespace:PCDoc.Presentation.SystemPage;assembly=PCDoc.Presentation"
         xmlns:b="clr-namespace:PCDoc.Presentation.Bilan;assembly=PCDoc.Presentation"
+        xmlns:st="clr-namespace:PCDoc.Presentation.Settings;assembly=PCDoc.Presentation"
         Title="PCDoc"
         Icon="Assets/pcdoc.ico"
         Width="1180" Height="760" MinWidth="960" MinHeight="600"
@@ -14,6 +15,7 @@
     <!-- Chaque ViewModel de page s'affiche avec sa vue. -->
     <DataTemplate DataType="{x:Type sp:SystemPageViewModel}"><views:SystemPage /></DataTemplate>
     <DataTemplate DataType="{x:Type b:BilanPageViewModel}"><views:BilanPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type st:SettingsPageViewModel}"><views:SettingsPage /></DataTemplate>
   </Window.Resources>
 
   <Grid>

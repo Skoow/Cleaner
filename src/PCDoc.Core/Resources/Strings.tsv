@@ -41,3 +41,29 @@ Bilan.FixAllSafe	Fix all (safe only)	Tout corriger (sûr uniquement)
 Bilan.Empty	No problem found. Your PC is in good condition.	Aucun problème trouvé. Votre PC est en bon état.
 Bilan.ReportHeader	{0} report {1} — {2:g}	Rapport {0} {1} — {2:g}
 Bilan.ShowDetails	Show details	Afficher les détails
+Settings.Language	Language	Langue
+Settings.LanguageHint	Applied immediately	Appliquée immédiatement
+Settings.Theme	Theme	Thème
+Settings.ThemeHint	Follows Windows by default	Suit Windows par défaut
+Settings.Theme.Light	Light	Clair
+Settings.Theme.Dark	Dark	Sombre
+Settings.Theme.System	System	Système
+Settings.Account	Analyzed account	Compte analysé
+Settings.AccountHint	PCDoc reads the settings and programs of the person using this PC.	PCDoc lit les réglages et programmes de la personne qui utilise ce PC.
+Settings.AccountOther	{0} (PCDoc was authorized with another administrator account)	{0} (PCDoc a été autorisé avec un autre compte administrateur)
+Settings.Logs	Action log	Journal des actions
+Settings.CopyPath	Copy path	Copier le chemin
+Settings.Data	PCDoc data	Données de PCDoc
+Settings.DataHint	Deletes the log and the settings of PCDoc on this PC.	Supprime le journal et les paramètres de PCDoc sur ce PC.
+Settings.Clear	Clear PCDoc data	Effacer les données de PCDoc
+Settings.ClearConfirm	Delete the log and the settings? This cannot be undone.	Supprimer le journal et les paramètres ? Cette action est définitive.
+Settings.ClearYes	Delete	Supprimer
+Settings.ClearDone	PCDoc data was deleted.	Les données de PCDoc ont été supprimées.
+Common.Cancel	Cancel	Annuler
+About.Title	About	À propos
+About.Tagline	Free software under the GPL-3.0 license · no ads, no telemetry	Logiciel libre sous licence GPL-3.0 · sans publicité ni télémétrie
+About.Components	Components	Composants
+About.Component	Component	Composant
+About.Version	Version	Version
+About.License	License	Licence
+About.ShowLicense	Read the GPL-3.0 license	Lire la licence GPL-3.0

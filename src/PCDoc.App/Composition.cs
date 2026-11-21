@@ -1,3 +1,4 @@
+using System.IO;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using PCDoc.Core.Abstractions;
@@ -11,6 +12,7 @@ using PCDoc.Modules.System.Inventory;
 using PCDoc.Presentation;
 using PCDoc.Presentation.Bilan;
 using PCDoc.Presentation.SystemPage;
+using PCDoc.Presentation.Settings;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -58,6 +60,7 @@ internal static class Composition
         services.AddSingleton<ThemeApplier>();
         services.AddSingleton<IThemeApplier>(sp => sp.GetRequiredService<ThemeApplier>());
         services.AddSingleton<IClipboardService, ClipboardService>();
+        services.AddSingleton<IAppDataCleaner, AppDataCleaner>();
         services.AddSingleton(sp => new ShellViewModel(page => CreatePage(sp, page)));
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
@@ -74,6 +77,17 @@ internal static class Composition
             services.GetRequiredService<IInventorySource>(), services.GetRequiredService<IBootSource>(),
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<IClipboardService>()),
-        _ => services.GetRequiredService<ILocalizer>()[$"Nav.{page}"],
+        _ => new SettingsPageViewModel(
+            services.GetRequiredService<ILocalizer>(), services.GetRequiredService<ISettingsStore>(),
+            services.GetRequiredService<IThemeApplier>(), services.GetRequiredService<IUserProfileResolver>(),
+            services.GetRequiredService<IAppDataCleaner>(), services.GetRequiredService<IClipboardService>(),
+            AppPaths.LogsDir, ReadLicense),
     };
+
+    /// <summary>Texte de la licence GPL-3.0 livré à côté de l'exécutable (affiché dans la fenêtre).</summary>
+    private static string? ReadLicense()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "LICENSE.txt");
+        return File.Exists(path) ? File.ReadAllText(path) : null;
+    }
 }

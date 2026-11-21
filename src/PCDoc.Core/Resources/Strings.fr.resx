@@ -46,4 +46,30 @@
   <data name="Bilan.Empty" xml:space="preserve"><value>Aucun problème trouvé. Votre PC est en bon état.</value></data>
   <data name="Bilan.ReportHeader" xml:space="preserve"><value>Rapport {0} {1} — {2:g}</value></data>
   <data name="Bilan.ShowDetails" xml:space="preserve"><value>Afficher les détails</value></data>
+  <data name="Settings.Language" xml:space="preserve"><value>Langue</value></data>
+  <data name="Settings.LanguageHint" xml:space="preserve"><value>Appliquée immédiatement</value></data>
+  <data name="Settings.Theme" xml:space="preserve"><value>Thème</value></data>
+  <data name="Settings.ThemeHint" xml:space="preserve"><value>Suit Windows par défaut</value></data>
+  <data name="Settings.Theme.Light" xml:space="preserve"><value>Clair</value></data>
+  <data name="Settings.Theme.Dark" xml:space="preserve"><value>Sombre</value></data>
+  <data name="Settings.Theme.System" xml:space="preserve"><value>Système</value></data>
+  <data name="Settings.Account" xml:space="preserve"><value>Compte analysé</value></data>
+  <data name="Settings.AccountHint" xml:space="preserve"><value>PCDoc lit les réglages et programmes de la personne qui utilise ce PC.</value></data>
+  <data name="Settings.AccountOther" xml:space="preserve"><value>{0} (PCDoc a été autorisé avec un autre compte administrateur)</value></data>
+  <data name="Settings.Logs" xml:space="preserve"><value>Journal des actions</value></data>
+  <data name="Settings.CopyPath" xml:space="preserve"><value>Copier le chemin</value></data>
+  <data name="Settings.Data" xml:space="preserve"><value>Données de PCDoc</value></data>
+  <data name="Settings.DataHint" xml:space="preserve"><value>Supprime le journal et les paramètres de PCDoc sur ce PC.</value></data>
+  <data name="Settings.Clear" xml:space="preserve"><value>Effacer les données de PCDoc</value></data>
+  <data name="Settings.ClearConfirm" xml:space="preserve"><value>Supprimer le journal et les paramètres ? Cette action est définitive.</value></data>
+  <data name="Settings.ClearYes" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Settings.ClearDone" xml:space="preserve"><value>Les données de PCDoc ont été supprimées.</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="About.Title" xml:space="preserve"><value>À propos</value></data>
+  <data name="About.Tagline" xml:space="preserve"><value>Logiciel libre sous licence GPL-3.0 · sans publicité ni télémétrie</value></data>
+  <data name="About.Components" xml:space="preserve"><value>Composants</value></data>
+  <data name="About.Component" xml:space="preserve"><value>Composant</value></data>
+  <data name="About.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="About.License" xml:space="preserve"><value>Licence</value></data>
+  <data name="About.ShowLicense" xml:space="preserve"><value>Lire la licence GPL-3.0</value></data>
 </root>
