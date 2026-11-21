@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Finding.DiskLow.Title" xml:space="preserve"><value>Disque {0} presque plein</value></data>
+  <data name="Finding.DiskLow.Explanation" xml:space="preserve"><value>Il reste {1:0.#} Go libres sur {2:0} Go ({3:0} %). Windows peut ralentir et les mises à jour échouer.</value></data>
+  <data name="Finding.BootSlow.Title" xml:space="preserve"><value>Démarrage lent : {0:0} secondes</value></data>
+  <data name="Finding.BootSlow.Explanation" xml:space="preserve"><value>La médiane des 5 derniers démarrages dépasse {1} secondes. Voir l'onglet Démarrage de la page Système.</value></data>
+  <data name="Finding.BootDegradation.Title" xml:space="preserve"><value>« {0} » a retardé le démarrage de {1:0.#} s</value></data>
+  <data name="Finding.BootDegradation.Explanation.Application" xml:space="preserve"><value>Information. Ce programme se lance avec Windows ; s'il ne vous sert pas tout de suite, il pourra être désactivé.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Driver" xml:space="preserve"><value>Information. Un pilote plus récent corrige souvent ce retard.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Service" xml:space="preserve"><value>Information. Ce service démarre lentement.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Other" xml:space="preserve"><value>Information. Windows a remarqué ce retard lors du dernier démarrage.</value></data>
+  <data name="Finding.NotActivated.Title" xml:space="preserve"><value>Windows n'est pas activé</value></data>
+  <data name="Finding.NotActivated.Explanation" xml:space="preserve"><value>Activez Windows avec une licence valide dans Paramètres &gt; Système &gt; Activation. PCDoc ne propose jamais d'activateur.</value></data>
+  <data name="Finding.Win10Eos.Title" xml:space="preserve"><value>Windows 10 n'est plus pris en charge depuis le 14 octobre 2025</value></data>
+  <data name="Finding.Win10Eos.Explanation" xml:space="preserve"><value>Ce PC ne reçoit plus de mises à jour de sécurité, sauf s'il est inscrit aux mises à jour de sécurité étendues (ESU). Voir le résultat de compatibilité Windows 11.</value></data>
+  <data name="Finding.Win11Ready.Title" xml:space="preserve"><value>Ce PC peut passer gratuitement à Windows 11</value></data>
+  <data name="Finding.Win11Ready.Explanation" xml:space="preserve"><value>Tous les contrôles de compatibilité sont réussis. La mise à niveau est proposée dans Windows Update.</value></data>
+  <data name="Finding.Win11Blocked.Title" xml:space="preserve"><value>Ce PC ne remplit pas toutes les conditions de Windows 11</value></data>
+  <data name="Finding.Win11Blocked.Explanation" xml:space="preserve"><value>Contrôles en échec : {0}. Certains réglages (TPM, Secure Boot) s'activent souvent dans le BIOS.</value></data>
+  <data name="Check.Tpm20" xml:space="preserve"><value>TPM 2.0 absent ou désactivé</value></data>
+  <data name="Check.SecureBoot" xml:space="preserve"><value>Secure Boot désactivé</value></data>
+  <data name="Check.Uefi" xml:space="preserve"><value>pas de démarrage UEFI (BIOS hérité)</value></data>
+  <data name="Check.SystemDiskGpt" xml:space="preserve"><value>disque système non GPT</value></data>
+  <data name="Check.CpuSupported" xml:space="preserve"><value>processeur non pris en charge</value></data>
+  <data name="Check.Ram4GB" xml:space="preserve"><value>moins de 4 Go de mémoire</value></data>
+  <data name="Check.Storage64GB" xml:space="preserve"><value>disque système de moins de 64 Go</value></data>
+  <data name="Finding.BatteryWear.Title" xml:space="preserve"><value>Batterie usée à {0:0} %</value></data>
+  <data name="Finding.BatteryWear.Explanation" xml:space="preserve"><value>La batterie ne tient plus que {1:0} % de sa capacité d'origine : son autonomie est réduite. Un remplacement peut être envisagé.</value></data>
+  <data name="Finding.Unsigned.Title" xml:space="preserve"><value>Élément non signé ({0}) : « {1} »</value></data>
+  <data name="Finding.Unsigned.Explanation" xml:space="preserve"><value>Cet élément se lance automatiquement mais n'a pas de signature numérique valide : son éditeur ne peut pas être vérifié.</value></data>
+  <data name="Finding.Orphan.Title" xml:space="preserve"><value>Élément orphelin : « {1} »</value></data>
+  <data name="Finding.Orphan.Explanation" xml:space="preserve"><value>Le fichier lancé ({2}) n'existe plus. Cet élément ({0}) est inutile.</value></data>
+  <data name="Kind.Startup" xml:space="preserve"><value>programme au démarrage</value></data>
+  <data name="Kind.ScheduledTask" xml:space="preserve"><value>tâche planifiée</value></data>
+  <data name="Kind.Service" xml:space="preserve"><value>service</value></data>
+  <data name="Kind.Driver" xml:space="preserve"><value>pilote</value></data>
+</root>

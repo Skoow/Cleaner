@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Finding.DiskLow.Title" xml:space="preserve"><value>Drive {0} is almost full</value></data>
+  <data name="Finding.DiskLow.Explanation" xml:space="preserve"><value>Only {1:0.#} GB free out of {2:0} GB ({3:0}%). Windows may slow down and updates may fail.</value></data>
+  <data name="Finding.BootSlow.Title" xml:space="preserve"><value>Slow startup: {0:0} seconds</value></data>
+  <data name="Finding.BootSlow.Explanation" xml:space="preserve"><value>The median of the last 5 startups is above {1} seconds. See the Startup tab of the System page.</value></data>
+  <data name="Finding.BootDegradation.Title" xml:space="preserve"><value>"{0}" delayed startup by {1:0.#} s</value></data>
+  <data name="Finding.BootDegradation.Explanation.Application" xml:space="preserve"><value>Information. This program starts with Windows; if you do not need it right away, it could be disabled later.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Driver" xml:space="preserve"><value>Information. A newer driver often fixes this delay.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Service" xml:space="preserve"><value>Information. This service starts slowly.</value></data>
+  <data name="Finding.BootDegradation.Explanation.Other" xml:space="preserve"><value>Information. Windows noticed this delay during the last startup.</value></data>
+  <data name="Finding.NotActivated.Title" xml:space="preserve"><value>Windows is not activated</value></data>
+  <data name="Finding.NotActivated.Explanation" xml:space="preserve"><value>Activate Windows with a valid license in Settings &gt; System &gt; Activation. PCDoc never offers activators.</value></data>
+  <data name="Finding.Win10Eos.Title" xml:space="preserve"><value>Windows 10 has not been supported since October 14, 2025</value></data>
+  <data name="Finding.Win10Eos.Explanation" xml:space="preserve"><value>This PC no longer receives security updates unless it is enrolled in Extended Security Updates (ESU). See the Windows 11 compatibility result.</value></data>
+  <data name="Finding.Win11Ready.Title" xml:space="preserve"><value>This PC can upgrade to Windows 11 for free</value></data>
+  <data name="Finding.Win11Ready.Explanation" xml:space="preserve"><value>All compatibility checks pass. The upgrade is offered in Windows Update.</value></data>
+  <data name="Finding.Win11Blocked.Title" xml:space="preserve"><value>This PC does not meet every Windows 11 requirement</value></data>
+  <data name="Finding.Win11Blocked.Explanation" xml:space="preserve"><value>Failed checks: {0}. Some settings (TPM, Secure Boot) can often be turned on in the BIOS.</value></data>
+  <data name="Check.Tpm20" xml:space="preserve"><value>TPM 2.0 missing or disabled</value></data>
+  <data name="Check.SecureBoot" xml:space="preserve"><value>Secure Boot disabled</value></data>
+  <data name="Check.Uefi" xml:space="preserve"><value>no UEFI boot (legacy BIOS)</value></data>
+  <data name="Check.SystemDiskGpt" xml:space="preserve"><value>system disk is not GPT</value></data>
+  <data name="Check.CpuSupported" xml:space="preserve"><value>processor not supported</value></data>
+  <data name="Check.Ram4GB" xml:space="preserve"><value>less than 4 GB of memory</value></data>
+  <data name="Check.Storage64GB" xml:space="preserve"><value>system disk smaller than 64 GB</value></data>
+  <data name="Finding.BatteryWear.Title" xml:space="preserve"><value>Battery {0:0}% worn</value></data>
+  <data name="Finding.BatteryWear.Explanation" xml:space="preserve"><value>The battery now holds only {1:0}% of its original capacity, so it runs out faster. A replacement may be worth considering.</value></data>
+  <data name="Finding.Unsigned.Title" xml:space="preserve"><value>Unsigned item ({0}): "{1}"</value></data>
+  <data name="Finding.Unsigned.Explanation" xml:space="preserve"><value>This item starts automatically but has no valid digital signature, so its publisher cannot be verified.</value></data>
+  <data name="Finding.Orphan.Title" xml:space="preserve"><value>Orphan item: "{1}"</value></data>
+  <data name="Finding.Orphan.Explanation" xml:space="preserve"><value>The file it starts ({2}) no longer exists. This {0} is useless.</value></data>
+  <data name="Kind.Startup" xml:space="preserve"><value>startup program</value></data>
+  <data name="Kind.ScheduledTask" xml:space="preserve"><value>scheduled task</value></data>
+  <data name="Kind.Service" xml:space="preserve"><value>service</value></data>
+  <data name="Kind.Driver" xml:space="preserve"><value>driver</value></data>
+</root>

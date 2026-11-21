@@ -58,6 +58,24 @@ public class LocalizerTests
     }
 
     [Fact]
+    public void Format_FormatsNestedTextsAndLists()
+    {
+        var sut = Make();
+        var nested = new LocalizedText("Bilan.ModulesAnalyzed", new LocalizedText("Nav.System"));
+        var list = new LocalizedText("Bilan.ModulesAnalyzed", (object)new[] { new LocalizedText("Nav.System"), new LocalizedText("Nav.Bilan") });
+
+        sut.Format(nested).Should().Be("Modules analysés : Système");
+        sut.Format(list).Should().Be("Modules analysés : Système, Bilan");
+    }
+
+    [Fact]
+    public void Format_UsesCultureForNumbers()
+    {
+        var sut = Make();
+        sut.Format(new LocalizedText("Bilan.ModulesAnalyzed", 9.8)).Should().Be("Modules analysés : 9,8");
+    }
+
+    [Fact]
     public void Resources_FrenchAndEnglishHaveSameKeys()
     {
         static HashSet<string> Keys(ResourceManager rm, CultureInfo culture) =>

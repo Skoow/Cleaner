@@ -1,0 +1,35 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.System/Resources/Strings.tsv src/PCDoc.Modules.System/Resources
+Finding.DiskLow.Title	Drive {0} is almost full	Disque {0} presque plein
+Finding.DiskLow.Explanation	Only {1:0.#} GB free out of {2:0} GB ({3:0}%). Windows may slow down and updates may fail.	Il reste {1:0.#} Go libres sur {2:0} Go ({3:0} %). Windows peut ralentir et les mises à jour échouer.
+Finding.BootSlow.Title	Slow startup: {0:0} seconds	Démarrage lent : {0:0} secondes
+Finding.BootSlow.Explanation	The median of the last 5 startups is above {1} seconds. See the Startup tab of the System page.	La médiane des 5 derniers démarrages dépasse {1} secondes. Voir l'onglet Démarrage de la page Système.
+Finding.BootDegradation.Title	"{0}" delayed startup by {1:0.#} s	« {0} » a retardé le démarrage de {1:0.#} s
+Finding.BootDegradation.Explanation.Application	Information. This program starts with Windows; if you do not need it right away, it could be disabled later.	Information. Ce programme se lance avec Windows ; s'il ne vous sert pas tout de suite, il pourra être désactivé.
+Finding.BootDegradation.Explanation.Driver	Information. A newer driver often fixes this delay.	Information. Un pilote plus récent corrige souvent ce retard.
+Finding.BootDegradation.Explanation.Service	Information. This service starts slowly.	Information. Ce service démarre lentement.
+Finding.BootDegradation.Explanation.Other	Information. Windows noticed this delay during the last startup.	Information. Windows a remarqué ce retard lors du dernier démarrage.
+Finding.NotActivated.Title	Windows is not activated	Windows n'est pas activé
+Finding.NotActivated.Explanation	Activate Windows with a valid license in Settings > System > Activation. PCDoc never offers activators.	Activez Windows avec une licence valide dans Paramètres > Système > Activation. PCDoc ne propose jamais d'activateur.
+Finding.Win10Eos.Title	Windows 10 has not been supported since October 14, 2025	Windows 10 n'est plus pris en charge depuis le 14 octobre 2025
+Finding.Win10Eos.Explanation	This PC no longer receives security updates unless it is enrolled in Extended Security Updates (ESU). See the Windows 11 compatibility result.	Ce PC ne reçoit plus de mises à jour de sécurité, sauf s'il est inscrit aux mises à jour de sécurité étendues (ESU). Voir le résultat de compatibilité Windows 11.
+Finding.Win11Ready.Title	This PC can upgrade to Windows 11 for free	Ce PC peut passer gratuitement à Windows 11
+Finding.Win11Ready.Explanation	All compatibility checks pass. The upgrade is offered in Windows Update.	Tous les contrôles de compatibilité sont réussis. La mise à niveau est proposée dans Windows Update.
+Finding.Win11Blocked.Title	This PC does not meet every Windows 11 requirement	Ce PC ne remplit pas toutes les conditions de Windows 11
+Finding.Win11Blocked.Explanation	Failed checks: {0}. Some settings (TPM, Secure Boot) can often be turned on in the BIOS.	Contrôles en échec : {0}. Certains réglages (TPM, Secure Boot) s'activent souvent dans le BIOS.
+Check.Tpm20	TPM 2.0 missing or disabled	TPM 2.0 absent ou désactivé
+Check.SecureBoot	Secure Boot disabled	Secure Boot désactivé
+Check.Uefi	no UEFI boot (legacy BIOS)	pas de démarrage UEFI (BIOS hérité)
+Check.SystemDiskGpt	system disk is not GPT	disque système non GPT
+Check.CpuSupported	processor not supported	processeur non pris en charge
+Check.Ram4GB	less than 4 GB of memory	moins de 4 Go de mémoire
+Check.Storage64GB	system disk smaller than 64 GB	disque système de moins de 64 Go
+Finding.BatteryWear.Title	Battery {0:0}% worn	Batterie usée à {0:0} %
+Finding.BatteryWear.Explanation	The battery now holds only {1:0}% of its original capacity, so it runs out faster. A replacement may be worth considering.	La batterie ne tient plus que {1:0} % de sa capacité d'origine : son autonomie est réduite. Un remplacement peut être envisagé.
+Finding.Unsigned.Title	Unsigned item ({0}): "{1}"	Élément non signé ({0}) : « {1} »
+Finding.Unsigned.Explanation	This item starts automatically but has no valid digital signature, so its publisher cannot be verified.	Cet élément se lance automatiquement mais n'a pas de signature numérique valide : son éditeur ne peut pas être vérifié.
+Finding.Orphan.Title	Orphan item: "{1}"	Élément orphelin : « {1} »
+Finding.Orphan.Explanation	The file it starts ({2}) no longer exists. This {0} is useless.	Le fichier lancé ({2}) n'existe plus. Cet élément ({0}) est inutile.
+Kind.Startup	startup program	programme au démarrage
+Kind.ScheduledTask	scheduled task	tâche planifiée
+Kind.Service	service	service
+Kind.Driver	driver	pilote

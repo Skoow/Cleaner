@@ -60,8 +60,16 @@ public sealed class Localizer : ILocalizer
     {
         ArgumentNullException.ThrowIfNull(text);
         var pattern = this[text.Key];
-        return text.Args.Count == 0 ? pattern : string.Format(Culture, pattern, [.. text.Args]);
+        return text.Args.Count == 0 ? pattern : string.Format(Culture, pattern, [.. text.Args.Select(Resolve)]);
     }
+
+    /// <summary>Un argument peut être lui-même un texte à traduire, ou une liste de textes (jointe par « , »).</summary>
+    private object Resolve(object arg) => arg switch
+    {
+        LocalizedText nested => Format(nested),
+        IEnumerable<LocalizedText> list => string.Join(", ", list.Select(Format)),
+        _ => arg,
+    };
 
     public void Register(ResourceManager resources)
     {
