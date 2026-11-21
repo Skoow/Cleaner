@@ -1,0 +1,15 @@
+# Clé	Anglais	Français — source des fichiers .resx (régénérer : python3 tools/resx.py src/PCDoc.Core/Resources/Strings.tsv src/PCDoc.Core/Resources)
+Nav.Bilan	Overview	Bilan
+Nav.System	System	Système
+Nav.Settings	Settings	Paramètres
+Severity.Critical	Critical	Critique
+Severity.Warning	Warning	Attention
+Severity.Info	Info	Info
+Score.Good	Good condition	Bon état
+Score.Watch	Keep an eye on it	À surveiller
+Score.Improve	Needs improvement	À améliorer
+Bilan.ModulesAnalyzed	Modules analyzed: {0}	Modules analysés : {0}
+Bilan.ModuleError	Incomplete analysis: {0}	Analyse incomplète : {0}
+Common.NotAvailable	Not available	Non disponible
+Common.Copy	Copy	Copier
+Common.Copied	Copied	Copié
