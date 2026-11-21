@@ -16,9 +16,21 @@ public class CleanupTests
         public DateTimeOffset Now => CleanupTests.Now;
     }
 
-    internal sealed class Profiles : IUserProfileResolver
+    internal sealed class Profiles(string localAppData = Local, bool isProcessUser = true) : IUserProfileResolver
     {
-        public UserProfile Resolve() => new("S-1-5-21-1", @"PC\Lea", @"C:\Users\Lea", @"C:\Users\Lea\AppData\Roaming", Local, false);
+        public UserProfile Resolve() => new("S-1-5-21-1", @"PC\Lea", @"C:\Users\Lea", @"C:\Users\Lea\AppData\Roaming", localAppData, isProcessUser);
+    }
+
+    internal sealed class Known : IKnownFolders
+    {
+        public string Windows => @"C:\Windows";
+
+        public string ProgramData => @"C:\ProgramData";
+    }
+
+    internal sealed class Guards(bool updateBusy = false) : ICleanupGuards
+    {
+        public bool IsWindowsUpdateBusy() => updateBusy;
     }
 
     internal sealed class Probe : IFileProbe
@@ -35,8 +47,10 @@ public class CleanupTests
         public byte[]? ReadSmallFile(string path, int maxBytes) => null;
     }
 
-    internal static CleanupEngine Engine(FakeFileSystem fs, FakeRecycleBin? bin = null, CleanupCatalog? catalog = null) =>
-        new(catalog ?? CleanupCatalog.Default, fs, bin ?? new FakeRecycleBin(0, 0), new Probe(), new Profiles(), new Clock());
+    internal static CleanupEngine Engine(FakeFileSystem fs, FakeRecycleBin? bin = null, CleanupCatalog? catalog = null,
+        Profiles? profiles = null, Guards? guards = null) =>
+        new(catalog ?? CleanupCatalog.Default, fs, bin ?? new FakeRecycleBin(0, 0), new Known(), profiles ?? new Profiles(), new Clock(),
+            guards ?? new Guards());
 
     [Fact]
     public void Analyze_TempIgnoresRecentFiles()
@@ -118,6 +132,56 @@ public class CleanupTests
         Engine(fs).Clean("user-temp");
 
         fs.Deleted.Should().Equal($@"{Local}\Temp\junk.tmp");
+    }
+
+    [Fact]
+    public void HostileRedirectedLocalAppData_IsIgnored_ProfileFolderUsed()
+    {
+        // L'utilisateur a redirigé « Local AppData » vers Program Files : PCDoc doit l'ignorer.
+        var fs = new FakeFileSystem()
+            .File(@"C:\Program Files\Vendor\Temp\app.dll", 5 * MB, Now.AddDays(-9))
+            .File($@"{Local}\Temp\junk.tmp", 1 * MB, Now.AddDays(-9));
+        var engine = Engine(fs, profiles: new Profiles(localAppData: @"C:\Program Files\Vendor"));
+
+        engine.Clean("user-temp");
+
+        fs.Deleted.Should().Equal($@"{Local}\Temp\junk.tmp");
+    }
+
+    [Fact]
+    public void Temp_RecentlyCreatedFile_IsKept_EvenWithOldWriteDate()
+    {
+        var fs = new FakeFileSystem()
+            .File(@"C:\Windows\Temp\setup\installer.msi", 10 * MB, Now.AddYears(-1), created: Now.AddMinutes(-5))
+            .File(@"C:\Windows\Temp\setup\data.cab", 10 * MB, Now.AddYears(-1), created: Now.AddYears(-1))
+            .File(@"C:\Windows\Temp\old.log", 1 * MB, Now.AddDays(-3));
+
+        Engine(fs).Clean("windows-temp");
+
+        fs.Deleted.Should().Equal(@"C:\Windows\Temp\old.log");
+    }
+
+    [Fact]
+    public void WindowsUpdateDownloads_SkippedWhileUpdateBusy()
+    {
+        var fs = new FakeFileSystem().File(@"C:\Windows\SoftwareDistribution\Download\x.cab", 500 * MB, Now.AddDays(-5));
+        var engine = Engine(fs, guards: new Guards(updateBusy: true));
+
+        engine.Analyze().Categories.Single(c => c.Id == "wu-download").Bytes.Should().Be(0);
+        engine.Clean("wu-download");
+        fs.Deleted.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void RecycleBin_OtherAccount_IsNotOffered()
+    {
+        var bin = new FakeRecycleBin(2048 * MB, 4);
+        var engine = Engine(new FakeFileSystem(), bin, profiles: new Profiles(isProcessUser: false));
+
+        engine.Analyze().RecycleBinBytes.Should().Be(0);
+        var act = () => engine.Clean(CleanupEngine.RecycleBinId);
+        act.Should().Throw<InvalidOperationException>();
+        bin.Emptied.Should().BeFalse();
     }
 
     [Fact]

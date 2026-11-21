@@ -16,9 +16,9 @@ public sealed class FakeFileSystem : IFileSystem
 
     public List<string> EmptiedRoots { get; } = [];
 
-    public FakeFileSystem File(string path, long size, DateTimeOffset lastWrite)
+    public FakeFileSystem File(string path, long size, DateTimeOffset lastWrite, DateTimeOffset? created = null)
     {
-        _files[path] = new FileEntry(path, size, lastWrite);
+        _files[path] = new FileEntry(path, size, lastWrite, created ?? lastWrite);
         for (var dir = Parent(path); dir is not null; dir = Parent(dir))
         {
             _dirs.Add(dir);
@@ -45,8 +45,13 @@ public sealed class FakeFileSystem : IFileSystem
             .ToList();
     }
 
-    public bool TryDeleteFile(string path)
+    public bool TryDeleteFile(string path, string allowedRoot)
     {
+        if (!path.StartsWith(allowedRoot.TrimEnd('\\') + @"\", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Engine passed a path outside its root");
+        }
+
         if (Locked.Contains(path) || !_files.Remove(path))
         {
             return false;

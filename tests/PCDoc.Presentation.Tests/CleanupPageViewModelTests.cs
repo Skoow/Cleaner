@@ -75,7 +75,7 @@ public sealed class CleanupPageViewModelTests : IDisposable
         await vm.AnalyzeCommand.ExecuteAsync(null);
 
         vm.Categories.Select(c => c.Id).Should().Equal("windows-temp", "crash-dumps", "chrome-cache", CleanupEngine.RecycleBinId, CleanupEngine.ComponentStoreId);
-        vm.Categories.Where(c => c.IsSelected).Select(c => c.Id).Should().Equal("windows-temp", CleanupEngine.ComponentStoreId);
+        vm.Categories.Where(c => c.IsSelected).Select(c => c.Id).Should().Equal("windows-temp");
         vm.Categories[0].Size.Should().Be("300 Mo");
         vm.Categories[0].Title.Should().Be("Fichiers temporaires de Windows");
         vm.TotalText.Should().Contain("300 Mo");
@@ -89,10 +89,10 @@ public sealed class CleanupPageViewModelTests : IDisposable
         await vm.AnalyzeCommand.ExecuteAsync(null);
 
         vm.CleanSelectedCommand.Execute(null);
-        fixes.Items.Select(i => i.Id).Should().Equal("cleanup.windows-temp", "cleanup.component-store");
+        fixes.Items.Select(i => i.Id).Should().Equal("cleanup.windows-temp");
         await fixes.ConfirmCommand.ExecuteAsync(null);
 
-        fixer.Applied.Should().Equal("cleanup.windows-temp", "cleanup.component-store");
+        fixer.Applied.Should().Equal("cleanup.windows-temp");
     }
 
     [Fact]

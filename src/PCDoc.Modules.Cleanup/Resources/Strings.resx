@@ -11,8 +11,6 @@
   <data name="Cleanup.user-temp.Explanation" xml:space="preserve"><value>Files left by programs in your temporary folder. Files from the last 24 hours are kept.</value></data>
   <data name="Cleanup.wu-download.Title" xml:space="preserve"><value>Downloaded Windows updates</value></data>
   <data name="Cleanup.wu-download.Explanation" xml:space="preserve"><value>Installation files of updates already installed. Windows downloads them again if needed.</value></data>
-  <data name="Cleanup.delivery-optimization.Title" xml:space="preserve"><value>Delivery Optimization cache</value></data>
-  <data name="Cleanup.delivery-optimization.Explanation" xml:space="preserve"><value>Copies of updates kept to share them with other PCs.</value></data>
   <data name="Cleanup.error-reports.Title" xml:space="preserve"><value>Error reports</value></data>
   <data name="Cleanup.error-reports.Explanation" xml:space="preserve"><value>Reports kept after program crashes.</value></data>
   <data name="Cleanup.crash-dumps.Title" xml:space="preserve"><value>Crash dumps</value></data>

@@ -126,7 +126,7 @@ public sealed partial class CleanupPageViewModel : ObservableObject
             var canSelect = FixPolicy.IsOffered(finding, _mode());
             var row = new CategoryRow(id, _localizer[$"Cleanup.{id}.Title"], _localizer[$"Cleanup.{id}.Explanation"],
                 bytes < 0 ? "—" : Size(bytes), Math.Max(0, bytes), finding, canSelect, _localizer[$"Risk.{risk}"]);
-            row.IsSelected = previous.TryGetValue(id, out var was) ? was && canSelect : canSelect && risk == RiskLevel.Safe && bytes != 0;
+            row.IsSelected = previous.TryGetValue(id, out var was) ? was && canSelect : canSelect && risk == RiskLevel.Safe && bytes > 0;
             row.PropertyChanged += (_, _) => UpdateTotal();
             Categories.Add(row);
         }

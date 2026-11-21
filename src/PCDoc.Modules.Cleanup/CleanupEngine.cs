@@ -16,12 +16,14 @@ public interface ICleanupSource
 }
 
 /// <summary>
-/// Analyse et nettoyage. Garde-fous : racines uniquement sous %SystemRoot%, %ProgramData% et le dossier local du profil
-/// cible (jamais ces dossiers eux-mêmes) ; « .. », chemins réseau et chemins hors racine refusés ; seuls des fichiers
-/// sont supprimés, jamais à travers un lien ; chaque chemin est revérifié juste avant sa suppression.
+/// Analyse et nettoyage. Garde-fous : racines uniquement sous le dossier Windows, ProgramData (dossiers connus, jamais les
+/// variables d'environnement) et &lt;profil&gt;\AppData\Local du profil cible (jamais la redirection « Local AppData »,
+/// modifiable par l'utilisateur) ; jamais ces dossiers eux-mêmes ; « .. », chemins réseau et variables inconnues refusés ;
+/// seuls des fichiers sont supprimés, et le système vérifie leur chemin réel juste avant (liens, liens physiques).
 /// </summary>
 public sealed class CleanupEngine(
-    CleanupCatalog catalog, IFileSystem files, IRecycleBin recycleBin, IFileProbe environment, IUserProfileResolver profiles, IClock clock)
+    CleanupCatalog catalog, IFileSystem files, IRecycleBin recycleBin, IKnownFolders known, IUserProfileResolver profiles, IClock clock,
+    ICleanupGuards guards)
     : ICleanupSource
 {
     public const string RecycleBinId = "recycle-bin";
@@ -36,15 +38,23 @@ public sealed class CleanupEngine(
             var eligible = Eligible(c).ToList();
             return new CategoryResult(c.Id, c.Risk, eligible.Sum(f => f.Size), eligible.Count);
         }).ToList();
-        var (bytes, items) = SafeQueryBin();
+        var (bytes, items) = RecycleBinAllowed ? SafeQueryBin() : (0, 0);
         return new CleanupReport(results, bytes, items);
     }
+
+    /// <summary>La corbeille de l'API est celle du compte qui exécute PCDoc : proposée seulement si c'est le profil cible.</summary>
+    private bool RecycleBinAllowed => profiles.Resolve().IsProcessUser;
 
     /// <summary>Nettoie une catégorie ; renvoie les octets libérés.</summary>
     public long Clean(string categoryId)
     {
         if (categoryId == RecycleBinId)
         {
+            if (!RecycleBinAllowed)
+            {
+                throw new InvalidOperationException("The Recycle Bin of another account cannot be emptied");
+            }
+
             var (bytes, _) = SafeQueryBin();
             recycleBin.Empty();
             return bytes;
@@ -55,7 +65,7 @@ public sealed class CleanupEngine(
         long freed = 0;
         foreach (var (root, entry) in EligibleWithRoot(category))
         {
-            if (IsUnder(entry.Path, root) && files.TryDeleteFile(entry.Path))
+            if (IsUnder(entry.Path, root) && files.TryDeleteFile(entry.Path, root))
             {
                 freed += entry.Size;
             }
@@ -107,10 +117,29 @@ public sealed class CleanupEngine(
 
     private IEnumerable<(string Root, FileEntry Entry)> EligibleWithRoot(CleanupCategory c)
     {
+        if (c.RequiresIdleWindowsUpdate && guards.IsWindowsUpdateBusy())
+        {
+            yield break; // une mise à jour est en cours : ses fichiers ne sont pas touchés
+        }
+
         var limit = clock.Now.AddHours(-c.MinAgeHours);
         foreach (var root in ResolveRoots(c.Roots))
         {
-            foreach (var f in files.EnumerateFiles(root, recursive: true).Where(f => c.MinAgeHours == 0 || f.LastWrite <= limit))
+            var all = files.EnumerateFiles(root, recursive: true).ToList();
+            if (c.MinAgeHours == 0)
+            {
+                foreach (var f in all)
+                {
+                    yield return (root, f);
+                }
+
+                continue;
+            }
+
+            // Un sous-dossier qui contient un fichier récent (installation en cours, archive juste extraite) est gardé entier.
+            var busy = all.Where(f => f.LastTouched > limit).Select(f => TopFolder(root, f.Path)).OfType<string>()
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var f in all.Where(f => f.LastTouched <= limit && (TopFolder(root, f.Path) is not { } top || !busy.Contains(top))))
             {
                 yield return (root, f);
             }
@@ -151,9 +180,26 @@ public sealed class CleanupEngine(
         }
     }
 
+    /// <summary>Premier sous-dossier sous la racine (null pour un fichier posé directement dans la racine).</summary>
+    private static string? TopFolder(string root, string path)
+    {
+        var rest = path[(root.Length + 1)..];
+        var cut = rest.IndexOf('\\', StringComparison.Ordinal);
+        return cut < 0 ? null : rest[..cut];
+    }
+
+    private string LocalAppData => profiles.Resolve().ProfilePath.TrimEnd('\\') + @"\AppData\Local";
+
+    /// <summary>Seules trois variables sont connues, toutes issues de sources de confiance.</summary>
+    private string Expand(string raw) => raw
+        .Replace("%SystemRoot%", known.Windows, StringComparison.OrdinalIgnoreCase)
+        .Replace("%windir%", known.Windows, StringComparison.OrdinalIgnoreCase)
+        .Replace("%ProgramData%", known.ProgramData, StringComparison.OrdinalIgnoreCase)
+        .Replace("%LOCALAPPDATA%", LocalAppData, StringComparison.OrdinalIgnoreCase);
+
     private string? Resolve(string raw)
     {
-        var path = environment.ExpandEnvironment(raw).Replace('/', '\\').TrimEnd('\\');
+        var path = Expand(raw).Replace('/', '\\').TrimEnd('\\');
         if (path.StartsWith(@"\\", StringComparison.Ordinal) || path.Length < 4 || path[1] != ':' || path[2] != '\\'
             || path.Split('\\').Any(s => s is ".." or "." || s.Length == 0) || path.Contains('%', StringComparison.Ordinal))
         {
@@ -165,12 +211,7 @@ public sealed class CleanupEngine(
 
     private bool IsAllowed(string path)
     {
-        var allowed = new[]
-        {
-            environment.ExpandEnvironment("%SystemRoot%"),
-            environment.ExpandEnvironment("%ProgramData%"),
-            profiles.Resolve().LocalAppData,
-        };
+        var allowed = new[] { known.Windows, known.ProgramData, LocalAppData };
         return allowed.Any(a => !string.IsNullOrEmpty(a) && !a.Contains('%', StringComparison.Ordinal) && IsUnder(path, a.TrimEnd('\\')));
     }
 

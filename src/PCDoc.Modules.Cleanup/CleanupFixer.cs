@@ -19,7 +19,7 @@ public sealed class CleanupFixer(CleanupEngine engine, IProcessRunner runner) : 
 
     public static Finding FindingFor(string categoryId, RiskLevel risk, long bytes = 0, int files = 0) => new(
         $"cleanup.{categoryId}", CleanupModule.Id, Severity.Info,
-        new LocalizedText("Finding.Cleanup.Title", new LocalizedText($"Cleanup.{categoryId}.Title"), bytes / 1e9),
+        new LocalizedText("Finding.Cleanup.Title", new LocalizedText($"Cleanup.{categoryId}.Title"), bytes / (double)(1L << 30)),
         new LocalizedText($"Cleanup.{categoryId}.Explanation"),
         string.Create(CultureInfo.InvariantCulture, $"{categoryId}: {bytes:N0} bytes, {files} files"),
         FixAvailable: true, Risk: risk, Reversible: false,

@@ -6,8 +6,6 @@ Cleanup.user-temp.Title	Your temporary files	Vos fichiers temporaires
 Cleanup.user-temp.Explanation	Files left by programs in your temporary folder. Files from the last 24 hours are kept.	Fichiers laissés par les programmes dans votre dossier temporaire. Ceux des dernières 24 h sont conservés.
 Cleanup.wu-download.Title	Downloaded Windows updates	Mises à jour de Windows téléchargées
 Cleanup.wu-download.Explanation	Installation files of updates already installed. Windows downloads them again if needed.	Fichiers d'installation de mises à jour déjà installées. Windows les retélécharge si besoin.
-Cleanup.delivery-optimization.Title	Delivery Optimization cache	Cache de l'Optimisation de la distribution
-Cleanup.delivery-optimization.Explanation	Copies of updates kept to share them with other PCs.	Copies de mises à jour gardées pour les partager avec d'autres PC.
 Cleanup.error-reports.Title	Error reports	Rapports d'erreurs
 Cleanup.error-reports.Explanation	Reports kept after program crashes.	Rapports conservés après des plantages de programmes.
 Cleanup.crash-dumps.Title	Crash dumps	Vidages après plantage

@@ -5,10 +5,12 @@ using PCDoc.Core.Abstractions;
 namespace PCDoc.Infrastructure.Writes;
 
 /// <summary>
-/// Parcours et suppression pour le nettoyage. Les liens (jonctions, liens symboliques, points de montage) ne sont jamais
-/// suivis : un lien placé dans un dossier temporaire ne peut pas faire supprimer des fichiers ailleurs.
+/// Parcours et suppression pour le nettoyage. Les liens ne sont jamais suivis lors du parcours, et chaque suppression se
+/// fait **par handle** : le fichier est ouvert sans suivre de lien, son chemin réel est demandé au système
+/// (GetFinalPathNameByHandle) et comparé à la racine autorisée, il doit n'avoir qu'un lien physique, puis il est supprimé
+/// par ce même handle. Échanger un dossier contre un lien pendant l'analyse ne peut donc rien faire supprimer ailleurs.
 /// </summary>
-public sealed class CleanupFileSystem : IFileSystem
+public sealed partial class CleanupFileSystem : IFileSystem
 {
     private static readonly EnumerationOptions Options = new()
     {
@@ -18,8 +20,24 @@ public sealed class CleanupFileSystem : IFileSystem
         ReturnSpecialDirectories = false,
     };
 
-    public bool DirectoryExists(string path) =>
-        Directory.Exists(path) && !File.GetAttributes(path).HasFlag(FileAttributes.ReparsePoint);
+    /// <summary>Vrai seulement si aucun dossier du chemin (y compris les parents) n'est un lien.</summary>
+    public bool DirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            return false;
+        }
+
+        for (var dir = new DirectoryInfo(path); dir is not null && dir.Parent is not null; dir = dir.Parent)
+        {
+            if (dir.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public IReadOnlyList<string> ListDirectories(string path) =>
         DirectoryExists(path) ? [.. new DirectoryInfo(path).EnumerateDirectories("*", Options).Select(d => d.FullName)] : [];
@@ -50,7 +68,7 @@ public sealed class CleanupFileSystem : IFileSystem
             {
                 if (item is FileInfo file)
                 {
-                    yield return new FileEntry(file.FullName, file.Length, file.LastWriteTimeUtc);
+                    yield return new FileEntry(file.FullName, file.Length, file.LastWriteTimeUtc, file.CreationTimeUtc);
                 }
                 else if (recursive && item is DirectoryInfo sub)
                 {
@@ -60,47 +78,181 @@ public sealed class CleanupFileSystem : IFileSystem
         }
     }
 
-    public bool TryDeleteFile(string path)
-    {
-        try
-        {
-            var info = new FileInfo(path);
-            if (!info.Exists || info.Attributes.HasFlag(FileAttributes.ReparsePoint))
-            {
-                return false;
-            }
-
-            if (info.IsReadOnly)
-            {
-                info.IsReadOnly = false;
-            }
-
-            info.Delete();
-            return true;
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            return false;
-        }
-    }
+    public bool TryDeleteFile(string path, string allowedRoot) => DeleteByHandle(path, allowedRoot, directory: false);
 
     public void DeleteEmptySubdirectories(string root)
     {
         foreach (var sub in ListDirectories(root))
         {
             DeleteEmptySubdirectories(sub);
-            try
+            DeleteByHandle(sub, root, directory: true); // échoue sans rien faire si le dossier n'est pas vide
+        }
+    }
+
+    private static bool DeleteByHandle(string path, string allowedRoot, bool directory)
+    {
+        var canonicalRoot = FinalPathOf(allowedRoot, directory: true);
+        if (canonicalRoot is null)
+        {
+            return false;
+        }
+
+        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), Delete | FileReadAttributes,
+            FileShareRead | FileShareWrite | FileShareDelete, IntPtr.Zero, OpenExisting,
+            FlagOpenReparsePoint | (directory ? FlagBackupSemantics : 0), IntPtr.Zero);
+        if (handle.IsInvalid)
+        {
+            return false;
+        }
+
+        if (!GetFileInformationByHandle(handle, out var info)
+            || (info.Attributes & (uint)FileAttributes.ReparsePoint) != 0
+            || ((info.Attributes & (uint)FileAttributes.Directory) != 0) != directory
+            || (!directory && info.NumberOfLinks != 1))
+        {
+            return false; // lien, mauvais type ou lien physique vers un autre fichier : refusé
+        }
+
+        var real = FinalPath(handle);
+        if (real is null || !real.StartsWith(canonicalRoot.TrimEnd('\\') + @"\", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        // Suppression par le handle vérifié (sémantique POSIX, attribut lecture seule ignoré sans le modifier).
+        var ex = new FileDispositionInfoEx { Flags = DispositionDelete | DispositionPosixSemantics | DispositionIgnoreReadonly };
+        if (SetFileInformationByHandle(handle, FileDispositionInfoExClass, ref ex, (uint)Marshal.SizeOf<FileDispositionInfoEx>()))
+        {
+            return true;
+        }
+
+        var legacy = new FileDispositionInfo { DeleteFile = 1 };
+        return SetFileInformationByHandle(handle, FileDispositionInfoClass, ref legacy, (uint)Marshal.SizeOf<FileDispositionInfo>());
+    }
+
+    private static string? FinalPathOf(string path, bool directory)
+    {
+        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), FileReadAttributes,
+            FileShareRead | FileShareWrite | FileShareDelete, IntPtr.Zero, OpenExisting,
+            FlagOpenReparsePoint | (directory ? FlagBackupSemantics : 0), IntPtr.Zero);
+        return handle.IsInvalid ? null : FinalPath(handle);
+    }
+
+    private static unsafe string? FinalPath(Microsoft.Win32.SafeHandles.SafeFileHandle handle)
+    {
+        var buffer = new char[1024];
+        uint length;
+        fixed (char* p = buffer)
+        {
+            length = GetFinalPathNameByHandleW(handle, p, (uint)buffer.Length, 0);
+        }
+
+        if (length == 0 || length >= buffer.Length)
+        {
+            return null;
+        }
+
+        var text = new string(buffer, 0, (int)length);
+        return text.StartsWith(@"\\?\UNC\", StringComparison.Ordinal) ? null
+            : text.StartsWith(@"\\?\", StringComparison.Ordinal) ? text[4..] : text;
+    }
+
+    private const uint Delete = 0x00010000;
+    private const uint FileReadAttributes = 0x0080;
+    private const uint FileShareRead = 1;
+    private const uint FileShareWrite = 2;
+    private const uint FileShareDelete = 4;
+    private const uint OpenExisting = 3;
+    private const uint FlagOpenReparsePoint = 0x00200000;
+    private const uint FlagBackupSemantics = 0x02000000;
+    private const int FileDispositionInfoClass = 4;
+    private const int FileDispositionInfoExClass = 21;
+    private const uint DispositionDelete = 0x1;
+    private const uint DispositionPosixSemantics = 0x2;
+    private const uint DispositionIgnoreReadonly = 0x10;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FileDispositionInfo
+    {
+        public byte DeleteFile;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FileDispositionInfoEx
+    {
+        public uint Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ByHandleFileInformation
+    {
+        public uint Attributes;
+        public uint CreationTimeLow;
+        public uint CreationTimeHigh;
+        public uint LastAccessTimeLow;
+        public uint LastAccessTimeHigh;
+        public uint LastWriteTimeLow;
+        public uint LastWriteTimeHigh;
+        public uint VolumeSerialNumber;
+        public uint FileSizeHigh;
+        public uint FileSizeLow;
+        public uint NumberOfLinks;
+        public uint FileIndexHigh;
+        public uint FileIndexLow;
+    }
+
+    [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    private static partial Microsoft.Win32.SafeHandles.SafeFileHandle CreateFileW(string name, uint access, uint share, IntPtr security,
+        uint creation, uint flags, IntPtr template);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetFileInformationByHandle(Microsoft.Win32.SafeHandles.SafeFileHandle handle, out ByHandleFileInformation info);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    private static unsafe partial uint GetFinalPathNameByHandleW(Microsoft.Win32.SafeHandles.SafeFileHandle handle, char* buffer, uint size, uint flags);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetFileInformationByHandle(Microsoft.Win32.SafeHandles.SafeFileHandle handle, int infoClass,
+        ref FileDispositionInfoEx info, uint size);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetFileInformationByHandle(Microsoft.Win32.SafeHandles.SafeFileHandle handle, int infoClass,
+        ref FileDispositionInfo info, uint size);
+}
+
+/// <summary>Dossiers système via les dossiers connus de Windows (SHGetKnownFolderPath), pas les variables d'environnement.</summary>
+public sealed class KnownFolders : IKnownFolders
+{
+    public string Windows { get; } = Environment.GetFolderPath(Environment.SpecialFolder.Windows, Environment.SpecialFolderOption.DoNotVerify);
+
+    public string ProgramData { get; } =
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData, Environment.SpecialFolderOption.DoNotVerify);
+}
+
+/// <summary>Une mise à jour est en cours si Windows Update ou TrustedInstaller tourne, ou si un redémarrage est attendu.</summary>
+public sealed class CleanupGuards(IWmiQuery wmi, IRegistryReader registry) : ICleanupGuards
+{
+    public bool IsWindowsUpdateBusy()
+    {
+        try
+        {
+            var rows = wmi.Query(@"root\cimv2",
+                "SELECT State FROM Win32_Service WHERE Name = 'wuauserv' OR Name = 'TrustedInstaller'");
+            if (rows.Any(r => (r.GetValueOrDefault("State") as string) is { } state && !state.Equals("Stopped", StringComparison.OrdinalIgnoreCase)))
             {
-                if (!Directory.EnumerateFileSystemEntries(sub).Any())
-                {
-                    Directory.Delete(sub, recursive: false);
-                }
-            }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-            {
-                // Dossier utilisé ou protégé : laissé en place.
+                return true;
             }
         }
+        catch (WmiUnavailableException)
+        {
+            return true; // état inconnu : prudence
+        }
+
+        return registry.GetValueNames(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired").Count > 0
+               || File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "WinSxS", "pending.xml"));
     }
 }
 

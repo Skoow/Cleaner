@@ -86,9 +86,11 @@ internal static class Composition
         // Nettoyage (v0.4).
         services.AddSingleton<IFileSystem, CleanupFileSystem>();
         services.AddSingleton<IRecycleBin, RecycleBin>();
+        services.AddSingleton<IKnownFolders, KnownFolders>();
+        services.AddSingleton<ICleanupGuards, CleanupGuards>();
         services.AddSingleton(sp => new CleanupEngine(CleanupCatalog.Default, sp.GetRequiredService<IFileSystem>(),
-            sp.GetRequiredService<IRecycleBin>(), sp.GetRequiredService<IFileProbe>(), sp.GetRequiredService<IUserProfileResolver>(),
-            sp.GetRequiredService<IClock>()));
+            sp.GetRequiredService<IRecycleBin>(), sp.GetRequiredService<IKnownFolders>(), sp.GetRequiredService<IUserProfileResolver>(),
+            sp.GetRequiredService<IClock>(), sp.GetRequiredService<ICleanupGuards>()));
         services.AddSingleton<ICleanupSource>(sp => sp.GetRequiredService<CleanupEngine>());
         services.AddSingleton<IScanner>(sp => new CleanupScanner(sp.GetRequiredService<ICleanupSource>()));
         services.AddSingleton<IFixer>(sp => new CleanupFixer(sp.GetRequiredService<CleanupEngine>(), sp.GetRequiredService<IProcessRunner>()));
