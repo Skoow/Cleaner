@@ -41,7 +41,7 @@ jobs:
       - name: SBOM (CycloneDX)
         run: |
           dotnet tool install --global CycloneDX --version 6.3.2
-          dotnet CycloneDX src/PCDoc.App/PCDoc.App.csproj -o . -fn "sbom-${{ matrix.rid }}.cdx.json" -j
+          dotnet CycloneDX src/PCDoc.App/PCDoc.App.csproj -o . -fn "sbom-${{ matrix.rid }}.cdx.json" -F Json -rs -sn PCDoc
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-${{ matrix.rid }}
