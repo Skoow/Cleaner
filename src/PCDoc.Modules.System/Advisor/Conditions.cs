@@ -26,7 +26,9 @@ public sealed class ConditionProbe(IWmiQuery wmi, IRegistryReader registry) : IC
         {
             return condition switch
             {
-                "no-printer" => !wmi.Query(Cimv2, "SELECT Name FROM Win32_Printer").Any(r =>
+                // WMI tourne sous le compte qui a lancé PCDoc : on ajoute les imprimantes réseau du profil cible.
+                "no-printer" => registry.GetSubKeyNames(RegistryHive.TargetUser, @"Printers\Connections").Count == 0
+                                && !wmi.Query(Cimv2, "SELECT Name FROM Win32_Printer").Any(r =>
                     r.GetValueOrDefault("Name") is string name && !VirtualPrinters.Any(v => name.Contains(v, StringComparison.OrdinalIgnoreCase))),
                 "no-bluetooth" => NoDevice("Bluetooth"),
                 "no-biometric" => NoDevice("Biometric"),

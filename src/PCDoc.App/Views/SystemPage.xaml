@@ -138,8 +138,7 @@
       <TextBlock DockPanel.Dock="Right" Text="{app:T System.ReadOnly}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Bottom" Margin="0,0,16,4" />
       <TextBlock Text="{app:T System.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
     </DockPanel>
-    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}"
-                Visibility="{Binding Fixes, Converter={StaticResource NotNullToVisibility}}" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
     <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
                  Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"
                  AutomationProperties.Name="{app:T System.Loading}" />

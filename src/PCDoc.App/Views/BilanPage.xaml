@@ -37,8 +37,7 @@
       <TextBlock DockPanel.Dock="Right" Text="{Binding CompletedText}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Bottom" Margin="0,0,16,4" />
       <TextBlock Text="{app:T Nav.Bilan}" Style="{StaticResource Pcdoc.PageTitle}" />
     </DockPanel>
-    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}"
-                        Visibility="{Binding Fixes, Converter={StaticResource NotNullToVisibility}}" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
 
     <Grid>
       <!-- 1. Avant analyse -->

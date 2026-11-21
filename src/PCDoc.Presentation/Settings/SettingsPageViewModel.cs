@@ -118,7 +118,11 @@ public sealed partial class SettingsPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CancelExpert() => ConfirmingExpert = false;
+    private void CancelExpert()
+    {
+        ConfirmingExpert = false;
+        OnPropertyChanged(nameof(IsExpert)); // remet les boutons radio sur le mode réel
+    }
 
     [RelayCommand]
     private void SetNovice()

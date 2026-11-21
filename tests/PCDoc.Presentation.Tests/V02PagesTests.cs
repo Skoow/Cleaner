@@ -80,6 +80,36 @@ public sealed class V02PagesTests : IDisposable
     }
 
     [Fact]
+    public async Task History_InterruptedEntry_CanBeUndone()
+    {
+        var (pipeline, fixer) = Pipeline();
+        var entry = pipeline.Journal.Begin(PCDoc.Core.Findings.UndoEntry.Create("a", "t", "", "Undo.Disabled", ["a"]));
+        fixer.Applied.Add("a"); // la modification a eu lieu, puis coupure avant « appliquée »
+        var vm = new HistoryPageViewModel(pipeline, Loc());
+        vm.Refresh();
+
+        vm.Entries.Single().CanUndo.Should().BeTrue();
+        await vm.UndoCommand.ExecuteAsync(vm.Entries.Single());
+
+        fixer.Applied.Should().BeEmpty();
+        _ = entry;
+    }
+
+    [Fact]
+    public void Settings_CancelExpert_RefreshesModeDisplay()
+    {
+        var vm = new PCDoc.Presentation.Settings.SettingsPageViewModel(Loc(), new MemoryStore(), new NoTheme(), new Profiles(), new NoCleaner(), null, "", () => null);
+        var raised = new List<string?>();
+        vm.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
+
+        vm.RequestExpertCommand.Execute(null);
+        vm.CancelExpertCommand.Execute(null);
+
+        raised.Should().Contain(nameof(vm.IsExpert));
+        vm.IsExpert.Should().BeFalse();
+    }
+
+    [Fact]
     public void Settings_SwitchToExpert_NeedsConfirmation()
     {
         var store = new MemoryStore();

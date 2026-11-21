@@ -128,6 +128,19 @@ public sealed class FixConfirmationViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task ConfirmWithoutRestorePoint_CannotRunTwice()
+    {
+        var (vm, _) = Make(RestorePointOutcome.Failed);
+        vm.Request([F("a")]);
+        await vm.ConfirmCommand.ExecuteAsync(null);
+
+        vm.ConfirmWithoutRestorePointCommand.CanExecute(null).Should().BeTrue();
+        await vm.ConfirmWithoutRestorePointCommand.ExecuteAsync(null);
+
+        vm.ConfirmWithoutRestorePointCommand.CanExecute(null).Should().BeFalse("plus rien à confirmer");
+    }
+
+    [Fact]
     public void Cancel_ClosesWithoutApplying()
     {
         var (vm, fixer) = Make();

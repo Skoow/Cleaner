@@ -124,4 +124,6 @@
   <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows a refusé d'activer la protection du système.</value></data>
   <data name="FirstRun.Finish" xml:space="preserve"><value>Commencer</value></data>
   <data name="Bilan.FooterSafe" xml:space="preserve"><value>« Tout corriger » n'applique que les modifications sûres (vertes). Un point de restauration est créé avant.</value></data>
+  <data name="Fix.Disabled" xml:space="preserve"><value>Les corrections sont désactivées : le dossier de sauvegarde de PCDoc (C:\ProgramData\PCDoc\backup) n'est pas sûr. Supprimez-le en administrateur, puis relancez PCDoc.</value></data>
+  <data name="History.InterruptedBanner" xml:space="preserve"><value>Une modification de PCDoc a été interrompue (coupure de courant ou plantage). Vérifiez-la dans la page Historique.</value></data>
 </root>

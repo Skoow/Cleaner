@@ -124,4 +124,6 @@
   <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows refused to turn on system protection.</value></data>
   <data name="FirstRun.Finish" xml:space="preserve"><value>Start</value></data>
   <data name="Bilan.FooterSafe" xml:space="preserve"><value>Fix all applies only safe changes (green). A restore point is created first.</value></data>
+  <data name="Fix.Disabled" xml:space="preserve"><value>Fixes are turned off: the PCDoc backup folder (C:\ProgramData\PCDoc\backup) is not safe. Delete it as an administrator, then restart PCDoc.</value></data>
+  <data name="History.InterruptedBanner" xml:space="preserve"><value>A change by PCDoc was interrupted (power cut or crash). Check it on the History page.</value></data>
 </root>

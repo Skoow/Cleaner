@@ -84,12 +84,38 @@ public class AdvisorTests
         Make().Advise(E(AutorunKind.ScheduledTask, @"\Microsoft\Windows\WindowsUpdate\Scheduled Start", true)).Level.Should().Be(RiskLevel.Locked);
 
     [Fact]
-    public void DisabledItem_ReEnable_IsSafeUnlessLocked()
+    public void ReEnable_UnknownService_StaysDiscouraged()
     {
-        var advice = Make().Advise(E(AutorunKind.Service, "rgbsvc", enabled: false));
+        var advice = Make().Advise(E(AutorunKind.Service, "RemoteAccessThing", enabled: false));
 
         advice.Action.Should().Be(ToggleAction.Enable);
-        advice.Level.Should().Be(RiskLevel.Safe);
+        advice.Level.Should().Be(RiskLevel.Discouraged, "réactiver un service désactivé peut affaiblir la sécurité");
+    }
+
+    [Fact]
+    public void ReEnable_StartupProgramOrConditional_IsSafe()
+    {
+        Make().Advise(E(AutorunKind.Startup, "Discord", enabled: false)).Level.Should().Be(RiskLevel.Safe);
+        Make(("no-printer", true)).Advise(E(AutorunKind.Service, "Spooler", microsoft: true, enabled: false)).Level.Should().Be(RiskLevel.Safe);
+    }
+
+    [Fact]
+    public void LevelFor_Request_MatchesCatalog()
+    {
+        var advisor = Make();
+        advisor.LevelFor(PCDoc.Modules.System.Fixes.ToggleRequest.ForService("WinDefend", ToggleAction.Enable)).Should().Be(RiskLevel.Locked);
+        advisor.LevelFor(PCDoc.Modules.System.Fixes.ToggleRequest.ForTask(@"\Microsoft\Windows\Windows Defender\Scan", ToggleAction.Disable))
+            .Should().Be(RiskLevel.Locked);
+        advisor.LevelFor(PCDoc.Modules.System.Fixes.ToggleRequest.ForService("Fax", ToggleAction.Disable)).Should().Be(RiskLevel.Safe);
+    }
+
+    [Fact]
+    public void ConditionProbe_TargetUserNetworkPrinter_MeansPrinter()
+    {
+        var wmi = new FakeWmiQuery().Add(@"root\cimv2", "Win32_Printer", Row.Of(("Name", "Microsoft Print to PDF")));
+        var reg = new FakeRegistryReader().Set(RegistryHive.TargetUser, @"Printers\Connections\,,srv,HP", "Server", "srv");
+
+        new ConditionProbe(wmi, reg).Check("no-printer").Should().BeFalse();
     }
 
     [Fact]

@@ -41,7 +41,7 @@ public sealed partial class HistoryPageViewModel : ObservableObject
         {
             Entries.Add(new HistoryRow(e, _localizer.Format(e.Title),
                 e.Timestamp.ToLocalTime().ToString("g", (_localizer as Localizer)?.Culture),
-                _localizer[$"History.Status.{e.Status}"], e.Status == UndoStatus.Applied));
+                _localizer[$"History.Status.{e.Status}"], e.Status is UndoStatus.Applied or UndoStatus.Pending));
         }
 
         var interrupted = _pipeline.Journal.Interrupted();

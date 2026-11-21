@@ -119,3 +119,5 @@ FirstRun.EnableProtection	Turn on	Activer
 FirstRun.ProtectionFailed	Windows refused to turn on system protection.	Windows a refusé d'activer la protection du système.
 FirstRun.Finish	Start	Commencer
 Bilan.FooterSafe	Fix all applies only safe changes (green). A restore point is created first.	« Tout corriger » n'applique que les modifications sûres (vertes). Un point de restauration est créé avant.
+Fix.Disabled	Fixes are turned off: the PCDoc backup folder (C:\ProgramData\PCDoc\backup) is not safe. Delete it as an administrator, then restart PCDoc.	Les corrections sont désactivées : le dossier de sauvegarde de PCDoc (C:\ProgramData\PCDoc\backup) n'est pas sûr. Supprimez-le en administrateur, puis relancez PCDoc.
+History.InterruptedBanner	A change by PCDoc was interrupted (power cut or crash). Check it on the History page.	Une modification de PCDoc a été interrompue (coupure de courant ou plantage). Vérifiez-la dans la page Historique.

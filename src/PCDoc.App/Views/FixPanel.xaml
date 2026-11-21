@@ -7,7 +7,7 @@
   <StackPanel>
     <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,12" BorderThickness="2"
             BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
-            Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}"
+            Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
             AutomationProperties.LiveSetting="Assertive" AutomationProperties.Name="{app:T Fix.Title}">
       <StackPanel>
         <TextBlock Text="{app:T Fix.Title}" FontSize="16" FontWeight="SemiBold" />
@@ -44,6 +44,6 @@
       </StackPanel>
     </Border>
     <TextBlock Text="{Binding ResultText}" Foreground="{DynamicResource Pcdoc.Ok}" TextWrapping="Wrap" Margin="0,0,0,8"
-               Visibility="{Binding ResultText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.LiveSetting="Polite" />
+               Visibility="{Binding ResultText, Converter={StaticResource NotNullToVisibility}, FallbackValue=Collapsed}" AutomationProperties.LiveSetting="Polite" />
   </StackPanel>
 </UserControl>

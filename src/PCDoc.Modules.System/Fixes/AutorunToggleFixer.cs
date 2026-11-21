@@ -17,7 +17,8 @@ public sealed class AutorunToggleFixer(
     IServiceControl services,
     ITaskControl tasks,
     IBackupStore backups,
-    Func<DateTimeOffset> now) : IFixer
+    Func<DateTimeOffset> now,
+    AutorunAdvisor advisor) : IFixer
 {
     public const string Kind = "system.toggle";
     private const string ApprovedRoot = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved";
@@ -28,13 +29,50 @@ public sealed class AutorunToggleFixer(
     public bool CanFix(Finding finding)
     {
         ArgumentNullException.ThrowIfNull(finding);
-        return ToggleRequest.Parse(finding.FixData) is { } r && (r.Kind != AutorunKind.Startup || (r.Hive is not null && r.ApprovedSubKey is not null));
+        return ToggleRequest.Parse(finding.FixData) is { } r && IsWellFormed(r) && IsAllowed(r, finding.Risk);
+    }
+
+    private static bool IsWellFormed(ToggleRequest r) =>
+        r.Kind is AutorunKind.Startup or AutorunKind.Service or AutorunKind.ScheduledTask
+        && !string.IsNullOrWhiteSpace(r.Name) && r.Name.Length <= 512
+        && (r.Kind != AutorunKind.Startup || (r.Hive is not null && r.ApprovedSubKey is "Run" or "Run32" or "StartupFolder"));
+
+    /// <summary>Le niveau est recalculé : jamais 🔒, et jamais plus risqué que ce que le problème annonçait.</summary>
+    private bool IsAllowed(ToggleRequest r, RiskLevel claimed)
+    {
+        var level = advisor.LevelFor(r);
+        return level != RiskLevel.Locked && (int)claimed >= (int)level;
+    }
+
+    private ToggleRequest Guarded(Finding finding)
+    {
+        var request = ToggleRequest.Parse(finding.FixData);
+        if (request is null || !IsWellFormed(request) || !IsAllowed(request, finding.Risk))
+        {
+            throw new InvalidOperationException("Change refused: locked or riskier than announced");
+        }
+
+        return request;
+    }
+
+    /// <summary>Annulation : le journal est une donnée lue sur le disque, on revérifie tout.</summary>
+    private (ToggleRequest Request, State Before) GuardedPayload(UndoEntry entry)
+    {
+        var (request, before) = ReadPayload(entry);
+        if (!IsWellFormed(request) || advisor.LevelFor(request) == RiskLevel.Locked
+            || before.ServiceMode is ServiceStartMode.Boot or ServiceStartMode.System or ServiceStartMode.Unknown
+            || before.StartupValue is { Length: > 128 })
+        {
+            throw new InvalidOperationException("Undo refused: invalid or locked target");
+        }
+
+        return (request, before);
     }
 
     public Task<UndoEntry> PrepareAsync(Finding finding, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(finding);
-        var request = ToggleRequest.Parse(finding.FixData) ?? throw new InvalidOperationException("Not a toggle finding");
+        var request = Guarded(finding);
         var before = new State();
         switch (request.Kind)
         {
@@ -66,7 +104,7 @@ public sealed class AutorunToggleFixer(
     public Task ApplyAsync(Finding finding, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(finding);
-        var request = ToggleRequest.Parse(finding.FixData) ?? throw new InvalidOperationException("Not a toggle finding");
+        var request = Guarded(finding);
         var disable = request.Action == ToggleAction.Disable;
         switch (request.Kind)
         {
@@ -86,7 +124,16 @@ public sealed class AutorunToggleFixer(
 
     public Task<bool> IsUnchangedSinceAsync(UndoEntry entry, CancellationToken cancellationToken)
     {
-        var (request, _) = ReadPayload(entry);
+        ToggleRequest request;
+        try
+        {
+            (request, _) = GuardedPayload(entry);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or JsonException)
+        {
+            return Task.FromResult(false);
+        }
+
         var disable = request.Action == ToggleAction.Disable;
         var unchanged = request.Kind switch
         {
@@ -100,7 +147,7 @@ public sealed class AutorunToggleFixer(
 
     public Task UndoAsync(UndoEntry entry, CancellationToken cancellationToken)
     {
-        var (request, before) = ReadPayload(entry);
+        var (request, before) = GuardedPayload(entry);
         switch (request.Kind)
         {
             case AutorunKind.Startup:

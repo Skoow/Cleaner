@@ -84,6 +84,28 @@ public class WritesTests
     }
 
     [Fact]
+    public void SecureFolders_LinkIsReplaced_TargetUntouched()
+    {
+        var target = Directory.CreateTempSubdirectory("pcdoc-target-").FullName;
+        var link = Path.Combine(Path.GetTempPath(), "pcdoc-link-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateSymbolicLink(link, target);
+        var before = new DirectoryInfo(target).GetAccessControl().GetSecurityDescriptorSddlForm(System.Security.AccessControl.AccessControlSections.Access);
+        try
+        {
+            SecureFolders.Ensure(link);
+
+            File.GetAttributes(link).HasFlag(FileAttributes.ReparsePoint).Should().BeFalse("le lien est remplacé par un vrai dossier");
+            new DirectoryInfo(target).GetAccessControl().GetSecurityDescriptorSddlForm(System.Security.AccessControl.AccessControlSections.Access)
+                .Should().Be(before, "les droits de la cible du lien ne sont jamais modifiés");
+        }
+        finally
+        {
+            Directory.Delete(link, true);
+            Directory.Delete(target, true);
+        }
+    }
+
+    [Fact]
     public async System.Threading.Tasks.Task RestorePoint_NeverThrows()
     {
         var outcome = await new RestorePointService(new SystemClock()).EnsureAsync("PCDoc integration test", CancellationToken.None);

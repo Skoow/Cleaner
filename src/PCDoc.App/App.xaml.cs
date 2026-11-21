@@ -40,7 +40,20 @@ public partial class App : Application
         localizer.Language = settings.Language;
         Loc.Instance = localizer;
 
-        _services = Composition.Build(_logger, localizer, store);
+        string? journalPath = null;
+        try
+        {
+            journalPath = System.IO.Path.Combine(PCDoc.Infrastructure.Writes.SecureFolders.Backup, "undo.jsonl");
+            PCDoc.Infrastructure.Writes.SecureFolders.SecureFile(journalPath);
+        }
+        catch (Exception ex) when (ex is PCDoc.Infrastructure.Writes.UnsafeFolderException or System.IO.IOException
+                                       or UnauthorizedAccessException or InvalidOperationException)
+        {
+            _logger.Error(ex, "Backup folder is not safe: fixes disabled");
+            journalPath = null;
+        }
+
+        _services = Composition.Build(_logger, localizer, store, journalPath);
         var theme = _services.GetRequiredService<ThemeApplier>();
         theme.Apply(settings.Theme);
         ThemeApplier.Hook(theme);
@@ -53,9 +66,22 @@ public partial class App : Application
             shell.ShowFirstRun(new FirstRunViewModel(localizer, store, _services.GetRequiredService<IProtectionService>()));
         }
 
-        foreach (var interrupted in _services.GetRequiredService<PCDoc.Core.Fixing.UndoJournal>().Interrupted())
+        if (journalPath is null)
         {
-            _logger.Warning("Interrupted change found at startup: {Kind} {Finding}", interrupted.Kind, interrupted.FindingId);
+            shell.ShowError(localizer["Fix.Disabled"]);
+        }
+        else
+        {
+            var interrupted = _services.GetRequiredService<PCDoc.Core.Fixing.UndoJournal>().Interrupted();
+            foreach (var entry in interrupted)
+            {
+                _logger.Warning("Interrupted change found at startup: {Kind} {Finding}", entry.Kind, entry.FindingId);
+            }
+
+            if (interrupted.Count > 0)
+            {
+                shell.ShowError(localizer["History.InterruptedBanner"]);
+            }
         }
 
         var window = new MainWindow(shell, store, _services.GetRequiredService<IAppDataCleaner>());

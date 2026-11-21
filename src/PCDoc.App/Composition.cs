@@ -29,8 +29,10 @@ namespace PCDoc.App;
 /// <summary>Assemblage des services (injection de dépendances). Rien n'est analysé au démarrage.</summary>
 internal static class Composition
 {
-    public static ServiceProvider Build(Logger logger, ILocalizer localizer, ISettingsStore settings)
+    /// <param name="journalPath">Journal d'annulation dans le dossier protégé ; null = dossier non sûr, corrections désactivées.</param>
+    public static ServiceProvider Build(Logger logger, ILocalizer localizer, ISettingsStore settings, string? journalPath)
     {
+        _fixesAvailable = journalPath is not null;
         var services = new ServiceCollection();
         services.AddSingleton(logger);
         services.AddSingleton(localizer);
@@ -66,8 +68,9 @@ internal static class Composition
         services.AddSingleton<IProtectionService, ProtectionService>();
         services.AddSingleton<IFixer>(sp => new AutorunToggleFixer(
             sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryWriter>(), sp.GetRequiredService<IServiceControl>(),
-            sp.GetRequiredService<ITaskControl>(), sp.GetRequiredService<IBackupStore>(), () => DateTimeOffset.Now));
-        services.AddSingleton(sp => new UndoJournal(Path.Combine(SecureFolders.Backup, "undo.jsonl"), sp.GetRequiredService<IClock>()));
+            sp.GetRequiredService<ITaskControl>(), sp.GetRequiredService<IBackupStore>(), () => DateTimeOffset.Now,
+            sp.GetRequiredService<AutorunAdvisor>()));
+        services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
 
@@ -103,7 +106,8 @@ internal static class Composition
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<IClipboardService>(), services.GetRequiredService<AutorunAdvisor>(),
             NewFixPanel(services), Mode(services)),
-        PageId.History => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
+        PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
+        PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],
         _ => new SettingsPageViewModel(
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<ISettingsStore>(),
             services.GetRequiredService<IThemeApplier>(), services.GetRequiredService<IUserProfileResolver>(),
@@ -118,8 +122,10 @@ internal static class Composition
         return () => store.Load().Mode;
     }
 
-    private static FixConfirmationViewModel NewFixPanel(IServiceProvider services) =>
-        new(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(), Mode(services));
+    private static bool _fixesAvailable;
+
+    private static FixConfirmationViewModel? NewFixPanel(IServiceProvider services) =>
+        _fixesAvailable ? new(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(), Mode(services)) : null;
 
     /// <summary>Texte de la licence GPL-3.0 livré à côté de l'exécutable (affiché dans la fenêtre).</summary>
     private static string? ReadLicense()

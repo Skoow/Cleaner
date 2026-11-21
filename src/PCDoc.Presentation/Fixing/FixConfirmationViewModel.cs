@@ -26,6 +26,7 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
     private bool _isOpen;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ConfirmWithoutRestorePointCommand))]
     private bool _isRunning;
 
     [ObservableProperty]
@@ -36,6 +37,7 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
     private bool _needsStrongConfirmation;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ConfirmWithoutRestorePointCommand))]
     private bool _awaitingNoRestorePointConfirmation;
 
     [ObservableProperty]
@@ -81,7 +83,9 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanConfirm))]
     private Task ConfirmAsync() => RunAsync(allowWithoutRestorePoint: false);
 
-    [RelayCommand]
+    private bool CanConfirmWithoutRestorePoint() => AwaitingNoRestorePointConfirmation && !IsRunning;
+
+    [RelayCommand(CanExecute = nameof(CanConfirmWithoutRestorePoint))]
     private Task ConfirmWithoutRestorePointAsync() => RunAsync(allowWithoutRestorePoint: true);
 
     [RelayCommand]

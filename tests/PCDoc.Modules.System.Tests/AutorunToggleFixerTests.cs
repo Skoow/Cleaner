@@ -43,12 +43,18 @@ public class AutorunToggleFixerTests
         }
     }
 
+    private sealed class NoConditions : IConditionProbe
+    {
+        public bool? Check(string condition) => null;
+    }
+
     private static readonly DateTimeOffset Now = new(2026, 11, 21, 10, 0, 0, TimeSpan.Zero);
 
     private static (AutorunToggleFixer Fixer, FakeSystem System) Make()
     {
         var sys = new FakeSystem();
-        return (new AutorunToggleFixer(sys.Registry, sys, sys, sys, sys, () => Now), sys);
+        var advisor = new AutorunAdvisor(AdvisorCatalog.Default, new NoConditions());
+        return (new AutorunToggleFixer(sys.Registry, sys, sys, sys, sys, () => Now, advisor), sys);
     }
 
     private static Finding FindingFor(ToggleRequest request) =>
@@ -107,7 +113,7 @@ public class AutorunToggleFixerTests
     {
         var (fixer, sys) = Make();
         sys.Services["Spooler"] = ServiceStartMode.AutomaticDelayed;
-        var finding = FindingFor(ToggleRequest.ForService("Spooler", ToggleAction.Disable));
+        var finding = FindingFor(ToggleRequest.ForService("Spooler", ToggleAction.Disable)) with { Risk = RiskLevel.Discouraged };
 
         var undo = await fixer.PrepareAsync(finding, CancellationToken.None);
         await fixer.ApplyAsync(finding, CancellationToken.None);
@@ -122,7 +128,7 @@ public class AutorunToggleFixerTests
     {
         var (fixer, sys) = Make();
         sys.Services["rgbsvc"] = ServiceStartMode.Disabled;
-        var finding = FindingFor(ToggleRequest.ForService("rgbsvc", ToggleAction.Enable));
+        var finding = FindingFor(ToggleRequest.ForService("rgbsvc", ToggleAction.Enable)) with { Risk = RiskLevel.Discouraged };
 
         await fixer.PrepareAsync(finding, CancellationToken.None);
         await fixer.ApplyAsync(finding, CancellationToken.None);
@@ -135,7 +141,7 @@ public class AutorunToggleFixerTests
     {
         var (fixer, sys) = Make();
         sys.Services["Spooler"] = ServiceStartMode.Automatic;
-        var finding = FindingFor(ToggleRequest.ForService("Spooler", ToggleAction.Disable));
+        var finding = FindingFor(ToggleRequest.ForService("Spooler", ToggleAction.Disable)) with { Risk = RiskLevel.Discouraged };
         var undo = await fixer.PrepareAsync(finding, CancellationToken.None);
         await fixer.ApplyAsync(finding, CancellationToken.None);
 
@@ -165,9 +171,47 @@ public class AutorunToggleFixerTests
     {
         var (fixer, _) = Make();
 
-        fixer.CanFix(FindingFor(ToggleRequest.ForTask(@"\x", ToggleAction.Disable))).Should().BeTrue();
+        fixer.CanFix(FindingFor(ToggleRequest.ForTask(@"\x", ToggleAction.Disable)) with { Risk = RiskLevel.Discouraged }).Should().BeTrue();
         fixer.CanFix(new Finding("system.disk-low.c", "system", Severity.Warning, new("T"), new("E"), "")).Should().BeFalse();
         fixer.CanFix(new Finding("system.x", "system", Severity.Info, new("T"), new("E"), "", FixData: "{ not json")).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task LockedService_IsRefused_EvenWithCraftedFinding()
+    {
+        var (fixer, sys) = Make();
+        sys.Services["wuauserv"] = ServiceStartMode.Manual;
+        var finding = FindingFor(ToggleRequest.ForService("wuauserv", ToggleAction.Disable));
+
+        fixer.CanFix(finding).Should().BeFalse();
+        var act = () => fixer.ApplyAsync(finding, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
+        sys.Services["wuauserv"].Should().Be(ServiceStartMode.Manual);
+    }
+
+    [Fact]
+    public async Task ForgedUndoEntry_TargetingLockedService_IsRefused()
+    {
+        var (fixer, sys) = Make();
+        sys.Services["wuauserv"] = ServiceStartMode.Manual;
+        // Entrée falsifiée : « annuler une réactivation » = remettre Windows Update en Désactivé.
+        var payload = "{\"Request\":{\"Kind\":2,\"Action\":1,\"Name\":\"wuauserv\"},\"Before\":{\"ServiceMode\":5}}";
+        var forged = new UndoEntry("x", "f", AutorunToggleFixer.Kind, payload, "Undo.Enabled", ["harmless"], Now, UndoStatus.Applied);
+
+        (await fixer.IsUnchangedSinceAsync(forged, CancellationToken.None)).Should().BeFalse();
+        var act = () => fixer.UndoAsync(forged, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
+        sys.Services["wuauserv"].Should().Be(ServiceStartMode.Manual);
+    }
+
+    [Fact]
+    public void Finding_ClaimingSaferThanCatalog_IsRefused()
+    {
+        var (fixer, _) = Make();
+        // Service inconnu = 🔴 ; un problème qui prétend « Sûr » est refusé.
+        fixer.CanFix(FindingFor(ToggleRequest.ForService("rgbsvc", ToggleAction.Disable))).Should().BeFalse();
+        fixer.CanFix(FindingFor(ToggleRequest.ForService("rgbsvc", ToggleAction.Disable)) with { Risk = RiskLevel.Discouraged })
+            .Should().BeTrue();
     }
 
     [Fact]
