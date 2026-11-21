@@ -2,7 +2,7 @@
 
 > **PCDoc** est un nom de code provisoire. Le nom définitif sera choisi plus tard ; il n'apparaît que dans les métadonnées et se change en un seul endroit.
 
-Date : 2026-11-03 — Statut : validée
+Date : 2026-11-03 — Statut : **remplacée** par `2026-11-21-pcdoc-specification-v2.md`
 
 ---
 

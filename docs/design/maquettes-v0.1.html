@@ -203,6 +203,7 @@ td.path{font-family:var(--mono);font-size:12px;color:var(--fg2);max-width:320px;
       <li>Système : 7 onglets dans cet ordre — Vue d'ensemble, Matériel, Disques, Démarrage, Programmes au démarrage, Tâches planifiées, Services.</li>
       <li>Pastilles de signature : Signé (vert), Non signé (orange), Fichier introuvable (rouge).</li>
       <li>Aucun bouton n'ouvre l'Explorateur, l'Éditeur du Registre ou un navigateur : on copie le chemin.</li>
+      <li>Nouveau : carte « Compatibilité Windows 11 » dans Système, « Compte analysé » et « Effacer les données de PCDoc » dans Paramètres.</li>
     </ol>
   </section>
 </div>
@@ -331,6 +332,7 @@ function system(){setNav('system');
   ${card('gpu','Carte graphique',kv([['Modèle','NVIDIA GeForce RTX 3060'],['Mémoire','12 Go'],['Pilote','32.0.15.6094']]))}
   ${card('disk','Disque C:',`<div class="meter warn"><i style="width:98%"></i></div><div class="tiny num">9,8 Go libres sur 476 Go</div>`+kv([['Type','SSD NVMe']]))}
   ${card('bat','Batterie','<p class="na" style="margin:0">Non disponible : aucune batterie détectée (PC fixe).</p>')}
+  ${card('win','Compatibilité Windows 11',kv([['TPM 2.0','<span class="sig ok"><i class="dot"></i>Oui</span>'],['Secure Boot','<span class="sig ok"><i class="dot"></i>Activé</span>'],['Démarrage UEFI, disque GPT','<span class="sig ok"><i class="dot"></i>Oui</span>'],['Processeur pris en charge','<span class="sig ok"><i class="dot"></i>Oui</span>'],['RAM ≥ 4 Go, stockage ≥ 64 Go','<span class="sig ok"><i class="dot"></i>Oui</span>']]))}
  </div>`;
  else if(tab===1) body=`<div class="grid">
   ${card('cpu','Carte mère et BIOS',kv([['Carte mère','ASUS TUF GAMING B550-PLUS'],['BIOS','American Megatrends 3607'],['Date du BIOS','08/2024']]))}
@@ -358,7 +360,9 @@ function settings(){setNav('settings');
  <div class="stack">
   <div class="card setting">${ico.lang}<div class="lbl"><b>Langue</b><span>Appliquée immédiatement</span></div><div class="seg"><button aria-pressed="true">Français</button><button aria-pressed="false">English</button></div></div>
   <div class="card setting">${ico.theme}<div class="lbl"><b>Thème</b><span>Suit Windows par défaut</span></div><div class="seg"><button aria-pressed="false">Clair</button><button aria-pressed="false">Sombre</button><button aria-pressed="true">Système</button></div></div>
+  <div class="card setting">${ico.info}<div class="lbl"><b>Compte analysé</b><span>Léa (session ouverte) · PCDoc a été autorisé avec le compte administrateur « Admin »</span></div><span></span></div>
   <div class="card setting">${ico.log}<div class="lbl"><b>Journal des actions</b><span class="mono">%LOCALAPPDATA%\\PCDoc\\logs</span></div><button class="btn" onclick="copied(this,'Chemin copié')">Copier le chemin</button></div>
+  <div class="card setting">${ico.log}<div class="lbl"><b>Données de PCDoc</b><span>Supprime le journal et les paramètres de PCDoc sur ce PC</span></div><button class="btn" onclick="copied(this,'Données effacées')">Effacer les données de PCDoc</button></div>
  </div>
  <div class="section-t">À propos</div>
  <div class="card" style="display:grid;gap:12px">
