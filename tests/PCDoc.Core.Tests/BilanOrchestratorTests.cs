@@ -74,6 +74,18 @@ public class BilanOrchestratorTests
     }
 
     [Fact]
+    public async Task Run_WhenScannerReportsPartialResult_KeepsFindingsAndReportsError()
+    {
+        var sut = Make(TimeSpan.FromSeconds(5), new FakeScanner("system",
+            _ => throw new PartialScanException([F("s.1", "system", Severity.Warning)], ["autoruns"])));
+
+        var result = await sut.RunAsync(null, CancellationToken.None);
+
+        result.Findings.Should().ContainSingle(f => f.Id == "s.1");
+        result.Errors.Should().ContainSingle().Which.Module.Should().Be("system");
+    }
+
+    [Fact]
     public async Task Run_WhenScannerHangs_TimesOut()
     {
         var sut = Make(TimeSpan.FromMilliseconds(100),

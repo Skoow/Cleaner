@@ -11,6 +11,11 @@ public class CommandLineParserTests
             .Should().Be(@"C:\Program Files\App\app.exe");
 
     [Fact]
+    public void DoubleQuoted_TaskPath_ReturnsPath() =>
+        CommandLineParser.ExtractExecutable("\"\"C:\\Program Files\\X\\x.exe\"\" /run", new FakeFileProbe())
+            .Should().Be(@"C:\Program Files\X\x.exe");
+
+    [Fact]
     public void Unquoted_WithSpaces_UsesExistingPrefix() =>
         CommandLineParser.ExtractExecutable(@"C:\Program Files\App\app.exe /s",
                 new FakeFileProbe().WithFiles(@"C:\Program Files\App\app.exe"))

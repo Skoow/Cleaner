@@ -36,8 +36,12 @@ public sealed class EventLogQuery : IEventLogQuery
                     break;
                 }
 
-                results.Add(new EventRecordData(record.Id, record.TimeCreated ?? DateTimeOffset.MinValue.DateTime,
-                    ReadData(record.ToXml())));
+                if (record.TimeCreated is not { } created)
+                {
+                    continue; // événement sans date : inexploitable
+                }
+
+                results.Add(new EventRecordData(record.Id, new DateTimeOffset(created), ReadData(record.ToXml())));
             }
         }
         catch (Exception ex) when (ex is EventLogNotFoundException or EventLogException or UnauthorizedAccessException)

@@ -72,4 +72,7 @@
   <data name="About.Version" xml:space="preserve"><value>Version</value></data>
   <data name="About.License" xml:space="preserve"><value>License</value></data>
   <data name="About.ShowLicense" xml:space="preserve"><value>Read the GPL-3.0 license</value></data>
+  <data name="Nav.Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="About.Url" xml:space="preserve"><value>Website</value></data>
+  <data name="About.LicenseText" xml:space="preserve"><value>License text</value></data>
 </root>

@@ -8,11 +8,63 @@ public class AutorunCollectorTests
 {
     private const string Run = @"Software\Microsoft\Windows\CurrentVersion\Run";
 
+    private sealed class SlowVerifier : ISignatureVerifier
+    {
+        public SignatureInfo Verify(string filePath)
+        {
+            Thread.Sleep(100);
+            return new SignatureInfo(SignatureStatus.Signed, "Vendor " + filePath, false);
+        }
+    }
+
+    [Fact]
+    public void Collect_VerifiesSignaturesInParallel_AndKeepsOrder()
+    {
+        var services = Enumerable.Range(0, 16)
+            .Select(i => new ServiceInfo($"svc{i:00}", $"Service {i:00}", ServiceStartMode.Automatic, "Running", $@"C:\s\svc{i:00}.exe", null, false))
+            .ToArray();
+        var files = new FakeFileProbe().WithFiles([.. services.Select(s => s.ImagePath!)]);
+
+        var watch = global::System.Diagnostics.Stopwatch.StartNew();
+        var entries = new AutorunCollector(new FakeRegistryReader(), files, new FakeProfileResolver(), new SlowVerifier(),
+            new FakeTaskReader(), new FakeServiceReader(services)).CollectAll().Entries;
+
+        watch.Elapsed.Should().BeLessThan(TimeSpan.FromMilliseconds(1200), "16 × 100 ms en série prendrait 1,6 s");
+        entries.Select(e => e.Name).Should().Equal(services.Select(s => s.DisplayName));
+        entries.Should().OnlyContain(e => e.Signature.Publisher == "Vendor " + e.FilePath);
+    }
+
+    [Fact]
+    public void Collect_DriverWithoutPath_IsNotApplicableNotOrphan()
+    {
+        var services = new[] { new ServiceInfo("vdrv", "Virtual driver", ServiceStartMode.Manual, "Stopped", "", null, true) };
+
+        Collect(services: services).Single().Signature.Status.Should().Be(SignatureStatus.NotApplicable);
+    }
+
+    private sealed class ThrowingTasks : IScheduledTaskReader
+    {
+        public IReadOnlyList<ScheduledTaskInfo> ReadAll() => throw new InvalidOperationException("Task Scheduler service disabled");
+    }
+
+    [Fact]
+    public void Collect_WhenTaskReaderThrows_KeepsOtherSources()
+    {
+        var reg = new FakeRegistryReader().Set(RegistryHive.LocalMachine, Run, "OldSync", @"C:\Gone\sync.exe");
+        var services = new[] { new ServiceInfo("Spooler", "Print Spooler", ServiceStartMode.Automatic, "Running", @"C:\Windows\System32\spoolsv.exe", null, false) };
+
+        var result = new AutorunCollector(reg, new FakeFileProbe(), new FakeProfileResolver(), new FakeSignatureVerifier(),
+            new ThrowingTasks(), new FakeServiceReader(services)).CollectAll();
+
+        result.Entries.Should().HaveCount(2);
+        result.FailedSources.Should().Equal("tasks");
+    }
+
     private static IReadOnlyList<AutorunEntry> Collect(
         FakeRegistryReader? reg = null, FakeFileProbe? files = null, FakeSignatureVerifier? signatures = null,
         ScheduledTaskInfo[]? tasks = null, ServiceInfo[]? services = null) =>
         new AutorunCollector(reg ?? new FakeRegistryReader(), files ?? new FakeFileProbe(), new FakeProfileResolver(),
-            signatures ?? new FakeSignatureVerifier(), new FakeTaskReader(tasks ?? []), new FakeServiceReader(services ?? [])).Collect();
+            signatures ?? new FakeSignatureVerifier(), new FakeTaskReader(tasks ?? []), new FakeServiceReader(services ?? [])).CollectAll().Entries;
 
     [Fact]
     public void Collect_MissingFile_SignatureIsFileNotFound()

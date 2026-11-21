@@ -43,6 +43,18 @@ jobs:
           dotnet publish src/PCDoc.App/PCDoc.App.csproj -c Release -r ${{ matrix.rid }} --self-contained
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true
           -o out/${{ matrix.rid }}
+      - name: Smoke test (the published app starts and stays up)
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "out/win-x64/PCDoc.exe" -PassThru
+          Start-Sleep -Seconds 20
+          $log = Get-ChildItem "$env:LOCALAPPDATA/PCDoc/logs" -Filter *.log -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($log) { Get-Content $log.FullName }
+          if ($p.HasExited) { Write-Error "PCDoc exited during startup (code $($p.ExitCode))"; exit 1 }
+          if (-not $log -or -not (Select-String -Path $log.FullName -Pattern 'Window shown')) { Write-Error "Main window was not shown"; exit 1 }
+          if (Select-String -Path $log.FullName -Pattern '\[(ERR|FTL)\]') { Write-Error "Errors in the startup log"; exit 1 }
+          Stop-Process -Id $p.Id -Force
       - name: SBOM (CycloneDX)
         run: |
           dotnet tool install --global CycloneDX --version 6.3.2

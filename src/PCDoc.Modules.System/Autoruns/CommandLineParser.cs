@@ -14,6 +14,13 @@ public static class CommandLineParser
     {
         ArgumentNullException.ThrowIfNull(files);
         var text = files.ExpandEnvironment(commandLine ?? string.Empty).Trim();
+        while (text.StartsWith("\"\"", StringComparison.Ordinal))
+        {
+            // Chemin déjà entre guillemets puis guillemeté à nouveau (actions de tâches planifiées).
+            var close = text.IndexOf("\"\"", 2, StringComparison.Ordinal);
+            text = close < 0 ? text[1..] : "\"" + text[2..close] + "\"" + text[(close + 2)..];
+        }
+
         if (text.Length == 0)
         {
             return null;

@@ -64,6 +64,10 @@ public sealed class BilanOrchestrator
         {
             return ([], new ModuleError(scanner.ModuleId, $"Timed out after {_perModuleTimeout.TotalSeconds:0.#} s"));
         }
+        catch (PartialScanException partial)
+        {
+            return (partial.Findings, new ModuleError(scanner.ModuleId, partial.Message));
+        }
 #pragma warning disable CA1031 // Un module en panne ne doit jamais faire échouer le Bilan.
         catch (Exception ex)
 #pragma warning restore CA1031

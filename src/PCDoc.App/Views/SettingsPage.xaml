@@ -101,14 +101,14 @@
               <DataGridTextColumn Header="{app:T About.Component}" Binding="{Binding Name}" Width="2*" />
               <DataGridTextColumn Header="{app:T About.Version}" Binding="{Binding Version}" Width="*" />
               <DataGridTextColumn Header="{app:T About.License}" Binding="{Binding License}" Width="*" />
-              <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="2*" />
+              <DataGridTextColumn Header="{app:T About.Url}" Binding="{Binding Url}" Width="2*" />
             </DataGrid.Columns>
           </DataGrid>
           <Button Content="{app:T About.ShowLicense}" Command="{Binding ShowLicenseCommand}" HorizontalAlignment="Left" Margin="0,12,0,0"
                   AutomationProperties.Name="{app:T About.ShowLicense}" />
           <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding LicenseText, Mode=OneWay}" Margin="0,8,0,0" MaxHeight="360"
                    VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
-                   Visibility="{Binding LicenseText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.Name="GPL-3.0" />
+                   Visibility="{Binding LicenseText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.Name="{app:T About.LicenseText}" />
         </StackPanel>
       </Border>
     </StackPanel>

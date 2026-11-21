@@ -23,6 +23,9 @@ internal static class NativeMethods
 
     public static readonly Guid GenericVerifyV2 = new("00AAC56B-CD44-11d0-8CC2-00C04FC295EE");
 
+    /// <summary>DRIVER_ACTION_VERIFY : politique des pilotes (catalogues WHQL).</summary>
+    public static readonly Guid DriverActionVerify = new("F750E6C3-38EE-11d1-85E5-00C04FC295EE");
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct WintrustFileInfo
     {

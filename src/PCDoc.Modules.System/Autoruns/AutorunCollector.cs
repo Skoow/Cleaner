@@ -2,10 +2,13 @@ using PCDoc.Core.Abstractions;
 
 namespace PCDoc.Modules.System.Autoruns;
 
+/// <summary>Éléments lus, et sources qui n'ont pas pu être lues (« startup », « tasks », « services »).</summary>
+public sealed record AutorunScanResult(IReadOnlyList<AutorunEntry> Entries, IReadOnlyList<string> FailedSources);
+
 /// <summary>Source des éléments lancés automatiquement (simulable dans les tests de la page Système).</summary>
 public interface IAutorunSource
 {
-    IReadOnlyList<AutorunEntry> Collect();
+    AutorunScanResult CollectAll();
 }
 
 /// <summary>Démarrage + tâches planifiées + services + pilotes, chacun avec la signature de son fichier.</summary>
@@ -17,43 +20,89 @@ public sealed class AutorunCollector(
     IScheduledTaskReader tasks,
     IServiceReader services) : IAutorunSource
 {
-    public IReadOnlyList<AutorunEntry> Collect()
+    /// <summary>Chaque source est lue séparément : une source en panne n'efface pas les autres.</summary>
+    public AutorunScanResult CollectAll()
     {
-        var entries = new List<AutorunEntry>();
+        var entries = new List<Pending>();
+        var failed = new List<string>();
 
-        foreach (var item in new StartupCollector(registry, files, profiles).Collect())
+        Read("startup", failed, () =>
         {
-            entries.Add(Entry(AutorunKind.Startup, item.Name, item.Location, item.CommandLine,
-                CommandLineParser.ExtractExecutable(item.CommandLine, files), item.Enabled));
-        }
-
-        foreach (var task in tasks.ReadAll())
-        {
-            foreach (var command in task.ExecCommands)
+            foreach (var item in new StartupCollector(registry, files, profiles).Collect())
             {
-                var isCom = command.StartsWith("COM ", StringComparison.OrdinalIgnoreCase);
-                entries.Add(Entry(AutorunKind.ScheduledTask, task.Path, task.Path, command,
-                    isCom ? null : CommandLineParser.ExtractExecutable(command, files), task.Enabled));
+                entries.Add(Entry(AutorunKind.Startup, item.Name, item.Location, item.CommandLine,
+                    CommandLineParser.ExtractExecutable(item.CommandLine, files), item.Enabled));
             }
-        }
+        });
 
-        foreach (var service in services.ReadAll())
+        Read("tasks", failed, () =>
         {
-            var image = service.ImagePath ?? string.Empty;
-            var path = service.IsDriver
-                ? CommandLineParser.NormalizeImagePath(image, files)
-                : CommandLineParser.ExtractExecutable(image, files);
-            entries.Add(Entry(service.IsDriver ? AutorunKind.Driver : AutorunKind.Service, service.DisplayName,
-                $@"HKLM\SYSTEM\CurrentControlSet\Services\{service.Name}", image, path,
-                service.StartMode != ServiceStartMode.Disabled));
-        }
+            foreach (var task in tasks.ReadAll())
+            {
+                foreach (var command in task.ExecCommands)
+                {
+                    var isCom = command.StartsWith("COM ", StringComparison.OrdinalIgnoreCase);
+                    entries.Add(Entry(AutorunKind.ScheduledTask, task.Path, task.Path, command,
+                        isCom ? null : CommandLineParser.ExtractExecutable(command, files), task.Enabled));
+                }
+            }
+        });
 
-        return entries;
+        Read("services", failed, () =>
+        {
+            foreach (var service in services.ReadAll())
+            {
+                var image = service.ImagePath ?? string.Empty;
+                var path = string.IsNullOrWhiteSpace(image) ? null
+                    : service.IsDriver ? CommandLineParser.NormalizeImagePath(image, files)
+                    : CommandLineParser.ExtractExecutable(image, files);
+                entries.Add(Entry(service.IsDriver ? AutorunKind.Driver : AutorunKind.Service, service.DisplayName,
+                    $@"HKLM\SYSTEM\CurrentControlSet\Services\{service.Name}", image, path,
+                    service.StartMode != ServiceStartMode.Disabled));
+            }
+        });
+
+        // Vérification des signatures en parallèle (plusieurs centaines de fichiers) ; l'ordre est conservé.
+        var results = new AutorunEntry[entries.Count];
+        var options = new ParallelOptions { MaxDegreeOfParallelism = Math.Clamp(Environment.ProcessorCount, 2, 8) };
+        Parallel.For(0, entries.Count, options, i => results[i] = Complete(entries[i]));
+        return new AutorunScanResult(results, failed);
     }
 
-    private AutorunEntry Entry(AutorunKind kind, string name, string location, string command, string? path, bool enabled)
+    private sealed record Pending(AutorunKind Kind, string Name, string Location, string Command, string? Path, bool Enabled);
+
+    private static Pending Entry(AutorunKind kind, string name, string location, string command, string? path, bool enabled) =>
+        new(kind, name, location, command, path, enabled);
+
+    private static void Read(string source, List<string> failed, Action read)
     {
-        var signature = path is null ? SignatureInfo.NotApplicable : signatures.Verify(path);
+        try
+        {
+            read();
+        }
+#pragma warning disable CA1031 // Une source en panne est signalée, jamais fatale.
+        catch (Exception)
+#pragma warning restore CA1031
+        {
+            failed.Add(source);
+        }
+    }
+
+    private AutorunEntry Complete(Pending p)
+    {
+        var (kind, name, location, command, path, enabled) = (p.Kind, p.Name, p.Location, p.Command, p.Path, p.Enabled);
+        SignatureInfo signature;
+        try
+        {
+            signature = path is null ? SignatureInfo.NotApplicable : signatures.Verify(path);
+        }
+#pragma warning disable CA1031 // Un fichier illisible ne doit pas interrompre la vérification des autres.
+        catch (Exception)
+#pragma warning restore CA1031
+        {
+            signature = new SignatureInfo(SignatureStatus.Error, null, false);
+        }
+
         var isMicrosoft = signature.Status == SignatureStatus.Signed
                           && signature.Publisher?.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) == true;
         return new AutorunEntry(kind, name, location, command, path, enabled, signature, isMicrosoft);

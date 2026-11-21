@@ -125,13 +125,13 @@ public sealed partial class SystemPageViewModel : ObservableObject
         {
             var inventoryTask = Task.Run(_inventorySource.Collect);
             var bootTask = Task.Run(() => _bootSource.Read());
-            var autorunTask = Task.Run(_autorunSource.Collect);
+            var autorunTask = Task.Run(_autorunSource.CollectAll);
 
             (Inventory, InventoryUnavailable) = await Read(inventoryTask).ConfigureAwait(true);
             (Boot, BootUnavailable) = await Read(bootTask).ConfigureAwait(true);
-            var (entries, autorunsFailed) = await Read(autorunTask).ConfigureAwait(true);
-            _allEntries = entries ?? [];
-            AutorunsUnavailable = autorunsFailed;
+            var (collection, autorunsFailed) = await Read(autorunTask).ConfigureAwait(true);
+            _allEntries = collection?.Entries ?? [];
+            AutorunsUnavailable = autorunsFailed || collection is { Entries.Count: 0, FailedSources.Count: > 0 };
             HasLoaded = true;
             Rebuild();
         }

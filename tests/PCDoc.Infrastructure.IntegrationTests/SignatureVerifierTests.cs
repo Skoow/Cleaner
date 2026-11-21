@@ -38,6 +38,16 @@ public sealed class SignatureVerifierTests : IDisposable
     }
 
     [Fact]
+    public void Verify_InboxDrivers_AreSigned()
+    {
+        var drivers = Directory.EnumerateFiles(Path.Combine(Windir, "System32", "drivers"), "*.sys").Take(40).ToList();
+
+        drivers.Should().NotBeEmpty();
+        drivers.Select(_sut.Verify).Should().OnlyContain(i => i.Status == SignatureStatus.Signed,
+            "les pilotes fournis avec Windows sont tous signés");
+    }
+
+    [Fact]
     public void Verify_UnsignedTempFile_IsUnsigned()
     {
         var path = Path.Combine(_tempDir, "not-signed.exe");

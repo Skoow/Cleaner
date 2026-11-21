@@ -41,7 +41,7 @@ public class SystemPageViewModelTests
 
         public BootHistory Read(int maxBoots = 30) => boot();
 
-        IReadOnlyList<AutorunEntry> IAutorunSource.Collect() => autoruns();
+        AutorunScanResult IAutorunSource.CollectAll() => new(autoruns(), []);
     }
 
     private static readonly AutorunEntry[] SampleAutoruns =

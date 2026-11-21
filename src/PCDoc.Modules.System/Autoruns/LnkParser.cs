@@ -20,6 +20,20 @@ public static class LnkParser
 
     public static (string Target, string? Arguments)? TryRead(ReadOnlySpan<byte> data)
     {
+        try
+        {
+            return TryReadCore(data);
+        }
+#pragma warning disable CA1031 // Fichier non fiable : aucune exception ne doit sortir (un .lnk abîmé ne doit rien casser).
+        catch (Exception)
+#pragma warning restore CA1031
+        {
+            return null;
+        }
+    }
+
+    private static (string Target, string? Arguments)? TryReadCore(ReadOnlySpan<byte> data)
+    {
         if (data.Length < HeaderSize || BinaryPrimitives.ReadUInt32LittleEndian(data) != HeaderSize)
         {
             return null;
@@ -55,6 +69,11 @@ public static class LnkParser
         string? target;
         if (infoHeaderSize >= 0x24)
         {
+            if (infoSize < 0x24)
+            {
+                return null; // champs Unicode annoncés mais bloc trop court
+            }
+
             var unicodeOffset = (int)BinaryPrimitives.ReadUInt32LittleEndian(info[0x1C..]);
             var unicodeSuffix = (int)BinaryPrimitives.ReadUInt32LittleEndian(info[0x20..]);
             target = UnicodeZ(info, unicodeOffset) + UnicodeZ(info, unicodeSuffix);

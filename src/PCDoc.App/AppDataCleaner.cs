@@ -10,8 +10,11 @@ namespace PCDoc.App;
 /// </summary>
 public sealed class AppDataCleaner : IAppDataCleaner
 {
+    public bool HasCleared { get; private set; }
+
     public void Clear()
     {
+        HasCleared = true;
         TryDelete(AppPaths.SettingsFile);
         if (Directory.Exists(AppPaths.LogsDir))
         {

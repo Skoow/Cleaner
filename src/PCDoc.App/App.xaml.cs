@@ -21,10 +21,15 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         var clock = Stopwatch.StartNew();
-        NativeSafety.RestrictDllSearchToSystem32();
+        var dllSearchRestricted = NativeSafety.RestrictDllSearch();
         base.OnStartup(e);
 
         _logger = Logging.CreateFileLogger(AppPaths.LogsDir);
+        if (!dllSearchRestricted)
+        {
+            _logger.Warning("SetDefaultDllDirectories failed: DLL search order not restricted");
+        }
+
         _logger.Information("{Product} {Version} starting", AppInfo.ProductName, AppInfo.Version);
 
         var store = new JsonSettingsStore(AppPaths.SettingsFile, Composition.UiCulture);
@@ -43,7 +48,7 @@ public partial class App : Application
         var shell = _services.GetRequiredService<ShellViewModel>();
         HookErrors(shell, localizer);
 
-        var window = new MainWindow(shell, store);
+        var window = new MainWindow(shell, store, _services.GetRequiredService<IAppDataCleaner>());
         MainWindow = window;
         window.Show();
         _logger.Information("Window shown in {Ms} ms", clock.ElapsedMilliseconds);

@@ -71,9 +71,9 @@ public sealed class BasicAdaptersTests : IDisposable
     }
 
     [Fact]
-    public void NativeSafety_DllSearchLimitedToSystem32()
+    public void NativeSafety_DllSearchRestricted()
     {
-        NativeSafety.RestrictDllSearchToSystem32().Should().BeTrue();
+        NativeSafety.RestrictDllSearch().Should().BeTrue();
     }
 
     [Fact]

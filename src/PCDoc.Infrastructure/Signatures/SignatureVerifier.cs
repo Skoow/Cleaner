@@ -58,7 +58,7 @@ public sealed class SignatureVerifier : ISignatureVerifier
         try
         {
             Marshal.StructureToPtr(fileInfo, filePtr, false);
-            return RunWinVerifyTrust(WtdChoiceFile, filePtr);
+            return RunWinVerifyTrust(WtdChoiceFile, filePtr, GenericVerifyV2);
         }
         finally
         {
@@ -137,7 +137,13 @@ public sealed class SignatureVerifier : ISignatureVerifier
                 catalog.CalculatedFileHash = hashPtr;
                 catalog.CbCalculatedFileHash = (uint)hash.Length;
                 Marshal.StructureToPtr(catalog, catalogPtr, false);
-                var (code, publisher) = RunWinVerifyTrust(WtdChoiceCatalog, catalogPtr);
+                var (code, publisher) = RunWinVerifyTrust(WtdChoiceCatalog, catalogPtr, GenericVerifyV2);
+                if (code != 0)
+                {
+                    // Les catalogues de pilotes tiers (WHQL) suivent la politique « pilote », pas « code ».
+                    (code, publisher) = RunWinVerifyTrust(WtdChoiceCatalog, catalogPtr, DriverActionVerify);
+                }
+
                 return code == 0
                     ? new SignatureInfo(SignatureStatus.Signed, publisher, true)
                     : new SignatureInfo(SignatureStatus.Invalid, publisher, true);
@@ -160,9 +166,9 @@ public sealed class SignatureVerifier : ISignatureVerifier
         }
     }
 
-    private static (int Code, string? Publisher) RunWinVerifyTrust(uint unionChoice, IntPtr info)
+    private static (int Code, string? Publisher) RunWinVerifyTrust(uint unionChoice, IntPtr info, Guid policy)
     {
-        var action = GenericVerifyV2;
+        var action = policy;
         var data = new WintrustData
         {
             CbStruct = (uint)Marshal.SizeOf<WintrustData>(),

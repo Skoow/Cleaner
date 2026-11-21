@@ -38,7 +38,7 @@
         </ListBoxItem>
       </ListBox>
       <ListBox x:Name="MainNav" BorderThickness="0" Background="Transparent"
-               AutomationProperties.Name="Menu"
+               AutomationProperties.Name="{app:T Nav.Menu}"
                SelectionChanged="OnMainNavChanged">
         <ListBoxItem x:Name="BilanItem" AutomationProperties.Name="{app:T Nav.Bilan}">
           <StackPanel Orientation="Horizontal" Margin="4,6">

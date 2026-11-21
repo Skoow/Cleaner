@@ -25,10 +25,11 @@ public sealed class SystemScanner(
     {
         var inventoryTask = Task.Run(inventory.Collect, cancellationToken);
         var bootTask = Task.Run(() => boot.Read(), cancellationToken);
-        var autorunTask = Task.Run(autoruns.Collect, cancellationToken);
+        var autorunTask = Task.Run(autoruns.CollectAll, cancellationToken);
 
         var findings = new List<Finding>();
-        var pc = await Try("inventory", inventoryTask).ConfigureAwait(false);
+        var failed = new List<string>();
+        var pc = await Try("inventory", inventoryTask, failed).ConfigureAwait(false);
         if (pc is not null)
         {
             if (pc.Volumes.Value is { } volumes)
@@ -47,23 +48,25 @@ public sealed class SystemScanner(
             }
         }
 
-        if (await Try("boot", bootTask).ConfigureAwait(false) is { } history)
+        if (await Try("boot", bootTask, failed).ConfigureAwait(false) is { } history)
         {
             findings.AddRange(BootTimeRule.Evaluate(history));
         }
 
-        if (await Try("autoruns", autorunTask).ConfigureAwait(false) is { } entries)
+        if (await Try("autoruns", autorunTask, failed).ConfigureAwait(false) is { } collection)
         {
-            findings.AddRange(AutorunSignatureRule.Evaluate(entries));
+            findings.AddRange(AutorunSignatureRule.Evaluate(collection.Entries));
+            failed.AddRange(collection.FailedSources.Select(s => "autoruns." + s));
         }
 
         cancellationToken.ThrowIfCancellationRequested();
 
         // Deux éléments du même nom donneraient le même identifiant : on garde le premier.
-        return [.. findings.DistinctBy(f => f.Id)];
+        IReadOnlyList<Finding> result = [.. findings.DistinctBy(f => f.Id)];
+        return failed.Count == 0 ? result : throw new PartialScanException(result, failed);
     }
 
-    private async Task<T?> Try<T>(string source, Task<T> task)
+    private async Task<T?> Try<T>(string source, Task<T> task, List<string> failed)
         where T : class
     {
         try
@@ -79,6 +82,7 @@ public sealed class SystemScanner(
 #pragma warning restore CA1031
         {
             onSourceError?.Invoke(source, ex);
+            failed.Add(source);
             return null;
         }
     }

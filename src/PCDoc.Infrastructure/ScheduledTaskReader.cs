@@ -57,9 +57,8 @@ public sealed class ScheduledTaskReader : IScheduledTaskReader
                 switch (action)
                 {
                     case ExecAction exec:
-                        commands.Add(string.IsNullOrWhiteSpace(exec.Arguments)
-                            ? $"\"{exec.Path}\""
-                            : $"\"{exec.Path}\" {exec.Arguments}");
+                        var path = (exec.Path ?? string.Empty).Trim().Trim('"');
+                        commands.Add(string.IsNullOrWhiteSpace(exec.Arguments) ? $"\"{path}\"" : $"\"{path}\" {exec.Arguments}");
                         break;
                     case ComHandlerAction com:
                         commands.Add($"COM {com.ClassId:B}".ToUpperInvariant());
@@ -80,7 +79,9 @@ public sealed class ScheduledTaskReader : IScheduledTaskReader
                 ToOffset(task.LastRunTime),
                 ToOffset(task.NextRunTime));
         }
-        catch (Exception ex) when (ex is UnauthorizedAccessException or COMException or InvalidOperationException)
+#pragma warning disable CA1031 // Une tâche illisible est ignorée ; elle ne doit pas interrompre la lecture des autres.
+        catch (Exception)
+#pragma warning restore CA1031
         {
             return null;
         }

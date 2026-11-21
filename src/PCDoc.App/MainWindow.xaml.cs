@@ -10,12 +10,14 @@ public partial class MainWindow : Window
 {
     private readonly ShellViewModel _shell;
     private readonly ISettingsStore _settings;
+    private readonly IAppDataCleaner _cleaner;
     private bool _syncing;
 
-    public MainWindow(ShellViewModel shell, ISettingsStore settings)
+    public MainWindow(ShellViewModel shell, ISettingsStore settings, IAppDataCleaner cleaner)
     {
         _shell = shell;
         _settings = settings;
+        _cleaner = cleaner;
         InitializeComponent();
         Title = PCDoc.Core.AppInfo.ProductName;
         DataContext = shell;
@@ -65,7 +67,8 @@ public partial class MainWindow : Window
 
     private void RestorePlacement()
     {
-        if (_settings.Load().Window is not { } w || w.Width < MinWidth || w.Height < MinHeight)
+        if (_settings.Load().Window is not { } w || w.Width < MinWidth || w.Height < MinHeight
+            || w.Width > SystemParameters.VirtualScreenWidth * 1.5 || w.Height > SystemParameters.VirtualScreenHeight * 1.5)
         {
             return;
         }
@@ -88,6 +91,11 @@ public partial class MainWindow : Window
 
     private void SavePlacement()
     {
+        if (_cleaner.HasCleared)
+        {
+            return; // l'utilisateur vient d'effacer les données de PCDoc : ne rien réécrire
+        }
+
         var bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
         var current = _settings.Load();
         _settings.Save(current with

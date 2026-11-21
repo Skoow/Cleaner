@@ -52,6 +52,37 @@ public class LnkParserTests
     }
 
     [Fact]
+    public void TryRead_UnicodeHeaderButShortLinkInfo_ReturnsNullInsteadOfThrowing()
+    {
+        var bytes = BuildLnk(@"C:\a.exe");
+        // LinkInfoHeaderSize ≥ 0x24 (champs Unicode annoncés) mais LinkInfoSize = 0x1C : bloc trop court.
+        BitConverter.GetBytes(0x1Cu).CopyTo(bytes, 0x4C);
+        BitConverter.GetBytes(0x24u).CopyTo(bytes, 0x50);
+
+        var act = () => LnkParser.TryRead(bytes);
+
+        act.Should().NotThrow();
+        act().Should().BeNull();
+    }
+
+    [Fact]
+    public void TryRead_RandomCorruption_NeverThrows()
+    {
+        var original = BuildLnk(@"C:\Users\Lea\app.exe", "--x");
+        var random = new Random(42);
+        for (var i = 0; i < 2000; i++)
+        {
+            var copy = (byte[])original.Clone();
+            copy[0x4C + random.Next(copy.Length - 0x4C)] = (byte)random.Next(256);
+            copy[0x4C + random.Next(copy.Length - 0x4C)] = (byte)random.Next(256);
+
+            var act = () => LnkParser.TryRead(copy);
+
+            act.Should().NotThrow();
+        }
+    }
+
+    [Fact]
     public void TryRead_TruncatedLinkInfo_ReturnsNull()
     {
         var bytes = BuildLnk(@"C:\a.exe");

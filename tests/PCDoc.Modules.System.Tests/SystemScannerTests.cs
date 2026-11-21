@@ -30,7 +30,9 @@ public class SystemScannerTests
 
     private sealed class Autoruns(params AutorunEntry[] entries) : IAutorunSource
     {
-        public IReadOnlyList<AutorunEntry> Collect() => entries;
+        public string[] Failed { get; init; } = [];
+
+        public AutorunScanResult CollectAll() => new(entries, Failed);
     }
 
     private static readonly Win11Readiness AllPass = new(CheckState.Pass, CheckState.Pass, CheckState.Pass,
@@ -237,7 +239,22 @@ public class SystemScannerTests
         var sut = new SystemScanner(new Inventory(() => throw new InvalidOperationException("WMI down")),
             new Boots(History()), new Autoruns(Entry("Bad", SignatureStatus.Unsigned)), new FixedClock(Today));
 
-        (await sut.ScanAsync(CancellationToken.None)).Should().ContainSingle(f => f.Id.StartsWith("system.unsigned", StringComparison.Ordinal));
+        var act = () => sut.ScanAsync(CancellationToken.None);
+
+        var partial = (await act.Should().ThrowAsync<global::PCDoc.Core.Modules.PartialScanException>()).Which;
+        partial.Findings.Should().ContainSingle(f => f.Id.StartsWith("system.unsigned", StringComparison.Ordinal));
+        partial.FailedSources.Should().Equal("inventory");
+    }
+
+    [Fact]
+    public async Task Scan_WhenAutorunSubSourceFails_ReportsPartial()
+    {
+        var sut = new SystemScanner(new Inventory(() => Pc()), new Boots(History()),
+            new Autoruns(Entry("Bad", SignatureStatus.Unsigned)) { Failed = ["tasks"] }, new FixedClock(Today));
+
+        var act = () => sut.ScanAsync(CancellationToken.None);
+
+        (await act.Should().ThrowAsync<global::PCDoc.Core.Modules.PartialScanException>()).Which.FailedSources.Should().Equal("autoruns.tasks");
     }
 
     [Fact]

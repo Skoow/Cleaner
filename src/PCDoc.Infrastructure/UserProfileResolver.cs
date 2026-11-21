@@ -6,8 +6,9 @@ using PCDoc.Core.Abstractions;
 namespace PCDoc.Infrastructure;
 
 /// <summary>
-/// Trouve la personne devant le PC : utilisateur de la session console active
-/// (WTSQuerySessionInformation, accessible à un administrateur), puis son profil dans
+/// Trouve la personne devant le PC : utilisateur de la session Windows où PCDoc s'affiche
+/// (session du processus, valable aussi en bureau à distance et en changement rapide d'utilisateur ;
+/// WTSQuerySessionInformation, accessible à un administrateur), puis son profil dans
 /// ProfileList et ses dossiers dans HKEY_USERS\&lt;SID&gt;. Sans session interactive :
 /// le compte du processus.
 /// </summary>
@@ -66,8 +67,7 @@ public sealed partial class UserProfileResolver : IUserProfileResolver
 
     private static string? InteractiveUserSid()
     {
-        var session = WTSGetActiveConsoleSessionId();
-        if (session == NoSession)
+        if (!ProcessIdToSessionId((uint)Environment.ProcessId, out var session) || session == NoSession)
         {
             return null;
         }
@@ -113,8 +113,9 @@ public sealed partial class UserProfileResolver : IUserProfileResolver
         WTSDomainName = 7,
     }
 
-    [LibraryImport("kernel32.dll")]
-    private static partial uint WTSGetActiveConsoleSessionId();
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ProcessIdToSessionId(uint processId, out uint sessionId);
 
     [LibraryImport("wtsapi32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

@@ -48,10 +48,10 @@ public sealed class NotNullToVisibilityConverter : IValueConverter
 public sealed class EqualsConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-        Equals(value?.ToString(), parameter?.ToString());
+        PCDoc.Presentation.EnumChoice.IsSelected(value, parameter);
 
     public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-        value is true && parameter is string name && targetType.IsEnum ? Enum.Parse(targetType, name) : Binding.DoNothing;
+        PCDoc.Presentation.EnumChoice.Choose(value, parameter, targetType) ?? Binding.DoNothing;
 }
 
 /// <summary>Rapport 0–1 → hauteur en pixels (paramètre = hauteur maximale).</summary>

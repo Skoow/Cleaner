@@ -33,6 +33,8 @@ public class SettingsPageViewModelTests
     {
         public int Calls;
 
+        public bool HasCleared => Calls > 0;
+
         public void Clear() => Calls++;
     }
 

@@ -17,5 +17,8 @@ public interface IClipboardService
 /// <summary>Efface les journaux et les paramètres de PCDoc (implémenté par l'application).</summary>
 public interface IAppDataCleaner
 {
+    /// <summary>Vrai après un effacement : rien ne doit réécrire les paramètres avant la fermeture.</summary>
+    bool HasCleared { get; }
+
     void Clear();
 }
