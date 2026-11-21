@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+
+jobs:
+  build:
+    name: Build and test ${{ matrix.rid }}
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        rid: [win-x64, win-arm64]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+      - run: dotnet restore PCDoc.slnx --locked-mode
+      - run: dotnet build PCDoc.slnx -c Release --no-restore
+      - name: Tests
+        if: matrix.rid == 'win-x64'
+        run: dotnet test PCDoc.slnx -c Release --no-build
+      - name: Publish portable
+        run: >
+          dotnet publish src/PCDoc.App/PCDoc.App.csproj -c Release -r ${{ matrix.rid }} --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true
+          -o out/${{ matrix.rid }}
+      - name: Zip
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          Compress-Archive -Path "out/${{ matrix.rid }}/*" -DestinationPath "PCDoc-$version-portable-${{ matrix.rid }}.zip"
+      - name: SBOM (CycloneDX)
+        run: |
+          dotnet tool install --global CycloneDX --version 6.3.2
+          dotnet CycloneDX src/PCDoc.App/PCDoc.App.csproj -o . -fn "sbom-${{ matrix.rid }}.cdx.json" -j
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-${{ matrix.rid }}
+          path: |
+            PCDoc-*.zip
+            sbom-*.cdx.json
+
+  publish:
+    name: GitHub prerelease
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # seul ce job peut créer la version
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0 (même génération que upload-artifact v7)
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum PCDoc-*.zip > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
+        with:
+          prerelease: true
+          files: |
+            dist/PCDoc-*.zip
+            dist/SHA256SUMS.txt
+            dist/sbom-*.cdx.json
