@@ -20,4 +20,14 @@ public sealed record AutorunEntry(
     string? FilePath,
     bool Enabled,
     SignatureInfo Signature,
-    bool IsMicrosoft);
+    bool IsMicrosoft)
+{
+    /// <summary>Nom court du service ou du pilote (clé sous Services).</summary>
+    public string? ServiceName { get; init; }
+
+    /// <summary>Où activer/désactiver un programme au démarrage (null pour RunOnce : non désactivable).</summary>
+    public StartupToggleTarget? Startup { get; init; }
+}
+
+/// <summary>Valeur StartupApproved qui active/désactive un programme au démarrage.</summary>
+public sealed record StartupToggleTarget(RegistryHive Hive, string ApprovedSubKey, string ValueName);

@@ -94,6 +94,18 @@ public class AutorunCollectorTests
     }
 
     [Fact]
+    public void Collect_PropagatesServiceNameAndStartupTarget()
+    {
+        var reg = new FakeRegistryReader().Set(RegistryHive.TargetUser, Run, "Discord", @"C:\d.exe");
+        var services = new[] { new ServiceInfo("Spooler", "Print Spooler", ServiceStartMode.Automatic, "Running", @"C:\s.exe", null, false) };
+
+        var entries = Collect(reg, services: services);
+
+        entries.Single(e => e.Kind == AutorunKind.Service).ServiceName.Should().Be("Spooler");
+        entries.Single(e => e.Kind == AutorunKind.Startup).Startup.Should().Be(new StartupToggleTarget(RegistryHive.TargetUser, "Run", "Discord"));
+    }
+
+    [Fact]
     public void Collect_DisabledService_IsNotEnabled()
     {
         var services = new[] { new ServiceInfo("Fax", "Fax", ServiceStartMode.Disabled, "Stopped", @"C:\Windows\system32\fxssvc.exe", null, false) };

@@ -31,7 +31,7 @@ public sealed class AutorunCollector(
             foreach (var item in new StartupCollector(registry, files, profiles).Collect())
             {
                 entries.Add(Entry(AutorunKind.Startup, item.Name, item.Location, item.CommandLine,
-                    CommandLineParser.ExtractExecutable(item.CommandLine, files), item.Enabled));
+                    CommandLineParser.ExtractExecutable(item.CommandLine, files), item.Enabled) with { Startup = item.Toggle });
             }
         });
 
@@ -58,7 +58,7 @@ public sealed class AutorunCollector(
                     : CommandLineParser.ExtractExecutable(image, files);
                 entries.Add(Entry(service.IsDriver ? AutorunKind.Driver : AutorunKind.Service, service.DisplayName,
                     $@"HKLM\SYSTEM\CurrentControlSet\Services\{service.Name}", image, path,
-                    service.StartMode != ServiceStartMode.Disabled));
+                    service.StartMode != ServiceStartMode.Disabled) with { ServiceName = service.Name });
             }
         });
 
@@ -69,7 +69,12 @@ public sealed class AutorunCollector(
         return new AutorunScanResult(results, failed);
     }
 
-    private sealed record Pending(AutorunKind Kind, string Name, string Location, string Command, string? Path, bool Enabled);
+    private sealed record Pending(AutorunKind Kind, string Name, string Location, string Command, string? Path, bool Enabled)
+    {
+        public string? ServiceName { get; init; }
+
+        public StartupToggleTarget? Startup { get; init; }
+    }
 
     private static Pending Entry(AutorunKind kind, string name, string location, string command, string? path, bool enabled) =>
         new(kind, name, location, command, path, enabled);
@@ -105,6 +110,10 @@ public sealed class AutorunCollector(
 
         var isMicrosoft = signature.Status == SignatureStatus.Signed
                           && signature.Publisher?.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) == true;
-        return new AutorunEntry(kind, name, location, command, path, enabled, signature, isMicrosoft);
+        return new AutorunEntry(kind, name, location, command, path, enabled, signature, isMicrosoft)
+        {
+            ServiceName = p.ServiceName,
+            Startup = p.Startup,
+        };
     }
 }

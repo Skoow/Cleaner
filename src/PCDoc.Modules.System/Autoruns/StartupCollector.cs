@@ -3,7 +3,7 @@ using PCDoc.Core.Abstractions;
 namespace PCDoc.Modules.System.Autoruns;
 
 /// <summary>Un programme lancé à l'ouverture de session (clé Run/RunOnce ou dossier Démarrage).</summary>
-public sealed record StartupItem(string Name, string Location, string CommandLine, bool Enabled);
+public sealed record StartupItem(string Name, string Location, string CommandLine, bool Enabled, StartupToggleTarget? Toggle = null);
 
 /// <summary>
 /// Programmes au démarrage. « HKCU » = ruche du profil cible (jamais celle du compte qui exécute PCDoc).
@@ -44,7 +44,8 @@ public sealed class StartupCollector(IRegistryReader registry, IFileProbe files,
             }
 
             var enabled = approvedSubKey is null || IsApproved(hive, approvedSubKey, name);
-            items.Add(new StartupItem(name, $@"{hiveLabel}\{key}", command, enabled));
+            var toggle = approvedSubKey is null ? null : new StartupToggleTarget(hive, approvedSubKey, name);
+            items.Add(new StartupItem(name, $@"{hiveLabel}\{key}", command, enabled, toggle));
         }
     }
 
@@ -72,7 +73,8 @@ public sealed class StartupCollector(IRegistryReader registry, IFileProbe files,
                 command = $"\"{path}\"";
             }
 
-            items.Add(new StartupItem(fileName, folder, command, IsApproved(approvedHive, "StartupFolder", fileName)));
+            items.Add(new StartupItem(fileName, folder, command, IsApproved(approvedHive, "StartupFolder", fileName),
+                new StartupToggleTarget(approvedHive, "StartupFolder", fileName)));
         }
     }
 

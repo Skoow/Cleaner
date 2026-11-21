@@ -10,5 +10,7 @@
     <!-- Liste intégrée (repli) + copie dans la sortie (remplaçable par une mise à jour des définitions). -->
     <EmbeddedResource Include="..\PCDoc.Definitions\win11-supported-cpus.json" LogicalName="PCDoc.Definitions.win11-supported-cpus.json" />
     <None Include="..\PCDoc.Definitions\win11-supported-cpus.json" Link="Definitions\win11-supported-cpus.json" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="..\PCDoc.Definitions\advisor.json" LogicalName="PCDoc.Definitions.advisor.json" />
+    <None Include="..\PCDoc.Definitions\advisor.json" Link="Definitions\advisor.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

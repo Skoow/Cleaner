@@ -71,6 +71,33 @@ public class StartupCollectorTests
         item.Enabled.Should().BeFalse();
     }
 
+    [Theory]
+    [InlineData(RegistryHive.TargetUser, Run, "Run")]
+    [InlineData(RegistryHive.LocalMachine, Wow, "Run32")]
+    public void Startup_RunKeys_HaveToggleTarget(RegistryHive hive, string key, string approved)
+    {
+        var item = Collect(new FakeRegistryReader().Set(hive, key, "App", @"C:\a.exe")).Single();
+
+        item.Toggle.Should().Be(new StartupToggleTarget(hive, approved, "App"));
+    }
+
+    [Fact]
+    public void Startup_UserFolderItem_ToggleInTargetUserStartupFolder()
+    {
+        var files = new FakeFileProbe().WithFiles($@"{UserStartup}\tool.exe");
+
+        Collect(new FakeRegistryReader(), files).Single().Toggle
+            .Should().Be(new StartupToggleTarget(RegistryHive.TargetUser, "StartupFolder", "tool.exe"));
+    }
+
+    [Fact]
+    public void Startup_RunOnce_HasNoToggleTarget()
+    {
+        var reg = new FakeRegistryReader().Set(RegistryHive.TargetUser, RunOnce, "Setup", @"C:\setup.exe /finish");
+
+        Collect(reg).Single().Toggle.Should().BeNull();
+    }
+
     [Fact]
     public void Startup_RunOnce_IsEnabled()
     {

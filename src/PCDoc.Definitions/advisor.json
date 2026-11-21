@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "note": "Catalogue du conseiller de désactivation (spec v2 §5, annexe D). level : Safe | Conditional | Discouraged | Locked. condition : identifiant vérifié par PCDoc (voir ConditionProbe) ; condition invérifiable → Discouraged.",
+  "services": [
+    { "name": "Fax", "level": "Safe", "reason": "Advice.Fax" },
+    { "name": "RetailDemo", "level": "Safe", "reason": "Advice.RetailDemo" },
+    { "name": "MapsBroker", "level": "Safe", "reason": "Advice.MapsBroker" },
+    { "name": "RemoteRegistry", "level": "Safe", "reason": "Advice.RemoteRegistry" },
+    { "name": "DiagTrack", "level": "Safe", "reason": "Advice.DiagTrack" },
+    { "name": "wisvc", "level": "Conditional", "condition": "not-insider", "reason": "Advice.Insider" },
+    { "name": "Spooler", "level": "Conditional", "condition": "no-printer", "reason": "Advice.Spooler" },
+    { "name": "bthserv", "level": "Conditional", "condition": "no-bluetooth", "reason": "Advice.Bluetooth" },
+    { "name": "BTAGService", "level": "Conditional", "condition": "no-bluetooth", "reason": "Advice.Bluetooth" },
+    { "name": "WbioSrvc", "level": "Conditional", "condition": "no-biometric", "reason": "Advice.Biometric" },
+    { "name": "SCardSvr", "level": "Conditional", "condition": "no-smartcard", "reason": "Advice.SmartCard" },
+    { "name": "XblAuthManager", "level": "Conditional", "condition": "no-xbox", "reason": "Advice.Xbox" },
+    { "name": "XblGameSave", "level": "Conditional", "condition": "no-xbox", "reason": "Advice.Xbox" },
+    { "name": "XboxNetApiSvc", "level": "Conditional", "condition": "no-xbox", "reason": "Advice.Xbox" },
+    { "name": "XboxGipSvc", "level": "Conditional", "condition": "no-xbox", "reason": "Advice.Xbox" },
+    { "name": "lfsvc", "level": "Discouraged", "reason": "Advice.Location" },
+    { "name": "WpcMonSvc", "level": "Discouraged", "reason": "Advice.Parental" },
+    { "name": "TermService", "level": "Discouraged", "reason": "Advice.RemoteDesktop" },
+    { "name": "TabletInputService", "level": "Discouraged", "reason": "Advice.TouchKeyboard" },
+    { "name": "DPS", "level": "Discouraged", "reason": "Advice.Diagnostics" },
+    { "name": "WSearch", "level": "Discouraged", "reason": "Advice.Search" },
+    { "name": "SysMain", "level": "Discouraged", "reason": "Advice.SysMain" }
+  ],
+  "lockedServices": [
+    "wuauserv", "UsoSvc", "WaaSMedicSvc", "WinDefend", "WdNisSvc", "Sense", "SecurityHealthService", "wscsvc", "mpssvc", "BFE",
+    "RpcSs", "RpcEptMapper", "DcomLaunch", "Audiosrv", "AudioEndpointBuilder", "WlanSvc", "CryptSvc", "BITS", "EventLog",
+    "Winmgmt", "Schedule", "ProfSvc", "LSM", "SamSs", "Dnscache", "Dhcp", "nsi", "PlugPlay", "Power", "UserManager", "gpsvc",
+    "TrustedInstaller", "msiserver", "AppXSvc", "ClipSVC", "StateRepository", "CoreMessagingRegistrar", "BrokerInfrastructure",
+    "SystemEventsBroker", "TimeBrokerSvc", "VaultSvc", "KeyIso", "sppsvc", "LanmanWorkstation", "netprofm", "NlaSvc",
+    "VSS", "swprv", "EFS", "Appinfo", "camsvc", "DeviceInstall", "InstallService"
+  ],
+  "tasks": [
+    { "path": "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser", "level": "Safe", "reason": "Advice.Telemetry" },
+    { "path": "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater", "level": "Safe", "reason": "Advice.Telemetry" },
+    { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator", "level": "Safe", "reason": "Advice.Telemetry" },
+    { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip", "level": "Safe", "reason": "Advice.Telemetry" },
+    { "path": "\\Microsoft\\Windows\\DiskDiagnostic\\Microsoft-Windows-DiskDiagnosticDataCollector", "level": "Safe", "reason": "Advice.Telemetry" },
+    { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClient", "level": "Safe", "reason": "Advice.Feedback" },
+    { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClientOnScenarioDownload", "level": "Safe", "reason": "Advice.Feedback" }
+  ],
+  "lockedTaskPrefixes": [
+    "\\Microsoft\\Windows\\WindowsUpdate\\", "\\Microsoft\\Windows\\UpdateOrchestrator\\", "\\Microsoft\\Windows\\Windows Defender\\",
+    "\\Microsoft\\Windows\\SystemRestore\\", "\\Microsoft\\Windows\\TaskScheduler\\", "\\Microsoft\\Windows\\Servicing\\",
+    "\\Microsoft\\Windows\\WaaSMedic\\", "\\Microsoft\\Windows\\InstallService\\", "\\Microsoft\\Windows\\Plug and Play\\"
+  ],
+  "startup": [
+    { "name": "SecurityHealth", "level": "Locked", "reason": "Advice.SecurityHealth" },
+    { "name": "OneDrive", "level": "Discouraged", "reason": "Advice.OneDrive" },
+    { "name": "MicrosoftEdgeAutoLaunch", "level": "Safe", "reason": "Advice.EdgeAutoLaunch", "prefix": true },
+    { "name": "com.squirrel.Teams.Teams", "level": "Safe", "reason": "Advice.Teams" },
+    { "name": "MSTeams", "level": "Safe", "reason": "Advice.Teams" }
+  ]
+}
