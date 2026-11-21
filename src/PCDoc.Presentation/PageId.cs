@@ -5,6 +5,7 @@ public enum PageId
 {
     Bilan,
     System,
+    History,
     Settings,
 }
 

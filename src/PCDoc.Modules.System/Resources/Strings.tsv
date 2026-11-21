@@ -181,3 +181,8 @@ Advice.UnknownService	Unknown service: only for experts.	Service inconnu : rése
 Advice.UnknownTask	Unknown task: only for experts.	Tâche inconnue : réservée aux experts.
 Advice.UnknownMicrosoftStartup	Windows component: only for experts.	Composant de Windows : réservé aux experts.
 Advice.ThirdPartyStartup	Starts with Windows; disabling it is reversible and the program still works when you open it.	Se lance avec Windows ; le désactiver est réversible et le programme marche quand vous l'ouvrez.
+Toggle.Disable	Disable	Désactiver
+Toggle.Enable	Re-enable	Réactiver
+Toggle.Disable.Title	Disable "{0}"	Désactiver « {0} »
+Toggle.Enable.Title	Re-enable "{0}"	Réactiver « {0} »
+Column.Advice	Advice	Conseil

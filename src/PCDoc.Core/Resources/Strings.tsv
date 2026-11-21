@@ -86,3 +86,35 @@ Fix.RestorePoint.Created	A restore point was created.	Un point de restauration a
 Fix.RestorePoint.ReusedRecent	A restore point from the last 24 hours is used.	Un point de restauration de moins de 24 h est utilisé.
 Fix.RestorePoint.ProtectionDisabled	System protection is turned off: no restore point can be created. Each change can still be undone from the History page.	La protection du système est désactivée : aucun point de restauration ne peut être créé. Chaque modification reste annulable depuis la page Historique.
 Fix.RestorePoint.Failed	Windows could not create a restore point. Each change can still be undone from the History page.	Windows n'a pas pu créer de point de restauration. Chaque modification reste annulable depuis la page Historique.
+Nav.History	History	Historique
+History.Intro	Every change made by PCDoc, newest first. Each one can be undone.	Toutes les modifications faites par PCDoc, la plus récente d'abord. Chacune peut être annulée.
+History.Empty	PCDoc has not changed anything on this PC yet.	PCDoc n'a encore rien modifié sur ce PC.
+History.Undo	Undo	Annuler
+History.Status.Pending	Interrupted	Interrompue
+History.Status.Applied	Applied	Appliquée
+History.Status.Failed	Failed	Échec
+History.Status.Undone	Undone	Annulée
+History.Interrupted	These changes were interrupted (power cut or crash), check them: {0}	Ces modifications ont été interrompues (coupure de courant ou plantage), vérifiez-les : {0}
+History.Undo.Undone	"{0}" was undone.	« {0} » a été annulé.
+History.Undo.StateChanged	"{0}" changed since PCDoc modified it (for example by a Windows update): it was not undone automatically.	« {0} » a changé depuis la modification par PCDoc (par exemple par une mise à jour de Windows) : il n'a pas été annulé automatiquement.
+History.Undo.NoFixer	"{0}" cannot be undone by this version of PCDoc.	« {0} » ne peut pas être annulé par cette version de PCDoc.
+History.Undo.Failed	Undoing "{0}" failed (see the log).	L'annulation de « {0} » a échoué (voir le journal).
+Column.Date	Date	Date
+Column.Change	Change	Modification
+Column.Status	Status	État
+Settings.Mode	Mode	Mode
+Settings.ModeHint	Novice: only changes that cannot break anything. Expert: everything, including what is not recommended.	Novice : seulement ce qui ne peut rien casser. Expert : tout, y compris ce qui est déconseillé.
+Settings.Mode.Novice	Novice	Novice
+Settings.Mode.Expert	Expert	Expert
+Settings.ExpertConfirm	Expert mode shows changes that can cause problems. Each one still asks for confirmation and can be undone. Switch to expert mode?	Le mode expert affiche des modifications qui peuvent causer des problèmes. Chacune reste confirmée et annulable. Passer en mode expert ?
+Settings.ExpertYes	Switch to expert	Passer en expert
+FirstRun.Title	Welcome to PCDoc	Bienvenue dans PCDoc
+FirstRun.Intro	Three quick choices before you start. You can change them later in Settings.	Trois choix rapides avant de commencer. Vous pourrez les changer dans les Paramètres.
+FirstRun.ModeNovice	Novice (recommended): PCDoc only offers changes that cannot break anything.	Novice (conseillé) : PCDoc ne propose que des modifications qui ne peuvent rien casser.
+FirstRun.ModeExpert	Expert: everything is shown, including risky changes.	Expert : tout est affiché, y compris les modifications risquées.
+FirstRun.Protection	System protection	Protection du système
+FirstRun.ProtectionOn	On: PCDoc creates a restore point before each series of changes.	Activée : PCDoc crée un point de restauration avant chaque série de modifications.
+FirstRun.ProtectionOff	Off: Windows cannot create restore points. Turning it on is recommended.	Désactivée : Windows ne peut pas créer de points de restauration. Il est conseillé de l'activer.
+FirstRun.EnableProtection	Turn on	Activer
+FirstRun.ProtectionFailed	Windows refused to turn on system protection.	Windows a refusé d'activer la protection du système.
+FirstRun.Finish	Start	Commencer

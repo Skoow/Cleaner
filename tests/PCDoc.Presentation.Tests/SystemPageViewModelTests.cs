@@ -62,6 +62,69 @@ public class SystemPageViewModelTests
         public void SetText(string text) => Text = text;
     }
 
+    private sealed class NoConditions : PCDoc.Modules.System.Advisor.IConditionProbe
+    {
+        public bool? Check(string condition) => null;
+    }
+
+    private static (SystemPageViewModel Vm, PCDoc.Presentation.Fixing.FixConfirmationViewModel Fixes) MakeWithAdvisor(PCDoc.Core.Settings.AppMode mode)
+    {
+        var entries = new[]
+        {
+            Entry("Discord", AutorunKind.Startup, SignatureStatus.Signed, "Discord Inc.") with
+            {
+                Startup = new StartupToggleTarget(RegistryHive.TargetUser, "Run", "Discord"),
+            },
+            Entry("wuauserv", AutorunKind.Service, SignatureStatus.Signed, "Microsoft Windows") with { ServiceName = "wuauserv" },
+            Entry("rgbsvc", AutorunKind.Service, SignatureStatus.Unsigned) with { ServiceName = "rgbsvc" },
+        };
+        var src = new Sources(Pc, () => new BootHistory([]), () => entries);
+        var localizer = new Localizer();
+        localizer.Register(CoreResources.Manager);
+        SystemModule.RegisterResources(localizer);
+        var pipeline = new PCDoc.Core.Fixing.FixPipeline([new FixConfirmationViewModelTests.Fixer()],
+            new FixConfirmationViewModelTests.Restore(PCDoc.Core.Fixing.RestorePointOutcome.Created),
+            new PCDoc.Core.Fixing.UndoJournal(Path.Combine(Path.GetTempPath(), "pcdoc-s-" + Guid.NewGuid().ToString("N"), "u.jsonl"),
+                new FixConfirmationViewModelTests.Clock()));
+        var fixes = new PCDoc.Presentation.Fixing.FixConfirmationViewModel(pipeline, localizer, () => mode);
+        var advisor = new PCDoc.Modules.System.Advisor.AutorunAdvisor(PCDoc.Modules.System.Advisor.AdvisorCatalog.Default, new NoConditions());
+        return (new SystemPageViewModel(src, src, src, localizer, null, advisor, fixes, () => mode) { }, fixes);
+    }
+
+    [Fact]
+    public async Task Rows_ShowAdviceAndToggleByMode()
+    {
+        var (novice, _) = MakeWithAdvisor(PCDoc.Core.Settings.AppMode.Novice);
+        await novice.RefreshCommand.ExecuteAsync(null);
+        novice.KindFilter = null;
+
+        var discord = novice.Autoruns.Single(a => a.Name == "Discord");
+        discord.AdviceLabel.Should().Be("Sûr");
+        discord.CanToggle.Should().BeTrue();
+        discord.ToggleLabel.Should().Be("Désactiver");
+        novice.Autoruns.Single(a => a.Name == "wuauserv").CanToggle.Should().BeFalse();
+        novice.Autoruns.Single(a => a.Name == "rgbsvc").CanToggle.Should().BeFalse("🔴 masqué en mode novice");
+
+        var (expert, _) = MakeWithAdvisor(PCDoc.Core.Settings.AppMode.Expert);
+        await expert.RefreshCommand.ExecuteAsync(null);
+        expert.KindFilter = null;
+        expert.Autoruns.Single(a => a.Name == "rgbsvc").CanToggle.Should().BeTrue();
+        expert.Autoruns.Single(a => a.Name == "wuauserv").CanToggle.Should().BeFalse("🔒 même en expert");
+    }
+
+    [Fact]
+    public async Task Toggle_OpensConfirmationWithThatItem()
+    {
+        var (vm, fixes) = MakeWithAdvisor(PCDoc.Core.Settings.AppMode.Novice);
+        await vm.RefreshCommand.ExecuteAsync(null);
+        vm.KindFilter = AutorunKind.Startup;
+
+        vm.ToggleCommand.Execute(vm.Autoruns.Single());
+
+        fixes.IsOpen.Should().BeTrue();
+        fixes.Items.Single().Title.Should().Contain("Discord");
+    }
+
     [Theory]
     [InlineData(4, AutorunKind.Startup)]
     [InlineData(5, AutorunKind.ScheduledTask)]

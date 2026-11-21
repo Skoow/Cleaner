@@ -186,4 +186,9 @@
   <data name="Advice.UnknownTask" xml:space="preserve"><value>Tâche inconnue : réservée aux experts.</value></data>
   <data name="Advice.UnknownMicrosoftStartup" xml:space="preserve"><value>Composant de Windows : réservé aux experts.</value></data>
   <data name="Advice.ThirdPartyStartup" xml:space="preserve"><value>Se lance avec Windows ; le désactiver est réversible et le programme marche quand vous l'ouvrez.</value></data>
+  <data name="Toggle.Disable" xml:space="preserve"><value>Désactiver</value></data>
+  <data name="Toggle.Enable" xml:space="preserve"><value>Réactiver</value></data>
+  <data name="Toggle.Disable.Title" xml:space="preserve"><value>Désactiver « {0} »</value></data>
+  <data name="Toggle.Enable.Title" xml:space="preserve"><value>Réactiver « {0} »</value></data>
+  <data name="Column.Advice" xml:space="preserve"><value>Conseil</value></data>
 </root>

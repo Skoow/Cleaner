@@ -91,4 +91,36 @@
   <data name="Fix.RestorePoint.ReusedRecent" xml:space="preserve"><value>Un point de restauration de moins de 24 h est utilisé.</value></data>
   <data name="Fix.RestorePoint.ProtectionDisabled" xml:space="preserve"><value>La protection du système est désactivée : aucun point de restauration ne peut être créé. Chaque modification reste annulable depuis la page Historique.</value></data>
   <data name="Fix.RestorePoint.Failed" xml:space="preserve"><value>Windows n'a pas pu créer de point de restauration. Chaque modification reste annulable depuis la page Historique.</value></data>
+  <data name="Nav.History" xml:space="preserve"><value>Historique</value></data>
+  <data name="History.Intro" xml:space="preserve"><value>Toutes les modifications faites par PCDoc, la plus récente d'abord. Chacune peut être annulée.</value></data>
+  <data name="History.Empty" xml:space="preserve"><value>PCDoc n'a encore rien modifié sur ce PC.</value></data>
+  <data name="History.Undo" xml:space="preserve"><value>Annuler</value></data>
+  <data name="History.Status.Pending" xml:space="preserve"><value>Interrompue</value></data>
+  <data name="History.Status.Applied" xml:space="preserve"><value>Appliquée</value></data>
+  <data name="History.Status.Failed" xml:space="preserve"><value>Échec</value></data>
+  <data name="History.Status.Undone" xml:space="preserve"><value>Annulée</value></data>
+  <data name="History.Interrupted" xml:space="preserve"><value>Ces modifications ont été interrompues (coupure de courant ou plantage), vérifiez-les : {0}</value></data>
+  <data name="History.Undo.Undone" xml:space="preserve"><value>« {0} » a été annulé.</value></data>
+  <data name="History.Undo.StateChanged" xml:space="preserve"><value>« {0} » a changé depuis la modification par PCDoc (par exemple par une mise à jour de Windows) : il n'a pas été annulé automatiquement.</value></data>
+  <data name="History.Undo.NoFixer" xml:space="preserve"><value>« {0} » ne peut pas être annulé par cette version de PCDoc.</value></data>
+  <data name="History.Undo.Failed" xml:space="preserve"><value>L'annulation de « {0} » a échoué (voir le journal).</value></data>
+  <data name="Column.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Column.Change" xml:space="preserve"><value>Modification</value></data>
+  <data name="Column.Status" xml:space="preserve"><value>État</value></data>
+  <data name="Settings.Mode" xml:space="preserve"><value>Mode</value></data>
+  <data name="Settings.ModeHint" xml:space="preserve"><value>Novice : seulement ce qui ne peut rien casser. Expert : tout, y compris ce qui est déconseillé.</value></data>
+  <data name="Settings.Mode.Novice" xml:space="preserve"><value>Novice</value></data>
+  <data name="Settings.Mode.Expert" xml:space="preserve"><value>Expert</value></data>
+  <data name="Settings.ExpertConfirm" xml:space="preserve"><value>Le mode expert affiche des modifications qui peuvent causer des problèmes. Chacune reste confirmée et annulable. Passer en mode expert ?</value></data>
+  <data name="Settings.ExpertYes" xml:space="preserve"><value>Passer en expert</value></data>
+  <data name="FirstRun.Title" xml:space="preserve"><value>Bienvenue dans PCDoc</value></data>
+  <data name="FirstRun.Intro" xml:space="preserve"><value>Trois choix rapides avant de commencer. Vous pourrez les changer dans les Paramètres.</value></data>
+  <data name="FirstRun.ModeNovice" xml:space="preserve"><value>Novice (conseillé) : PCDoc ne propose que des modifications qui ne peuvent rien casser.</value></data>
+  <data name="FirstRun.ModeExpert" xml:space="preserve"><value>Expert : tout est affiché, y compris les modifications risquées.</value></data>
+  <data name="FirstRun.Protection" xml:space="preserve"><value>Protection du système</value></data>
+  <data name="FirstRun.ProtectionOn" xml:space="preserve"><value>Activée : PCDoc crée un point de restauration avant chaque série de modifications.</value></data>
+  <data name="FirstRun.ProtectionOff" xml:space="preserve"><value>Désactivée : Windows ne peut pas créer de points de restauration. Il est conseillé de l'activer.</value></data>
+  <data name="FirstRun.EnableProtection" xml:space="preserve"><value>Activer</value></data>
+  <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows a refusé d'activer la protection du système.</value></data>
+  <data name="FirstRun.Finish" xml:space="preserve"><value>Commencer</value></data>
 </root>

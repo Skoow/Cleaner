@@ -186,4 +186,9 @@
   <data name="Advice.UnknownTask" xml:space="preserve"><value>Unknown task: only for experts.</value></data>
   <data name="Advice.UnknownMicrosoftStartup" xml:space="preserve"><value>Windows component: only for experts.</value></data>
   <data name="Advice.ThirdPartyStartup" xml:space="preserve"><value>Starts with Windows; disabling it is reversible and the program still works when you open it.</value></data>
+  <data name="Toggle.Disable" xml:space="preserve"><value>Disable</value></data>
+  <data name="Toggle.Enable" xml:space="preserve"><value>Re-enable</value></data>
+  <data name="Toggle.Disable.Title" xml:space="preserve"><value>Disable "{0}"</value></data>
+  <data name="Toggle.Enable.Title" xml:space="preserve"><value>Re-enable "{0}"</value></data>
+  <data name="Column.Advice" xml:space="preserve"><value>Advice</value></data>
 </root>

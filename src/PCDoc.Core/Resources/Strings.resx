@@ -91,4 +91,36 @@
   <data name="Fix.RestorePoint.ReusedRecent" xml:space="preserve"><value>A restore point from the last 24 hours is used.</value></data>
   <data name="Fix.RestorePoint.ProtectionDisabled" xml:space="preserve"><value>System protection is turned off: no restore point can be created. Each change can still be undone from the History page.</value></data>
   <data name="Fix.RestorePoint.Failed" xml:space="preserve"><value>Windows could not create a restore point. Each change can still be undone from the History page.</value></data>
+  <data name="Nav.History" xml:space="preserve"><value>History</value></data>
+  <data name="History.Intro" xml:space="preserve"><value>Every change made by PCDoc, newest first. Each one can be undone.</value></data>
+  <data name="History.Empty" xml:space="preserve"><value>PCDoc has not changed anything on this PC yet.</value></data>
+  <data name="History.Undo" xml:space="preserve"><value>Undo</value></data>
+  <data name="History.Status.Pending" xml:space="preserve"><value>Interrupted</value></data>
+  <data name="History.Status.Applied" xml:space="preserve"><value>Applied</value></data>
+  <data name="History.Status.Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="History.Status.Undone" xml:space="preserve"><value>Undone</value></data>
+  <data name="History.Interrupted" xml:space="preserve"><value>These changes were interrupted (power cut or crash), check them: {0}</value></data>
+  <data name="History.Undo.Undone" xml:space="preserve"><value>"{0}" was undone.</value></data>
+  <data name="History.Undo.StateChanged" xml:space="preserve"><value>"{0}" changed since PCDoc modified it (for example by a Windows update): it was not undone automatically.</value></data>
+  <data name="History.Undo.NoFixer" xml:space="preserve"><value>"{0}" cannot be undone by this version of PCDoc.</value></data>
+  <data name="History.Undo.Failed" xml:space="preserve"><value>Undoing "{0}" failed (see the log).</value></data>
+  <data name="Column.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Column.Change" xml:space="preserve"><value>Change</value></data>
+  <data name="Column.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Settings.Mode" xml:space="preserve"><value>Mode</value></data>
+  <data name="Settings.ModeHint" xml:space="preserve"><value>Novice: only changes that cannot break anything. Expert: everything, including what is not recommended.</value></data>
+  <data name="Settings.Mode.Novice" xml:space="preserve"><value>Novice</value></data>
+  <data name="Settings.Mode.Expert" xml:space="preserve"><value>Expert</value></data>
+  <data name="Settings.ExpertConfirm" xml:space="preserve"><value>Expert mode shows changes that can cause problems. Each one still asks for confirmation and can be undone. Switch to expert mode?</value></data>
+  <data name="Settings.ExpertYes" xml:space="preserve"><value>Switch to expert</value></data>
+  <data name="FirstRun.Title" xml:space="preserve"><value>Welcome to PCDoc</value></data>
+  <data name="FirstRun.Intro" xml:space="preserve"><value>Three quick choices before you start. You can change them later in Settings.</value></data>
+  <data name="FirstRun.ModeNovice" xml:space="preserve"><value>Novice (recommended): PCDoc only offers changes that cannot break anything.</value></data>
+  <data name="FirstRun.ModeExpert" xml:space="preserve"><value>Expert: everything is shown, including risky changes.</value></data>
+  <data name="FirstRun.Protection" xml:space="preserve"><value>System protection</value></data>
+  <data name="FirstRun.ProtectionOn" xml:space="preserve"><value>On: PCDoc creates a restore point before each series of changes.</value></data>
+  <data name="FirstRun.ProtectionOff" xml:space="preserve"><value>Off: Windows cannot create restore points. Turning it on is recommended.</value></data>
+  <data name="FirstRun.EnableProtection" xml:space="preserve"><value>Turn on</value></data>
+  <data name="FirstRun.ProtectionFailed" xml:space="preserve"><value>Windows refused to turn on system protection.</value></data>
+  <data name="FirstRun.Finish" xml:space="preserve"><value>Start</value></data>
 </root>

@@ -45,4 +45,17 @@ public sealed record AutorunRow(
     public bool IsUnsigned => Badge is SignatureBadge.Unsigned or SignatureBadge.Missing;
 
     public string Details => $"{Location}\n{CommandLine}\n{Entry.FilePath}";
+
+    /// <summary>Niveau de risque du conseil (Sûr, Selon l'usage, Déconseillé, Verrouillé).</summary>
+    public string AdviceLabel { get; init; } = string.Empty;
+
+    public PCDoc.Core.Findings.RiskLevel? AdviceLevel { get; init; }
+
+    public string AdviceReason { get; init; } = string.Empty;
+
+    public string ToggleLabel { get; init; } = string.Empty;
+
+    public bool CanToggle { get; init; }
+
+    public PCDoc.Core.Findings.Finding? ToggleFinding { get; init; }
 }

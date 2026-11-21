@@ -36,6 +36,12 @@ public sealed partial class SettingsPageViewModel : ObservableObject
     [ObservableProperty]
     private string? _licenseText;
 
+    [ObservableProperty]
+    private bool _confirmingExpert;
+
+    [ObservableProperty]
+    private bool _isExpert;
+
     public SettingsPageViewModel(
         ILocalizer localizer,
         ISettingsStore store,
@@ -59,6 +65,7 @@ public sealed partial class SettingsPageViewModel : ObservableObject
         _suspendSave = true;
         _language = current.Language;
         _theme = current.Theme;
+        _isExpert = current.Mode == AppMode.Expert;
         _suspendSave = false;
         localizer.PropertyChanged += (_, _) => OnPropertyChanged(nameof(AnalyzedAccount));
     }
@@ -97,6 +104,29 @@ public sealed partial class SettingsPageViewModel : ObservableObject
 
     [RelayCommand]
     private void CopyLogsPath() => _clipboard?.SetText(LogsPath);
+
+    /// <summary>Passer en mode expert demande une confirmation dans la page.</summary>
+    [RelayCommand]
+    private void RequestExpert() => ConfirmingExpert = !IsExpert;
+
+    [RelayCommand]
+    private void ConfirmExpert()
+    {
+        ConfirmingExpert = false;
+        IsExpert = true;
+        _store.Save(_store.Load() with { Mode = AppMode.Expert });
+    }
+
+    [RelayCommand]
+    private void CancelExpert() => ConfirmingExpert = false;
+
+    [RelayCommand]
+    private void SetNovice()
+    {
+        ConfirmingExpert = false;
+        IsExpert = false;
+        _store.Save(_store.Load() with { Mode = AppMode.Novice });
+    }
 
     [RelayCommand]
     private void RequestClear()

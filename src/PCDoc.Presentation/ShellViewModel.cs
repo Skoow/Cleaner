@@ -18,6 +18,17 @@ public sealed partial class ShellViewModel : ObservableObject
     [ObservableProperty]
     private string? _errorBanner;
 
+    /// <summary>Assistant du premier lancement affiché par-dessus les pages (null = terminé).</summary>
+    [ObservableProperty]
+    private FirstRunViewModel? _firstRun;
+
+    public void ShowFirstRun(FirstRunViewModel firstRun)
+    {
+        ArgumentNullException.ThrowIfNull(firstRun);
+        firstRun.Finished += (_, _) => FirstRun = null;
+        FirstRun = firstRun;
+    }
+
     /// <param name="pageFactory">Crée le ViewModel d'une page à sa première ouverture (démarrage rapide).</param>
     public ShellViewModel(Func<PageId, object> pageFactory)
     {
@@ -29,6 +40,7 @@ public sealed partial class ShellViewModel : ObservableObject
     [
         new(PageId.Bilan, "Nav.Bilan", ""),
         new(PageId.System, "Nav.System", ""),
+        new(PageId.History, "Nav.History", "\uE81C"),
         new(PageId.Settings, "Nav.Settings", ""),
     ];
 

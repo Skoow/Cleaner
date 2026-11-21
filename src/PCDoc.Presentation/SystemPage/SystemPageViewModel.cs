@@ -7,6 +7,10 @@ using PCDoc.Core.Localization;
 using PCDoc.Modules.System.Autoruns;
 using PCDoc.Modules.System.Boot;
 using PCDoc.Modules.System.Inventory;
+using PCDoc.Modules.System.Advisor;
+using PCDoc.Modules.System.Fixes;
+using PCDoc.Core.Settings;
+using PCDoc.Presentation.Fixing;
 
 namespace PCDoc.Presentation.SystemPage;
 
@@ -90,10 +94,28 @@ public sealed partial class SystemPageViewModel : ObservableObject
     [ObservableProperty]
     private int _selectedTab;
 
+    private readonly AutorunAdvisor? _advisor;
+    private readonly Func<AppMode> _mode;
+
     public SystemPageViewModel(
-        IInventorySource inventory, IBootSource boot, IAutorunSource autoruns, ILocalizer localizer, IClipboardService? clipboard = null)
+        IInventorySource inventory,
+        IBootSource boot,
+        IAutorunSource autoruns,
+        ILocalizer localizer,
+        IClipboardService? clipboard = null,
+        AutorunAdvisor? advisor = null,
+        FixConfirmationViewModel? fixes = null,
+        Func<AppMode>? mode = null)
     {
         _clipboard = clipboard;
+        _advisor = advisor;
+        _mode = mode ?? (() => AppMode.Novice);
+        Fixes = fixes;
+        if (fixes is not null)
+        {
+            fixes.Completed += (_, _) => _ = RefreshAsync();
+        }
+
         _inventorySource = inventory;
         _bootSource = boot;
         _autorunSource = autoruns;
@@ -102,6 +124,9 @@ public sealed partial class SystemPageViewModel : ObservableObject
     }
 
     public ILocalizer Localizer { get; }
+
+    /// <summary>Panneau de confirmation des activations/désactivations (null si indisponible).</summary>
+    public FixConfirmationViewModel? Fixes { get; }
 
     public ObservableCollection<AutorunRow> Autoruns { get; } = [];
 
@@ -169,6 +194,15 @@ public sealed partial class SystemPageViewModel : ObservableObject
         if (kind is not null)
         {
             KindFilter = kind;
+        }
+    }
+
+    [RelayCommand]
+    private void Toggle(AutorunRow? row)
+    {
+        if (row?.ToggleFinding is { } finding)
+        {
+            Fixes?.Request([finding]);
         }
     }
 
@@ -371,7 +405,32 @@ public sealed partial class SystemPageViewModel : ObservableObject
             SignatureBadge.Missing => T("Sig.Missing"),
             _ => T("Sig.NotApplicable"),
         };
-        return new AutorunRow(e, e.Name, e.Signature.Publisher ?? "—", T($"Kind.{e.Kind}"), e.Location, e.CommandLine,
+        var row = new AutorunRow(e, e.Name, e.Signature.Publisher ?? "—", T($"Kind.{e.Kind}"), e.Location, e.CommandLine,
             badge, label, e.Enabled ? T("State.Enabled") : T("State.Disabled"));
+        if (_advisor is null)
+        {
+            return row;
+        }
+
+        var advice = _advisor.Advise(e);
+        Finding? toggle = null;
+        if (Fixes is not null && advice.Level != RiskLevel.Locked && ToggleRequest.For(e, advice.Action) is { } request)
+        {
+            var display = e.Kind == AutorunKind.ScheduledTask ? e.Name.Split('\\')[^1] : e.Name;
+            toggle = new Finding(
+                $"system.toggle.{e.Kind}.{e.ServiceName ?? e.Name}".ToLowerInvariant(), "system", Severity.Info,
+                new LocalizedText(advice.Action == ToggleAction.Disable ? "Toggle.Disable.Title" : "Toggle.Enable.Title", display),
+                new LocalizedText(advice.ReasonKey), $"{e.Location}\n{e.CommandLine}", true, advice.Level, FixData: request.Serialize());
+        }
+
+        return row with
+        {
+            AdviceLabel = T($"Risk.{advice.Level}"),
+            AdviceLevel = advice.Level,
+            AdviceReason = T(advice.ReasonKey),
+            ToggleLabel = T(advice.Action == ToggleAction.Disable ? "Toggle.Disable" : "Toggle.Enable"),
+            ToggleFinding = toggle,
+            CanToggle = toggle is not null && FixPolicy.IsOffered(toggle, _mode()),
+        };
     }
 }
