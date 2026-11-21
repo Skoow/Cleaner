@@ -8,6 +8,7 @@
         xmlns:st="clr-namespace:PCDoc.Presentation.Settings;assembly=PCDoc.Presentation"
         xmlns:hi="clr-namespace:PCDoc.Presentation.History;assembly=PCDoc.Presentation"
         xmlns:pr="clr-namespace:PCDoc.Presentation;assembly=PCDoc.Presentation"
+        xmlns:dg="clr-namespace:PCDoc.Presentation.Diagnostic;assembly=PCDoc.Presentation"
         Title="PCDoc"
         Icon="Assets/pcdoc.ico"
         Width="1180" Height="760" MinWidth="960" MinHeight="600"
@@ -19,6 +20,7 @@
     <DataTemplate DataType="{x:Type b:BilanPageViewModel}"><views:BilanPage /></DataTemplate>
     <DataTemplate DataType="{x:Type st:SettingsPageViewModel}"><views:SettingsPage /></DataTemplate>
     <DataTemplate DataType="{x:Type hi:HistoryPageViewModel}"><views:HistoryPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type dg:DiagnosticPageViewModel}"><views:DiagnosticPage /></DataTemplate>
     <DataTemplate DataType="{x:Type pr:FirstRunViewModel}"><views:FirstRunView /></DataTemplate>
   </Window.Resources>
 
@@ -56,6 +58,12 @@
             <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0"
                        VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.System}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+        <ListBoxItem x:Name="DiagnosticItem" AutomationProperties.Name="{app:T Nav.Diagnostic}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE90F;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Diagnostic}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
         <ListBoxItem x:Name="HistoryItem" AutomationProperties.Name="{app:T Nav.History}">

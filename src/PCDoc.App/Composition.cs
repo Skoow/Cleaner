@@ -19,6 +19,9 @@ using PCDoc.Core.Fixing;
 using PCDoc.Infrastructure.Writes;
 using PCDoc.Modules.System.Advisor;
 using PCDoc.Modules.System.Fixes;
+using PCDoc.Modules.Diagnostic;
+using PCDoc.Modules.Diagnostic.Repairs;
+using PCDoc.Presentation.Diagnostic;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -70,6 +73,14 @@ internal static class Composition
             sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryWriter>(), sp.GetRequiredService<IServiceControl>(),
             sp.GetRequiredService<ITaskControl>(), sp.GetRequiredService<IBackupStore>(), () => DateTimeOffset.Now,
             sp.GetRequiredService<AutorunAdvisor>()));
+        // Diagnostic (v0.3) : lecture + réparations cachées.
+        services.AddSingleton<IProcessRunner, ProcessRunner>();
+        services.AddSingleton<IDiagnosticSource>(sp => new DiagnosticCollector(sp.GetRequiredService<IEventLogQuery>(),
+            sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IClock>()));
+        services.AddSingleton<IScanner>(sp => new DiagnosticScanner(sp.GetRequiredService<IDiagnosticSource>()));
+        services.AddSingleton(sp => new RepairFixer(sp.GetRequiredService<IProcessRunner>()));
+        services.AddSingleton<IFixer>(sp => sp.GetRequiredService<RepairFixer>());
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
@@ -106,6 +117,8 @@ internal static class Composition
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<IClipboardService>(), services.GetRequiredService<AutorunAdvisor>(),
             NewFixPanel(services), Mode(services)),
+        PageId.Diagnostic => new DiagnosticPageViewModel(services.GetRequiredService<IDiagnosticSource>(),
+            services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],
         _ => new SettingsPageViewModel(

@@ -1,0 +1,126 @@
+<UserControl x:Class="PCDoc.App.Views.DiagnosticPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:d="clr-namespace:PCDoc.Presentation.Diagnostic;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+      <Button DockPanel.Dock="Right" Content="{app:T System.Refresh}" Command="{Binding RefreshCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T System.Refresh}" />
+      <TextBlock Text="{app:T Diag.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <Border DockPanel.Dock="Top" Padding="12" CornerRadius="6" Margin="0,0,0,8" Background="{DynamicResource Pcdoc.Warning.Background}"
+            Visibility="{Binding RebootPending, Converter={StaticResource BoolToVisibility}}">
+      <TextBlock Text="{app:T Diag.RebootPending}" TextWrapping="Wrap" />
+    </Border>
+
+    <TabControl>
+      <TabItem Header="{app:T Diag.Tab.BlueScreens}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{Binding ShutdownsText}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8" />
+          <DataGrid ItemsSource="{Binding BlueScreens}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.BlueScreens}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.Date}" Binding="{Binding Date}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.StopCode}" Binding="{Binding Name}" Width="1.5*" />
+              <DataGridTemplateColumn Header="{app:T Column.Explanation}" Width="3*">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate DataType="{x:Type d:DiagRow}"><TextBlock Text="{Binding Explanation}" TextWrapping="Wrap" Margin="4" /></DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Crashes}">
+        <DataGrid Margin="0,12,0,0" ItemsSource="{Binding AppCrashes}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.Crashes}">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="{app:T Column.App}" Binding="{Binding App}" Width="2*" />
+            <DataGridTextColumn Header="{app:T Column.Count}" Binding="{Binding Count}" Width="Auto" />
+            <DataGridTextColumn Header="{app:T Column.Module}" Binding="{Binding Module}" Width="1.5*" />
+            <DataGridTextColumn Header="{app:T Column.Date}" Binding="{Binding Last}" Width="Auto" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Devices}">
+        <DataGrid Margin="0,12,0,0" ItemsSource="{Binding Devices}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.Devices}">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="{app:T Column.Device}" Binding="{Binding Name}" Width="2*" />
+            <DataGridTextColumn Header="{app:T Column.Code}" Binding="{Binding Detail}" Width="Auto" />
+            <DataGridTemplateColumn Header="{app:T Column.Explanation}" Width="3*">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="{x:Type d:DiagRow}"><TextBlock Text="{Binding Explanation}" TextWrapping="Wrap" Margin="4" /></DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+        </DataGrid>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Disks}">
+        <StackPanel Margin="0,12,0,0">
+          <TextBlock Text="{app:T Diag.DisksUnavailable}" Style="{StaticResource Pcdoc.Muted}"
+                     Visibility="{Binding DisksUnavailable, Converter={StaticResource BoolToVisibility}}" />
+          <DataGrid ItemsSource="{Binding Disks}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.Disks}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.Disk}" Binding="{Binding Name}" Width="2*" />
+              <DataGridTextColumn Header="{app:T Column.Health}" Binding="{Binding Health}" Width="*" />
+              <DataGridTextColumn Header="{app:T Column.Wear}" Binding="{Binding Wear}" Width="*" />
+              <DataGridTextColumn Header="{app:T Column.Temperature}" Binding="{Binding Temperature}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Text="{app:T Diag.OldDriversTitle}" Style="{StaticResource Pcdoc.SectionTitle}" Margin="0,16,0,8" />
+          <DataGrid ItemsSource="{Binding OldDrivers}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                    GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.OldDriversTitle}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.Date}" Binding="{Binding Date}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Device}" Binding="{Binding Name}" Width="2*" />
+              <DataGridTextColumn Header="{app:T Column.Provider}" Binding="{Binding Detail}" Width="*" />
+              <DataGridTextColumn Header="{app:T Column.Version}" Binding="{Binding Explanation}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Repairs}">
+        <DockPanel Margin="0,12,0,0">
+          <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <TextBlock Text="{app:T Diag.RepairOutput}" Style="{StaticResource Pcdoc.SectionTitle}" />
+            <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding RepairOutput, Mode=OneWay}" Height="160"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AutomationProperties.Name="{app:T Diag.RepairOutput}" />
+          </StackPanel>
+          <ItemsControl ItemsSource="{Binding Repairs}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type d:RepairRow}">
+                <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6">
+                  <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="{app:T Diag.Run}" VerticalAlignment="Center" AutomationProperties.Name="{Binding Title}"
+                            Command="{Binding DataContext.RunRepairCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding Kind}" />
+                    <StackPanel>
+                      <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                      <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" />
+                    </StackPanel>
+                  </DockPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Help}">
+        <StackPanel Margin="0,12,0,0" MaxWidth="760" HorizontalAlignment="Left">
+          <TextBlock Text="{app:T Help.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />
+          <TextBlock Text="{app:T Help.Step1}" TextWrapping="Wrap" Margin="0,4" />
+          <TextBlock Text="{app:T Help.Step2}" TextWrapping="Wrap" Margin="0,4" />
+          <TextBlock Text="{app:T Help.Step3}" TextWrapping="Wrap" Margin="0,4" />
+          <TextBlock Text="{app:T Help.Step4}" TextWrapping="Wrap" Margin="0,4" />
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

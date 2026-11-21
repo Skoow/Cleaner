@@ -49,7 +49,7 @@ public class ShellViewModelTests
 
     [Fact]
     public void NavItems_AreBilanSystemSettings_InOrder() =>
-        Make().NavItems.Select(n => n.Id).Should().Equal(PageId.Bilan, PageId.System, PageId.History, PageId.Settings);
+        Make().NavItems.Select(n => n.Id).Should().Equal(PageId.Bilan, PageId.System, PageId.Diagnostic, PageId.History, PageId.Settings);
 
     [Fact]
     public void NavItems_LabelKeysExistInBothLanguages()

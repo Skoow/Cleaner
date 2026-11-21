@@ -49,4 +49,45 @@
   <data name="Repair.SystemFiles.Explanation" xml:space="preserve"><value>Finds and repairs damaged Windows files. Takes 10 to 30 minutes.</value></data>
   <data name="Repair.WindowsImage.Title" xml:space="preserve"><value>Repair the Windows image (DISM)</value></data>
   <data name="Repair.WindowsImage.Explanation" xml:space="preserve"><value>Downloads healthy copies of damaged components from Windows Update. Run it if SFC could not repair everything. Takes 10 to 40 minutes.</value></data>
+  <data name="Diag.Title" xml:space="preserve"><value>Diagnostics</value></data>
+  <data name="Diag.Tab.BlueScreens" xml:space="preserve"><value>Blue screens</value></data>
+  <data name="Diag.Tab.Crashes" xml:space="preserve"><value>App crashes</value></data>
+  <data name="Diag.Tab.Devices" xml:space="preserve"><value>Devices</value></data>
+  <data name="Diag.Tab.Disks" xml:space="preserve"><value>Disk health</value></data>
+  <data name="Diag.Tab.Repairs" xml:space="preserve"><value>Repairs</value></data>
+  <data name="Diag.Tab.Help" xml:space="preserve"><value>PC won't start?</value></data>
+  <data name="Diag.NoBlueScreen" xml:space="preserve"><value>No blue screen in the last 30 days.</value></data>
+  <data name="Diag.NoCrash" xml:space="preserve"><value>No application crash in the last 30 days.</value></data>
+  <data name="Diag.NoDevice" xml:space="preserve"><value>All devices work.</value></data>
+  <data name="Diag.ShutdownsCount" xml:space="preserve"><value>Unexpected shutdowns in 30 days: {0}</value></data>
+  <data name="Diag.RebootPending" xml:space="preserve"><value>A restart is pending to finish updates or installations.</value></data>
+  <data name="Diag.OldDriversTitle" xml:space="preserve"><value>Drivers older than 5 years</value></data>
+  <data name="Diag.Health.Healthy" xml:space="preserve"><value>Healthy</value></data>
+  <data name="Diag.Health.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Diag.Health.Unhealthy" xml:space="preserve"><value>Failing</value></data>
+  <data name="Diag.Health.Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Diag.Percent" xml:space="preserve"><value>{0} %</value></data>
+  <data name="Diag.Celsius" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Diag.DisksUnavailable" xml:space="preserve"><value>Windows does not provide disk health information on this PC.</value></data>
+  <data name="Diag.Run" xml:space="preserve"><value>Run</value></data>
+  <data name="Diag.RepairOutput" xml:space="preserve"><value>Progress</value></data>
+  <data name="Column.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Column.StopCode" xml:space="preserve"><value>Stop code</value></data>
+  <data name="Column.Explanation" xml:space="preserve"><value>What it means</value></data>
+  <data name="Column.App" xml:space="preserve"><value>Application</value></data>
+  <data name="Column.Count" xml:space="preserve"><value>Times</value></data>
+  <data name="Column.Module" xml:space="preserve"><value>Module</value></data>
+  <data name="Column.Device" xml:space="preserve"><value>Device</value></data>
+  <data name="Column.Code" xml:space="preserve"><value>Code</value></data>
+  <data name="Column.Disk" xml:space="preserve"><value>Disk</value></data>
+  <data name="Column.Health" xml:space="preserve"><value>Health</value></data>
+  <data name="Column.Wear" xml:space="preserve"><value>Wear</value></data>
+  <data name="Column.Temperature" xml:space="preserve"><value>Temperature</value></data>
+  <data name="Column.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="Column.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Help.Title" xml:space="preserve"><value>If Windows no longer starts</value></data>
+  <data name="Help.Step1" xml:space="preserve"><value>1. Turn the PC off and on three times in a row during startup: Windows then opens its recovery environment (blue screen "Choose an option").</value></data>
+  <data name="Help.Step2" xml:space="preserve"><value>2. Choose Troubleshoot &gt; Advanced options &gt; System Restore, and pick the restore point created by PCDoc before its last changes.</value></data>
+  <data name="Help.Step3" xml:space="preserve"><value>3. If that is not enough: Troubleshoot &gt; Advanced options &gt; Startup Settings &gt; Safe Mode, then undo the last changes from PCDoc's History page.</value></data>
+  <data name="Help.Step4" xml:space="preserve"><value>4. Last resort: Troubleshoot &gt; Reset this PC &gt; Keep my files.</value></data>
 </root>

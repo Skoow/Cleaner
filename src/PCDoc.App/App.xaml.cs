@@ -37,6 +37,7 @@ public partial class App : Application
         var localizer = new Localizer(key => _logger.Warning("Missing translation key {Key}", key));
         localizer.Register(CoreResources.Manager);
         SystemModule.RegisterResources(localizer);
+        PCDoc.Modules.Diagnostic.DiagnosticModule.RegisterResources(localizer);
         localizer.Language = settings.Language;
         Loc.Instance = localizer;
 

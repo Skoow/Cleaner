@@ -44,3 +44,44 @@ Repair.SystemFiles.Title	Check Windows system files (SFC)	Vérifier les fichiers
 Repair.SystemFiles.Explanation	Finds and repairs damaged Windows files. Takes 10 to 30 minutes.	Recherche et répare les fichiers de Windows endommagés. Dure 10 à 30 minutes.
 Repair.WindowsImage.Title	Repair the Windows image (DISM)	Réparer l'image de Windows (DISM)
 Repair.WindowsImage.Explanation	Downloads healthy copies of damaged components from Windows Update. Run it if SFC could not repair everything. Takes 10 to 40 minutes.	Télécharge depuis Windows Update des copies saines des composants endommagés. À lancer si SFC n'a pas tout réparé. Dure 10 à 40 minutes.
+Diag.Title	Diagnostics	Diagnostic
+Diag.Tab.BlueScreens	Blue screens	Écrans bleus
+Diag.Tab.Crashes	App crashes	Plantages
+Diag.Tab.Devices	Devices	Périphériques
+Diag.Tab.Disks	Disk health	Santé des disques
+Diag.Tab.Repairs	Repairs	Réparations
+Diag.Tab.Help	PC won't start?	Le PC ne démarre plus ?
+Diag.NoBlueScreen	No blue screen in the last 30 days.	Aucun écran bleu ces 30 derniers jours.
+Diag.NoCrash	No application crash in the last 30 days.	Aucun plantage d'application ces 30 derniers jours.
+Diag.NoDevice	All devices work.	Tous les périphériques fonctionnent.
+Diag.ShutdownsCount	Unexpected shutdowns in 30 days: {0}	Arrêts brutaux en 30 jours : {0}
+Diag.RebootPending	A restart is pending to finish updates or installations.	Un redémarrage est en attente pour terminer des mises à jour ou installations.
+Diag.OldDriversTitle	Drivers older than 5 years	Pilotes de plus de 5 ans
+Diag.Health.Healthy	Healthy	Bon
+Diag.Health.Warning	Warning	Avertissement
+Diag.Health.Unhealthy	Failing	Défaillant
+Diag.Health.Unknown	Unknown	Inconnu
+Diag.Percent	{0} %	{0} %
+Diag.Celsius	{0} °C	{0} °C
+Diag.DisksUnavailable	Windows does not provide disk health information on this PC.	Windows ne fournit pas l'état de santé des disques sur ce PC.
+Diag.Run	Run	Lancer
+Diag.RepairOutput	Progress	Progression
+Column.Date	Date	Date
+Column.StopCode	Stop code	Code d'arrêt
+Column.Explanation	What it means	Ce que ça veut dire
+Column.App	Application	Application
+Column.Count	Times	Fois
+Column.Module	Module	Module
+Column.Device	Device	Périphérique
+Column.Code	Code	Code
+Column.Disk	Disk	Disque
+Column.Health	Health	État
+Column.Wear	Wear	Usure
+Column.Temperature	Temperature	Température
+Column.Provider	Provider	Fournisseur
+Column.Version	Version	Version
+Help.Title	If Windows no longer starts	Si Windows ne démarre plus
+Help.Step1	1. Turn the PC off and on three times in a row during startup: Windows then opens its recovery environment (blue screen "Choose an option").	1. Éteignez et rallumez le PC trois fois de suite pendant le démarrage : Windows ouvre alors son environnement de récupération (écran bleu « Choisir une option »).
+Help.Step2	2. Choose Troubleshoot > Advanced options > System Restore, and pick the restore point created by PCDoc before its last changes.	2. Choisissez Dépannage > Options avancées > Restauration du système, puis le point de restauration créé par PCDoc avant ses dernières modifications.
+Help.Step3	3. If that is not enough: Troubleshoot > Advanced options > Startup Settings > Safe Mode, then undo the last changes from PCDoc's History page.	3. Si ça ne suffit pas : Dépannage > Options avancées > Paramètres > Mode sans échec, puis annulez les dernières modifications depuis la page Historique de PCDoc.
+Help.Step4	4. Last resort: Troubleshoot > Reset this PC > Keep my files.	4. En dernier recours : Dépannage > Réinitialiser ce PC > Conserver mes fichiers.

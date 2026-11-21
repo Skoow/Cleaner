@@ -15,6 +15,7 @@
     <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
     <ProjectReference Include="..\PCDoc.Infrastructure\PCDoc.Infrastructure.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.System\PCDoc.Modules.System.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Diagnostic\PCDoc.Modules.Diagnostic.csproj" />
     <ProjectReference Include="..\PCDoc.Presentation\PCDoc.Presentation.csproj" />
   </ItemGroup>
   <ItemGroup>

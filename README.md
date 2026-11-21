@@ -9,7 +9,7 @@ optimiser, sécuriser et rendre confidentiel votre PC. Une seule fenêtre, aucun
 secure and de-track your PC. One window, no ads, no telemetry.
 
 ## État / Status
-Version 0.2 (prérelease) : Bilan, informations système, et premières corrections sûres et annulables.
+Version 0.3 (prérelease) : Bilan, informations système, corrections sûres et annulables, Diagnostic.
 Version 0.2 (prerelease): health check, system information and first safe, undoable fixes.
 
 ## Fonctions de la v0.1 / v0.1 features
@@ -20,6 +20,9 @@ Version 0.2 (prerelease): health check, system information and first safe, undoa
 - **v0.2 — corrections sûres** : conseiller (sûr / selon l'usage / déconseillé / verrouillé), désactiver ou réactiver
   programmes au démarrage, services et tâches, point de restauration avant chaque série, sauvegarde .reg,
   page Historique pour tout annuler, assistant de premier lancement.
+- **v0.3 — Diagnostic** : écrans bleus expliqués, plantages d'applications, périphériques en erreur, santé des disques,
+  redémarrage en attente, pilotes anciens, réparations en un clic (cache DNS, SFC, DISM) lancées sans fenêtre,
+  fiche « Le PC ne démarre plus ».
 
 Guide pas à pas (GitHub, téléchargement) : [docs/guide-debutant.md](docs/guide-debutant.md).
 Tests manuels : [docs/tests-manuels-v0.1.md](docs/tests-manuels-v0.1.md).

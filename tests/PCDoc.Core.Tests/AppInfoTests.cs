@@ -14,6 +14,6 @@ public class AppInfoTests
     [Fact]
     public void AppInfo_Version_HasNoCommitSuffix()
     {
-        AppInfo.Version.Should().Be("0.2.0");
+        AppInfo.Version.Should().Be("0.3.0");
     }
 }

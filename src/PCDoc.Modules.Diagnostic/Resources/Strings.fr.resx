@@ -49,4 +49,45 @@
   <data name="Repair.SystemFiles.Explanation" xml:space="preserve"><value>Recherche et répare les fichiers de Windows endommagés. Dure 10 à 30 minutes.</value></data>
   <data name="Repair.WindowsImage.Title" xml:space="preserve"><value>Réparer l'image de Windows (DISM)</value></data>
   <data name="Repair.WindowsImage.Explanation" xml:space="preserve"><value>Télécharge depuis Windows Update des copies saines des composants endommagés. À lancer si SFC n'a pas tout réparé. Dure 10 à 40 minutes.</value></data>
+  <data name="Diag.Title" xml:space="preserve"><value>Diagnostic</value></data>
+  <data name="Diag.Tab.BlueScreens" xml:space="preserve"><value>Écrans bleus</value></data>
+  <data name="Diag.Tab.Crashes" xml:space="preserve"><value>Plantages</value></data>
+  <data name="Diag.Tab.Devices" xml:space="preserve"><value>Périphériques</value></data>
+  <data name="Diag.Tab.Disks" xml:space="preserve"><value>Santé des disques</value></data>
+  <data name="Diag.Tab.Repairs" xml:space="preserve"><value>Réparations</value></data>
+  <data name="Diag.Tab.Help" xml:space="preserve"><value>Le PC ne démarre plus ?</value></data>
+  <data name="Diag.NoBlueScreen" xml:space="preserve"><value>Aucun écran bleu ces 30 derniers jours.</value></data>
+  <data name="Diag.NoCrash" xml:space="preserve"><value>Aucun plantage d'application ces 30 derniers jours.</value></data>
+  <data name="Diag.NoDevice" xml:space="preserve"><value>Tous les périphériques fonctionnent.</value></data>
+  <data name="Diag.ShutdownsCount" xml:space="preserve"><value>Arrêts brutaux en 30 jours : {0}</value></data>
+  <data name="Diag.RebootPending" xml:space="preserve"><value>Un redémarrage est en attente pour terminer des mises à jour ou installations.</value></data>
+  <data name="Diag.OldDriversTitle" xml:space="preserve"><value>Pilotes de plus de 5 ans</value></data>
+  <data name="Diag.Health.Healthy" xml:space="preserve"><value>Bon</value></data>
+  <data name="Diag.Health.Warning" xml:space="preserve"><value>Avertissement</value></data>
+  <data name="Diag.Health.Unhealthy" xml:space="preserve"><value>Défaillant</value></data>
+  <data name="Diag.Health.Unknown" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Diag.Percent" xml:space="preserve"><value>{0} %</value></data>
+  <data name="Diag.Celsius" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Diag.DisksUnavailable" xml:space="preserve"><value>Windows ne fournit pas l'état de santé des disques sur ce PC.</value></data>
+  <data name="Diag.Run" xml:space="preserve"><value>Lancer</value></data>
+  <data name="Diag.RepairOutput" xml:space="preserve"><value>Progression</value></data>
+  <data name="Column.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Column.StopCode" xml:space="preserve"><value>Code d'arrêt</value></data>
+  <data name="Column.Explanation" xml:space="preserve"><value>Ce que ça veut dire</value></data>
+  <data name="Column.App" xml:space="preserve"><value>Application</value></data>
+  <data name="Column.Count" xml:space="preserve"><value>Fois</value></data>
+  <data name="Column.Module" xml:space="preserve"><value>Module</value></data>
+  <data name="Column.Device" xml:space="preserve"><value>Périphérique</value></data>
+  <data name="Column.Code" xml:space="preserve"><value>Code</value></data>
+  <data name="Column.Disk" xml:space="preserve"><value>Disque</value></data>
+  <data name="Column.Health" xml:space="preserve"><value>État</value></data>
+  <data name="Column.Wear" xml:space="preserve"><value>Usure</value></data>
+  <data name="Column.Temperature" xml:space="preserve"><value>Température</value></data>
+  <data name="Column.Provider" xml:space="preserve"><value>Fournisseur</value></data>
+  <data name="Column.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Help.Title" xml:space="preserve"><value>Si Windows ne démarre plus</value></data>
+  <data name="Help.Step1" xml:space="preserve"><value>1. Éteignez et rallumez le PC trois fois de suite pendant le démarrage : Windows ouvre alors son environnement de récupération (écran bleu « Choisir une option »).</value></data>
+  <data name="Help.Step2" xml:space="preserve"><value>2. Choisissez Dépannage &gt; Options avancées &gt; Restauration du système, puis le point de restauration créé par PCDoc avant ses dernières modifications.</value></data>
+  <data name="Help.Step3" xml:space="preserve"><value>3. Si ça ne suffit pas : Dépannage &gt; Options avancées &gt; Paramètres &gt; Mode sans échec, puis annulez les dernières modifications depuis la page Historique de PCDoc.</value></data>
+  <data name="Help.Step4" xml:space="preserve"><value>4. En dernier recours : Dépannage &gt; Réinitialiser ce PC &gt; Conserver mes fichiers.</value></data>
 </root>

@@ -1,0 +1,71 @@
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using PCDoc.Core.Abstractions;
+
+namespace PCDoc.Infrastructure;
+
+/// <summary>
+/// Lance un outil de System32 sans fenêtre (CreateNoWindow, aucune console visible), avec un chemin complet
+/// (jamais le PATH) et lit sa sortie ligne par ligne.
+/// </summary>
+public sealed class ProcessRunner : IProcessRunner
+{
+    private static readonly TimeSpan Timeout = TimeSpan.FromHours(1);
+
+    static ProcessRunner() => Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+    public async Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(system32Tool) || system32Tool.IndexOfAny(['\\', '/', ':', '"']) >= 0
+            || !system32Tool.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ArgumentException("Only a System32 executable name is allowed", nameof(system32Tool));
+        }
+
+        var path = Path.Combine(Environment.SystemDirectory, system32Tool);
+        var start = new ProcessStartInfo(path, arguments)
+        {
+            CreateNoWindow = true,
+            UseShellExecute = false,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            WorkingDirectory = Environment.SystemDirectory,
+            // SFC écrit en UTF-16 quand sa sortie est redirigée ; les autres outils dans la page de code OEM.
+            StandardOutputEncoding = system32Tool.Equals("sfc.exe", StringComparison.OrdinalIgnoreCase)
+                ? Encoding.Unicode
+                : Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
+        };
+
+        using var process = new Process { StartInfo = start, EnableRaisingEvents = true };
+        process.OutputDataReceived += (_, e) => Forward(e.Data, onOutput);
+        process.ErrorDataReceived += (_, e) => Forward(e.Data, onOutput);
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(Timeout);
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            process.Kill(entireProcessTree: true);
+            throw;
+        }
+
+        return process.ExitCode;
+    }
+
+    private static void Forward(string? line, Action<string>? onOutput)
+    {
+        var text = line?.Replace("\0", string.Empty, StringComparison.Ordinal).Trim();
+        if (!string.IsNullOrEmpty(text))
+        {
+            onOutput?.Invoke(text);
+        }
+    }
+}

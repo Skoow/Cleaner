@@ -145,7 +145,7 @@
       "pcdoc.modules.diagnostic": {
         "type": "Project",
         "dependencies": {
-          "PCDoc.Core": "[0.2.0, )"
+          "PCDoc.Core": "[0.3.0, )"
         }
       }
     }
