@@ -9,6 +9,9 @@ public enum SignatureStatus
     Invalid,
     FileNotFound,
     Error,
+
+    /// <summary>Rien à vérifier (action COM d'une tâche, par exemple).</summary>
+    NotApplicable,
 }
 #pragma warning restore CA1720
 
@@ -16,6 +19,8 @@ public enum SignatureStatus
 public sealed record SignatureInfo(SignatureStatus Status, string? Publisher, bool IsCatalogSigned)
 {
     public static SignatureInfo NotFound { get; } = new(SignatureStatus.FileNotFound, null, false);
+
+    public static SignatureInfo NotApplicable { get; } = new(SignatureStatus.NotApplicable, null, false);
 }
 
 /// <summary>Vérifie la signature Authenticode (intégrée ou par catalogue), sans accès réseau.</summary>

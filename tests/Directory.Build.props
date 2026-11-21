@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <!-- Noms de tests lisibles avec des tirets bas ; classes de test publiques exigées par xUnit. -->
-    <NoWarn>$(NoWarn);CA1707;CA1515;CA1861</NoWarn>
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA1861;CA1720;CA1832</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

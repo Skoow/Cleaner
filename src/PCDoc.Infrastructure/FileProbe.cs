@@ -22,4 +22,29 @@ public sealed class FileProbe(IUserProfileResolver profiles) : IFileProbe
             .Replace("%LOCALAPPDATA%", profile.LocalAppData, StringComparison.OrdinalIgnoreCase);
         return Environment.ExpandEnvironmentVariables(withUser);
     }
+
+    public IReadOnlyList<string> ListFiles(string directory)
+    {
+        try
+        {
+            return Directory.Exists(directory) ? Directory.GetFiles(directory) : [];
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return [];
+        }
+    }
+
+    public byte[]? ReadSmallFile(string path, int maxBytes)
+    {
+        try
+        {
+            var info = new FileInfo(path);
+            return info.Exists && info.Length <= maxBytes ? File.ReadAllBytes(path) : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
 }
