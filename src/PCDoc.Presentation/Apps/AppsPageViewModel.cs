@@ -51,6 +51,9 @@ public sealed partial class AppsPageViewModel : ObservableObject
     private readonly Func<Core.Settings.AppMode> _mode;
     private AppsReport? _report;
 
+    // Sélection des applications préinstallées : initialisée une seule fois (🟢 cochées), puis gardée telle quelle.
+    private HashSet<string>? _selected;
+
     [ObservableProperty]
     private bool _isLoading;
 
@@ -127,7 +130,7 @@ public sealed partial class AppsPageViewModel : ObservableObject
             return;
         }
 
-        var selected = Preinstalled.Where(r => r.IsSelected).Select(r => r.Item.App.Id).ToHashSet(StringComparer.Ordinal);
+        _selected ??= [.. report.Apps.Where(i => i.IsBloat && i.Risk == RiskLevel.Safe).Select(i => i.App.Id)];
         Installed.Clear();
         Preinstalled.Clear();
         var search = SearchText.Trim();
@@ -143,7 +146,24 @@ public sealed partial class AppsPageViewModel : ObservableObject
             if (item.IsBloat)
             {
                 var bloat = RowFor(item);
-                bloat.IsSelected = bloat.CanUninstall && (selected.Count == 0 ? item.Risk == RiskLevel.Safe : selected.Contains(item.App.Id));
+                var selected = _selected;
+                bloat.IsSelected = bloat.CanUninstall && selected.Contains(item.App.Id);
+                bloat.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName != nameof(AppRow.IsSelected))
+                    {
+                        return;
+                    }
+
+                    if (bloat.IsSelected)
+                    {
+                        selected.Add(bloat.Item.App.Id);
+                    }
+                    else
+                    {
+                        selected.Remove(bloat.Item.App.Id);
+                    }
+                };
                 Preinstalled.Add(bloat);
             }
         }

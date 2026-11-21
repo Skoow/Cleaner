@@ -60,7 +60,7 @@ internal static class TrustedPaths
     }
 
     /// <summary>Le fichier et ses dossiers jusqu'à <paramref name="root"/> (exclu) ne sont modifiables que par les administrateurs.</summary>
-    public static bool OnlyAdminsCanWrite(string path, string root)
+    public static bool OnlyAdminsCanWrite(string path, string root, bool includeRoot = false)
     {
         try
         {
@@ -77,11 +77,52 @@ internal static class TrustedPaths
                 }
             }
 
-            return true;
+            return !includeRoot || Allowed(new DirectoryInfo(root).GetAccessControl());
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             return false;
+        }
+    }
+
+    /// <summary>Chemin long (les noms courts 8.3 comme COMMON~1 sont développés), ou le chemin tel quel s'il n'existe pas.</summary>
+    public static string LongPath(string path)
+    {
+        var buffer = new char[1024];
+        var length = GetLongPathNameW(path, buffer, (uint)buffer.Length);
+        return length == 0 || length >= buffer.Length ? path : new string(buffer, 0, (int)length);
+    }
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern uint GetLongPathNameW(string shortPath, [Out] char[] longPath, uint size);
+
+    /// <summary>Propriétaire Administrateurs et droits hérités seulement, sur tout l'arbre (les liens ne sont pas suivis).</summary>
+    public static void ResetToInherited(string directory)
+    {
+        var pending = new Stack<DirectoryInfo>();
+        pending.Push(new DirectoryInfo(directory));
+        var options = new EnumerationOptions { RecurseSubdirectories = false, IgnoreInaccessible = false, AttributesToSkip = FileAttributes.ReparsePoint };
+        while (pending.Count > 0)
+        {
+            var dir = pending.Pop();
+            var security = new DirectorySecurity();
+            security.SetOwner(Administrators);
+            security.SetAccessRuleProtection(isProtected: false, preserveInheritance: false);
+            dir.SetAccessControl(security);
+            foreach (var item in dir.EnumerateFileSystemInfos("*", options))
+            {
+                if (item is DirectoryInfo sub)
+                {
+                    pending.Push(sub);
+                }
+                else if (item is FileInfo file)
+                {
+                    var fileSecurity = new FileSecurity();
+                    fileSecurity.SetOwner(Administrators);
+                    fileSecurity.SetAccessRuleProtection(isProtected: false, preserveInheritance: false);
+                    file.SetAccessControl(fileSecurity);
+                }
+            }
         }
     }
 
@@ -117,14 +158,71 @@ public sealed class UninstallLauncher : IUninstallLauncher
             return false;
         }
 
-        var root = new[] { TrustedPaths.ProgramFiles, TrustedPaths.ProgramFilesX86, TrustedPaths.Windows, TrustedPaths.PackageCache }
-            .FirstOrDefault(r => TrustedPaths.IsUnder(path, r));
-        return root is not null && TrustedPaths.HasNoLinks(path, root) && TrustedPaths.OnlyAdminsCanWrite(path, root);
+        // Jamais un exécutable de Windows : rundll32, cmd, mshta… lanceraient un fichier que rien ne vérifie.
+        var root = Roots.FirstOrDefault(r => TrustedPaths.IsUnder(path, r));
+        return root is not null && TrustedPaths.HasNoLinks(path, root)
+               && TrustedPaths.OnlyAdminsCanWrite(path, root, includeRoot: root == TrustedPaths.PackageCache);
+    }
+
+    /// <summary>Tout chemin cité dans les arguments doit lui aussi être dans un dossier réservé aux administrateurs.</summary>
+    public bool AreArgumentsTrusted(string arguments)
+    {
+        foreach (var candidate in PathsIn(arguments ?? string.Empty))
+        {
+            var path = TrustedPaths.Normalize(candidate);
+            var root = path is null ? null : Roots.FirstOrDefault(r => TrustedPaths.IsUnder(path, r) || path.Equals(r.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase));
+            if (path is null || root is null || !TrustedPaths.HasNoLinks(path, root)
+                || (File.Exists(path) && !TrustedPaths.OnlyAdminsCanWrite(path, root, includeRoot: root == TrustedPaths.PackageCache)))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string[] Roots => [TrustedPaths.ProgramFiles, TrustedPaths.ProgramFilesX86, TrustedPaths.PackageCache];
+
+    /// <summary>Chemins « X:\… » : entre guillemets, ou jusqu'au prochain « / », « - » précédé d'un espace, ou la fin.</summary>
+    internal static IEnumerable<string> PathsIn(string arguments)
+    {
+        for (var i = 0; i + 2 < arguments.Length; i++)
+        {
+            if (!char.IsAsciiLetter(arguments[i]) || arguments[i + 1] != ':' || arguments[i + 2] != '\\' || (i > 0 && char.IsAsciiLetterOrDigit(arguments[i - 1])))
+            {
+                continue;
+            }
+
+            var quoted = i > 0 && arguments[i - 1] == '"';
+            var end = quoted ? arguments.IndexOf('"', i) : NextSwitch(arguments, i);
+            if (end < 0)
+            {
+                end = arguments.Length;
+            }
+
+            var path = arguments[i..end].Trim();
+            var comma = path.IndexOf(',', StringComparison.Ordinal); // rundll32 « fichier.dll,Point d'entrée »
+            yield return comma > 0 ? path[..comma] : path;
+            i = end;
+        }
+    }
+
+    private static int NextSwitch(string text, int start)
+    {
+        for (var i = start; i + 1 < text.Length; i++)
+        {
+            if (text[i] == ' ' && text[i + 1] is '/' or '-')
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public async Task<int> RunAsync(string executable, string arguments, bool hidden, TimeSpan timeout, CancellationToken cancellationToken)
     {
-        if (!IsTrusted(executable))
+        if (!IsTrusted(executable) || !AreArgumentsTrusted(arguments))
         {
             throw new InvalidOperationException("Uninstaller is not in a protected folder");
         }
@@ -178,7 +276,10 @@ public sealed class Quarantine(IClock clock) : IQuarantine
         "Common Files", "WindowsApps", "ModifiableWindowsApps", "Windows Defender", "Windows Defender Advanced Threat Protection", "Windows NT",
         "Windows Mail", "Windows Media Player", "Windows Photo Viewer", "Windows Sidebar", "WindowsPowerShell", "Windows Security",
         "Microsoft", "Microsoft Office", "Microsoft Update Health Tools", "Internet Explorer", "Reference Assemblies", "MSBuild", "dotnet",
-        "Uninstall Information", "PCDoc",
+        "Uninstall Information", "PCDoc", "Microsoft SQL Server", "Microsoft Visual Studio", "Microsoft Visual Studio 14.0", "Windows Kits",
+        "Microsoft SDKs", "Microsoft.NET", "Intel", "NVIDIA Corporation", "AMD", "ATI Technologies", "Realtek", "Dolby", "Synaptics",
+        "Elantech", "Conexant", "Qualcomm", "Broadcom", "Dell", "HP", "Hewlett-Packard", "Lenovo", "ASUS", "Acer", "MSI", "Logitech",
+        "Google", "Mozilla Maintenance Service", "Java", "Oracle", "Package Cache", "Installer", "MSBuild",
     };
 
     private static string Root => SecureFolders.Ensure(Path.Combine(SecureFolders.Root, "quarantine"));
@@ -198,6 +299,9 @@ public sealed class Quarantine(IClock clock) : IQuarantine
             throw new InvalidOperationException("Quarantine refused");
         }
 
+        // Avant de déplacer : propriétaire Administrateurs et droits hérités partout, sinon un compte qui pouvait écrire dans le
+        // dossier de l'application garderait ce droit dans la quarantaine.
+        TrustedPaths.ResetToInherited(originalPath);
         Directory.Move(originalPath, quarantinePath);
     }
 
@@ -216,10 +320,12 @@ public sealed class Quarantine(IClock clock) : IQuarantine
 
     public bool IsLeftoverCandidate(string path)
     {
-        if (TrustedPaths.Normalize(path) is not { } full)
+        if (TrustedPaths.Normalize(path) is not { } normalized)
         {
             return false;
         }
+
+        var full = TrustedPaths.LongPath(normalized).TrimEnd('\\');
 
         foreach (var root in new[] { TrustedPaths.ProgramFiles, TrustedPaths.ProgramFilesX86 }.Distinct(StringComparer.OrdinalIgnoreCase))
         {
@@ -241,15 +347,8 @@ public sealed class Quarantine(IClock clock) : IQuarantine
             if (dir.Name.Length >= 15 && DateTime.TryParseExact(dir.Name[..15], "yyyyMMdd-HHmmss", CultureInfo.InvariantCulture,
                     DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var stamp) && stamp < limit)
             {
-                try
-                {
-                    // Directory.Delete ne suit pas les liens : il supprime le lien, jamais sa cible.
-                    dir.Delete(recursive: true);
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-                {
-                    // Fichier en cours d'utilisation : nouvel essai au prochain démarrage.
-                }
+                // Suppression par handles vérifiés : un lien glissé dans l'arbre est supprimé lui-même, jamais suivi.
+                CleanupFileSystem.DeleteTree(dir.FullName, Root);
             }
         }
     }
@@ -265,9 +364,10 @@ public sealed partial class AppDisplayNames : IAppDisplayNames
     public string? Resolve(StorePackage package)
     {
         ArgumentNullException.ThrowIfNull(package);
-        if (package.InstallLocation is not { Length: > 0 } location)
+        if (package.InstallLocation is not { Length: > 0 } raw0 || TrustedPaths.Normalize(raw0) is not { } location
+            || !(TrustedPaths.IsUnder(location, Path.Combine(TrustedPaths.ProgramFiles, "WindowsApps")) || TrustedPaths.IsUnder(location, TrustedPaths.Windows)))
         {
-            return null;
+            return null; // paquet de développement ou partage réseau : manifeste non lu en administrateur
         }
 
         var raw = ReadDisplayName(Path.Combine(location, "AppxManifest.xml"));

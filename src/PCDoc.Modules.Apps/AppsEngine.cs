@@ -55,10 +55,12 @@ public sealed class AppsEngine(
         }
 
         var items = apps.Select(Classify).OrderBy(i => i.App.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+        var used = await Task.Run(win32.UsedFolders, cancellationToken).ConfigureAwait(false);
         lock (_gate)
         {
             _items = items.GroupBy(i => i.App.Id, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First(), StringComparer.Ordinal);
-            _leftovers.RemoveAll(path => !quarantine.DirectoryExists(path));
+            // Un reste réinstallé (ou réutilisé par un autre programme) n'est plus un reste.
+            _leftovers.RemoveAll(path => !quarantine.DirectoryExists(path) || Overlaps(path, used));
             return new AppsReport(items, [.. _leftovers]);
         }
     }
@@ -68,7 +70,16 @@ public sealed class AppsEngine(
         ArgumentNullException.ThrowIfNull(app);
         var entry = catalog.Match(app);
         var plan = UninstallPlanner.Plan(app, launcher);
-        var risk = app.Kind == AppKind.Store && (app.NonRemovable || app.IsFramework) ? RiskLevel.Locked : entry?.Risk ?? RiskLevel.Safe;
+        if (plan?.Method == UninstallMethod.Store && app.PackageFullName is null && entry?.IsBloat != true)
+        {
+            plan = null; // paquet provisionné seul et hors catalogue : on ne retire pas l'image de Windows
+        }
+
+        // Paquet Microsoft absent du catalogue : peut être un composant de Windows (langue, codec…) → 🟠, jamais en mode novice.
+        var unknownDefault = app.Kind == AppKind.Store && (app.Publisher?.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) ?? true)
+            ? RiskLevel.Conditional
+            : RiskLevel.Safe;
+        var risk = app.Kind == AppKind.Store && (app.NonRemovable || app.IsFramework) ? RiskLevel.Locked : entry?.Risk ?? unknownDefault;
         return new AppItem(app, risk, entry, plan);
     }
 
@@ -80,13 +91,22 @@ public sealed class AppsEngine(
         }
     }
 
+    /// <summary>Reste noté et toujours inutilisé (vérifié à nouveau dans le registre au moment de la correction).</summary>
     public bool IsPendingLeftover(string path)
     {
         lock (_gate)
         {
-            return _leftovers.Contains(path, StringComparer.OrdinalIgnoreCase);
+            if (!_leftovers.Contains(path, StringComparer.OrdinalIgnoreCase))
+            {
+                return false;
+            }
         }
+
+        return !Overlaps(path, win32.UsedFolders());
     }
+
+    private static bool Overlaps(string folder, IEnumerable<string> used) =>
+        used.Any(u => IsInside(u, folder) || IsInside(folder, u));
 
     public void ForgetLeftover(string path)
     {
@@ -117,12 +137,12 @@ public sealed class AppsEngine(
                     .ConfigureAwait(false);
                 break;
             case UninstallMethod.Store:
-                await RemoveStoreAsync(app, cancellationToken).ConfigureAwait(false);
+                await RemoveStoreAsync(item, cancellationToken).ConfigureAwait(false);
                 return;
         }
 
         // Beaucoup de désinstalleurs se relancent depuis une copie temporaire et rendent la main tout de suite.
-        var wait = plan.Method == UninstallMethod.Interactive ? TimeSpan.FromMinutes(10) : TimeSpan.FromMinutes(2);
+        var wait = TimeSpan.FromMinutes(10);
         for (var waited = TimeSpan.Zero; win32.StillInstalled(app); waited += TimeSpan.FromSeconds(2))
         {
             if (waited >= wait)
@@ -136,18 +156,20 @@ public sealed class AppsEngine(
         RecordLeftover(app);
     }
 
-    private async Task RemoveStoreAsync(InstalledApp app, CancellationToken cancellationToken)
+    private async Task RemoveStoreAsync(AppItem item, CancellationToken cancellationToken)
     {
-        var profile = profiles.Resolve();
-        var user = profile.IsProcessUser || !StoreAppReader.IsSid(profile.Sid) ? string.Empty : $" -User '{profile.Sid}'";
+        var app = item.App;
+        var user = StoreAppReader.UserArgument(profiles.Resolve());
+        var name = BloatwareCatalog.StoreName(app);
         var lines = new List<string> { "$ErrorActionPreference = 'Stop'", "try {" };
-        if (StoreAppReader.IsSafeName(app.PackageFullName))
+        if (StoreAppReader.IsSafeName(app.PackageFullName) && StoreAppReader.IsSafeName(name))
         {
             lines.Add($"  Remove-AppxPackage -Package '{app.PackageFullName}'{user}");
+            lines.Add($"  if (Get-AppxPackage -Name '{name}'{user}) {{ Write-Output 'Still installed'; exit 2 }}");
         }
 
-        // Une application préinstallée est aussi retirée de l'image : elle ne revient pas pour les nouveaux comptes.
-        if (StoreAppReader.IsSafeName(app.ProvisionedName))
+        // Une application préinstallée du catalogue est aussi retirée de l'image : elle ne revient pas pour les nouveaux comptes.
+        if (item.IsBloat && StoreAppReader.IsSafeName(app.ProvisionedName))
         {
             lines.Add($"  Remove-AppxProvisionedPackage -Online -PackageName '{app.ProvisionedName}' | Out-Null");
         }
@@ -156,6 +178,8 @@ public sealed class AppsEngine(
         {
             throw new InvalidOperationException("Invalid package name");
         }
+
+        lines[0] = StoreAppReader.Preamble + lines[0];
 
         lines.Add("  exit 0");
         lines.Add("} catch { Write-Output $_.Exception.Message; exit 1 }");
@@ -173,7 +197,15 @@ public sealed class AppsEngine(
     {
         var folder = app.InstallLocation
                      ?? (UninstallPlanner.Split(app.UninstallString) is { } cmd && cmd.Exe.LastIndexOf('\\') is > 2 and var slash ? cmd.Exe[..slash] : null);
-        if (string.IsNullOrWhiteSpace(folder) || !quarantine.IsLeftoverCandidate(folder) || !quarantine.DirectoryExists(folder))
+        // Sans InstallLocation, le dossier du désinstalleur n'est retenu qu'à deux niveaux au moins sous Program Files
+        // (« Program Files\Éditeur\Application ») : jamais le dossier commun d'un éditeur.
+        if (app.InstallLocation is null && folder is not null && folder.Count(c => c == '\\') < 3)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(folder) || !quarantine.IsLeftoverCandidate(folder) || !quarantine.DirectoryExists(folder)
+            || Overlaps(folder, win32.UsedFolders()))
         {
             return;
         }

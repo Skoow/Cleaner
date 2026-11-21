@@ -20,6 +20,13 @@ public sealed class FakeRegistryReader : IRegistryReader
         return this;
     }
 
+    /// <summary>Supprime une clé (et ses valeurs), comme un désinstalleur.</summary>
+    public FakeRegistryReader Remove(RegistryHive hive, string path, RegistryView view = RegistryView.Default)
+    {
+        _keys.Remove((hive, view, path.ToUpperInvariant()));
+        return this;
+    }
+
     public IReadOnlyList<string> GetValueNames(RegistryHive hive, string path, RegistryView view = RegistryView.Default) =>
         _keys.TryGetValue((hive, view, path.ToUpperInvariant()), out var values) ? [.. values.Keys] : [];
 

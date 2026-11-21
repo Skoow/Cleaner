@@ -39,6 +39,8 @@ internal sealed class FakeLauncher : IUninstallLauncher
         return Task.FromResult(0);
     }
 
+    public bool AreArgumentsTrusted(string arguments) => !arguments.Contains(@"C:\ProgramData", StringComparison.OrdinalIgnoreCase);
+
     public bool IsTrusted(string executable) =>
         executable.StartsWith(@"C:\Program Files", StringComparison.OrdinalIgnoreCase) && executable.EndsWith(".exe", StringComparison.OrdinalIgnoreCase);
 }

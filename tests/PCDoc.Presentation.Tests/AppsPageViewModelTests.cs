@@ -59,4 +59,19 @@ public sealed class AppsPageViewModelTests
         vm.Installed.Single(r => r.Name == "Visual C++").CanUninstall.Should().Be(discouragedOffered);
         vm.Installed.Single(r => r.Name == "Chat").CanUninstall.Should().BeFalse("aucune méthode de désinstallation");
     }
+
+    [Fact]
+    public async Task Unticking_Everything_SurvivesSearchAndRebuild()
+    {
+        var vm = await Make();
+        foreach (var row in vm.Preinstalled)
+        {
+            row.IsSelected = false;
+        }
+
+        vm.SearchText = "w";
+        vm.SearchText = string.Empty;
+
+        vm.Preinstalled.Should().OnlyContain(r => !r.IsSelected);
+    }
 }

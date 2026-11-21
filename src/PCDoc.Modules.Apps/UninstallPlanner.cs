@@ -44,19 +44,21 @@ public static class UninstallPlanner
             return new UninstallPlan(UninstallMethod.Msi, "msiexec.exe", $"/x {app.ProductCode} /qn /norestart");
         }
 
-        if (Split(app.QuietUninstallString) is { } quiet && launcher.IsTrusted(quiet.Exe))
+        var command = Split(app.UninstallString);
+        bool Trusted((string Exe, string Args)? c) => c is { } x && launcher.IsTrusted(x.Exe) && launcher.AreArgumentsTrusted(x.Args);
+
+        // Inno Setup écrit QuietUninstallString avec /SILENT (fenêtre de progression) : /VERYSILENT passe avant.
+        if (app.RegistryPath?.EndsWith("_is1", StringComparison.OrdinalIgnoreCase) == true && Trusted(command))
+        {
+            return new UninstallPlan(UninstallMethod.Silent, command!.Value.Exe, Join(command.Value.Args, InnoSilent));
+        }
+
+        if (Split(app.QuietUninstallString) is { } quiet && Trusted(quiet))
         {
             return new UninstallPlan(UninstallMethod.Silent, quiet.Exe, quiet.Args);
         }
 
-        if (Split(app.UninstallString) is not { } command || !launcher.IsTrusted(command.Exe))
-        {
-            return null;
-        }
-
-        return app.RegistryPath?.EndsWith("_is1", StringComparison.OrdinalIgnoreCase) == true
-            ? new UninstallPlan(UninstallMethod.Silent, command.Exe, Join(command.Args, InnoSilent))
-            : new UninstallPlan(UninstallMethod.Interactive, command.Exe, command.Args);
+        return Trusted(command) ? new UninstallPlan(UninstallMethod.Interactive, command!.Value.Exe, command.Value.Args) : null;
     }
 
     /// <summary>Sépare l'exécutable (entre guillemets, ou jusqu'au premier « .exe ») de ses arguments.</summary>
@@ -78,6 +80,10 @@ public static class UninstallPlanner
         return exe < 0 ? null : (text[..(exe + 4)], text[(exe + 4)..].Trim());
     }
 
-    private static string Join(string args, string extra) =>
-        args.Contains("/VERYSILENT", StringComparison.OrdinalIgnoreCase) ? args : (args + " " + extra).Trim();
+    private static string Join(string args, string extra)
+    {
+        var kept = string.Join(' ', args.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Where(a => !a.Equals("/SILENT", StringComparison.OrdinalIgnoreCase) && !a.Equals("/VERYSILENT", StringComparison.OrdinalIgnoreCase)));
+        return (kept + " " + extra).Trim();
+    }
 }

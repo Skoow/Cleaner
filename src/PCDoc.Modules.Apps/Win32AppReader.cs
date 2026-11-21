@@ -45,10 +45,59 @@ public sealed partial class Win32AppReader(IRegistryReader registry)
                && registry.GetValue(app.Scope == AppScope.User ? RegistryHive.TargetUser : RegistryHive.LocalMachine, path, "DisplayName", app.View) is string;
     }
 
+    /// <summary>
+    /// Dossiers utilisés par tout ce qui est encore installé, y compris les entrées masquées (composants, mises à jour) et
+    /// les services : un « reste » qui en contient un, ou qui est dedans, n'est jamais proposé.
+    /// </summary>
+    public IReadOnlyList<string> UsedFolders()
+    {
+        var folders = new List<string>();
+        void Add(string? value, bool isFile)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
+            var text = Environment.ExpandEnvironmentVariables(value.Trim());
+            var path = isFile ? UninstallPlanner.Split(text)?.Exe ?? text.Split(',')[0].Trim('"') : text.Trim('"');
+            if (isFile && path.LastIndexOf('\\') is > 2 and var slash)
+            {
+                path = path[..slash];
+            }
+
+            if (path.Length > 3 && path[1] == ':')
+            {
+                folders.Add(path.TrimEnd('\\'));
+            }
+        }
+
+        foreach (var (hive, view) in Sources)
+        {
+            foreach (var key in registry.GetSubKeyNames(hive, UninstallPath, view))
+            {
+                var path = $@"{UninstallPath}\{key}";
+                Add(registry.GetValue(hive, path, "InstallLocation", view) as string, isFile: false);
+                Add(registry.GetValue(hive, path, "UninstallString", view) as string, isFile: true);
+                Add(registry.GetValue(hive, path, "DisplayIcon", view) as string, isFile: true);
+            }
+        }
+
+        const string services = @"SYSTEM\CurrentControlSet\Services";
+        foreach (var name in registry.GetSubKeyNames(RegistryHive.LocalMachine, services))
+        {
+            Add(registry.GetValue(RegistryHive.LocalMachine, $@"{services}\{name}", "ImagePath") as string, isFile: true);
+        }
+
+        return folders;
+    }
+
     private InstalledApp? ReadOne(RegistryHive hive, RegistryView view, string key)
     {
         var path = $@"{UninstallPath}\{key}";
-        string? Text(string name) => registry.GetValue(hive, path, name, view) is string s && !string.IsNullOrWhiteSpace(s) ? s.Trim() : null;
+        string? Text(string name) => registry.GetValue(hive, path, name, view) is string s && !string.IsNullOrWhiteSpace(s)
+            ? Environment.ExpandEnvironmentVariables(s.Trim())
+            : null;
         int? Number(string name) => registry.GetValue(hive, path, name, view) is int i ? i : null;
 
         var name = Text("DisplayName");

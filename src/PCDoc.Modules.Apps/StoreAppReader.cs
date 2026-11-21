@@ -15,14 +15,33 @@ public sealed partial class StoreAppReader(IProcessRunner runner, IAppDisplayNam
 
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(3);
 
+    /// <summary>
+    /// Début de chaque script : modules de Windows seulement ($PSHOME vient de l'emplacement de powershell.exe), chargés
+    /// par chemin complet, avant tout appel de commande (aucune commande d'un module de l'utilisateur ne peut s'exécuter).
+    /// </summary>
+    public const string Preamble = "$env:PSModulePath = $PSHOME + '\\Modules'\n"
+                                   + "Import-Module ($PSHOME + '\\Modules\\Appx') -ErrorAction Stop\n"
+                                   + "Import-Module ($PSHOME + '\\Modules\\Dism') -ErrorAction Stop\n";
+
+    /// <summary>« -User 'SID' » si le profil cible n'est pas celui du processus ; SID invalide → refus (jamais un autre compte).</summary>
+    public static string UserArgument(UserProfile profile)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        if (profile.IsProcessUser)
+        {
+            return string.Empty;
+        }
+
+        return IsSid(profile.Sid) ? $" -User '{profile.Sid}'" : throw new InvalidOperationException("Invalid target user SID");
+    }
+
     public async Task<IReadOnlyList<InstalledApp>> ReadAsync(CancellationToken cancellationToken)
     {
-        var profile = profiles.Resolve();
-        var user = profile.IsProcessUser || !Sid().IsMatch(profile.Sid) ? string.Empty : $" -User '{profile.Sid}'";
-        var script = $$"""
-            $ErrorActionPreference = 'SilentlyContinue'
-            $p = @(Get-AppxPackage{{user}} | ForEach-Object { [pscustomobject]@{ N = $_.Name; F = $_.PackageFullName; Fa = $_.PackageFamilyName; P = $_.Publisher; V = [string]$_.Version; L = $_.InstallLocation; Fw = [bool]$_.IsFramework; Nr = [bool]$_.NonRemovable; S = [string]$_.SignatureKind } })
-            $v = @(Get-AppxProvisionedPackage -Online | ForEach-Object { [pscustomobject]@{ D = $_.DisplayName; N = $_.PackageName } })
+        var user = UserArgument(profiles.Resolve());
+        var script = Preamble + $$"""
+            $ErrorActionPreference = 'Stop'
+            try { $p = @(Get-AppxPackage{{user}} | ForEach-Object { [pscustomobject]@{ N = $_.Name; F = $_.PackageFullName; Fa = $_.PackageFamilyName; P = $_.Publisher; V = [string]$_.Version; L = $_.InstallLocation; Fw = [bool]$_.IsFramework; Nr = [bool]$_.NonRemovable; S = [string]$_.SignatureKind } }) } catch { Write-Output $_.Exception.Message; exit 1 }
+            try { $v = @(Get-AppxProvisionedPackage -Online | ForEach-Object { [pscustomobject]@{ D = $_.DisplayName; N = $_.PackageName } }) } catch { $v = @() }
             $j = [pscustomobject]@{ Packages = $p; Provisioned = $v } | ConvertTo-Json -Compress -Depth 3
             'PCDOC:' + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($j))
             """;

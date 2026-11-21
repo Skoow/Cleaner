@@ -25,6 +25,7 @@ public class AppsTests
         Add(MsiCode, RegistryView.Registry64, ("DisplayName", "Contoso Viewer"), ("WindowsInstaller", 1), ("EstimatedSize", 2048),
             ("InstallDate", "20250102"), ("UninstallString", $"MsiExec.exe /X{MsiCode}"), ("Publisher", "Contoso"));
         Add("Notes_is1", RegistryView.Registry32, ("DisplayName", "Notes"), ("UninstallString", "\"C:\\Program Files (x86)\\Notes\\unins000.exe\""),
+            ("QuietUninstallString", "\"C:\\Program Files (x86)\\Notes\\unins000.exe\" /SILENT"),
             ("InstallLocation", @"C:\Program Files (x86)\Notes\"));
         Add("Player", RegistryView.Registry64, ("DisplayName", "Player"), ("UninstallString", @"C:\Program Files\Player\uninstall.exe /x"));
         Add("Quiet", RegistryView.Registry64, ("DisplayName", "Quiet"), ("UninstallString", @"C:\Program Files\Quiet\u.exe"),
@@ -34,6 +35,7 @@ public class AppsTests
         Add("KB1", RegistryView.Registry64, ("DisplayName", "Update"), ("ParentKeyName", "Office"));
         Add("Patch", RegistryView.Registry64, ("DisplayName", "Patch"), ("ReleaseType", "Security Update"));
         Add("NoName", RegistryView.Registry64, ("UninstallString", @"C:\Program Files\x.exe"));
+        Add("Dll", RegistryView.Registry64, ("DisplayName", "Dll tool"), ("UninstallString", @"C:\Program Files\Dll\u.exe C:\ProgramData\Vendor\x.dll,Uninstall"));
         Add("Edge", RegistryView.Registry64, ("DisplayName", "Microsoft Edge WebView2 Runtime"), ("UninstallString", @"C:\Program Files\E\setup.exe"));
         Add("Vc", RegistryView.Registry64, ("DisplayName", "Microsoft Visual C++ 2015-2022 Redistributable"), ("UninstallString", @"C:\Program Files\vc.exe"));
         r.Set(RegistryHive.TargetUser, $@"{Key}\Chat", "DisplayName", "Chat");
@@ -52,12 +54,15 @@ public class AppsTests
             new { N = "Microsoft.VCLibs.140.00", F = "Microsoft.VCLibs.140.00_14.0_x64__8wekyb3d8bbwe", Fa = "Microsoft.VCLibs.140.00_8wekyb3d8bbwe", P = "CN=Microsoft", V = "14.0", L = (string?)null, Fw = true, Nr = false, S = "Store" },
             new { N = "Microsoft.Windows.ShellExperienceHost", F = "Microsoft.Windows.ShellExperienceHost_10.0_neutral_neutral_cw5n1h2txyewy", Fa = "Microsoft.Windows.ShellExperienceHost_cw5n1h2txyewy", P = "CN=Microsoft", V = "10.0", L = (string?)null, Fw = false, Nr = true, S = "System" },
             new { N = "Evil", F = "Evil'; Remove-Item C:\\ -Recurse; '", Fa = "Evil_x", P = "x", V = "1", L = (string?)null, Fw = false, Nr = false, S = "Store" },
+            new { N = "Microsoft.LanguageExperiencePackfr-FR", F = "Microsoft.LanguageExperiencePackfr-FR_1.0_neutral__8wekyb3d8bbwe", Fa = "Microsoft.LanguageExperiencePackfr-FR_8wekyb3d8bbwe", P = "CN=Microsoft Corporation, O=Microsoft Corporation, C=US", V = "1.0", L = (string?)null, Fw = false, Nr = false, S = "Store" },
+            new { N = "Microsoft.Unknown", F = "Microsoft.Unknown_1.0_x64__8wekyb3d8bbwe", Fa = "Microsoft.Unknown_8wekyb3d8bbwe", P = "CN=Microsoft Corporation, O=Microsoft Corporation, C=US", V = "1.0", L = (string?)null, Fw = false, Nr = false, S = "Store" },
             new { N = "SpotifyAB.SpotifyMusic", F = "SpotifyAB.SpotifyMusic_1.0_x86__zpdnekdrzrea0", Fa = "SpotifyAB.SpotifyMusic_zpdnekdrzrea0", P = "CN=Spotify", V = "1.0", L = (string?)null, Fw = false, Nr = false, S = "Developer" },
         },
         Provisioned = new object[]
         {
             new { D = "Microsoft.BingWeather", N = "Microsoft.BingWeather_4.53.0.0_neutral_~_8wekyb3d8bbwe" },
             new { D = "Microsoft.BingNews", N = "Microsoft.BingNews_4.1.0.0_neutral_~_8wekyb3d8bbwe" },
+            new { D = "Microsoft.Other", N = "Microsoft.Other_1.0_neutral_~_8wekyb3d8bbwe" },
         },
     };
 
@@ -87,7 +92,7 @@ public class AppsTests
         var report = await engine.AnalyzeAsync(CancellationToken.None);
 
         report.Apps.Select(a => a.App.Name).Should().BeEquivalentTo(
-            "Contoso Viewer", "Notes", "Player", "Quiet", "Evil", "Microsoft Edge WebView2 Runtime", "Microsoft Visual C++ 2015-2022 Redistributable",
+            "Contoso Viewer", "Notes", "Player", "Quiet", "Evil", "Dll tool", "Microsoft.LanguageExperiencePackfr-FR", "Microsoft.Unknown", "Microsoft.Other", "Microsoft Edge WebView2 Runtime", "Microsoft Visual C++ 2015-2022 Redistributable",
             "Chat", "Météo", "Microsoft.VCLibs.140.00", "Microsoft.Windows.ShellExperienceHost", "SpotifyAB.SpotifyMusic", "Microsoft.BingNews");
         var viewer = Item(report, "Contoso Viewer").App;
         viewer.ProductCode.Should().Be(MsiCode);
@@ -119,6 +124,37 @@ public class AppsTests
         Item(report, "Météo").Should().Match<AppItem>(a => a.IsBloat && a.Risk == RiskLevel.Safe && a.CanUninstall);
         Item(report, "SpotifyAB.SpotifyMusic").Entry!.Reason.Should().Be(BloatReason.Promo);
         Item(report, "Player").Risk.Should().Be(RiskLevel.Safe);
+        Item(report, "Dll tool").CanUninstall.Should().BeFalse("un fichier cité dans les arguments n'est pas protégé");
+        Item(report, "Microsoft.LanguageExperiencePackfr-FR").Risk.Should().Be(RiskLevel.Locked);
+        Item(report, "Microsoft.Unknown").Risk.Should().Be(RiskLevel.Conditional, "paquet Microsoft inconnu : peut être un composant");
+        Item(report, "Microsoft.Other").CanUninstall.Should().BeFalse("paquet provisionné seul hors catalogue");
+    }
+
+    [Fact]
+    public async Task Leftover_ReinstalledFolder_IsDropped()
+    {
+        var (engine, _, launcher, quarantine, registry) = Create();
+        const string folder = @"C:\Program Files (x86)\Notes";
+        quarantine.Folders.Add(folder);
+        var report = await engine.AnalyzeAsync(CancellationToken.None);
+        launcher.OnRun = () => registry.Remove(RegistryHive.LocalMachine, $@"{Key}\Notes_is1", RegistryView.Registry32);
+        await engine.UninstallAsync(Item(report, "Notes"), CancellationToken.None);
+        engine.IsPendingLeftover(folder).Should().BeTrue();
+
+        registry.Set(RegistryHive.LocalMachine, $@"{Key}\Notes2", "InstallLocation", folder, RegistryView.Registry64);
+
+        engine.IsPendingLeftover(folder).Should().BeFalse("réinstallé dans le même dossier");
+        (await engine.AnalyzeAsync(CancellationToken.None)).Leftovers.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Store_InvalidTargetSid_FailsClosed()
+    {
+        var profile = new UserProfile("not-a-sid", "x", "", "", "", IsProcessUser: false);
+
+        var act = () => StoreAppReader.UserArgument(profile);
+
+        act.Should().Throw<InvalidOperationException>();
     }
 
     [Fact]
@@ -128,7 +164,7 @@ public class AppsTests
         var report = await engine.AnalyzeAsync(CancellationToken.None);
         runner.Respond = (tool, _) =>
         {
-            registry.Set(RegistryHive.LocalMachine, $@"{Key}\{MsiCode}", "DisplayName", null, RegistryView.Registry64);
+            registry.Remove(RegistryHive.LocalMachine, $@"{Key}\{MsiCode}", RegistryView.Registry64);
             return (3010, []);
         };
 
@@ -156,7 +192,7 @@ public class AppsTests
         const string folder = @"C:\Program Files (x86)\Notes";
         quarantine.Folders.Add(folder);
         var report = await engine.AnalyzeAsync(CancellationToken.None);
-        launcher.OnRun = () => registry.Set(RegistryHive.LocalMachine, $@"{Key}\Notes_is1", "DisplayName", null, RegistryView.Registry32);
+        launcher.OnRun = () => registry.Remove(RegistryHive.LocalMachine, $@"{Key}\Notes_is1", RegistryView.Registry32);
 
         await engine.UninstallAsync(Item(report, "Notes"), CancellationToken.None);
         (await engine.AnalyzeAsync(CancellationToken.None)).Leftovers.Should().Equal(folder);
@@ -182,7 +218,7 @@ public class AppsTests
         registry.Set(RegistryHive.LocalMachine, $@"{Key}\Plugin", "InstallLocation", @"C:\Program Files (x86)\Notes\plugins", RegistryView.Registry64);
         quarantine.Folders.Add(@"C:\Program Files (x86)\Notes");
         var report = await engine.AnalyzeAsync(CancellationToken.None);
-        launcher.OnRun = () => registry.Set(RegistryHive.LocalMachine, $@"{Key}\Notes_is1", "DisplayName", null, RegistryView.Registry32);
+        launcher.OnRun = () => registry.Remove(RegistryHive.LocalMachine, $@"{Key}\Notes_is1", RegistryView.Registry32);
 
         await engine.UninstallAsync(Item(report, "Notes"), CancellationToken.None);
 
@@ -203,6 +239,7 @@ public class AppsTests
         script.Should().Contain("Remove-AppxPackage -Package 'Microsoft.BingWeather_4.53.0.0_x64__8wekyb3d8bbwe'")
             .And.Contain("Remove-AppxProvisionedPackage -Online -PackageName 'Microsoft.BingWeather_4.53.0.0_neutral_~_8wekyb3d8bbwe'");
         script.Contains($"-User '{FakeProfiles.Sid}'", StringComparison.Ordinal).Should().Be(expectUserArgument);
+        script.Should().StartWith("$env:PSModulePath = $PSHOME").And.Contain("if (Get-AppxPackage -Name 'Microsoft.BingWeather'");
         FakeRunner.Script(runner.Calls[0].Args).Contains("-User", StringComparison.Ordinal).Should().Be(expectUserArgument);
     }
 

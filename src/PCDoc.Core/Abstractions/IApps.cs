@@ -63,6 +63,9 @@ public interface IUninstallLauncher
 
     /// <summary>Vrai si le chemin est un exécutable existant dans un dossier réservé aux administrateurs.</summary>
     bool IsTrusted(string executable);
+
+    /// <summary>Vrai si chaque chemin cité dans les arguments est lui aussi dans un dossier réservé aux administrateurs.</summary>
+    bool AreArgumentsTrusted(string arguments);
 }
 
 /// <summary>Quarantaine des restes : déplacement réversible dans le dossier protégé, purge après quelques jours.</summary>

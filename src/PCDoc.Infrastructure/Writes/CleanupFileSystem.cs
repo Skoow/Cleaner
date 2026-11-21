@@ -89,7 +89,49 @@ public sealed partial class CleanupFileSystem : IFileSystem
         }
     }
 
-    private static bool DeleteByHandle(string path, string allowedRoot, bool directory)
+    /// <summary>
+    /// Supprime une arborescence sans jamais suivre de lien : les liens sont supprimés eux-mêmes, et chaque élément est
+    /// supprimé par un handle dont le chemin réel est vérifié sous <paramref name="allowedRoot"/>.
+    /// </summary>
+    internal static void DeleteTree(string directory, string allowedRoot)
+    {
+        IEnumerable<FileSystemInfo> items;
+        try
+        {
+            items = [.. new DirectoryInfo(directory).EnumerateFileSystemInfos("*", new EnumerationOptions
+            {
+                RecurseSubdirectories = false,
+                IgnoreInaccessible = true,
+                AttributesToSkip = 0,
+                ReturnSpecialDirectories = false,
+            })];
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        foreach (var item in items)
+        {
+            var isDirectory = item.Attributes.HasFlag(FileAttributes.Directory);
+            if (item.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                DeleteByHandle(item.FullName, allowedRoot, isDirectory, allowLink: true);
+            }
+            else if (isDirectory)
+            {
+                DeleteTree(item.FullName, allowedRoot);
+            }
+            else
+            {
+                DeleteByHandle(item.FullName, allowedRoot, directory: false, allowLink: false, allowHardLinks: true);
+            }
+        }
+
+        DeleteByHandle(directory, allowedRoot, directory: true);
+    }
+
+    private static bool DeleteByHandle(string path, string allowedRoot, bool directory, bool allowLink = false, bool allowHardLinks = false)
     {
         var canonicalRoot = FinalPathOf(allowedRoot, directory: true);
         if (canonicalRoot is null)
@@ -105,10 +147,11 @@ public sealed partial class CleanupFileSystem : IFileSystem
             return false;
         }
 
-        if (!GetFileInformationByHandle(handle, out var info)
-            || (info.Attributes & (uint)FileAttributes.ReparsePoint) != 0
-            || ((info.Attributes & (uint)FileAttributes.Directory) != 0) != directory
-            || (!directory && info.NumberOfLinks != 1))
+        var isLink = GetFileInformationByHandle(handle, out var info) && (info.Attributes & (uint)FileAttributes.ReparsePoint) != 0;
+        if (info.Attributes == 0
+            || (isLink && !allowLink)
+            || (!isLink && ((info.Attributes & (uint)FileAttributes.Directory) != 0) != directory)
+            || (!directory && !isLink && !allowHardLinks && info.NumberOfLinks != 1))
         {
             return false; // lien, mauvais type ou lien physique vers un autre fichier : refusé
         }

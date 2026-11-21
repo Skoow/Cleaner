@@ -42,6 +42,12 @@ public sealed partial class ProcessRunner : IProcessRunner
                 : Encoding.GetEncoding((int)GetOEMCP()),
         };
 
+        if (AllowedSubPaths.Contains(system32Tool))
+        {
+            // PowerShell : modules de Windows seulement (jamais ceux du profil ou d'un PSModulePath choisi par l'utilisateur).
+            start.Environment["PSModulePath"] = Path.Combine(Environment.SystemDirectory, @"WindowsPowerShell\v1.0\Modules");
+        }
+
         using var process = new Process { StartInfo = start, EnableRaisingEvents = true };
         process.OutputDataReceived += (_, e) => Forward(e.Data, onOutput);
         process.ErrorDataReceived += (_, e) => Forward(e.Data, onOutput);
