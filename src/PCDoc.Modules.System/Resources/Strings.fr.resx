@@ -191,4 +191,14 @@
   <data name="Toggle.Disable.Title" xml:space="preserve"><value>Désactiver « {0} »</value></data>
   <data name="Toggle.Enable.Title" xml:space="preserve"><value>Réactiver « {0} »</value></data>
   <data name="Column.Advice" xml:space="preserve"><value>Conseil</value></data>
+  <data name="Lic.Tab" xml:space="preserve"><value>Licences</value></data>
+  <data name="Lic.Intro" xml:space="preserve"><value>Activation de Windows et d'Office, et la clé Windows enregistrée dans le PC par son fabricant (utile pour réinstaller Windows).</value></data>
+  <data name="Lic.Refresh" xml:space="preserve"><value>Lire les licences</value></data>
+  <data name="Lic.Activated" xml:space="preserve"><value>Activé</value></data>
+  <data name="Lic.NotActivated" xml:space="preserve"><value>Non activé</value></data>
+  <data name="Lic.OemKey" xml:space="preserve"><value>Clé Windows d'origine (dans le micrologiciel du PC)</value></data>
+  <data name="Lic.NoOemKey" xml:space="preserve"><value>Aucune clé enregistrée dans ce PC (PC monté, licence numérique ou modèle ancien).</value></data>
+  <data name="Lic.Show" xml:space="preserve"><value>Afficher</value></data>
+  <data name="Lic.Copy" xml:space="preserve"><value>Copier</value></data>
+  <data name="Lic.Key" xml:space="preserve"><value>Clé</value></data>
 </root>

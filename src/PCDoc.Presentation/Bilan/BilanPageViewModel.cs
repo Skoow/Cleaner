@@ -173,12 +173,42 @@ public sealed partial class BilanPageViewModel : ObservableObject
         }
     }
 
+    /// <summary>Informations à masquer dans le rapport pour forum (compte, PC, profil, SID).</summary>
+    public Func<IEnumerable<string?>>? Secrets { get; init; }
+
+    /// <summary>Rapport anonymisé : publiable sur un forum d'entraide (copié et enregistré).</summary>
+    [RelayCommand]
+    private void CopyForumReport()
+    {
+        if (BuildReport() is not { } text)
+        {
+            return;
+        }
+
+        var anonymous = PCDoc.Core.Activity.Anonymizer.Apply(
+            _localizer["Bilan.ForumHeader"] + Environment.NewLine + $"Windows : {Environment.OSVersion.Version}" + Environment.NewLine + text,
+            Secrets?.Invoke() ?? []);
+        _clipboard?.SetText(anonymous);
+        ForumReportCopied = true;
+    }
+
+    [ObservableProperty]
+    private bool _forumReportCopied;
+
     [RelayCommand]
     private void CopyReport()
     {
+        if (BuildReport() is { } text)
+        {
+            _clipboard?.SetText(text);
+        }
+    }
+
+    private string? BuildReport()
+    {
         if (_result is null)
         {
-            return;
+            return null;
         }
 
         var text = new StringBuilder()
@@ -198,7 +228,7 @@ public sealed partial class BilanPageViewModel : ObservableObject
                 .AppendLine(row.TechnicalDetails);
         }
 
-        _clipboard?.SetText(text.ToString());
+        return text.ToString();
     }
 
     partial void OnModuleFilterChanged(string? value) => ApplyFilter();

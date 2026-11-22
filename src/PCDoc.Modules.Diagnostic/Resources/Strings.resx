@@ -122,4 +122,26 @@
   <data name="Assistant.Sound.DeviceError" xml:space="preserve"><value>Audio device in error: {0}. Update its driver (Updates page).</value></data>
   <data name="Assistant.Sound.Device" xml:space="preserve"><value>Sound devices: {0}</value></data>
   <data name="Assistant.Sound.CheckVolume" xml:space="preserve"><value>Check the volume and the output device (speaker icon next to the clock): the right speakers or headphones must be selected.</value></data>
+  <data name="Diag.Tab.Network" xml:space="preserve"><value>Network</value></data>
+  <data name="Net.Info.Intro" xml:space="preserve"><value>Network cards in use, DNS servers, and the Wi-Fi networks saved on this PC.</value></data>
+  <data name="Net.Info.Refresh" xml:space="preserve"><value>Read the network</value></data>
+  <data name="Net.Info.Adapter" xml:space="preserve"><value>Connection</value></data>
+  <data name="Net.Info.Addresses" xml:space="preserve"><value>IP addresses</value></data>
+  <data name="Net.Info.Gateway" xml:space="preserve"><value>Router</value></data>
+  <data name="Net.Info.Dns" xml:space="preserve"><value>DNS</value></data>
+  <data name="Dns.Title" xml:space="preserve"><value>DNS of {0}: {1}</value></data>
+  <data name="Dns.Explanation" xml:space="preserve"><value>Changes the servers that turn website names into addresses. Can be faster or block some malicious sites; a company network may need its own DNS. Reversible from History.</value></data>
+  <data name="Dns.Undo" xml:space="preserve"><value>DNS of {0} changed</value></data>
+  <data name="Dns.Choice.auto" xml:space="preserve"><value>Automatic (router)</value></data>
+  <data name="Dns.Choice.cloudflare" xml:space="preserve"><value>Cloudflare (fast, private)</value></data>
+  <data name="Dns.Choice.quad9" xml:space="preserve"><value>Quad9 (blocks malicious sites)</value></data>
+  <data name="Dns.Choice.google" xml:space="preserve"><value>Google</value></data>
+  <data name="Dns.Apply" xml:space="preserve"><value>Use these DNS</value></data>
+  <data name="Wifi.Title" xml:space="preserve"><value>Saved Wi-Fi networks</value></data>
+  <data name="Wifi.Show" xml:space="preserve"><value>Show the passwords</value></data>
+  <data name="Wifi.Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Wifi.Name" xml:space="preserve"><value>Network</value></data>
+  <data name="Wifi.Security" xml:space="preserve"><value>Security</value></data>
+  <data name="Wifi.Key" xml:space="preserve"><value>Password</value></data>
+  <data name="Wifi.NoKey" xml:space="preserve"><value>(open network or company login)</value></data>
 </root>

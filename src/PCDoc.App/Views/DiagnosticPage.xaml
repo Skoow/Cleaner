@@ -143,6 +143,49 @@
           </ItemsControl>
         </DockPanel>
       </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Network}" DataContext="{Binding Network}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,12,0,0">
+            <TextBlock Text="{app:T Net.Info.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <Button Content="{app:T Net.Info.Refresh}" Command="{Binding RefreshCommand}" HorizontalAlignment="Left" Margin="0,0,0,8"
+                    AutomationProperties.Name="{app:T Net.Info.Refresh}" />
+            <DataGrid ItemsSource="{Binding Adapters}" SelectedItem="{Binding SelectedAdapter}" AutoGenerateColumns="False" IsReadOnly="True"
+                      HeadersVisibility="Column" GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.Network}" MaxHeight="200">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="{app:T Net.Info.Adapter}" Binding="{Binding Title}" Width="2*" />
+                <DataGridTextColumn Header="{app:T Net.Info.Addresses}" Binding="{Binding Addresses}" Width="2*" />
+                <DataGridTextColumn Header="{app:T Net.Info.Gateway}" Binding="{Binding Gateway}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Net.Info.Dns}" Binding="{Binding Dns}" Width="2*" />
+              </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,16">
+              <ComboBox ItemsSource="{Binding DnsOptions}" SelectedItem="{Binding SelectedDns}" DisplayMemberPath="Label" MinWidth="240" Margin="0,0,8,0"
+                        AutomationProperties.Name="{app:T Net.Info.Dns}" />
+              <Button Content="{app:T Dns.Apply}" Command="{Binding ApplyDnsCommand}" AutomationProperties.Name="{app:T Dns.Apply}" />
+            </StackPanel>
+            <TextBlock Text="{app:T Wifi.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />
+            <Button Content="{app:T Wifi.Show}" Command="{Binding ShowWifiKeysCommand}" HorizontalAlignment="Left" Margin="0,4,0,8"
+                    AutomationProperties.Name="{app:T Wifi.Show}" />
+            <DataGrid ItemsSource="{Binding Wifi}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
+                      AutomationProperties.Name="{app:T Wifi.Title}" MaxHeight="260">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="{app:T Wifi.Name}" Binding="{Binding Name}" Width="2*" />
+                <DataGridTextColumn Header="{app:T Wifi.Security}" Binding="{Binding Security}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Wifi.Key}" Binding="{Binding Key}" Width="2*" />
+                <DataGridTemplateColumn Width="Auto">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type d:WifiRow}">
+                      <Button Content="{app:T Wifi.Copy}" Margin="4,2" AutomationProperties.Name="{Binding Name}"
+                              Command="{Binding DataContext.Network.CopyWifiKeyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                              CommandParameter="{Binding}" />
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
       <TabItem Header="{app:T Diag.Tab.Help}">
         <StackPanel Margin="0,12,0,0" MaxWidth="760" HorizontalAlignment="Left">
           <TextBlock Text="{app:T Help.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />

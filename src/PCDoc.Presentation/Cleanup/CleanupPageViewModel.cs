@@ -62,7 +62,11 @@ public sealed partial class CleanupPageViewModel : ObservableObject
         Fixes = fixes;
         if (fixes is not null)
         {
-            fixes.Completed += (_, _) => _ = AnalyzeAsync();
+            fixes.Completed += (_, _) =>
+            {
+                EraseItems.Clear();
+                _ = AnalyzeAsync();
+            };
         }
 
         localizer.PropertyChanged += (_, _) => Build();
@@ -145,6 +149,7 @@ public sealed partial class CleanupPageViewModel : ObservableObject
             Categories.Add(row);
         }
 
+        RefreshDrives();
         BigFiles.Clear();
         foreach (var f in _bigFiles)
         {

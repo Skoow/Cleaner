@@ -113,6 +113,8 @@
         <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" Padding="0,12,0,0" Margin="0,12,0,0"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
           <DockPanel>
+            <Button DockPanel.Dock="Right" Content="{app:T Bilan.ForumReport}" Command="{Binding CopyForumReportCommand}" Margin="8,0,0,0"
+                    ToolTip="{app:T Bilan.ForumReport.Tip}" AutomationProperties.Name="{app:T Bilan.ForumReport}" />
             <Button DockPanel.Dock="Right" Content="{app:T Bilan.CopyReport}" Command="{Binding CopyReportCommand}"
                     AutomationProperties.Name="{app:T Bilan.CopyReport}" />
             <Button DockPanel.Dock="Right" Content="{app:T Bilan.FixAllSafe}" Margin="0,0,8,0" Command="{Binding FixAllCommand}"

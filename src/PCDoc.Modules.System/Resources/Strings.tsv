@@ -186,3 +186,13 @@ Toggle.Enable	Re-enable	Réactiver
 Toggle.Disable.Title	Disable "{0}"	Désactiver « {0} »
 Toggle.Enable.Title	Re-enable "{0}"	Réactiver « {0} »
 Column.Advice	Advice	Conseil
+Lic.Tab	Licenses	Licences
+Lic.Intro	Activation of Windows and Office, and the Windows key stored in the PC by its manufacturer (useful to reinstall Windows).	Activation de Windows et d'Office, et la clé Windows enregistrée dans le PC par son fabricant (utile pour réinstaller Windows).
+Lic.Refresh	Read the licenses	Lire les licences
+Lic.Activated	Activated	Activé
+Lic.NotActivated	Not activated	Non activé
+Lic.OemKey	Original Windows key (in the PC firmware)	Clé Windows d'origine (dans le micrologiciel du PC)
+Lic.NoOemKey	No key stored in this PC (built PC, digital license or older model).	Aucune clé enregistrée dans ce PC (PC monté, licence numérique ou modèle ancien).
+Lic.Show	Show	Afficher
+Lic.Copy	Copy	Copier
+Lic.Key	Key	Clé

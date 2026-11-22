@@ -256,6 +256,30 @@
       <TabItem Header="{app:T System.Tab.Services}">
         <ContentControl ContentTemplate="{StaticResource AutorunList}" Content="{Binding}" Focusable="False" />
       </TabItem>
+      <TabItem Header="{app:T Lic.Tab}" DataContext="{Binding Licenses}">
+        <StackPanel Margin="0,12,0,0">
+          <TextBlock Text="{app:T Lic.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <Button Content="{app:T Lic.Refresh}" Command="{Binding RefreshCommand}" HorizontalAlignment="Left" Margin="0,0,0,8"
+                  AutomationProperties.Name="{app:T Lic.Refresh}" />
+          <DataGrid ItemsSource="{Binding Products}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
+                    AutomationProperties.Name="{app:T Lic.Tab}" MaxHeight="300">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Column.Name}" Binding="{Binding Name}" Width="2*" />
+              <DataGridTextColumn Header="{app:T Column.Status}" Binding="{Binding Status}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Lic.Key}" Binding="{Binding Key}" Width="Auto" />
+              <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Text="{app:T Lic.OemKey}" FontWeight="SemiBold" Margin="0,12,0,4" />
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding OemKeyText}" FontFamily="Consolas" VerticalAlignment="Center" Margin="0,0,12,0" />
+            <Button Content="{app:T Lic.Show}" Command="{Binding ShowOemKeyCommand}" Margin="0,0,8,0" AutomationProperties.Name="{app:T Lic.Show}"
+                    Visibility="{Binding HasOemKey, Converter={StaticResource BoolToVisibility}}" />
+            <Button Content="{app:T Lic.Copy}" Command="{Binding CopyOemKeyCommand}" AutomationProperties.Name="{app:T Lic.Copy}"
+                    Visibility="{Binding HasOemKey, Converter={StaticResource BoolToVisibility}}" />
+          </StackPanel>
+        </StackPanel>
+      </TabItem>
     </TabControl>
   </DockPanel>
 </UserControl>

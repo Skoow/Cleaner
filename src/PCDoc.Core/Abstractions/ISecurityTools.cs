@@ -67,3 +67,12 @@ public interface IVirusTotal
     /// <summary>Null si l'empreinte est inconnue ; exception si la clé est refusée ou le service indisponible.</summary>
     Task<VirusTotalStats?> LookupAsync(string sha256, CancellationToken cancellationToken);
 }
+
+/// <summary>Réseau Wi-Fi enregistré (le mot de passe n'est lu qu'à la demande).</summary>
+public sealed record WifiProfile(string Name, string Authentication, string? Key);
+
+/// <summary>Profils Wi-Fi enregistrés, lus par « netsh wlan export » (XML, indépendant de la langue de Windows).</summary>
+public interface IWifiProfiles
+{
+    Task<IReadOnlyList<WifiProfile>> ListAsync(bool withKeys, CancellationToken cancellationToken);
+}

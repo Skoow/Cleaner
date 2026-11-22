@@ -638,3 +638,77 @@ public sealed partial class VirusTotalClient(string keyFile) : IVirusTotal
     [DllImport("kernel32.dll")]
     private static extern IntPtr LocalFree(IntPtr memory);
 }
+
+/// <summary>
+/// Profils Wi-Fi par « netsh wlan export profile » dans un dossier protégé (XML, indépendant de la langue), lus puis
+/// supprimés aussitôt. Les mots de passe ne sont exportés que si on les demande (key=clear).
+/// </summary>
+public sealed class WifiProfiles(IProcessRunner runner) : IWifiProfiles
+{
+    public async Task<IReadOnlyList<WifiProfile>> ListAsync(bool withKeys, CancellationToken cancellationToken)
+    {
+        var folder = Path.Combine(SecureFolders.EnsureChild("temp"), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var exit = await runner.RunHiddenAsync("netsh.exe", $"wlan export profile folder=\"{folder}\"" + (withKeys ? " key=clear" : string.Empty), null,
+                cancellationToken, TimeSpan.FromMinutes(1)).ConfigureAwait(false);
+            if (exit != 0)
+            {
+                return []; // pas de Wi-Fi sur ce PC (service WLAN absent)
+            }
+
+            var result = new List<WifiProfile>();
+            foreach (var file in Directory.EnumerateFiles(folder, "*.xml").Take(500))
+            {
+                try
+                {
+                    using var reader = System.Xml.XmlReader.Create(file, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Prohibit, XmlResolver = null });
+                    string? name = null, auth = null, key = null;
+                    while (reader.Read())
+                    {
+                        if (reader.NodeType != System.Xml.XmlNodeType.Element)
+                        {
+                            continue;
+                        }
+
+                        switch (reader.LocalName)
+                        {
+                            case "name" when name is null:
+                                name = reader.ReadElementContentAsString();
+                                break;
+                            case "authentication":
+                                auth = reader.ReadElementContentAsString();
+                                break;
+                            case "keyMaterial":
+                                key = reader.ReadElementContentAsString();
+                                break;
+                        }
+                    }
+
+                    if (name is not null)
+                    {
+                        result.Add(new WifiProfile(name, auth ?? "?", withKeys ? key : null));
+                    }
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // Profil illisible : ignoré.
+                }
+            }
+
+            return [.. result.OrderBy(p => p.Name, StringComparer.CurrentCultureIgnoreCase)];
+        }
+        finally
+        {
+            try
+            {
+                CleanupFileSystem.DeleteTree(folder, SecureFolders.Root); // mots de passe en clair : supprimés tout de suite
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Dossier protégé (administrateurs seulement) : purgé au prochain passage.
+            }
+        }
+    }
+}

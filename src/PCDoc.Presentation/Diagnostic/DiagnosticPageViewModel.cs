@@ -123,6 +123,9 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
 
     public ObservableCollection<AssistantRow> AssistantResults { get; } = [];
 
+    /// <summary>Onglet Réseau (null = indisponible).</summary>
+    public NetworkViewModel? Network { get; init; }
+
     public bool HasAssistants => _assistants is not null;
 
     [RelayCommand]

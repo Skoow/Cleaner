@@ -69,6 +69,40 @@
           </DataGrid>
         </DockPanel>
       </TabItem>
+      <TabItem Header="{app:T Erase.Tab}">
+        <DockPanel Margin="0,12,0,0" AllowDrop="True" Drop="OnEraseDrop" Background="Transparent">
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Erase.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+            <Button DockPanel.Dock="Right" Content="{app:T Erase.Add}" Command="{Binding AddErasePathCommand}" Margin="8,0,0,0"
+                    AutomationProperties.Name="{app:T Erase.Add}" />
+            <TextBox Text="{Binding ErasePath, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{app:T Erase.Add}" />
+          </DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="{Binding EraseStatus}" TextWrapping="Wrap" Margin="0,0,0,6"
+                     Visibility="{Binding EraseStatus, Converter={StaticResource NotNullToVisibility}}" />
+          <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button Content="{app:T Erase.Run}" Command="{Binding EraseSelectedCommand}" HorizontalAlignment="Right" MinWidth="180"
+                    AutomationProperties.Name="{app:T Erase.Run}" />
+            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+              <TextBlock Text="{app:T Erase.FreeSpace}" VerticalAlignment="Center" Margin="0,0,8,0" />
+              <ComboBox ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" MinWidth="70" Margin="0,0,8,0"
+                        AutomationProperties.Name="{app:T Erase.FreeSpace}" />
+              <Button Content="{app:T Erase.FreeRun}" Command="{Binding WipeFreeSpaceCommand}" AutomationProperties.Name="{app:T Erase.FreeRun}" />
+            </StackPanel>
+          </StackPanel>
+          <ListBox ItemsSource="{Binding EraseItems}" AutomationProperties.Name="{app:T Erase.Tab}" MinHeight="120">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="{app:T Erase.Remove}" Margin="8,0,0,0" AutomationProperties.Name="{app:T Erase.Remove}"
+                          Command="{Binding DataContext.RemoveErasePathCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          CommandParameter="{Binding}" />
+                  <TextBlock Text="{Binding}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                </DockPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </TabItem>
     </TabControl>
   </DockPanel>
 </UserControl>

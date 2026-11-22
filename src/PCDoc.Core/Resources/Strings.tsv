@@ -228,3 +228,6 @@ Nav.Group.Tools	TROUBLESHOOT	DÉPANNER
 Nav.Group.Expert	EXPERT (OCCASIONAL)	EXPERT (PONCTUEL)
 Fix.Stop	Stop	Arrêter
 Fix.Stopped	Stopped: the actions already done are in History.	Arrêté : les actions déjà faites sont dans l'Historique.
+Bilan.ForumReport	Copy for a forum	Copier pour un forum
+Bilan.ForumReport.Tip	Copies the report without your name, PC name, IP and MAC addresses, e-mails or serial numbers, ready to paste on a help forum.	Copie le rapport sans votre nom, celui du PC, les adresses IP et MAC, les courriels ni les numéros de série, prêt à coller sur un forum d'entraide.
+Bilan.ForumHeader	Anonymous report made with PCDoc (personal information removed).	Rapport anonyme fait avec PCDoc (informations personnelles retirées).

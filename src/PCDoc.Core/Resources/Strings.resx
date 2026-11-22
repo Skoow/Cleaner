@@ -232,4 +232,7 @@
   <data name="Nav.Group.Expert" xml:space="preserve"><value>EXPERT (OCCASIONAL)</value></data>
   <data name="Fix.Stop" xml:space="preserve"><value>Stop</value></data>
   <data name="Fix.Stopped" xml:space="preserve"><value>Stopped: the actions already done are in History.</value></data>
+  <data name="Bilan.ForumReport" xml:space="preserve"><value>Copy for a forum</value></data>
+  <data name="Bilan.ForumReport.Tip" xml:space="preserve"><value>Copies the report without your name, PC name, IP and MAC addresses, e-mails or serial numbers, ready to paste on a help forum.</value></data>
+  <data name="Bilan.ForumHeader" xml:space="preserve"><value>Anonymous report made with PCDoc (personal information removed).</value></data>
 </root>

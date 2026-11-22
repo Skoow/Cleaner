@@ -117,3 +117,25 @@ Assistant.Sound.NoDevice	No sound device found: install the audio driver (Update
 Assistant.Sound.DeviceError	Audio device in error: {0}. Update its driver (Updates page).	Périphérique audio en erreur : {0}. Mettez à jour son pilote (page Mises à jour).
 Assistant.Sound.Device	Sound devices: {0}	Périphériques audio : {0}
 Assistant.Sound.CheckVolume	Check the volume and the output device (speaker icon next to the clock): the right speakers or headphones must be selected.	Vérifiez le volume et la sortie (icône du haut-parleur près de l'horloge) : les bons haut-parleurs ou le bon casque doivent être choisis.
+Diag.Tab.Network	Network	Réseau
+Net.Info.Intro	Network cards in use, DNS servers, and the Wi-Fi networks saved on this PC.	Cartes réseau utilisées, serveurs DNS et réseaux Wi-Fi enregistrés sur ce PC.
+Net.Info.Refresh	Read the network	Lire le réseau
+Net.Info.Adapter	Connection	Connexion
+Net.Info.Addresses	IP addresses	Adresses IP
+Net.Info.Gateway	Router	Routeur
+Net.Info.Dns	DNS	DNS
+Dns.Title	DNS of {0}: {1}	DNS de {0} : {1}
+Dns.Explanation	Changes the servers that turn website names into addresses. Can be faster or block some malicious sites; a company network may need its own DNS. Reversible from History.	Change les serveurs qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.
+Dns.Undo	DNS of {0} changed	DNS de {0} modifiés
+Dns.Choice.auto	Automatic (router)	Automatique (routeur)
+Dns.Choice.cloudflare	Cloudflare (fast, private)	Cloudflare (rapide, privé)
+Dns.Choice.quad9	Quad9 (blocks malicious sites)	Quad9 (bloque les sites malveillants)
+Dns.Choice.google	Google	Google
+Dns.Apply	Use these DNS	Utiliser ces DNS
+Wifi.Title	Saved Wi-Fi networks	Réseaux Wi-Fi enregistrés
+Wifi.Show	Show the passwords	Afficher les mots de passe
+Wifi.Copy	Copy	Copier
+Wifi.Name	Network	Réseau
+Wifi.Security	Security	Sécurité
+Wifi.Key	Password	Mot de passe
+Wifi.NoKey	(open network or company login)	(réseau ouvert ou connexion d'entreprise)

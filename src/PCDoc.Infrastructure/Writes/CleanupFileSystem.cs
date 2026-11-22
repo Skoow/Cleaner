@@ -173,6 +173,53 @@ public sealed partial class CleanupFileSystem : IFileSystem
         return SetFileInformationByHandle(handle, FileDispositionInfoClass, ref legacy, (uint)Marshal.SizeOf<FileDispositionInfo>());
     }
 
+    /// <summary>
+    /// Effacement sûr d'un fichier : ouvert sans suivre de lien et sans partage, refusé s'il est un lien ou a plusieurs
+    /// liens physiques, contenu écrasé par des données aléatoires (écriture directe sur le disque), puis supprimé par le
+    /// même handle.
+    /// </summary>
+    internal static bool WipeByHandle(string path)
+    {
+        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), GenericWrite | Delete | FileReadAttributes, 0, IntPtr.Zero, OpenExisting,
+            FlagOpenReparsePoint | FlagWriteThrough, IntPtr.Zero);
+        if (handle.IsInvalid)
+        {
+            return false;
+        }
+
+        if (!GetFileInformationByHandle(handle, out var info)
+            || (info.Attributes & (uint)(FileAttributes.ReparsePoint | FileAttributes.Directory)) != 0 || info.NumberOfLinks != 1)
+        {
+            return false;
+        }
+
+        var length = ((long)info.FileSizeHigh << 32) | info.FileSizeLow;
+        using (var stream = new FileStream(handle, FileAccess.Write, 1, isAsync: false))
+        {
+            var buffer = new byte[1 << 20];
+            for (long written = 0; written < length; written += buffer.Length)
+            {
+                System.Security.Cryptography.RandomNumberGenerator.Fill(buffer);
+                stream.Write(buffer, 0, (int)Math.Min(buffer.Length, length - written));
+            }
+
+            stream.Flush(flushToDisk: true);
+            stream.SetLength(0);
+            stream.Flush(flushToDisk: true);
+            var ex = new FileDispositionInfoEx { Flags = DispositionDelete | DispositionPosixSemantics | DispositionIgnoreReadonly };
+            if (SetFileInformationByHandle(handle, FileDispositionInfoExClass, ref ex, (uint)Marshal.SizeOf<FileDispositionInfoEx>()))
+            {
+                return true;
+            }
+
+            var legacy = new FileDispositionInfo { DeleteFile = 1 };
+            return SetFileInformationByHandle(handle, FileDispositionInfoClass, ref legacy, (uint)Marshal.SizeOf<FileDispositionInfo>());
+        }
+    }
+
+    private const uint GenericWrite = 0x40000000;
+    private const uint FlagWriteThrough = 0x80000000;
+
     private static string? FinalPathOf(string path, bool directory)
     {
         using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), FileReadAttributes,
@@ -352,4 +399,68 @@ public sealed partial class RecycleBin : IRecycleBin
 
     [LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
     private static partial int SHEmptyRecycleBinW(IntPtr hwnd, string? rootPath, uint flags);
+}
+
+/// <summary>Effacement définitif de fichiers choisis par l'utilisateur, en refusant les dossiers de Windows et des programmes.</summary>
+public sealed class SecureEraser(IUserProfileResolver profiles) : ISecureEraser
+{
+    private static readonly EnumerationOptions Recursive = new()
+    {
+        RecurseSubdirectories = true,
+        IgnoreInaccessible = true,
+        AttributesToSkip = FileAttributes.ReparsePoint,
+    };
+
+    public bool IsAllowed(string path)
+    {
+        if (TrustedPaths.Normalize(path) is not { } full || full.Length <= 3 || (!File.Exists(full) && !Directory.Exists(full)))
+        {
+            return false;
+        }
+
+        var profile = profiles.Resolve().ProfilePath.TrimEnd('\\');
+        var users = Path.GetDirectoryName(profile)?.TrimEnd('\\') ?? string.Empty;
+        string[] forbidden = [TrustedPaths.Windows, TrustedPaths.ProgramFiles, TrustedPaths.ProgramFilesX86, SecureFolders.Root,
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Microsoft"];
+        return !forbidden.Any(f => f.Length > 0 && (TrustedPaths.IsUnder(full, f) || full.Equals(f.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)))
+               && !full.Equals(profile, StringComparison.OrdinalIgnoreCase) && !full.Equals(users, StringComparison.OrdinalIgnoreCase)
+               && !File.GetAttributes(full).HasFlag(FileAttributes.ReparsePoint);
+    }
+
+    public IReadOnlyList<string> Expand(string path)
+    {
+        if (!IsAllowed(path))
+        {
+            return [];
+        }
+
+        return File.Exists(path) ? [path] : [.. new DirectoryInfo(path).EnumerateFiles("*", Recursive).Select(f => f.FullName)];
+    }
+
+    public bool Wipe(string file) => IsAllowed(file) && CleanupFileSystem.WipeByHandle(file);
+
+    public void RemoveEmptyFolders(string folder)
+    {
+        if (!IsAllowed(folder) || !Directory.Exists(folder))
+        {
+            return;
+        }
+
+        foreach (var sub in new DirectoryInfo(folder).EnumerateDirectories("*", new EnumerationOptions { AttributesToSkip = FileAttributes.ReparsePoint }))
+        {
+            RemoveEmptyFolders(sub.FullName);
+        }
+
+        try
+        {
+            if (!Directory.EnumerateFileSystemEntries(folder).Any())
+            {
+                Directory.Delete(folder, recursive: false);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Dossier en cours d'utilisation : laissé.
+        }
+    }
 }

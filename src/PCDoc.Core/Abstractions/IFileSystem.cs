@@ -56,3 +56,19 @@ public interface IRecycleBin
 
     void Empty();
 }
+
+/// <summary>Effacement définitif : contenu écrasé puis fichier supprimé, sans jamais suivre de lien.</summary>
+public interface ISecureEraser
+{
+    /// <summary>Fichiers à effacer pour un chemin (fichier, ou contenu d'un dossier sans suivre de lien).</summary>
+    IReadOnlyList<string> Expand(string path);
+
+    /// <summary>Écrase puis supprime un fichier ; faux s'il est verrouillé, lié ou n'est pas un fichier ordinaire.</summary>
+    bool Wipe(string file);
+
+    /// <summary>Supprime les dossiers vides laissés sous <paramref name="folder"/> (et lui-même).</summary>
+    void RemoveEmptyFolders(string folder);
+
+    /// <summary>Vrai si le chemin peut être effacé (pas Windows, Program Files, ProgramData\PCDoc, ni une racine de disque).</summary>
+    bool IsAllowed(string path);
+}

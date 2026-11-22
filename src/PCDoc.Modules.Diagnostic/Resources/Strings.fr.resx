@@ -122,4 +122,26 @@
   <data name="Assistant.Sound.DeviceError" xml:space="preserve"><value>Périphérique audio en erreur : {0}. Mettez à jour son pilote (page Mises à jour).</value></data>
   <data name="Assistant.Sound.Device" xml:space="preserve"><value>Périphériques audio : {0}</value></data>
   <data name="Assistant.Sound.CheckVolume" xml:space="preserve"><value>Vérifiez le volume et la sortie (icône du haut-parleur près de l'horloge) : les bons haut-parleurs ou le bon casque doivent être choisis.</value></data>
+  <data name="Diag.Tab.Network" xml:space="preserve"><value>Réseau</value></data>
+  <data name="Net.Info.Intro" xml:space="preserve"><value>Cartes réseau utilisées, serveurs DNS et réseaux Wi-Fi enregistrés sur ce PC.</value></data>
+  <data name="Net.Info.Refresh" xml:space="preserve"><value>Lire le réseau</value></data>
+  <data name="Net.Info.Adapter" xml:space="preserve"><value>Connexion</value></data>
+  <data name="Net.Info.Addresses" xml:space="preserve"><value>Adresses IP</value></data>
+  <data name="Net.Info.Gateway" xml:space="preserve"><value>Routeur</value></data>
+  <data name="Net.Info.Dns" xml:space="preserve"><value>DNS</value></data>
+  <data name="Dns.Title" xml:space="preserve"><value>DNS de {0} : {1}</value></data>
+  <data name="Dns.Explanation" xml:space="preserve"><value>Change les serveurs qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.</value></data>
+  <data name="Dns.Undo" xml:space="preserve"><value>DNS de {0} modifiés</value></data>
+  <data name="Dns.Choice.auto" xml:space="preserve"><value>Automatique (routeur)</value></data>
+  <data name="Dns.Choice.cloudflare" xml:space="preserve"><value>Cloudflare (rapide, privé)</value></data>
+  <data name="Dns.Choice.quad9" xml:space="preserve"><value>Quad9 (bloque les sites malveillants)</value></data>
+  <data name="Dns.Choice.google" xml:space="preserve"><value>Google</value></data>
+  <data name="Dns.Apply" xml:space="preserve"><value>Utiliser ces DNS</value></data>
+  <data name="Wifi.Title" xml:space="preserve"><value>Réseaux Wi-Fi enregistrés</value></data>
+  <data name="Wifi.Show" xml:space="preserve"><value>Afficher les mots de passe</value></data>
+  <data name="Wifi.Copy" xml:space="preserve"><value>Copier</value></data>
+  <data name="Wifi.Name" xml:space="preserve"><value>Réseau</value></data>
+  <data name="Wifi.Security" xml:space="preserve"><value>Sécurité</value></data>
+  <data name="Wifi.Key" xml:space="preserve"><value>Mot de passe</value></data>
+  <data name="Wifi.NoKey" xml:space="preserve"><value>(réseau ouvert ou connexion d'entreprise)</value></data>
 </root>

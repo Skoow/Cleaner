@@ -97,6 +97,9 @@ public sealed partial class SystemPageViewModel : ObservableObject
     private readonly AutorunAdvisor? _advisor;
     private readonly Func<AppMode> _mode;
 
+    /// <summary>Onglet Licences (null = indisponible).</summary>
+    public LicensesViewModel? Licenses { get; init; }
+
     public SystemPageViewModel(
         IInventorySource inventory,
         IBootSource boot,

@@ -93,6 +93,9 @@ internal static class Composition
         services.AddSingleton<IScanner>(sp => new DiagnosticScanner(sp.GetRequiredService<IDiagnosticSource>()));
         services.AddSingleton(sp => new RepairFixer(sp.GetRequiredService<IProcessRunner>()));
         services.AddSingleton<IFixer>(sp => sp.GetRequiredService<RepairFixer>());
+        services.AddSingleton(sp => new NetworkTools(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IProcessRunner>()));
+        services.AddSingleton<IFixer>(sp => new DnsFixer(sp.GetRequiredService<NetworkTools>()));
+        services.AddSingleton<IWifiProfiles>(sp => new WifiProfiles(sp.GetRequiredService<IProcessRunner>()));
         services.AddSingleton<IAssistants>(sp => new Assistants(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IProcessRunner>()));
 
         // Nettoyage (v0.4).
@@ -106,6 +109,8 @@ internal static class Composition
         services.AddSingleton<ICleanupSource>(sp => sp.GetRequiredService<CleanupEngine>());
         services.AddSingleton<IScanner>(sp => new CleanupScanner(sp.GetRequiredService<ICleanupSource>()));
         services.AddSingleton<IFixer>(sp => new CleanupFixer(sp.GetRequiredService<CleanupEngine>(), sp.GetRequiredService<IProcessRunner>()));
+        services.AddSingleton<ISecureEraser>(sp => new SecureEraser(sp.GetRequiredService<IUserProfileResolver>()));
+        services.AddSingleton<IFixer>(sp => new SecureEraseFixer(sp.GetRequiredService<ISecureEraser>(), sp.GetRequiredService<IProcessRunner>()));
 
         // Applications (v0.5).
         services.AddSingleton<IUninstallLauncher, UninstallLauncher>();
@@ -229,17 +234,31 @@ internal static class Composition
     {
         PageId.Bilan => new BilanPageViewModel(
             services.GetRequiredService<BilanOrchestrator>(), services.GetRequiredService<ILocalizer>(),
-            services.GetRequiredService<IClipboardService>(), NewFixPanel(services), Mode(services)),
+            services.GetRequiredService<IClipboardService>(), NewFixPanel(services), Mode(services))
+        {
+            Secrets = () =>
+            {
+                var p = services.GetRequiredService<IUserProfileResolver>().Resolve();
+                return [Environment.MachineName, Environment.UserName, p.AccountName, p.AccountName.Split('\\')[^1], p.ProfilePath, p.Sid];
+            },
+        },
         PageId.System => new SystemPageViewModel(
             services.GetRequiredService<IInventorySource>(), services.GetRequiredService<IBootSource>(),
             services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<IClipboardService>(), services.GetRequiredService<AutorunAdvisor>(),
-            NewFixPanel(services), Mode(services)),
-        PageId.Diagnostic => new DiagnosticPageViewModel(services.GetRequiredService<IDiagnosticSource>(),
-            services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services),
-            services.GetRequiredService<IAssistants>()),
+            NewFixPanel(services), Mode(services))
+        {
+            Licenses = new LicensesViewModel(new PCDoc.Modules.System.Licenses.LicenseReader(services.GetRequiredService<IWmiQuery>()),
+                services.GetRequiredService<ILocalizer>(), services.GetRequiredService<IClipboardService>()),
+        },
+        PageId.Diagnostic => DiagnosticPage(services),
         PageId.Cleanup => new CleanupPageViewModel(services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<ILocalizer>(),
-            NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services)),
+            NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services))
+        {
+            CanErase = path => services.GetRequiredService<ISecureEraser>().IsAllowed(path),
+            LocalDrives = () => [.. DriveInfo.GetDrives().Where(d => d.DriveType is DriveType.Fixed or DriveType.Removable && d.IsReady)
+                .Select(d => d.RootDirectory.FullName)],
+        },
         PageId.Apps => new AppsPageViewModel(services.GetRequiredService<IAppsSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
         PageId.Updates => new UpdatesPageViewModel(services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ILocalizer>(),
@@ -283,6 +302,17 @@ internal static class Composition
             RemovableRoots = () => [.. services.GetRequiredService<IRemovableDrives>().List().Select(d => d.Root)],
         },
     };
+
+    private static DiagnosticPageViewModel DiagnosticPage(IServiceProvider services)
+    {
+        var fixes = NewFixPanel(services);
+        return new DiagnosticPageViewModel(services.GetRequiredService<IDiagnosticSource>(), services.GetRequiredService<ILocalizer>(),
+            services.GetRequiredService<RepairFixer>(), fixes, services.GetRequiredService<IAssistants>())
+        {
+            Network = new NetworkViewModel(services.GetRequiredService<NetworkTools>(), services.GetRequiredService<IWifiProfiles>(),
+                services.GetRequiredService<ILocalizer>(), services.GetRequiredService<IClipboardService>(), fixes),
+        };
+    }
 
     private static SecurityPageViewModel SecurityPage(IServiceProvider services)
     {
