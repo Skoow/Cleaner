@@ -20,12 +20,18 @@ public sealed partial class LicensesViewModel(LicenseReader reader, ILocalizer l
     [ObservableProperty]
     private bool _hasOemKey;
 
+    /// <summary>« Lecture… », « Licences indisponibles » ou null.</summary>
+    [ObservableProperty]
+    private string? _status;
+
     public ObservableCollection<LicenseRow> Products { get; } = [];
 
     [RelayCommand]
     private async Task RefreshAsync()
     {
+        Status = localizer["Lic.Reading"];
         var report = await Task.Run(reader.Read).ConfigureAwait(true);
+        Status = report.Unavailable ? localizer["Lic.Unavailable"] : report.Products.Count == 0 ? localizer["Lic.None"] : null;
         Products.Clear();
         foreach (var p in report.Products)
         {

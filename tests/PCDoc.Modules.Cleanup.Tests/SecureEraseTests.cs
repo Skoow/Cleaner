@@ -22,16 +22,22 @@ public sealed class SecureEraseTests
         }
 
         public bool IsAllowed(string path) => !path.StartsWith(@"C:\Windows", StringComparison.OrdinalIgnoreCase);
+
+        public List<string> CipherCleaned { get; } = [];
+
+        public void RemoveCipherLeftovers(string drive) => CipherCleaned.Add(drive);
     }
 
     private sealed class Runner : IProcessRunner
     {
         public List<string> Calls { get; } = [];
 
+        public int Exit { get; set; }
+
         public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken, TimeSpan? timeout = null)
         {
             Calls.Add($"{system32Tool} {arguments}");
-            return Task.FromResult(0);
+            return Task.FromResult(Exit);
         }
     }
 
@@ -54,5 +60,18 @@ public sealed class SecureEraseTests
         await fixer.ApplyAsync(SecureEraseFixer.ForFreeSpace(@"D:\"), CancellationToken.None);
         runner.Calls.Should().Equal(@"cipher.exe /w:D:\");
         fixer.CanFix(SecureEraseFixer.ForFreeSpace("D:\\\" & del")).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task FreeSpace_InterruptedCipher_RemovesItsTemporaryFolder()
+    {
+        var eraser = new Eraser();
+        var fixer = new SecureEraseFixer(eraser, new Runner { Exit = 1 });
+
+        var act = () => fixer.ApplyAsync(SecureEraseFixer.ForFreeSpace(@"E:\"), CancellationToken.None);
+
+        await act.Should().ThrowAsync<InvalidOperationException>();
+        eraser.CipherCleaned.Should().Equal(@"E:\");
+        fixer.NeedsRestorePoint.Should().BeFalse("un cliché du disque garderait une copie des fichiers effacés");
     }
 }

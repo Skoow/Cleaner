@@ -196,3 +196,6 @@ Lic.NoOemKey	No key stored in this PC (built PC, digital license or older model)
 Lic.Show	Show	Afficher
 Lic.Copy	Copy	Copier
 Lic.Key	Key	Clé
+Lic.Reading	Reading the licenses (can take a minute)…	Lecture des licences (peut prendre une minute)…
+Lic.Unavailable	The licensing service did not answer: try again in a moment. This does not mean there is no license.	Le service des licences n'a pas répondu : réessayez dans un instant. Cela ne veut pas dire qu'il n'y a pas de licence.
+Lic.None	No Windows or Office license key found. Microsoft 365 subscriptions are linked to the Microsoft account and are not listed here.	Aucune clé de licence Windows ou Office trouvée. Les abonnements Microsoft 365 sont liés au compte Microsoft et ne sont pas listés ici.

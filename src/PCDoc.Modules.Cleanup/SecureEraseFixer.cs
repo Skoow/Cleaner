@@ -52,9 +52,20 @@ public sealed class SecureEraseFixer(ISecureEraser eraser, IProcessRunner runner
         if (data.Mode == "free")
         {
             // cipher /w écrit des zéros, des uns puis des données aléatoires dans tout l'espace libre (long sur un grand disque).
-            var exit = await runner.RunHiddenAsync("cipher.exe", $"/w:{data.Drive}", null, cancellationToken, TimeSpan.FromHours(12)).ConfigureAwait(false);
+            int exit;
+            try
+            {
+                exit = await runner.RunHiddenAsync("cipher.exe", $"/w:{data.Drive}", null, cancellationToken, TimeSpan.FromHours(12)).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is OperationCanceledException or TimeoutException)
+            {
+                eraser.RemoveCipherLeftovers(data.Drive!); // arrêté en cours : son fichier temporaire remplirait le disque
+                throw;
+            }
+
             if (exit != 0)
             {
+                eraser.RemoveCipherLeftovers(data.Drive!);
                 throw new InvalidOperationException($"cipher.exe exited with code {exit}");
             }
 

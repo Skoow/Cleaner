@@ -261,6 +261,8 @@
           <TextBlock Text="{app:T Lic.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
           <Button Content="{app:T Lic.Refresh}" Command="{Binding RefreshCommand}" HorizontalAlignment="Left" Margin="0,0,0,8"
                   AutomationProperties.Name="{app:T Lic.Refresh}" />
+          <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Margin="0,0,0,8"
+                     Visibility="{Binding Status, Converter={StaticResource NotNullToVisibility}}" />
           <DataGrid ItemsSource="{Binding Products}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
                     AutomationProperties.Name="{app:T Lic.Tab}" MaxHeight="300">
             <DataGrid.Columns>

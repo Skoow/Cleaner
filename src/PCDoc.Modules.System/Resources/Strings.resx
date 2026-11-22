@@ -201,4 +201,7 @@
   <data name="Lic.Show" xml:space="preserve"><value>Show</value></data>
   <data name="Lic.Copy" xml:space="preserve"><value>Copy</value></data>
   <data name="Lic.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Lic.Reading" xml:space="preserve"><value>Reading the licenses (can take a minute)…</value></data>
+  <data name="Lic.Unavailable" xml:space="preserve"><value>The licensing service did not answer: try again in a moment. This does not mean there is no license.</value></data>
+  <data name="Lic.None" xml:space="preserve"><value>No Windows or Office license key found. Microsoft 365 subscriptions are linked to the Microsoft account and are not listed here.</value></data>
 </root>

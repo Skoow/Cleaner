@@ -74,6 +74,23 @@ jobs:
           $p = Start-Process msiexec.exe -ArgumentList "/x `"$msi`" /qn /norestart /l*v uninstall.log" -Wait -PassThru
           if ($p.ExitCode -ne 0) { Get-Content uninstall.log -Tail 60; Write-Error "Uninstall failed ($($p.ExitCode))"; exit 1 }
           if (Test-Path "$env:ProgramFiles\PCDoc\PCDoc.exe") { Write-Error "PCDoc.exe left after uninstall"; exit 1 }
+      - name: Installer upgrade test (0.9.0 then current, one entry left)
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: |
+          dotnet build installer/PCDoc.Installer.wixproj -c Release -p:InstallerPlatform=x64 -p:AppDir="$PWD/out/win-x64" -p:ProductVersion=0.9.0 -o out/msi-old
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          $old = (Get-ChildItem out/msi-old -Filter *.msi | Select-Object -First 1).FullName
+          $new = (Get-ChildItem out/msi-x64 -Filter *.msi | Select-Object -First 1).FullName
+          foreach ($m in @($old, $new)) {
+            $p = Start-Process msiexec.exe -ArgumentList "/i `"$m`" /qn /norestart /l*v upgrade.log" -Wait -PassThru
+            if ($p.ExitCode -ne 0) { Get-Content upgrade.log -Tail 60; Write-Error "Install of $m failed ($($p.ExitCode))"; exit 1 }
+          }
+          $entries = Get-ChildItem HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty | Where-Object { $_.DisplayName -eq 'PCDoc' }
+          $entries | Select-Object DisplayName, DisplayVersion | Format-Table | Out-String | Write-Output
+          if (@($entries).Count -ne 1 -or $entries.DisplayVersion -eq '0.9.0') { Write-Error "The upgrade did not replace the old version"; exit 1 }
+          $p = Start-Process msiexec.exe -ArgumentList "/x `"$new`" /qn /norestart" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Write-Error "Uninstall failed ($($p.ExitCode))"; exit 1 }
       - name: SBOM (CycloneDX)
         run: |
           dotnet tool install --global CycloneDX --version 6.3.2

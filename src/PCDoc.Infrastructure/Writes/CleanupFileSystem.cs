@@ -192,6 +192,7 @@ public sealed partial class CleanupFileSystem : IFileSystem
             return false; // syntaxe de flux (« fichier:flux », « dossier::$INDEX_ALLOCATION ») refusée
         }
 
+        ClearReadOnly(path, realPathAllowed); // un fichier en lecture seule ne s'ouvre pas en écriture
         using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), GenericWrite | Delete | FileReadAttributes, FileShareDelete, IntPtr.Zero, OpenExisting,
             FlagOpenReparsePoint | FlagWriteThrough, IntPtr.Zero); // partage « suppression » seul : requis par NTFS pour ouvrir les flux secondaires
         if (handle.IsInvalid)
@@ -248,6 +249,39 @@ public sealed partial class CleanupFileSystem : IFileSystem
             return false;
         }
     }
+
+    /// <summary>Retire l'attribut « lecture seule » par un handle ouvert sans suivre de lien (rien n'est fait sur un lien).</summary>
+    private static void ClearReadOnly(string path, Func<string, bool> realPathAllowed)
+    {
+        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), FileReadAttributes | FileWriteAttributes, FileShareRead | FileShareWrite | FileShareDelete,
+            IntPtr.Zero, OpenExisting, FlagOpenReparsePoint, IntPtr.Zero);
+        if (handle.IsInvalid || !GetFileInformationByHandle(handle, out var info)
+            || (info.Attributes & (uint)(FileAttributes.ReparsePoint | FileAttributes.Directory)) != 0 || (info.Attributes & (uint)FileAttributes.ReadOnly) == 0
+            || FinalPath(handle) is not { } real || !realPathAllowed(real))
+        {
+            return; // rien n'est modifié sur un fichier refusé
+        }
+
+        var basic = new FileBasicInfo { FileAttributes = info.Attributes & ~(uint)FileAttributes.ReadOnly };
+        SetFileInformationByHandle(handle, FileBasicInfoClass, ref basic, (uint)Marshal.SizeOf<FileBasicInfo>());
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FileBasicInfo
+    {
+        public long CreationTime; // 0 = inchangé
+        public long LastAccessTime;
+        public long LastWriteTime;
+        public long ChangeTime;
+        public uint FileAttributes;
+    }
+
+    private const uint FileWriteAttributes = 0x0100;
+    private const int FileBasicInfoClass = 0;
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetFileInformationByHandle(Microsoft.Win32.SafeHandles.SafeFileHandle file, int infoClass, ref FileBasicInfo info, uint size);
 
     private static void Overwrite(FileStream stream, long length, CancellationToken cancellationToken)
     {
@@ -618,6 +652,27 @@ public sealed class SecureEraser(IUserProfileResolver profiles) : ISecureEraser
         var ok = CleanupFileSystem.WipeByHandle(file, real => !Denied(real.TrimEnd('\\')), out var reason);
         LastError = ok ? null : reason;
         return ok;
+    }
+
+    public void RemoveCipherLeftovers(string drive)
+    {
+        if (drive is not { Length: 3 } || !char.IsAsciiLetter(drive[0]) || drive[1] != ':' || drive[2] != '\\')
+        {
+            return;
+        }
+
+        var leftover = Path.Combine(drive, "EFSTMPWP");
+        try
+        {
+            if (Directory.Exists(leftover) && !File.GetAttributes(leftover).HasFlag(FileAttributes.ReparsePoint))
+            {
+                CleanupFileSystem.DeleteTree(leftover, drive);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Encore utilisé : Windows le supprimera au prochain cipher, ou à la main.
+        }
     }
 
     public void RemoveEmptyFolders(string folder)

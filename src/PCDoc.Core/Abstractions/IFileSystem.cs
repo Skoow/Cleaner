@@ -71,4 +71,9 @@ public interface ISecureEraser
 
     /// <summary>Vrai si le chemin peut être effacé (pas Windows, Program Files, ProgramData\PCDoc, ni une racine de disque).</summary>
     bool IsAllowed(string path);
+
+    /// <summary>Supprime le dossier temporaire « EFSTMPWP » laissé par un cipher /w interrompu (il remplit le disque).</summary>
+    void RemoveCipherLeftovers(string drive)
+    {
+    }
 }
