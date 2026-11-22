@@ -124,7 +124,13 @@ internal static class Composition
         // Mises à jour et optimisation (v0.6).
         services.AddSingleton<IWindowsUpdate, WindowsUpdate>();
         services.AddSingleton<IWingetRunner, WingetRunner>();
-        services.AddSingleton(sp => new UpdatesEngine(sp.GetRequiredService<IWindowsUpdate>(), sp.GetRequiredService<IWingetRunner>()));
+        services.AddSingleton<IDriverBackup>(sp => new DriverBackup(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IClock>()));
+        services.AddSingleton(sp => new UpdatesEngine(sp.GetRequiredService<IWindowsUpdate>(), sp.GetRequiredService<IWingetRunner>(), null,
+            sp.GetRequiredService<IDriverBackup>())
+        {
+            DriversBackedUp = folder => sp.GetRequiredService<PCDoc.Core.Activity.IActivityLog>().Write("updates",
+                sp.GetRequiredService<ILocalizer>().Format(new PCDoc.Core.Findings.LocalizedText("Updates.DriverBackup.Done", folder))),
+        });
         services.AddSingleton<IUpdatesSource>(sp => sp.GetRequiredService<UpdatesEngine>());
         services.AddSingleton<IScanner>(sp => new UpdatesScanner(sp.GetRequiredService<IUpdatesSource>()));
         services.AddSingleton<IFixer>(sp => new UpdateFixer(sp.GetRequiredService<UpdatesEngine>()));
@@ -221,7 +227,10 @@ internal static class Composition
         PageId.Apps => new AppsPageViewModel(services.GetRequiredService<IAppsSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
         PageId.Updates => new UpdatesPageViewModel(services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ILocalizer>(),
-            NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired),
+            NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired)
+        {
+            BackupDrivers = ct => services.GetRequiredService<UpdatesEngine>().BackupDriversAsync(ct),
+        },
         PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
         PageId.Security => new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(),

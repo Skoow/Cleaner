@@ -158,4 +158,31 @@ public class UpdatesTests
         findings.Select(f => f.Id).Should().Equal("updates.upgrade.Mozilla.Firefox", "updates.upgrade.7zip.7zip");
         Winget.DefaultCatalog.Should().HaveCountGreaterThan(10).And.OnlyHaveUniqueItems(p => p.Id);
     }
+
+    private sealed class Backup : IDriverBackup
+    {
+        public int Calls { get; private set; }
+
+        public Task<string> BackupAsync(CancellationToken cancellationToken)
+        {
+            Calls++;
+            return Task.FromResult(@"C:\ProgramData\PCDoc\drivers\20261122-100000");
+        }
+    }
+
+    [Fact]
+    public async Task DriverUpdates_BackUpDriversOnceFirst()
+    {
+        var backup = new Backup();
+        var engine = new UpdatesEngine(new FakeWindowsUpdate(), new FakeWinget(), null, backup);
+        var report = await engine.AnalyzeAsync(includeWindows: true, CancellationToken.None);
+
+        await engine.InstallWindowsAsync(report.Windows[0], CancellationToken.None);
+        backup.Calls.Should().Be(0, "pas un pilote");
+        await engine.InstallWindowsAsync(report.Windows[1], CancellationToken.None);
+        await engine.InstallWindowsAsync(report.Windows[1], CancellationToken.None);
+
+        backup.Calls.Should().Be(1);
+        engine.DriverBackupFolder.Should().EndWith("20261122-100000");
+    }
 }

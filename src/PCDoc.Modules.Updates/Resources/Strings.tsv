@@ -32,3 +32,7 @@ Updates.Category.communication	Communication	Communication
 Updates.Category.dev	Development	Développement
 Updates.Driver	Driver	Pilote
 Updates.Optional	Optional	Facultative
+Updates.DriverBackup	Back up the drivers	Sauvegarder les pilotes
+Updates.DriverBackup.Running	Backing up the drivers…	Sauvegarde des pilotes…
+Updates.DriverBackup.Done	Drivers backed up in {0} (Device Manager > Update driver > Browse to restore one). Done automatically before any driver update.	Pilotes sauvegardés dans {0} (Gestionnaire de périphériques > Mettre à jour le pilote > Parcourir pour en remettre un). Fait automatiquement avant toute mise à jour de pilote.
+Updates.DriverBackup.Failed	The drivers could not be backed up.	Les pilotes n'ont pas pu être sauvegardés.

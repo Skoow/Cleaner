@@ -34,3 +34,10 @@ public interface IRegistryValueWriter
     /// <param name="value">int (DWORD) ou string (REG_SZ) ; null supprime la valeur.</param>
     void SetValue(RegistryHive hive, string path, string name, object? value);
 }
+
+/// <summary>Sauvegarde de tous les pilotes tiers (pnputil /export-driver) dans le dossier protégé de PCDoc.</summary>
+public interface IDriverBackup
+{
+    /// <summary>Dossier de la sauvegarde créée.</summary>
+    Task<string> BackupAsync(CancellationToken cancellationToken);
+}

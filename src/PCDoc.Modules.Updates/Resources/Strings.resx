@@ -37,4 +37,8 @@
   <data name="Updates.Category.dev" xml:space="preserve"><value>Development</value></data>
   <data name="Updates.Driver" xml:space="preserve"><value>Driver</value></data>
   <data name="Updates.Optional" xml:space="preserve"><value>Optional</value></data>
+  <data name="Updates.DriverBackup" xml:space="preserve"><value>Back up the drivers</value></data>
+  <data name="Updates.DriverBackup.Running" xml:space="preserve"><value>Backing up the drivers…</value></data>
+  <data name="Updates.DriverBackup.Done" xml:space="preserve"><value>Drivers backed up in {0} (Device Manager &gt; Update driver &gt; Browse to restore one). Done automatically before any driver update.</value></data>
+  <data name="Updates.DriverBackup.Failed" xml:space="preserve"><value>The drivers could not be backed up.</value></data>
 </root>

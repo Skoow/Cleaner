@@ -46,6 +46,42 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
     [ObservableProperty]
     private bool _rebootRequired;
 
+    [ObservableProperty]
+    private string? _driverBackupStatus;
+
+    [ObservableProperty]
+    private bool _isBackingUp;
+
+    /// <summary>Sauvegarde des pilotes (dossier créé) ; null = indisponible.</summary>
+    public Func<CancellationToken, Task<string?>>? BackupDrivers { get; init; }
+
+    [RelayCommand]
+    private async Task BackupDriversNowAsync()
+    {
+        if (BackupDrivers is null || IsBackingUp)
+        {
+            return;
+        }
+
+        IsBackingUp = true;
+        DriverBackupStatus = _localizer["Updates.DriverBackup.Running"];
+        try
+        {
+            var folder = await Task.Run(() => BackupDrivers(CancellationToken.None)).ConfigureAwait(true);
+            DriverBackupStatus = folder is null ? _localizer["Updates.DriverBackup.Failed"] : _localizer.Format(new LocalizedText("Updates.DriverBackup.Done", folder));
+        }
+#pragma warning disable CA1031 // pnputil peut échouer (droits, disque plein) : message, jamais de plantage
+        catch (Exception ex) when (ex is not OperationCanceledException)
+#pragma warning restore CA1031
+        {
+            DriverBackupStatus = _localizer["Updates.DriverBackup.Failed"];
+        }
+        finally
+        {
+            IsBackingUp = false;
+        }
+    }
+
     public UpdatesPageViewModel(IUpdatesSource source, ILocalizer localizer, FixConfirmationViewModel? fixes,
         Func<Core.Settings.AppMode>? mode = null, Func<bool>? rebootRequired = null)
     {

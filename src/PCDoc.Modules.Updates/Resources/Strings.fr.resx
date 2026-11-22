@@ -37,4 +37,8 @@
   <data name="Updates.Category.dev" xml:space="preserve"><value>Développement</value></data>
   <data name="Updates.Driver" xml:space="preserve"><value>Pilote</value></data>
   <data name="Updates.Optional" xml:space="preserve"><value>Facultative</value></data>
+  <data name="Updates.DriverBackup" xml:space="preserve"><value>Sauvegarder les pilotes</value></data>
+  <data name="Updates.DriverBackup.Running" xml:space="preserve"><value>Sauvegarde des pilotes…</value></data>
+  <data name="Updates.DriverBackup.Done" xml:space="preserve"><value>Pilotes sauvegardés dans {0} (Gestionnaire de périphériques &gt; Mettre à jour le pilote &gt; Parcourir pour en remettre un). Fait automatiquement avant toute mise à jour de pilote.</value></data>
+  <data name="Updates.DriverBackup.Failed" xml:space="preserve"><value>Les pilotes n'ont pas pu être sauvegardés.</value></data>
 </root>

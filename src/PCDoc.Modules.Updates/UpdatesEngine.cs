@@ -22,8 +22,39 @@ public interface IUpdatesSource
 /// Recherche et installation. Les derniers résultats servent à revalider chaque correction : on n'installe que ce qui a
 /// été trouvé (Windows Update, winget upgrade) ou ce qui figure au catalogue (installation groupée).
 /// </summary>
-public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner winget, IReadOnlyList<WingetPackage>? catalog = null) : IUpdatesSource
+public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner winget, IReadOnlyList<WingetPackage>? catalog = null,
+    IDriverBackup? driverBackup = null) : IUpdatesSource
 {
+    private Task<string>? _driverBackup;
+
+    /// <summary>Dossier de la sauvegarde des pilotes faite pendant cette session (null si aucune).</summary>
+    public string? DriverBackupFolder { get; private set; }
+
+    /// <summary>Appelé après chaque sauvegarde des pilotes (dossier), pour le journal d'activité.</summary>
+    public Action<string>? DriversBackedUp { get; set; }
+
+    /// <summary>Sauvegarde des pilotes, une seule fois par session (réutilisée pour les pilotes suivants).</summary>
+    public async Task<string?> BackupDriversAsync(CancellationToken cancellationToken)
+    {
+        if (driverBackup is null)
+        {
+            return null;
+        }
+
+        _driverBackup ??= driverBackup.BackupAsync(cancellationToken);
+        try
+        {
+            DriverBackupFolder = await _driverBackup.ConfigureAwait(false);
+            DriversBackedUp?.Invoke(DriverBackupFolder);
+            return DriverBackupFolder;
+        }
+        catch
+        {
+            _driverBackup = null; // nouvel essai au prochain pilote
+            throw;
+        }
+    }
+
     private static readonly TimeSpan ListTimeout = TimeSpan.FromMinutes(3);
     private static readonly TimeSpan InstallTimeout = TimeSpan.FromMinutes(30);
 
@@ -117,6 +148,12 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
     public async Task InstallWindowsAsync(WindowsUpdateItem item, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(item);
+        if (item.IsDriver)
+        {
+            // Avant tout nouveau pilote : copie des pilotes actuels (retour arrière possible même sans point de restauration).
+            await BackupDriversAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         var result = await windowsUpdate.InstallAsync([item.Id], cancellationToken).ConfigureAwait(false);
         RebootRequired |= result.RebootRequired;
         if (result.Installed == 0 || result.Failed > 0)

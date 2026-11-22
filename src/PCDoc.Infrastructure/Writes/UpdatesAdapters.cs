@@ -308,3 +308,25 @@ public sealed class WingetRunner(IProcessRunner runner) : IWingetRunner, IDispos
         }
     }
 }
+
+/// <summary>
+/// Copie des pilotes tiers installés (pnputil /export-driver *) dans %ProgramData%\PCDoc\drivers\aaaaMMjj-HHmmss.
+/// Restauration : Gestionnaire de périphériques > Mettre à jour le pilote > Parcourir ce dossier.
+/// </summary>
+public sealed class DriverBackup(IProcessRunner runner, IClock clock) : IDriverBackup
+{
+    public async Task<string> BackupAsync(CancellationToken cancellationToken)
+    {
+        var root = SecureFolders.EnsureChild("drivers");
+        var folder = Path.Combine(root, clock.Now.ToLocalTime().ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
+        Directory.CreateDirectory(folder);
+        var exit = await runner.RunHiddenAsync("pnputil.exe", $"/export-driver * \"{folder}\"", null, cancellationToken, TimeSpan.FromMinutes(20))
+            .ConfigureAwait(false);
+        if (exit != 0)
+        {
+            throw new InvalidOperationException($"pnputil /export-driver exited with code {exit}");
+        }
+
+        return folder;
+    }
+}
