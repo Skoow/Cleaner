@@ -46,7 +46,16 @@ public sealed class NetworkToolsTests
         runner.Calls.Should().Equal(
             "interface ipv4 set dnsservers name=\"Wi-Fi\" source=static address=9.9.9.9 register=primary validate=no",
             "interface ipv4 add dnsservers name=\"Wi-Fi\" address=149.112.112.112 index=2 validate=no",
-            "interface ipv4 set dnsservers name=\"Wi-Fi\" source=static address=192.168.1.1 register=primary validate=no");
+            "interface ipv6 set dnsservers name=\"Wi-Fi\" source=static address=2620:fe::fe register=primary validate=no",
+            "interface ipv6 add dnsservers name=\"Wi-Fi\" address=2620:fe::9 index=2 validate=no",
+            "interface ipv4 set dnsservers name=\"Wi-Fi\" source=static address=192.168.1.1 register=primary validate=no",
+            "interface ipv6 set dnsservers name=\"Wi-Fi\" source=dhcp");
+        // Adresse fixe : « DNS automatiques » refusé (la carte n'aurait plus de DNS).
+        wmi.Replace(@"root\cimv2", "Win32_NetworkAdapterConfiguration", new Dictionary<string, object?> { ["SettingID"] = Guid, ["DHCPEnabled"] = false });
+        var auto = DnsFixer.FindingFor(adapter, DnsChoice.All[0]);
+        var act = () => fixer.ApplyAsync(auto, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
+
         fixer.CanFix(DnsFixer.FindingFor(adapter with { Connection = "Wi-Fi\" & calc" }, DnsChoice.All[1])).Should().BeFalse();
     }
 }

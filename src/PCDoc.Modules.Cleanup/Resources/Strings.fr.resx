@@ -61,16 +61,18 @@
   <data name="Cleanup.thumbnail-cache.Explanation" xml:space="preserve"><value>Windows recrée les aperçus des images quand il en a besoin. Les fichiers en cours d'utilisation sont ignorés.</value></data>
   <data name="Cleanup.BrowserOpen" xml:space="preserve"><value>Navigateur ouvert</value></data>
   <data name="Erase.Files.Title" xml:space="preserve"><value>Effacer définitivement {0} éléments</value></data>
-  <data name="Erase.Files.Explanation" xml:space="preserve"><value>Le contenu est écrasé par des données aléatoires avant la suppression : aucun logiciel de récupération ne pourra le retrouver. Sur un SSD ce n'est pas totalement garanti (protégez un SSD avec BitLocker). Impossible à annuler.</value></data>
+  <data name="Erase.Files.Explanation" xml:space="preserve"><value>Le contenu est écrasé par des données aléatoires avant la suppression : les logiciels de récupération ne peuvent pas le retrouver. Aucun point de restauration n'est créé (il en garderait une copie). Les copies gardées ailleurs ne sont pas effacées : anciens points de restauration ou versions précédentes, historique des fichiers, OneDrive ou autre cloud. Les fichiers uniquement dans le cloud, compressés, chiffrés ou fragmentés (sparse) sont refusés. Sur un SSD ce n'est pas totalement garanti (protégez un SSD avec BitLocker). Impossible à annuler.</value></data>
   <data name="Erase.Free.Title" xml:space="preserve"><value>Effacer l'espace libre de {0}</value></data>
   <data name="Erase.Free.Explanation" xml:space="preserve"><value>Écrase l'espace où se trouvaient les fichiers supprimés (cipher /w de Windows), pour qu'ils ne puissent pas être récupérés. Vos fichiers actuels ne sont pas touchés. Peut durer plusieurs heures.</value></data>
   <data name="Erase.Tab" xml:space="preserve"><value>Effacement sécurisé</value></data>
-  <data name="Erase.Intro" xml:space="preserve"><value>Déposez ici des fichiers ou des dossiers, ou tapez un chemin, puis effacez-les définitivement. Windows, les programmes et les dossiers de PCDoc sont refusés.</value></data>
+  <data name="Erase.Intro" xml:space="preserve"><value>Choisissez des fichiers ou des dossiers (ou tapez un chemin), puis effacez-les définitivement. Windows, les programmes, la racine des dossiers utilisateurs et les dossiers de PCDoc sont refusés.</value></data>
   <data name="Erase.Add" xml:space="preserve"><value>Ajouter</value></data>
   <data name="Erase.Remove" xml:space="preserve"><value>Retirer de la liste</value></data>
   <data name="Erase.Run" xml:space="preserve"><value>Effacer définitivement</value></data>
   <data name="Erase.FreeSpace" xml:space="preserve"><value>Effacer l'espace libre du disque :</value></data>
   <data name="Erase.FreeRun" xml:space="preserve"><value>Effacer l'espace libre</value></data>
-  <data name="Erase.Refused" xml:space="preserve"><value>Ce chemin ne peut pas être effacé (système, programmes, PCDoc ou disque entier).</value></data>
-  <data name="Erase.Done" xml:space="preserve"><value>{0} fichiers effacés.</value></data>
+  <data name="Erase.Refused" xml:space="preserve"><value>Ce chemin ne peut pas être effacé (système, programmes, racine d'un dossier utilisateur, PCDoc ou disque entier).</value></data>
+  <data name="Erase.TooMany" xml:space="preserve"><value>200 éléments au maximum à la fois.</value></data>
+  <data name="Erase.PickFiles" xml:space="preserve"><value>Choisir des fichiers…</value></data>
+  <data name="Erase.PickFolder" xml:space="preserve"><value>Choisir un dossier…</value></data>
 </root>

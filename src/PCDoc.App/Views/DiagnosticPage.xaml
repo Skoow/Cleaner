@@ -149,6 +149,8 @@
             <TextBlock Text="{app:T Net.Info.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
             <Button Content="{app:T Net.Info.Refresh}" Command="{Binding RefreshCommand}" HorizontalAlignment="Left" Margin="0,0,0,8"
                     AutomationProperties.Name="{app:T Net.Info.Refresh}" />
+            <TextBlock Text="{Binding Error}" TextWrapping="Wrap" Margin="0,0,0,8" Foreground="{DynamicResource Pcdoc.Critical}"
+                       Visibility="{Binding Error, Converter={StaticResource NotNullToVisibility}}" />
             <DataGrid ItemsSource="{Binding Adapters}" SelectedItem="{Binding SelectedAdapter}" AutoGenerateColumns="False" IsReadOnly="True"
                       HeadersVisibility="Column" GridLinesVisibility="None" AutomationProperties.Name="{app:T Diag.Tab.Network}" MaxHeight="200">
               <DataGrid.Columns>

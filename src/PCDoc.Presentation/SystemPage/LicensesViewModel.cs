@@ -12,6 +12,7 @@ public sealed record LicenseRow(string Name, string Description, string Status, 
 public sealed partial class LicensesViewModel(LicenseReader reader, ILocalizer localizer, IClipboardService? clipboard) : ObservableObject
 {
     private string? _oemKey;
+    private bool _oemShown;
 
     [ObservableProperty]
     private string _oemKeyText = string.Empty;
@@ -33,7 +34,7 @@ public sealed partial class LicensesViewModel(LicenseReader reader, ILocalizer l
 
         _oemKey = report.OemKey;
         HasOemKey = _oemKey is not null;
-        OemKeyText = _oemKey is null ? localizer["Lic.NoOemKey"] : "•••••-•••••-•••••-•••••-" + _oemKey[^5..];
+        OemKeyText = _oemKey is null ? localizer["Lic.NoOemKey"] : "•••••-•••••-•••••-•••••-" + (_oemKey.Length > 5 ? _oemKey[^5..] : "•••••");
     }
 
     [RelayCommand]
@@ -42,15 +43,16 @@ public sealed partial class LicensesViewModel(LicenseReader reader, ILocalizer l
         if (_oemKey is not null)
         {
             OemKeyText = _oemKey;
+            _oemShown = true;
         }
     }
 
     [RelayCommand]
     private void CopyOemKey()
     {
-        if (_oemKey is not null)
+        if (_oemKey is not null && _oemShown)
         {
-            clipboard?.SetText(_oemKey);
+            clipboard?.SetSecret(_oemKey);
         }
     }
 }

@@ -40,6 +40,12 @@ public sealed partial class CleanupPageViewModel
                 continue;
             }
 
+            if (EraseItems.Count >= SecureEraseFixer.MaxPaths)
+            {
+                EraseStatus = _localizer["Erase.TooMany"];
+                return;
+            }
+
             if (CanErase?.Invoke(p) != true)
             {
                 EraseStatus = _localizer["Erase.Refused"];

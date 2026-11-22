@@ -15,6 +15,28 @@ public partial class CleanupPage : UserControl
         }
     }
 
+    /// <summary>
+    /// Sélecteurs de fichiers et de dossier : le glisser-déposer depuis l'Explorateur est bloqué par Windows quand
+    /// PCDoc tourne en administrateur.
+    /// </summary>
+    private void OnPickFiles(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog { Multiselect = true, DereferenceLinks = false };
+        if (DataContext is CleanupPageViewModel vm && dialog.ShowDialog(System.Windows.Window.GetWindow(this)) == true)
+        {
+            vm.AddPaths(dialog.FileNames);
+        }
+    }
+
+    private void OnPickFolder(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFolderDialog { Multiselect = true, DereferenceLinks = false };
+        if (DataContext is CleanupPageViewModel vm && dialog.ShowDialog(System.Windows.Window.GetWindow(this)) == true)
+        {
+            vm.AddPaths(dialog.FolderNames);
+        }
+    }
+
     public CleanupPage()
     {
         InitializeComponent();

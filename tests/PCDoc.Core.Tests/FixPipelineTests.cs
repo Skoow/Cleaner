@@ -41,6 +41,8 @@ public sealed class FixPipelineTests : IDisposable
 
         public bool Throw { get; set; }
 
+        public bool NeedsRestorePoint { get; set; } = true;
+
         public string UndoKind => "fake";
 
         public bool CanFix(Finding finding) => finding.Id.StartsWith("fake.", StringComparison.Ordinal);
@@ -95,6 +97,19 @@ public sealed class FixPipelineTests : IDisposable
         result.Outcomes.Should().OnlyContain(o => o.Status == FixStatus.Applied);
         state.Values.Should().OnlyContain(v => v == "off");
         journal.Entries().Should().HaveCount(2).And.OnlyContain(e => e.Status == UndoStatus.Applied);
+    }
+
+    [Fact]
+    public async Task Run_SkipsTheRestorePoint_WhenNoFixerNeedsIt()
+    {
+        var (sut, fixer, restore, _, state) = Make(RestorePointOutcome.ProtectionDisabled);
+        fixer.NeedsRestorePoint = false; // effacement définitif : un cliché du disque en garderait une copie
+
+        var result = await sut.RunAsync([F("fake.a")], AppMode.Novice, allowWithoutRestorePoint: false, CancellationToken.None);
+
+        restore.Calls.Should().Be(0);
+        result.RestorePoint.Should().BeNull();
+        state["fake.a"].Should().Be("off");
     }
 
     private sealed class MemoryLog : PCDoc.Core.Activity.IActivityLog

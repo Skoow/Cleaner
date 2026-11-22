@@ -14,6 +14,9 @@ public interface IFixer
     /// <summary>Faux pour une réparation non annulable par nature (ex. vider le cache DNS) : pas de bouton « Annuler ».</summary>
     bool SupportsUndo => true;
 
+    /// <summary>Faux pour un effacement définitif : un point de restauration (cliché du disque) en garderait une copie.</summary>
+    bool NeedsRestorePoint => true;
+
     bool CanFix(Finding finding);
 
     Task<UndoEntry> PrepareAsync(Finding finding, CancellationToken cancellationToken);

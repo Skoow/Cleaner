@@ -56,15 +56,17 @@ Cleanup.thumbnail-cache.Title	Thumbnail cache	Cache des miniatures
 Cleanup.thumbnail-cache.Explanation	Windows recreates the picture previews when needed. Files in use are skipped.	Windows recrée les aperçus des images quand il en a besoin. Les fichiers en cours d'utilisation sont ignorés.
 Cleanup.BrowserOpen	Browser open	Navigateur ouvert
 Erase.Files.Title	Permanently erase {0} items	Effacer définitivement {0} éléments
-Erase.Files.Explanation	The content is overwritten with random data before deletion: no undelete tool can recover it. On an SSD this is not fully guaranteed (use BitLocker to protect an SSD). Cannot be undone.	Le contenu est écrasé par des données aléatoires avant la suppression : aucun logiciel de récupération ne pourra le retrouver. Sur un SSD ce n'est pas totalement garanti (protégez un SSD avec BitLocker). Impossible à annuler.
+Erase.Files.Explanation	The content is overwritten with random data before deletion: undelete tools cannot recover it. No restore point is made (it would keep a copy). Copies kept elsewhere are not erased: older restore points or Previous Versions, File History, OneDrive or other cloud copies. Cloud-only, compressed, encrypted or sparse files are refused. On an SSD this is not fully guaranteed (protect an SSD with BitLocker). Cannot be undone.	Le contenu est écrasé par des données aléatoires avant la suppression : les logiciels de récupération ne peuvent pas le retrouver. Aucun point de restauration n'est créé (il en garderait une copie). Les copies gardées ailleurs ne sont pas effacées : anciens points de restauration ou versions précédentes, historique des fichiers, OneDrive ou autre cloud. Les fichiers uniquement dans le cloud, compressés, chiffrés ou fragmentés (sparse) sont refusés. Sur un SSD ce n'est pas totalement garanti (protégez un SSD avec BitLocker). Impossible à annuler.
 Erase.Free.Title	Wipe the free space of {0}	Effacer l'espace libre de {0}
 Erase.Free.Explanation	Overwrites the space where deleted files used to be (Windows cipher /w), so they cannot be recovered. Your current files are not touched. Can take several hours.	Écrase l'espace où se trouvaient les fichiers supprimés (cipher /w de Windows), pour qu'ils ne puissent pas être récupérés. Vos fichiers actuels ne sont pas touchés. Peut durer plusieurs heures.
 Erase.Tab	Secure erase	Effacement sécurisé
-Erase.Intro	Drop files or folders here, or type a path, then erase them for good. Windows, programs and PCDoc's own folders are refused.	Déposez ici des fichiers ou des dossiers, ou tapez un chemin, puis effacez-les définitivement. Windows, les programmes et les dossiers de PCDoc sont refusés.
+Erase.Intro	Choose files or folders (or type a path), then erase them for good. Windows, programs, user folders roots and PCDoc's own folders are refused.	Choisissez des fichiers ou des dossiers (ou tapez un chemin), puis effacez-les définitivement. Windows, les programmes, la racine des dossiers utilisateurs et les dossiers de PCDoc sont refusés.
 Erase.Add	Add	Ajouter
 Erase.Remove	Remove from the list	Retirer de la liste
 Erase.Run	Erase permanently	Effacer définitivement
 Erase.FreeSpace	Wipe the free space of the drive:	Effacer l'espace libre du disque :
 Erase.FreeRun	Wipe free space	Effacer l'espace libre
-Erase.Refused	This path cannot be erased (system, programs, PCDoc or a whole drive).	Ce chemin ne peut pas être effacé (système, programmes, PCDoc ou disque entier).
-Erase.Done	{0} files erased.	{0} fichiers effacés.
+Erase.Refused	This path cannot be erased (system, programs, a user folder root, PCDoc or a whole drive).	Ce chemin ne peut pas être effacé (système, programmes, racine d'un dossier utilisateur, PCDoc ou disque entier).
+Erase.TooMany	At most 200 items at a time.	200 éléments au maximum à la fois.
+Erase.PickFiles	Choose files…	Choisir des fichiers…
+Erase.PickFolder	Choose a folder…	Choisir un dossier…

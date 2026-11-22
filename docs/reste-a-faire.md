@@ -20,7 +20,7 @@ Mis à jour le 2026-11-21, après la v0.11. Détail des décisions : `docs/super
 | v0.9 | Réparations réseau/son/Windows Update + assistants « Pas d'Internet » / « Pas de son », sauvegarde des pilotes, avant/après, profils de technicien, mode portable, entretien automatique hebdomadaire, activité réseau, extensions des navigateurs, seconde analyse (Safety Scanner, AdwCleaner), VirusTotal |
 | v0.10 | Confidentialité d'Office, Edge, Chrome, Firefox (seulement s'ils sont installés), mises à jour des applications du Store, recherche globale |
 | v0.11 | Menu en sections dans l'ordre logique, Nouveau PC réordonné avec analyse antivirus, cookies/historique/fichiers récents, Kaspersky VRT et AdwCleaner (suppression) |
-| v0.12 | Effacement sécurisé, **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) |
+| v0.12 ✅ | Effacement sécurisé, **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) — fait |
 | v1.0 | Signature du code, installateur MSI dans Program Files, tâche planifiée (UAC une seule fois), mise à jour automatique, page de téléchargement |
 
 ## Reporté des versions précédentes (petits points)

@@ -125,7 +125,7 @@ Net.Info.Addresses	IP addresses	Adresses IP
 Net.Info.Gateway	Router	Routeur
 Net.Info.Dns	DNS	DNS
 Dns.Title	DNS of {0}: {1}	DNS de {0} : {1}
-Dns.Explanation	Changes the servers that turn website names into addresses. Can be faster or block some malicious sites; a company network may need its own DNS. Reversible from History.	Change les serveurs qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.
+Dns.Explanation	Changes the servers (IPv4 and IPv6) that turn website names into addresses. Can be faster or block some malicious sites; a company network may need its own DNS. Reversible from History.	Change les serveurs (IPv4 et IPv6) qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.
 Dns.Undo	DNS of {0} changed	DNS de {0} modifiés
 Dns.Choice.auto	Automatic (router)	Automatique (routeur)
 Dns.Choice.cloudflare	Cloudflare (fast, private)	Cloudflare (rapide, privé)

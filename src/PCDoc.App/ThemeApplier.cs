@@ -103,4 +103,39 @@ public sealed class ClipboardService : IClipboardService
             // Presse-papiers occupé par un autre programme : on ignore plutôt que de planter.
         }
     }
+
+    public void SetSecret(string text)
+    {
+        try
+        {
+            // Formats reconnus par Windows : pas d'historique (Win+V), pas d'envoi au presse-papiers cloud, ignoré des outils de suivi.
+            var data = new DataObject();
+            data.SetData(DataFormats.UnicodeText, text);
+            data.SetData("ExcludeClipboardContentFromMonitorProcessing", new System.IO.MemoryStream(new byte[4]));
+            data.SetData("CanIncludeInClipboardHistory", new System.IO.MemoryStream(new byte[4]));
+            data.SetData("CanUploadToCloudClipboard", new System.IO.MemoryStream(new byte[4]));
+            Clipboard.SetDataObject(data, copy: true);
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+            timer.Tick += (_, _) =>
+            {
+                timer.Stop();
+                try
+                {
+                    if (Clipboard.ContainsText() && Clipboard.GetText() == text)
+                    {
+                        Clipboard.Clear();
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    // Presse-papiers occupé : laissé.
+                }
+            };
+            timer.Start();
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            // Presse-papiers occupé par un autre programme : on ignore plutôt que de planter.
+        }
+    }
 }

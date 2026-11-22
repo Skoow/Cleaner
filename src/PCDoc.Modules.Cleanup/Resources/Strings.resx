@@ -61,16 +61,18 @@
   <data name="Cleanup.thumbnail-cache.Explanation" xml:space="preserve"><value>Windows recreates the picture previews when needed. Files in use are skipped.</value></data>
   <data name="Cleanup.BrowserOpen" xml:space="preserve"><value>Browser open</value></data>
   <data name="Erase.Files.Title" xml:space="preserve"><value>Permanently erase {0} items</value></data>
-  <data name="Erase.Files.Explanation" xml:space="preserve"><value>The content is overwritten with random data before deletion: no undelete tool can recover it. On an SSD this is not fully guaranteed (use BitLocker to protect an SSD). Cannot be undone.</value></data>
+  <data name="Erase.Files.Explanation" xml:space="preserve"><value>The content is overwritten with random data before deletion: undelete tools cannot recover it. No restore point is made (it would keep a copy). Copies kept elsewhere are not erased: older restore points or Previous Versions, File History, OneDrive or other cloud copies. Cloud-only, compressed, encrypted or sparse files are refused. On an SSD this is not fully guaranteed (protect an SSD with BitLocker). Cannot be undone.</value></data>
   <data name="Erase.Free.Title" xml:space="preserve"><value>Wipe the free space of {0}</value></data>
   <data name="Erase.Free.Explanation" xml:space="preserve"><value>Overwrites the space where deleted files used to be (Windows cipher /w), so they cannot be recovered. Your current files are not touched. Can take several hours.</value></data>
   <data name="Erase.Tab" xml:space="preserve"><value>Secure erase</value></data>
-  <data name="Erase.Intro" xml:space="preserve"><value>Drop files or folders here, or type a path, then erase them for good. Windows, programs and PCDoc's own folders are refused.</value></data>
+  <data name="Erase.Intro" xml:space="preserve"><value>Choose files or folders (or type a path), then erase them for good. Windows, programs, user folders roots and PCDoc's own folders are refused.</value></data>
   <data name="Erase.Add" xml:space="preserve"><value>Add</value></data>
   <data name="Erase.Remove" xml:space="preserve"><value>Remove from the list</value></data>
   <data name="Erase.Run" xml:space="preserve"><value>Erase permanently</value></data>
   <data name="Erase.FreeSpace" xml:space="preserve"><value>Wipe the free space of the drive:</value></data>
   <data name="Erase.FreeRun" xml:space="preserve"><value>Wipe free space</value></data>
-  <data name="Erase.Refused" xml:space="preserve"><value>This path cannot be erased (system, programs, PCDoc or a whole drive).</value></data>
-  <data name="Erase.Done" xml:space="preserve"><value>{0} files erased.</value></data>
+  <data name="Erase.Refused" xml:space="preserve"><value>This path cannot be erased (system, programs, a user folder root, PCDoc or a whole drive).</value></data>
+  <data name="Erase.TooMany" xml:space="preserve"><value>At most 200 items at a time.</value></data>
+  <data name="Erase.PickFiles" xml:space="preserve"><value>Choose files…</value></data>
+  <data name="Erase.PickFolder" xml:space="preserve"><value>Choose a folder…</value></data>
 </root>

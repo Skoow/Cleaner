@@ -647,7 +647,13 @@ public sealed class WifiProfiles(IProcessRunner runner) : IWifiProfiles
 {
     public async Task<IReadOnlyList<WifiProfile>> ListAsync(bool withKeys, CancellationToken cancellationToken)
     {
-        var folder = Path.Combine(SecureFolders.EnsureChild("temp"), Guid.NewGuid().ToString("N"));
+        var temp = SecureFolders.EnsureChild("temp");
+        foreach (var leftover in Directory.EnumerateDirectories(temp, "wifi-*"))
+        {
+            Purge(leftover); // reste d'un export interrompu (PCDoc fermé brutalement)
+        }
+
+        var folder = Path.Combine(temp, "wifi-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
         try
         {
@@ -661,39 +667,9 @@ public sealed class WifiProfiles(IProcessRunner runner) : IWifiProfiles
             var result = new List<WifiProfile>();
             foreach (var file in Directory.EnumerateFiles(folder, "*.xml").Take(500))
             {
-                try
+                if (Read(file, withKeys) is { } profile)
                 {
-                    using var reader = System.Xml.XmlReader.Create(file, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Prohibit, XmlResolver = null });
-                    string? name = null, auth = null, key = null;
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType != System.Xml.XmlNodeType.Element)
-                        {
-                            continue;
-                        }
-
-                        switch (reader.LocalName)
-                        {
-                            case "name" when name is null:
-                                name = reader.ReadElementContentAsString();
-                                break;
-                            case "authentication":
-                                auth = reader.ReadElementContentAsString();
-                                break;
-                            case "keyMaterial":
-                                key = reader.ReadElementContentAsString();
-                                break;
-                        }
-                    }
-
-                    if (name is not null)
-                    {
-                        result.Add(new WifiProfile(name, auth ?? "?", withKeys ? key : null));
-                    }
-                }
-                catch (System.Xml.XmlException)
-                {
-                    // Profil illisible : ignoré.
+                    result.Add(profile);
                 }
             }
 
@@ -701,14 +677,69 @@ public sealed class WifiProfiles(IProcessRunner runner) : IWifiProfiles
         }
         finally
         {
-            try
+            Purge(folder);
+        }
+    }
+
+    internal static WifiProfile? Read(string file, bool withKeys)
+    {
+        try
+        {
+            using var reader = System.Xml.XmlReader.Create(file, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Prohibit, XmlResolver = null });
+            string? name = null, auth = null, key = null, isProtected = null;
+            while (!reader.EOF)
             {
-                CleanupFileSystem.DeleteTree(folder, SecureFolders.Root); // mots de passe en clair : supprimés tout de suite
+                if (reader.NodeType != System.Xml.XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.LocalName)
+                {
+                    case "name" when name is null:
+                        name = reader.ReadElementContentAsString(); // avance déjà au nœud suivant
+                        break;
+                    case "authentication":
+                        auth = reader.ReadElementContentAsString();
+                        break;
+                    case "protected":
+                        isProtected = reader.ReadElementContentAsString();
+                        break;
+                    case "keyMaterial":
+                        key = reader.ReadElementContentAsString();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
+                }
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+
+            // Clé encore chiffrée (export en clair refusé pour ce profil) : ne jamais l'afficher comme mot de passe.
+            var plain = withKeys && key is not null && string.Equals(isProtected?.Trim(), "false", StringComparison.OrdinalIgnoreCase) ? key : null;
+            return name is null ? null : new WifiProfile(name, auth ?? "?", plain);
+        }
+        catch (System.Xml.XmlException)
+        {
+            return null; // profil illisible : ignoré
+        }
+    }
+
+    /// <summary>Mots de passe en clair : contenu écrasé puis supprimé, pour ne rien laisser dans l'espace libre.</summary>
+    private static void Purge(string folder)
+    {
+        try
+        {
+            foreach (var file in Directory.EnumerateFiles(folder))
             {
-                // Dossier protégé (administrateurs seulement) : purgé au prochain passage.
+                CleanupFileSystem.WipeByHandle(file, real => TrustedPaths.IsUnder(real, SecureFolders.Root));
             }
+
+            CleanupFileSystem.DeleteTree(folder, SecureFolders.Root);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Dossier protégé (administrateurs seulement) : purgé au prochain passage.
         }
     }
 }

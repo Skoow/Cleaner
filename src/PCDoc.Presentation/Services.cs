@@ -12,6 +12,9 @@ public interface IThemeApplier
 public interface IClipboardService
 {
     void SetText(string text);
+
+    /// <summary>Secret (mot de passe, clé) : exclu de l'historique et de la synchronisation cloud, effacé après 30 s.</summary>
+    void SetSecret(string text) => SetText(text);
 }
 
 /// <summary>Efface les journaux et les paramètres de PCDoc (implémenté par l'application).</summary>

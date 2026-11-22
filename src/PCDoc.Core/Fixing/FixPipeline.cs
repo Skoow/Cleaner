@@ -106,13 +106,19 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
             return new FixSessionResult(null, false, Ordered(findings, outcomes));
         }
 
-        var restore = await restorePoints.EnsureAsync("PCDoc", cancellationToken).ConfigureAwait(false);
-        if (restore is RestorePointOutcome.ProtectionDisabled or RestorePointOutcome.Failed && !allowWithoutRestorePoint)
+        // Pas de point de restauration pour un effacement définitif seul : le cliché du disque garderait une copie
+        // des fichiers que l'on veut justement faire disparaître.
+        RestorePointOutcome? restore = null;
+        if (allowed.Any(a => a.Fixer.NeedsRestorePoint))
         {
-            return new FixSessionResult(restore, true, []);
-        }
+            restore = await restorePoints.EnsureAsync("PCDoc", cancellationToken).ConfigureAwait(false);
+            if (restore is RestorePointOutcome.ProtectionDisabled or RestorePointOutcome.Failed && !allowWithoutRestorePoint)
+            {
+                return new FixSessionResult(restore, true, []);
+            }
 
-        Activity.Write("restore", Describe(new LocalizedText($"Activity.Restore.{restore}")));
+            Activity.Write("restore", Describe(new LocalizedText($"Activity.Restore.{restore}")));
+        }
 
         foreach (var (finding, fixer) in allowed)
         {

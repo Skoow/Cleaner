@@ -13,20 +13,24 @@ namespace PCDoc.Modules.Cleanup;
 public sealed class SecureEraseFixer(ISecureEraser eraser, IProcessRunner runner) : IFixer
 {
     public const string Kind = "cleanup.erase";
-    private const int MaxPaths = 200;
+    public const int MaxPaths = 200;
 
     public string UndoKind => Kind;
 
     public bool SupportsUndo => false;
 
-    /// <summary>Nombre de fichiers effacés lors de la dernière action (affiché dans la page).</summary>
-    public event EventHandler<int>? Erased;
+    /// <summary>Un point de restauration (cliché VSS) garderait une copie des fichiers effacés.</summary>
+    public bool NeedsRestorePoint => false;
 
     public static Finding ForPaths(IReadOnlyList<string> paths)
     {
         ArgumentNullException.ThrowIfNull(paths);
-        return new Finding($"cleanup.erase.{string.Join('|', paths).GetHashCode(StringComparison.OrdinalIgnoreCase):x8}", CleanupModule.Id, Severity.Info,
-            new LocalizedText("Erase.Files.Title", paths.Count), new LocalizedText("Erase.Files.Explanation"), string.Join(Environment.NewLine, paths),
+        // Identifiant stable (SHA-256) ; le détail technique ne donne que le nombre d'éléments : le journal d'activité
+        // ne doit pas garder les noms des fichiers effacés.
+        var hash = Convert.ToHexString(global::System.Security.Cryptography.SHA256.HashData(
+            global::System.Text.Encoding.UTF8.GetBytes(string.Join('|', paths).ToUpperInvariant())))[..16];
+        return new Finding($"cleanup.erase.{hash}", CleanupModule.Id, Severity.Info,
+            new LocalizedText("Erase.Files.Title", paths.Count), new LocalizedText("Erase.Files.Explanation"), $"{paths.Count} item(s)",
             FixAvailable: true, Risk: RiskLevel.Conditional, Reversible: false, FixData: JsonSerializer.Serialize(new Data("files", [.. paths], null)));
     }
 
@@ -82,7 +86,6 @@ public sealed class SecureEraseFixer(ISecureEraser eraser, IProcessRunner runner
                 }
             }
         }, cancellationToken).ConfigureAwait(false);
-        Erased?.Invoke(this, erased);
         if (failed > 0)
         {
             throw new InvalidOperationException($"{erased} files erased, {failed} could not be erased (in use or protected)");

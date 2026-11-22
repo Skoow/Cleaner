@@ -64,7 +64,12 @@ public sealed partial class CleanupPageViewModel : ObservableObject
         {
             fixes.Completed += (_, _) =>
             {
-                EraseItems.Clear();
+                // Ne retire que ce qui a bien disparu : après un échec ou une annulation, le reste demeure listé.
+                foreach (var gone in EraseItems.Where(p => !File.Exists(p) && !Directory.Exists(p)).ToList())
+                {
+                    EraseItems.Remove(gone);
+                }
+
                 _ = AnalyzeAsync();
             };
         }

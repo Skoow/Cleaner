@@ -73,6 +73,10 @@
         <DockPanel Margin="0,12,0,0" AllowDrop="True" Drop="OnEraseDrop" Background="Transparent">
           <TextBlock DockPanel.Dock="Top" Text="{app:T Erase.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
           <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+            <Button DockPanel.Dock="Right" Content="{app:T Erase.PickFolder}" Click="OnPickFolder" Margin="8,0,0,0"
+                    AutomationProperties.Name="{app:T Erase.PickFolder}" />
+            <Button DockPanel.Dock="Right" Content="{app:T Erase.PickFiles}" Click="OnPickFiles" Margin="8,0,0,0"
+                    AutomationProperties.Name="{app:T Erase.PickFiles}" />
             <Button DockPanel.Dock="Right" Content="{app:T Erase.Add}" Command="{Binding AddErasePathCommand}" Margin="8,0,0,0"
                     AutomationProperties.Name="{app:T Erase.Add}" />
             <TextBox Text="{Binding ErasePath, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{app:T Erase.Add}" />

@@ -239,7 +239,7 @@ internal static class Composition
             Secrets = () =>
             {
                 var p = services.GetRequiredService<IUserProfileResolver>().Resolve();
-                return [Environment.MachineName, Environment.UserName, p.AccountName, p.AccountName.Split('\\')[^1], p.ProfilePath, p.Sid];
+                return [Environment.MachineName, Environment.UserName, Environment.UserDomainName, p.AccountName, p.AccountName.Split('\\')[^1], p.ProfilePath, p.Sid];
             },
         },
         PageId.System => new SystemPageViewModel(

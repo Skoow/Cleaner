@@ -28,6 +28,10 @@ public sealed partial class NetworkViewModel(NetworkTools network, IWifiProfiles
     [ObservableProperty]
     private bool _keysShown;
 
+    /// <summary>Erreur de la dernière lecture (WMI ou netsh indisponible), affichée au lieu de planter.</summary>
+    [ObservableProperty]
+    private string? _error;
+
     public ObservableCollection<AdapterRow> Adapters { get; } = [];
 
     public ObservableCollection<WifiRow> Wifi { get; } = [];
@@ -37,7 +41,20 @@ public sealed partial class NetworkViewModel(NetworkTools network, IWifiProfiles
     [RelayCommand]
     private async Task RefreshAsync()
     {
-        var adapters = await Task.Run(network.Adapters).ConfigureAwait(true);
+        Error = null;
+        IReadOnlyList<NetworkAdapterInfo> adapters;
+        try
+        {
+            adapters = await Task.Run(network.Adapters).ConfigureAwait(true);
+        }
+#pragma warning disable CA1031 // Lecture impossible : message affiché, la page reste utilisable.
+        catch (Exception ex)
+#pragma warning restore CA1031
+        {
+            Error = ex.Message;
+            return;
+        }
+
         Adapters.Clear();
         foreach (var a in adapters)
         {
@@ -58,7 +75,7 @@ public sealed partial class NetworkViewModel(NetworkTools network, IWifiProfiles
     {
         if (row is { Key.Length: > 0 } && KeysShown)
         {
-            clipboard?.SetText(row.Key);
+            clipboard?.SetSecret(row.Key);
         }
     }
 
@@ -73,7 +90,19 @@ public sealed partial class NetworkViewModel(NetworkTools network, IWifiProfiles
 
     private async Task LoadWifiAsync(bool withKeys)
     {
-        var profiles = await Task.Run(() => wifi.ListAsync(withKeys, CancellationToken.None)).ConfigureAwait(true);
+        IReadOnlyList<WifiProfile> profiles;
+        try
+        {
+            profiles = await Task.Run(() => wifi.ListAsync(withKeys, CancellationToken.None)).ConfigureAwait(true);
+        }
+#pragma warning disable CA1031 // netsh indisponible ou dossier temporaire refusé : message affiché.
+        catch (Exception ex)
+#pragma warning restore CA1031
+        {
+            Error = ex.Message;
+            return;
+        }
+
         Wifi.Clear();
         foreach (var p in profiles)
         {

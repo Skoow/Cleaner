@@ -130,7 +130,7 @@
   <data name="Net.Info.Gateway" xml:space="preserve"><value>Routeur</value></data>
   <data name="Net.Info.Dns" xml:space="preserve"><value>DNS</value></data>
   <data name="Dns.Title" xml:space="preserve"><value>DNS de {0} : {1}</value></data>
-  <data name="Dns.Explanation" xml:space="preserve"><value>Change les serveurs qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.</value></data>
+  <data name="Dns.Explanation" xml:space="preserve"><value>Change les serveurs (IPv4 et IPv6) qui traduisent les noms des sites en adresses. Peut être plus rapide ou bloquer des sites malveillants ; un réseau d'entreprise peut avoir besoin de son propre DNS. Annulable depuis l'Historique.</value></data>
   <data name="Dns.Undo" xml:space="preserve"><value>DNS de {0} modifiés</value></data>
   <data name="Dns.Choice.auto" xml:space="preserve"><value>Automatique (routeur)</value></data>
   <data name="Dns.Choice.cloudflare" xml:space="preserve"><value>Cloudflare (rapide, privé)</value></data>
