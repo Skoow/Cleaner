@@ -68,3 +68,47 @@ Security.NoProblem	No problem found.	Aucun problème trouvé.
 Security.NoUsb	No USB drive plugged in.	Aucune clé USB branchée.
 Security.UsbClean	No shortcut virus found.	Aucun virus raccourci trouvé.
 Security.FixSelected	Fix the selection	Corriger la sélection
+Security.Tab.Network	Network activity	Activité réseau
+Security.Tab.Extensions	Browser extensions	Extensions des navigateurs
+Security.Tab.SecondOpinion	Second opinion	Seconde analyse
+Net.Refresh	Refresh	Actualiser
+Net.ShowUdp	Also show UDP ports	Afficher aussi les ports UDP
+Net.Intro	Programs connected to the Internet or waiting for connections. "Unusual" = program started from Temp, Downloads or Public: check it with the Second opinion tab.	Programmes connectés à Internet ou en attente de connexions. « Inhabituel » = programme lancé depuis Temp, Téléchargements ou Public : vérifiez-le avec l'onglet Seconde analyse.
+Net.Suspicious	Unusual	Inhabituel
+Net.Process	Program	Programme
+Net.Protocol	Protocol	Protocole
+Net.Local	Local address	Adresse locale
+Net.Remote	Remote address	Adresse distante
+Net.State.ESTABLISHED	Connected	Connecté
+Net.State.LISTEN	Waiting for connections	En écoute
+Net.State.UDP	UDP	UDP
+Ext.Refresh	List the extensions	Lister les extensions
+Ext.Intro	Extensions of Chrome, Edge, Brave and Firefox for this account. An unknown extension can read every page you visit: block it if you did not install it. Blocking uses the browser's official policy (undo from History).	Extensions de Chrome, Edge, Brave et Firefox pour ce compte. Une extension inconnue peut lire toutes les pages que vous visitez : bloquez-la si vous ne l'avez pas installée. Le blocage utilise la stratégie officielle du navigateur (annulable depuis l'Historique).
+Ext.Browser	Browser	Navigateur
+Ext.Block	Block	Bloquer
+Ext.Blocked	blocked	bloquée
+Ext.Disabled	disabled	désactivée
+Security.extension.Title	Block the extension {0} ({1})	Bloquer l'extension {0} ({1})
+Security.extension.Explanation	The browser disables and removes it, and it cannot be reinstalled. Reversible from History.	Le navigateur la désactive et la retire, et elle ne peut plus être réinstallée. Annulable depuis l'Historique.
+SecondOpinion.Intro	Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. Their report is saved with PCDoc's reports.	Outils gratuits d'autres éditeurs, téléchargés depuis leur site officiel seulement quand vous cliquez, signature vérifiée, lancés sans fenêtre, puis supprimés. Leur rapport est enregistré avec ceux de PCDoc.
+SecondOpinion.SafetyScanner	Microsoft Safety Scanner	Microsoft Safety Scanner
+SecondOpinion.AdwCleaner	Malwarebytes AdwCleaner	Malwarebytes AdwCleaner
+SecondOpinion.Running.SafetyScanner	Microsoft Safety Scanner: download and quick scan (can take 10 to 30 minutes)…	Microsoft Safety Scanner : téléchargement et analyse rapide (10 à 30 minutes)…
+SecondOpinion.Running.AdwCleaner	AdwCleaner: download, scan and removal of adware…	AdwCleaner : téléchargement, analyse et suppression des logiciels publicitaires…
+SecondOpinion.Done	{0} finished (code {1}). See its report below and in History.	{0} terminé (code {1}). Voir son rapport ci-dessous et dans l'Historique.
+SecondOpinion.Failed	{0} could not run: {1}	{0} n'a pas pu s'exécuter : {1}
+SecondOpinion.Cancelled	Stopped.	Arrêté.
+VT.Intro	Checks the programs started with Windows on VirusTotal (about 70 antivirus engines). Only the fingerprint (SHA-256) is sent, never the file. You need your own free key: create an account on virustotal.com, then copy the API key from your profile.	Vérifie sur VirusTotal (environ 70 antivirus) les programmes lancés avec Windows. Seule l'empreinte (SHA-256) est envoyée, jamais le fichier. Il faut votre propre clé gratuite : créez un compte sur virustotal.com, puis copiez la clé API depuis votre profil.
+VT.Key	VirusTotal API key	Clé API VirusTotal
+VT.SaveKey	Save the key	Enregistrer la clé
+VT.Run	Check the start-up programs	Vérifier les programmes au démarrage
+VT.Result	Result	Résultat
+VT.KeySaved	Key saved (encrypted for your account).	Clé enregistrée (chiffrée pour votre compte).
+VT.KeyRemoved	Key removed.	Clé supprimée.
+VT.KeyInvalid	This is not a valid VirusTotal key (64 characters).	Ce n'est pas une clé VirusTotal valide (64 caractères).
+VT.NeedKey	Enter your VirusTotal key first.	Saisissez d'abord votre clé VirusTotal.
+VT.Running	Checking… (4 files per minute with a free key)	Vérification… (4 fichiers par minute avec une clé gratuite)
+VT.Done	{0} programs checked, {1} flagged by at least one antivirus.	{0} programmes vérifiés, {1} signalés par au moins un antivirus.
+VT.Unknown	Unknown to VirusTotal	Inconnu de VirusTotal
+VT.Stats	{0} / {1} antivirus engines	{0} / {1} antivirus
+VT.Error	Error: {0}	Erreur : {0}

@@ -127,6 +127,91 @@
           </ScrollViewer>
         </DockPanel>
       </TabItem>
+      <TabItem Header="{app:T Security.Tab.Network}" DataContext="{Binding Tools}">
+        <DockPanel Margin="0,12,0,0">
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="{app:T Net.Refresh}" Command="{Binding RefreshConnectionsCommand}" Margin="0,0,12,0" AutomationProperties.Name="{app:T Net.Refresh}" />
+            <CheckBox Content="{app:T Net.ShowUdp}" IsChecked="{Binding ShowAllConnections}" VerticalAlignment="Center" AutomationProperties.Name="{app:T Net.ShowUdp}" />
+          </StackPanel>
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Net.Intro}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <DataGrid ItemsSource="{Binding Connections}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
+                    EnableRowVirtualization="True" AutomationProperties.Name="{app:T Security.Tab.Network}">
+            <DataGrid.Columns>
+              <DataGridCheckBoxColumn Header="{app:T Net.Suspicious}" Binding="{Binding Suspicious}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Net.Process}" Binding="{Binding Process}" Width="*" />
+              <DataGridTextColumn Header="{app:T Net.Protocol}" Binding="{Binding Protocol}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Net.Local}" Binding="{Binding Local}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Net.Remote}" Binding="{Binding Remote}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Status}" Binding="{Binding State}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.File}" Binding="{Binding Path}" Width="2*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Security.Tab.Extensions}" DataContext="{Binding Tools}">
+        <DockPanel Margin="0,12,0,0">
+          <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{app:T Ext.Refresh}" Command="{Binding RefreshExtensionsCommand}" Margin="0,0,0,8"
+                  AutomationProperties.Name="{app:T Ext.Refresh}" />
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Ext.Intro}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <DataGrid ItemsSource="{Binding Extensions}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
+                    AutomationProperties.Name="{app:T Security.Tab.Extensions}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{app:T Ext.Browser}" Binding="{Binding Browser}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Name}" Binding="{Binding Name}" Width="2*" />
+              <DataGridTextColumn Header="{app:T Column.Version}" Binding="{Binding Version}" Width="Auto" />
+              <DataGridTextColumn Header="{app:T Column.Status}" Binding="{Binding Status}" Width="Auto" />
+              <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="*" />
+              <DataGridTemplateColumn Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate DataType="{x:Type s:ExtensionView}">
+                    <Button Content="{app:T Ext.Block}" Margin="4,2" IsEnabled="{Binding CanBlock}" AutomationProperties.Name="{Binding Name}"
+                            Command="{Binding DataContext.Tools.BlockExtensionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Security.Tab.SecondOpinion}" DataContext="{Binding Tools}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,12,0,0">
+            <TextBlock Text="{app:T SecondOpinion.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+              <Button Content="{app:T SecondOpinion.SafetyScanner}" Command="{Binding RunSafetyScannerCommand}" Margin="0,0,8,0" MinWidth="200"
+                      AutomationProperties.Name="{app:T SecondOpinion.SafetyScanner}" />
+              <Button Content="{app:T SecondOpinion.AdwCleaner}" Command="{Binding RunAdwCleanerCommand}" Margin="0,0,8,0" MinWidth="200"
+                      AutomationProperties.Name="{app:T SecondOpinion.AdwCleaner}" />
+              <Button Content="{app:T Security.CancelScan}" Command="{Binding CancelToolCommand}" AutomationProperties.Name="{app:T Security.CancelScan}"
+                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+            </StackPanel>
+            <TextBlock Text="{Binding ToolStatus}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,6" AutomationProperties.LiveSetting="Polite"
+                       Visibility="{Binding ToolStatus, Converter={StaticResource NotNullToVisibility}}" />
+            <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding ToolOutput, Mode=OneWay}" Height="140" VerticalScrollBarVisibility="Auto"
+                     TextWrapping="Wrap" AutomationProperties.Name="{app:T Diag.RepairOutput}" />
+            <TextBlock Text="VirusTotal" Style="{StaticResource Pcdoc.SectionTitle}" Margin="0,16,0,4" />
+            <TextBlock Text="{app:T VT.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+              <TextBox Text="{Binding ApiKey, UpdateSourceTrigger=PropertyChanged}" MinWidth="320" Margin="0,0,8,0"
+                       AutomationProperties.Name="{app:T VT.Key}" ToolTip="{app:T VT.Key}" />
+              <Button Content="{app:T VT.SaveKey}" Command="{Binding SaveApiKeyCommand}" Margin="0,0,8,0" AutomationProperties.Name="{app:T VT.SaveKey}" />
+              <Button Content="{app:T VT.Run}" Command="{Binding RunVirusTotalCommand}" AutomationProperties.Name="{app:T VT.Run}" />
+            </StackPanel>
+            <TextBlock Text="{Binding VirusTotalStatus}" TextWrapping="Wrap" Margin="0,0,0,6"
+                       Visibility="{Binding VirusTotalStatus, Converter={StaticResource NotNullToVisibility}}" />
+            <DataGrid ItemsSource="{Binding VirusTotal}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="None"
+                      MaxHeight="300" AutomationProperties.Name="VirusTotal">
+              <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="{app:T Net.Suspicious}" Binding="{Binding Alert}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Column.Name}" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="{app:T VT.Result}" Binding="{Binding Result}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Column.File}" Binding="{Binding Path}" Width="2*" />
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
     </TabControl>
   </DockPanel>
 </UserControl>

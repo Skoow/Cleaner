@@ -73,4 +73,48 @@
   <data name="Security.NoUsb" xml:space="preserve"><value>No USB drive plugged in.</value></data>
   <data name="Security.UsbClean" xml:space="preserve"><value>No shortcut virus found.</value></data>
   <data name="Security.FixSelected" xml:space="preserve"><value>Fix the selection</value></data>
+  <data name="Security.Tab.Network" xml:space="preserve"><value>Network activity</value></data>
+  <data name="Security.Tab.Extensions" xml:space="preserve"><value>Browser extensions</value></data>
+  <data name="Security.Tab.SecondOpinion" xml:space="preserve"><value>Second opinion</value></data>
+  <data name="Net.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Net.ShowUdp" xml:space="preserve"><value>Also show UDP ports</value></data>
+  <data name="Net.Intro" xml:space="preserve"><value>Programs connected to the Internet or waiting for connections. "Unusual" = program started from Temp, Downloads or Public: check it with the Second opinion tab.</value></data>
+  <data name="Net.Suspicious" xml:space="preserve"><value>Unusual</value></data>
+  <data name="Net.Process" xml:space="preserve"><value>Program</value></data>
+  <data name="Net.Protocol" xml:space="preserve"><value>Protocol</value></data>
+  <data name="Net.Local" xml:space="preserve"><value>Local address</value></data>
+  <data name="Net.Remote" xml:space="preserve"><value>Remote address</value></data>
+  <data name="Net.State.ESTABLISHED" xml:space="preserve"><value>Connected</value></data>
+  <data name="Net.State.LISTEN" xml:space="preserve"><value>Waiting for connections</value></data>
+  <data name="Net.State.UDP" xml:space="preserve"><value>UDP</value></data>
+  <data name="Ext.Refresh" xml:space="preserve"><value>List the extensions</value></data>
+  <data name="Ext.Intro" xml:space="preserve"><value>Extensions of Chrome, Edge, Brave and Firefox for this account. An unknown extension can read every page you visit: block it if you did not install it. Blocking uses the browser's official policy (undo from History).</value></data>
+  <data name="Ext.Browser" xml:space="preserve"><value>Browser</value></data>
+  <data name="Ext.Block" xml:space="preserve"><value>Block</value></data>
+  <data name="Ext.Blocked" xml:space="preserve"><value>blocked</value></data>
+  <data name="Ext.Disabled" xml:space="preserve"><value>disabled</value></data>
+  <data name="Security.extension.Title" xml:space="preserve"><value>Block the extension {0} ({1})</value></data>
+  <data name="Security.extension.Explanation" xml:space="preserve"><value>The browser disables and removes it, and it cannot be reinstalled. Reversible from History.</value></data>
+  <data name="SecondOpinion.Intro" xml:space="preserve"><value>Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. Their report is saved with PCDoc's reports.</value></data>
+  <data name="SecondOpinion.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner</value></data>
+  <data name="SecondOpinion.AdwCleaner" xml:space="preserve"><value>Malwarebytes AdwCleaner</value></data>
+  <data name="SecondOpinion.Running.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner: download and quick scan (can take 10 to 30 minutes)…</value></data>
+  <data name="SecondOpinion.Running.AdwCleaner" xml:space="preserve"><value>AdwCleaner: download, scan and removal of adware…</value></data>
+  <data name="SecondOpinion.Done" xml:space="preserve"><value>{0} finished (code {1}). See its report below and in History.</value></data>
+  <data name="SecondOpinion.Failed" xml:space="preserve"><value>{0} could not run: {1}</value></data>
+  <data name="SecondOpinion.Cancelled" xml:space="preserve"><value>Stopped.</value></data>
+  <data name="VT.Intro" xml:space="preserve"><value>Checks the programs started with Windows on VirusTotal (about 70 antivirus engines). Only the fingerprint (SHA-256) is sent, never the file. You need your own free key: create an account on virustotal.com, then copy the API key from your profile.</value></data>
+  <data name="VT.Key" xml:space="preserve"><value>VirusTotal API key</value></data>
+  <data name="VT.SaveKey" xml:space="preserve"><value>Save the key</value></data>
+  <data name="VT.Run" xml:space="preserve"><value>Check the start-up programs</value></data>
+  <data name="VT.Result" xml:space="preserve"><value>Result</value></data>
+  <data name="VT.KeySaved" xml:space="preserve"><value>Key saved (encrypted for your account).</value></data>
+  <data name="VT.KeyRemoved" xml:space="preserve"><value>Key removed.</value></data>
+  <data name="VT.KeyInvalid" xml:space="preserve"><value>This is not a valid VirusTotal key (64 characters).</value></data>
+  <data name="VT.NeedKey" xml:space="preserve"><value>Enter your VirusTotal key first.</value></data>
+  <data name="VT.Running" xml:space="preserve"><value>Checking… (4 files per minute with a free key)</value></data>
+  <data name="VT.Done" xml:space="preserve"><value>{0} programs checked, {1} flagged by at least one antivirus.</value></data>
+  <data name="VT.Unknown" xml:space="preserve"><value>Unknown to VirusTotal</value></data>
+  <data name="VT.Stats" xml:space="preserve"><value>{0} / {1} antivirus engines</value></data>
+  <data name="VT.Error" xml:space="preserve"><value>Error: {0}</value></data>
 </root>

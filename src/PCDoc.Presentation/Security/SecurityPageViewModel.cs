@@ -82,6 +82,9 @@ public sealed partial class SecurityPageViewModel : ObservableObject
 
     public FixConfirmationViewModel? Fixes { get; }
 
+    /// <summary>Activité réseau, extensions, seconde analyse et VirusTotal (null = indisponible).</summary>
+    public SecurityToolsViewModel? Tools { get; init; }
+
     public ObservableCollection<AntivirusRow> Antivirus { get; } = [];
 
     public ObservableCollection<DetectionRow> Detections { get; } = [];

@@ -176,6 +176,15 @@ internal static class Composition
         services.AddSingleton<IFixer>(sp => new RegistryRepairFixer(sp.GetRequiredService<SecurityEngine>()));
         services.AddSingleton<IFixer>(sp => new UsbFixer(sp.GetRequiredService<SecurityEngine>()));
 
+        // Outils de sécurité (v0.9) : activité réseau, extensions, seconde analyse, VirusTotal.
+        services.AddSingleton<INetworkConnections, NetworkConnections>();
+        services.AddSingleton<IBrowserExtensions, BrowserExtensions>();
+        services.AddSingleton(sp => new ExtensionBlockFixer(sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>()));
+        services.AddSingleton<IFixer>(sp => sp.GetRequiredService<ExtensionBlockFixer>());
+        services.AddSingleton<ISecondOpinion>(sp => new SecondOpinion(sp.GetRequiredService<ISignatureVerifier>(),
+            sp.GetRequiredService<PCDoc.Core.Activity.IReportWriter>()));
+        services.AddSingleton<IVirusTotal>(_ => new VirusTotalClient(Path.Combine(AppPaths.DataRoot, "virustotal.key")));
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton<PCDoc.Core.Activity.IActivityLog>(sp => journalPath is null
             ? new PCDoc.Core.Activity.NullActivityLog()
@@ -234,8 +243,7 @@ internal static class Composition
         },
         PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
-        PageId.Security => new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(),
-            NewFixPanel(services), Mode(services)),
+        PageId.Security => SecurityPage(services),
         PageId.Privacy => new OptimizePageViewModel(services.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId),
             services.GetRequiredService<ILocalizer>(), NewFixPanel(services), Mode(services), "Privacy"),
         PageId.Setup => new SetupPageViewModel(new SetupSources(
@@ -263,6 +271,18 @@ internal static class Composition
             RemovableRoots = () => [.. services.GetRequiredService<IRemovableDrives>().List().Select(d => d.Root)],
         },
     };
+
+    private static SecurityPageViewModel SecurityPage(IServiceProvider services)
+    {
+        var fixes = NewFixPanel(services);
+        return new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(), fixes, Mode(services))
+        {
+            Tools = new SecurityToolsViewModel(services.GetRequiredService<INetworkConnections>(), services.GetRequiredService<IBrowserExtensions>(),
+                services.GetRequiredService<ExtensionBlockFixer>(), services.GetRequiredService<ISecondOpinion>(), services.GetRequiredService<IVirusTotal>(),
+                new VirusTotalCheck(services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<IVirusTotal>()),
+                services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(), services.GetRequiredService<ILocalizer>(), fixes),
+        };
+    }
 
     /// <summary>Entretien automatique sans fenêtre (tâche planifiée lancée avec « --maintenance »).</summary>
     public static PCDoc.Presentation.Maintenance.MaintenanceRunner Maintenance(IServiceProvider services) => new(
