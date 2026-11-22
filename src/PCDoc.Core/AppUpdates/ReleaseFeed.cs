@@ -15,8 +15,14 @@ public interface IAppUpdater
     /// <summary>Null si l'installation automatique est possible ; sinon la clé du texte qui explique pourquoi.</summary>
     string? InstallBlockedReason();
 
-    /// <summary>Télécharge l'installateur, vérifie sa somme SHA-256 et sa signature (même éditeur que PCDoc), puis le lance.</summary>
-    Task InstallAsync(AppRelease release, Action<string>? progress, CancellationToken cancellationToken);
+    /// <summary>
+    /// Télécharge l'installateur dans un dossier protégé et vérifie sa somme SHA-256 et sa signature (même signataire
+    /// que PCDoc, chaîne et révocation contrôlées). Renvoie son chemin ; rien n'est encore installé.
+    /// </summary>
+    Task<string> DownloadAsync(AppRelease release, Action<string>? progress, CancellationToken cancellationToken);
+
+    /// <summary>Lance l'installateur vérifié ; appelé quand PCDoc se ferme, pour qu'aucune correction ne soit interrompue.</summary>
+    void LaunchInstaller(string installer);
 }
 
 /// <summary>
@@ -31,7 +37,8 @@ public static class ReleaseFeed
     private const string DownloadPrefix = "https://github.com/" + Repository + "/releases/download/";
 
     /// <summary>La version publiée si elle est plus récente que <paramref name="current"/>, sinon null.</summary>
-    public static AppRelease? Parse(string json, Version current, string architecture)
+    /// <param name="currentIsPrerelease">Vrai pour une préversion (« 1.1.0-beta ») : la version finale 1.1.0 est alors plus récente.</param>
+    public static AppRelease? Parse(string json, Version current, string architecture, bool currentIsPrerelease = false)
     {
         ArgumentNullException.ThrowIfNull(current);
         using var doc = JsonDocument.Parse(json);
@@ -44,7 +51,7 @@ public static class ReleaseFeed
             return null;
         }
 
-        if (version <= current)
+        if (version < current || (version == current && !currentIsPrerelease))
         {
             return null;
         }
@@ -61,11 +68,11 @@ public static class ReleaseFeed
                     continue;
                 }
 
-                if (name.Equals(wanted, StringComparison.OrdinalIgnoreCase))
+                if (name.Equals(wanted, StringComparison.Ordinal))
                 {
                     (installerUrl, installerName) = (url, name);
                 }
-                else if (name.Equals("SHA256SUMS.txt", StringComparison.OrdinalIgnoreCase))
+                else if (name.Equals("SHA256SUMS.txt", StringComparison.Ordinal))
                 {
                     checksums = url;
                 }
@@ -113,5 +120,18 @@ public static class ReleaseFeed
 /// <summary>Dernière version trouvée pendant cette session (bandeau au démarrage, puis page Paramètres).</summary>
 public sealed class AppUpdateState
 {
-    public AppRelease? Latest { get; set; }
+    private AppRelease? _latest;
+
+    /// <summary>Prévient la page Paramètres déjà ouverte quand la vérification du démarrage se termine.</summary>
+    public event EventHandler? Changed;
+
+    public AppRelease? Latest
+    {
+        get => _latest;
+        set
+        {
+            _latest = value;
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

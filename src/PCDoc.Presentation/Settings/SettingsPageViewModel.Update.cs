@@ -38,8 +38,8 @@ public sealed partial class SettingsPageViewModel
         }
     }
 
-    /// <summary>Ferme PCDoc pour que l'installateur puisse le remplacer.</summary>
-    public Action? ExitApp { get; init; }
+    /// <summary>Retient l'installateur vérifié et ferme PCDoc : il est lancé à la fermeture (jamais pendant une correction).</summary>
+    public Action<string>? InstallOnExit { get; init; }
 
     /// <summary>Vrai pendant une correction : PCDoc ne doit pas se fermer, l'installation attend.</summary>
     public Func<bool>? IsBusy { get; init; }
@@ -54,6 +54,17 @@ public sealed partial class SettingsPageViewModel
             if (value?.Latest is { } release)
             {
                 ShowRelease(release);
+            }
+
+            if (value is not null)
+            {
+                value.Changed += (_, _) =>
+                {
+                    if (value.Latest is { } r && !AppUpdateBusy)
+                    {
+                        ShowRelease(r);
+                    }
+                };
             }
         }
     }
@@ -138,9 +149,9 @@ public sealed partial class SettingsPageViewModel
         AppUpdateStatus = _localizer["AppUpdate.Downloading"];
         try
         {
-            await _updater.InstallAsync(release, null, CancellationToken.None).ConfigureAwait(true);
-            AppUpdateStatus = _localizer["AppUpdate.Installing"];
-            ExitApp?.Invoke();
+            var installer = await _updater.DownloadAsync(release, null, CancellationToken.None).ConfigureAwait(true);
+            AppUpdateStatus = _localizer[IsBusy?.Invoke() == true ? "AppUpdate.AfterFix" : "AppUpdate.Installing"];
+            InstallOnExit?.Invoke(installer);
         }
 #pragma warning disable CA1031 // Somme ou signature refusée, téléchargement interrompu : rien n'est installé, message affiché.
         catch (Exception ex)

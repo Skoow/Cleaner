@@ -177,15 +177,33 @@ public partial class App : Application
                 _logger?.Information("PCDoc {Version} is available", release.Version);
             }
         }
-        catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or TaskCanceledException or InvalidOperationException or System.Text.Json.JsonException)
+#pragma warning disable CA1031 // Vérification facultative : pas d'Internet, GitHub indisponible, fermeture en cours… sans effet sur PCDoc.
+        catch (Exception ex)
+#pragma warning restore CA1031
         {
             _logger?.Information("Update check skipped: {Message}", ex.Message);
         }
     }
 
+    /// <summary>Installateur de PCDoc vérifié, à lancer une fois l'application fermée.</summary>
+    internal static string? PendingInstaller { get; set; }
+
     protected override void OnExit(ExitEventArgs e)
     {
         _logger?.Information("Exit");
+        if (PendingInstaller is { } installer && _services is not null)
+        {
+            try
+            {
+                _services.GetRequiredService<PCDoc.Core.AppUpdates.IAppUpdater>().LaunchInstaller(installer);
+                _logger?.Information("PCDoc installer started");
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception or System.IO.IOException)
+            {
+                _logger?.Warning(ex, "The PCDoc installer could not be started");
+            }
+        }
+
         _services?.Dispose();
         _logger?.Dispose();
         _instance?.Dispose(); // libère le mutex (aussi libéré par Windows à la fin du processus)

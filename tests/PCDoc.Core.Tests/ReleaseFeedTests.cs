@@ -26,6 +26,7 @@ public sealed class ReleaseFeedTests
 
         ReleaseFeed.Parse(Json, new Version(1, 0, 0), "arm64")!.InstallerUrl.Should().BeNull("un lien hors du dépôt officiel est ignoré");
         ReleaseFeed.Parse(Json, new Version(1, 2, 0), "x64").Should().BeNull("déjà à jour");
+        ReleaseFeed.Parse(Json, new Version(1, 2, 0), "x64", currentIsPrerelease: true).Should().NotBeNull("1.2.0 remplace 1.2.0-beta");
         ReleaseFeed.Parse(Json.Replace("\"prerelease\": false", "\"prerelease\": true", StringComparison.Ordinal), new Version(1, 0, 0), "x64").Should().BeNull();
         ReleaseFeed.Parse(Json.Replace("https://github.com/Skoow/Cleaner/releases/tag", "https://github.com/other/repo/releases/tag", StringComparison.Ordinal),
             new Version(1, 0, 0), "x64").Should().BeNull();

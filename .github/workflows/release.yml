@@ -21,10 +21,9 @@ jobs:
     env:
       # Signature (Azure Trusted Signing) seulement si les secrets sont configurés ; sinon la version n'est pas signée
       # et PCDoc propose alors la page de téléchargement au lieu d'installer la mise à jour tout seul.
+      # Les secrets ne sont donnés qu'aux deux étapes de signature (jamais à la compilation ni aux tests).
       SIGN: ${{ secrets.AZURE_CLIENT_ID != '' && 'true' || 'false' }}
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
@@ -33,7 +32,7 @@ jobs:
       - name: Version from the tag
         shell: pwsh
         run: |
-          $version = "${{ github.ref_name }}".TrimStart('v')
+          $version = $env:TAG.TrimStart('v')
           if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') { Write-Error "Bad tag $version"; exit 1 }
           "VERSION=$version" >> $env:GITHUB_ENV
           "MSI_VERSION=$($version.Split('-')[0])" >> $env:GITHUB_ENV
@@ -50,9 +49,13 @@ jobs:
           -p:Version=${{ env.VERSION }} -o out/${{ matrix.rid }}
       - name: Signing tool
         if: env.SIGN == 'true'
-        run: dotnet tool install --global sign --prerelease
+        run: dotnet tool install --global sign --version 1.1.5
       - name: Sign PCDoc.exe
         if: env.SIGN == 'true'
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: >
           sign code trusted-signing "out/${{ matrix.rid }}/PCDoc.exe"
           --trusted-signing-endpoint "${{ vars.SIGNING_ENDPOINT }}" --trusted-signing-account "${{ vars.SIGNING_ACCOUNT }}"
@@ -65,6 +68,10 @@ jobs:
           Move-Item out/msi/PCDoc.msi "PCDoc-$env:VERSION-$env:ARCH.msi"
       - name: Sign the installer
         if: env.SIGN == 'true'
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: >
           sign code trusted-signing "PCDoc-${{ env.VERSION }}-${{ env.ARCH }}.msi"
           --trusted-signing-endpoint "${{ vars.SIGNING_ENDPOINT }}" --trusted-signing-account "${{ vars.SIGNING_ACCOUNT }}"
@@ -96,7 +103,7 @@ jobs:
           path: dist
           merge-multiple: true
       - name: Checksums
-        run: cd dist && sha256sum PCDoc-*.zip PCDoc-*.msi > SHA256SUMS.txt && cat SHA256SUMS.txt
+        run: cd dist && sha256sum PCDoc-*.zip PCDoc-*.msi sbom-*.cdx.json > SHA256SUMS.txt && cat SHA256SUMS.txt
       - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
           # Une version « x.y.z-beta » reste une préversion : la mise à jour automatique ne la propose pas.

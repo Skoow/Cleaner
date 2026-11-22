@@ -304,7 +304,11 @@ internal static class Composition
             Updater = services.GetRequiredService<PCDoc.Core.AppUpdates.IAppUpdater>(),
             State = services.GetRequiredService<PCDoc.Core.AppUpdates.AppUpdateState>(),
             IsBusy = () => services.GetRequiredService<PCDoc.Core.Fixing.FixPipeline>().IsRunning,
-            ExitApp = () => System.Windows.Application.Current?.MainWindow?.Close(),
+            InstallOnExit = installer =>
+            {
+                App.PendingInstaller = installer; // lancé dans OnExit : jamais pendant une correction
+                System.Windows.Application.Current?.MainWindow?.Close();
+            },
             RemovableRoots = () => [.. services.GetRequiredService<IRemovableDrives>().List().Select(d => d.Root)],
         },
     };

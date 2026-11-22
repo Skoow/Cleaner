@@ -237,7 +237,7 @@
   <data name="Bilan.ForumHeader" xml:space="preserve"><value>Anonymous report made with PCDoc (personal information removed).</value></data>
   <data name="AppUpdate.Title" xml:space="preserve"><value>PCDoc updates</value></data>
   <data name="AppUpdate.Auto" xml:space="preserve"><value>Check for a new version when PCDoc starts</value></data>
-  <data name="AppUpdate.Privacy" xml:space="preserve"><value>PCDoc only reads the latest version number on GitHub: nothing about you or your PC is sent.</value></data>
+  <data name="AppUpdate.Privacy" xml:space="preserve"><value>PCDoc only reads the latest version number on GitHub (GitHub sees your IP address, like any website): nothing about you or your PC is sent.</value></data>
   <data name="AppUpdate.Check" xml:space="preserve"><value>Check now</value></data>
   <data name="AppUpdate.Install" xml:space="preserve"><value>Install the update</value></data>
   <data name="AppUpdate.CopyLink" xml:space="preserve"><value>Copy the download link</value></data>
@@ -247,7 +247,8 @@
   <data name="AppUpdate.Available" xml:space="preserve"><value>PCDoc {0} is available.</value></data>
   <data name="AppUpdate.Banner" xml:space="preserve"><value>A new version of PCDoc ({0}) is available.</value></data>
   <data name="AppUpdate.Downloading" xml:space="preserve"><value>Downloading and checking the installer…</value></data>
-  <data name="AppUpdate.Installing" xml:space="preserve"><value>The installer is running; PCDoc closes. Open PCDoc again from the Start menu afterwards.</value></data>
+  <data name="AppUpdate.Installing" xml:space="preserve"><value>PCDoc closes and the installer starts. Open PCDoc again from the Start menu afterwards.</value></data>
+  <data name="AppUpdate.AfterFix" xml:space="preserve"><value>The update is ready: it will be installed when PCDoc closes, after the current fix.</value></data>
   <data name="AppUpdate.Failed" xml:space="preserve"><value>The update could not be done: {0}</value></data>
   <data name="AppUpdate.NotInstalled" xml:space="preserve"><value>Automatic installation is only for PCDoc installed with its installer: copy the link to download the new version.</value></data>
   <data name="AppUpdate.Unsigned" xml:space="preserve"><value>This copy of PCDoc is not signed, so the installer cannot be checked: copy the link to download it.</value></data>
