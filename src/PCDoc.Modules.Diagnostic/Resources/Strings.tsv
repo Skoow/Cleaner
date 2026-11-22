@@ -85,3 +85,35 @@ Help.Step1	1. Turn the PC off and on three times in a row during startup: Window
 Help.Step2	2. Choose Troubleshoot > Advanced options > System Restore, and pick the restore point created by PCDoc before its last changes.	2. Choisissez Dépannage > Options avancées > Restauration du système, puis le point de restauration créé par PCDoc avant ses dernières modifications.
 Help.Step3	3. If that is not enough: Troubleshoot > Advanced options > Startup Settings > Safe Mode, then undo the last changes from PCDoc's History page.	3. Si ça ne suffit pas : Dépannage > Options avancées > Paramètres > Mode sans échec, puis annulez les dernières modifications depuis la page Historique de PCDoc.
 Help.Step4	4. Last resort: Troubleshoot > Reset this PC > Keep my files.	4. En dernier recours : Dépannage > Réinitialiser ce PC > Conserver mes fichiers.
+Repair.RenewIp.Title	Get a new IP address	Obtenir une nouvelle adresse IP
+Repair.RenewIp.Explanation	Asks the router for a new address and clears the DNS cache. The connection is cut for a few seconds.	Redemande une adresse au routeur et vide le cache DNS. La connexion est coupée quelques secondes.
+Repair.RestartAudio.Title	Restart the sound services	Redémarrer les services du son
+Repair.RestartAudio.Explanation	Fixes sound that suddenly stopped working. Instant and harmless.	Corrige le son qui s'est arrêté d'un coup. Instantané et sans risque.
+Repair.NetworkReset.Title	Reset the network settings	Réinitialiser les réglages réseau
+Repair.NetworkReset.Explanation	Resets Winsock and TCP/IP. Fixed IP addresses and some VPN settings are erased. A restart is needed.	Réinitialise Winsock et TCP/IP. Les adresses IP fixes et certains réglages de VPN sont effacés. Un redémarrage est nécessaire.
+Repair.WindowsUpdateReset.Title	Repair Windows Update	Réparer Windows Update
+Repair.WindowsUpdateReset.Explanation	Stops the update services, renames their cache folders (Windows recreates them) and restarts them. The update history shown in Settings is emptied.	Arrête les services de mise à jour, renomme leurs dossiers de cache (Windows les recrée) et les redémarre. L'historique des mises à jour affiché dans les Paramètres est vidé.
+Diag.Tab.Assistants	Assistants	Assistants
+Assistant.Intro	Describe the problem: PCDoc checks each possible cause in order and offers the right repair.	Décrivez le problème : PCDoc vérifie chaque cause possible dans l'ordre et propose la bonne réparation.
+Assistant.NoInternet	No Internet	Pas d'Internet
+Assistant.NoSound	No sound	Pas de son
+Assistant.Status.Ok	OK	OK
+Assistant.Status.Problem	Problem	Problème
+Assistant.Status.Unknown	To check	À vérifier
+Assistant.Wmi	Windows could not provide the information (WMI). Restart the PC and try again.	Windows n'a pas pu fournir les informations (WMI). Redémarrez le PC et réessayez.
+Assistant.Net.NoAdapter	No network card is connected. Check the cable, or that Wi-Fi is on and connected to a network.	Aucune carte réseau n'est connectée. Vérifiez le câble, ou que le Wi-Fi est activé et connecté à un réseau.
+Assistant.Net.Adapter	Connected network card: {0}	Carte réseau connectée : {0}
+Assistant.Net.NoIp	The router did not give an address to this PC. Restart the router, then get a new address.	Le routeur n'a pas donné d'adresse à ce PC. Redémarrez le routeur, puis obtenez une nouvelle adresse.
+Assistant.Net.Ip	IP address: {0}	Adresse IP : {0}
+Assistant.Net.NoGateway	No router (gateway) is known. Get a new address.	Aucun routeur (passerelle) n'est connu. Obtenez une nouvelle adresse.
+Assistant.Net.GatewayDown	The router ({0}) does not answer. Restart it, check the cable or the Wi-Fi.	Le routeur ({0}) ne répond pas. Redémarrez-le, vérifiez le câble ou le Wi-Fi.
+Assistant.Net.Gateway	The router ({0}) answers.	Le routeur ({0}) répond.
+Assistant.Net.NoInternet	The router answers but Internet does not. Restart the box; if it continues, reset the network settings or call your provider.	Le routeur répond mais pas Internet. Redémarrez la box ; si cela continue, réinitialisez les réglages réseau ou appelez votre fournisseur.
+Assistant.Net.NoDns	Internet works but website names are not found (DNS). Clear the DNS cache.	Internet marche mais les noms des sites ne sont pas trouvés (DNS). Videz le cache DNS.
+Assistant.Net.Ok	Internet works. If one website does not open, the problem is on its side or in the browser.	Internet fonctionne. Si un site ne s'ouvre pas, le problème vient de lui ou du navigateur.
+Assistant.Sound.ServiceStopped	The Windows sound service is stopped.	Le service du son de Windows est arrêté.
+Assistant.Sound.Service	The sound services are running.	Les services du son fonctionnent.
+Assistant.Sound.NoDevice	No sound device found: install the audio driver (Updates page, drivers) or check that the device is plugged in.	Aucun périphérique audio trouvé : installez le pilote audio (page Mises à jour, pilotes) ou vérifiez qu'il est branché.
+Assistant.Sound.DeviceError	Audio device in error: {0}. Update its driver (Updates page).	Périphérique audio en erreur : {0}. Mettez à jour son pilote (page Mises à jour).
+Assistant.Sound.Device	Sound devices: {0}	Périphériques audio : {0}
+Assistant.Sound.CheckVolume	Check the volume and the output device (speaker icon next to the clock): the right speakers or headphones must be selected.	Vérifiez le volume et la sortie (icône du haut-parleur près de l'horloge) : les bons haut-parleurs ou le bon casque doivent être choisis.

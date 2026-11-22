@@ -90,4 +90,36 @@
   <data name="Help.Step2" xml:space="preserve"><value>2. Choisissez Dépannage &gt; Options avancées &gt; Restauration du système, puis le point de restauration créé par PCDoc avant ses dernières modifications.</value></data>
   <data name="Help.Step3" xml:space="preserve"><value>3. Si ça ne suffit pas : Dépannage &gt; Options avancées &gt; Paramètres &gt; Mode sans échec, puis annulez les dernières modifications depuis la page Historique de PCDoc.</value></data>
   <data name="Help.Step4" xml:space="preserve"><value>4. En dernier recours : Dépannage &gt; Réinitialiser ce PC &gt; Conserver mes fichiers.</value></data>
+  <data name="Repair.RenewIp.Title" xml:space="preserve"><value>Obtenir une nouvelle adresse IP</value></data>
+  <data name="Repair.RenewIp.Explanation" xml:space="preserve"><value>Redemande une adresse au routeur et vide le cache DNS. La connexion est coupée quelques secondes.</value></data>
+  <data name="Repair.RestartAudio.Title" xml:space="preserve"><value>Redémarrer les services du son</value></data>
+  <data name="Repair.RestartAudio.Explanation" xml:space="preserve"><value>Corrige le son qui s'est arrêté d'un coup. Instantané et sans risque.</value></data>
+  <data name="Repair.NetworkReset.Title" xml:space="preserve"><value>Réinitialiser les réglages réseau</value></data>
+  <data name="Repair.NetworkReset.Explanation" xml:space="preserve"><value>Réinitialise Winsock et TCP/IP. Les adresses IP fixes et certains réglages de VPN sont effacés. Un redémarrage est nécessaire.</value></data>
+  <data name="Repair.WindowsUpdateReset.Title" xml:space="preserve"><value>Réparer Windows Update</value></data>
+  <data name="Repair.WindowsUpdateReset.Explanation" xml:space="preserve"><value>Arrête les services de mise à jour, renomme leurs dossiers de cache (Windows les recrée) et les redémarre. L'historique des mises à jour affiché dans les Paramètres est vidé.</value></data>
+  <data name="Diag.Tab.Assistants" xml:space="preserve"><value>Assistants</value></data>
+  <data name="Assistant.Intro" xml:space="preserve"><value>Décrivez le problème : PCDoc vérifie chaque cause possible dans l'ordre et propose la bonne réparation.</value></data>
+  <data name="Assistant.NoInternet" xml:space="preserve"><value>Pas d'Internet</value></data>
+  <data name="Assistant.NoSound" xml:space="preserve"><value>Pas de son</value></data>
+  <data name="Assistant.Status.Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="Assistant.Status.Problem" xml:space="preserve"><value>Problème</value></data>
+  <data name="Assistant.Status.Unknown" xml:space="preserve"><value>À vérifier</value></data>
+  <data name="Assistant.Wmi" xml:space="preserve"><value>Windows n'a pas pu fournir les informations (WMI). Redémarrez le PC et réessayez.</value></data>
+  <data name="Assistant.Net.NoAdapter" xml:space="preserve"><value>Aucune carte réseau n'est connectée. Vérifiez le câble, ou que le Wi-Fi est activé et connecté à un réseau.</value></data>
+  <data name="Assistant.Net.Adapter" xml:space="preserve"><value>Carte réseau connectée : {0}</value></data>
+  <data name="Assistant.Net.NoIp" xml:space="preserve"><value>Le routeur n'a pas donné d'adresse à ce PC. Redémarrez le routeur, puis obtenez une nouvelle adresse.</value></data>
+  <data name="Assistant.Net.Ip" xml:space="preserve"><value>Adresse IP : {0}</value></data>
+  <data name="Assistant.Net.NoGateway" xml:space="preserve"><value>Aucun routeur (passerelle) n'est connu. Obtenez une nouvelle adresse.</value></data>
+  <data name="Assistant.Net.GatewayDown" xml:space="preserve"><value>Le routeur ({0}) ne répond pas. Redémarrez-le, vérifiez le câble ou le Wi-Fi.</value></data>
+  <data name="Assistant.Net.Gateway" xml:space="preserve"><value>Le routeur ({0}) répond.</value></data>
+  <data name="Assistant.Net.NoInternet" xml:space="preserve"><value>Le routeur répond mais pas Internet. Redémarrez la box ; si cela continue, réinitialisez les réglages réseau ou appelez votre fournisseur.</value></data>
+  <data name="Assistant.Net.NoDns" xml:space="preserve"><value>Internet marche mais les noms des sites ne sont pas trouvés (DNS). Videz le cache DNS.</value></data>
+  <data name="Assistant.Net.Ok" xml:space="preserve"><value>Internet fonctionne. Si un site ne s'ouvre pas, le problème vient de lui ou du navigateur.</value></data>
+  <data name="Assistant.Sound.ServiceStopped" xml:space="preserve"><value>Le service du son de Windows est arrêté.</value></data>
+  <data name="Assistant.Sound.Service" xml:space="preserve"><value>Les services du son fonctionnent.</value></data>
+  <data name="Assistant.Sound.NoDevice" xml:space="preserve"><value>Aucun périphérique audio trouvé : installez le pilote audio (page Mises à jour, pilotes) ou vérifiez qu'il est branché.</value></data>
+  <data name="Assistant.Sound.DeviceError" xml:space="preserve"><value>Périphérique audio en erreur : {0}. Mettez à jour son pilote (page Mises à jour).</value></data>
+  <data name="Assistant.Sound.Device" xml:space="preserve"><value>Périphériques audio : {0}</value></data>
+  <data name="Assistant.Sound.CheckVolume" xml:space="preserve"><value>Vérifiez le volume et la sortie (icône du haut-parleur près de l'horloge) : les bons haut-parleurs ou le bon casque doivent être choisis.</value></data>
 </root>

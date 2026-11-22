@@ -90,4 +90,36 @@
   <data name="Help.Step2" xml:space="preserve"><value>2. Choose Troubleshoot &gt; Advanced options &gt; System Restore, and pick the restore point created by PCDoc before its last changes.</value></data>
   <data name="Help.Step3" xml:space="preserve"><value>3. If that is not enough: Troubleshoot &gt; Advanced options &gt; Startup Settings &gt; Safe Mode, then undo the last changes from PCDoc's History page.</value></data>
   <data name="Help.Step4" xml:space="preserve"><value>4. Last resort: Troubleshoot &gt; Reset this PC &gt; Keep my files.</value></data>
+  <data name="Repair.RenewIp.Title" xml:space="preserve"><value>Get a new IP address</value></data>
+  <data name="Repair.RenewIp.Explanation" xml:space="preserve"><value>Asks the router for a new address and clears the DNS cache. The connection is cut for a few seconds.</value></data>
+  <data name="Repair.RestartAudio.Title" xml:space="preserve"><value>Restart the sound services</value></data>
+  <data name="Repair.RestartAudio.Explanation" xml:space="preserve"><value>Fixes sound that suddenly stopped working. Instant and harmless.</value></data>
+  <data name="Repair.NetworkReset.Title" xml:space="preserve"><value>Reset the network settings</value></data>
+  <data name="Repair.NetworkReset.Explanation" xml:space="preserve"><value>Resets Winsock and TCP/IP. Fixed IP addresses and some VPN settings are erased. A restart is needed.</value></data>
+  <data name="Repair.WindowsUpdateReset.Title" xml:space="preserve"><value>Repair Windows Update</value></data>
+  <data name="Repair.WindowsUpdateReset.Explanation" xml:space="preserve"><value>Stops the update services, renames their cache folders (Windows recreates them) and restarts them. The update history shown in Settings is emptied.</value></data>
+  <data name="Diag.Tab.Assistants" xml:space="preserve"><value>Assistants</value></data>
+  <data name="Assistant.Intro" xml:space="preserve"><value>Describe the problem: PCDoc checks each possible cause in order and offers the right repair.</value></data>
+  <data name="Assistant.NoInternet" xml:space="preserve"><value>No Internet</value></data>
+  <data name="Assistant.NoSound" xml:space="preserve"><value>No sound</value></data>
+  <data name="Assistant.Status.Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="Assistant.Status.Problem" xml:space="preserve"><value>Problem</value></data>
+  <data name="Assistant.Status.Unknown" xml:space="preserve"><value>To check</value></data>
+  <data name="Assistant.Wmi" xml:space="preserve"><value>Windows could not provide the information (WMI). Restart the PC and try again.</value></data>
+  <data name="Assistant.Net.NoAdapter" xml:space="preserve"><value>No network card is connected. Check the cable, or that Wi-Fi is on and connected to a network.</value></data>
+  <data name="Assistant.Net.Adapter" xml:space="preserve"><value>Connected network card: {0}</value></data>
+  <data name="Assistant.Net.NoIp" xml:space="preserve"><value>The router did not give an address to this PC. Restart the router, then get a new address.</value></data>
+  <data name="Assistant.Net.Ip" xml:space="preserve"><value>IP address: {0}</value></data>
+  <data name="Assistant.Net.NoGateway" xml:space="preserve"><value>No router (gateway) is known. Get a new address.</value></data>
+  <data name="Assistant.Net.GatewayDown" xml:space="preserve"><value>The router ({0}) does not answer. Restart it, check the cable or the Wi-Fi.</value></data>
+  <data name="Assistant.Net.Gateway" xml:space="preserve"><value>The router ({0}) answers.</value></data>
+  <data name="Assistant.Net.NoInternet" xml:space="preserve"><value>The router answers but Internet does not. Restart the box; if it continues, reset the network settings or call your provider.</value></data>
+  <data name="Assistant.Net.NoDns" xml:space="preserve"><value>Internet works but website names are not found (DNS). Clear the DNS cache.</value></data>
+  <data name="Assistant.Net.Ok" xml:space="preserve"><value>Internet works. If one website does not open, the problem is on its side or in the browser.</value></data>
+  <data name="Assistant.Sound.ServiceStopped" xml:space="preserve"><value>The Windows sound service is stopped.</value></data>
+  <data name="Assistant.Sound.Service" xml:space="preserve"><value>The sound services are running.</value></data>
+  <data name="Assistant.Sound.NoDevice" xml:space="preserve"><value>No sound device found: install the audio driver (Updates page, drivers) or check that the device is plugged in.</value></data>
+  <data name="Assistant.Sound.DeviceError" xml:space="preserve"><value>Audio device in error: {0}. Update its driver (Updates page).</value></data>
+  <data name="Assistant.Sound.Device" xml:space="preserve"><value>Sound devices: {0}</value></data>
+  <data name="Assistant.Sound.CheckVolume" xml:space="preserve"><value>Check the volume and the output device (speaker icon next to the clock): the right speakers or headphones must be selected.</value></data>
 </root>

@@ -93,6 +93,7 @@ internal static class Composition
         services.AddSingleton<IScanner>(sp => new DiagnosticScanner(sp.GetRequiredService<IDiagnosticSource>()));
         services.AddSingleton(sp => new RepairFixer(sp.GetRequiredService<IProcessRunner>()));
         services.AddSingleton<IFixer>(sp => sp.GetRequiredService<RepairFixer>());
+        services.AddSingleton<IAssistants>(sp => new Assistants(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IProcessRunner>()));
 
         // Nettoyage (v0.4).
         services.AddSingleton<IFileSystem, CleanupFileSystem>();
@@ -213,7 +214,8 @@ internal static class Composition
             services.GetRequiredService<IClipboardService>(), services.GetRequiredService<AutorunAdvisor>(),
             NewFixPanel(services), Mode(services)),
         PageId.Diagnostic => new DiagnosticPageViewModel(services.GetRequiredService<IDiagnosticSource>(),
-            services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services)),
+            services.GetRequiredService<ILocalizer>(), services.GetRequiredService<RepairFixer>(), NewFixPanel(services),
+            services.GetRequiredService<IAssistants>()),
         PageId.Cleanup => new CleanupPageViewModel(services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), services.GetRequiredService<IClipboardService>(), Mode(services)),
         PageId.Apps => new AppsPageViewModel(services.GetRequiredService<IAppsSource>(), services.GetRequiredService<ILocalizer>(),

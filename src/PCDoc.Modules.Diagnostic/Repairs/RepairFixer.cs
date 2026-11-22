@@ -11,25 +11,60 @@ public enum RepairKind
     FlushDns,
     SystemFiles,
     WindowsImage,
+    RenewIp,
+    RestartAudio,
+    NetworkReset,
+    WindowsUpdateReset,
 }
+
+/// <summary>Une étape : outil de System32 et ses arguments, ou renommage d'un dossier de Windows (<see cref="RenameFolder"/>).</summary>
+public sealed record RepairStep(string Tool, string Arguments, TimeSpan Timeout, bool MustSucceed = true, string? RenameFolder = null);
 
 /// <summary>
 /// Lance un outil officiel de Windows, caché, et relaie sa sortie. Les réparations passent par le pipeline sûr
 /// (point de restauration, Historique) ; elles ne sont pas annulables par nature mais sans risque.
 /// </summary>
-public sealed class RepairFixer(IProcessRunner runner) : IFixer
+public sealed class RepairFixer(IProcessRunner runner, Action<string>? renameFolder = null, string? windowsDirectory = null) : IFixer
 {
     public const string Kind = "diagnostic.repair";
 
     private const int RebootRequiredCode = 3010; // ERROR_SUCCESS_REBOOT_REQUIRED
     private const int SourceNotFound = unchecked((int)0x800F081F);
 
-    private static readonly Dictionary<RepairKind, (string Tool, string Arguments, TimeSpan Timeout)> Commands = new()
+    private static readonly TimeSpan Short = TimeSpan.FromMinutes(2);
+
+    /// <summary>Liste fermée des étapes de chaque réparation (outils officiels de Windows uniquement).</summary>
+    public static readonly IReadOnlyDictionary<RepairKind, IReadOnlyList<RepairStep>> Steps = new Dictionary<RepairKind, IReadOnlyList<RepairStep>>
     {
-        [RepairKind.FlushDns] = ("ipconfig.exe", "/flushdns", TimeSpan.FromMinutes(2)),
-        [RepairKind.SystemFiles] = ("sfc.exe", "/scannow", TimeSpan.FromHours(2)),
-        [RepairKind.WindowsImage] = ("dism.exe", "/Online /Cleanup-Image /RestoreHealth", TimeSpan.FromHours(4)),
+        [RepairKind.FlushDns] = [new("ipconfig.exe", "/flushdns", Short)],
+        [RepairKind.SystemFiles] = [new("sfc.exe", "/scannow", TimeSpan.FromHours(2))],
+        [RepairKind.WindowsImage] = [new("dism.exe", "/Online /Cleanup-Image /RestoreHealth", TimeSpan.FromHours(4))],
+        [RepairKind.RenewIp] = [new("ipconfig.exe", "/release", Short, MustSucceed: false), new("ipconfig.exe", "/renew", Short), new("ipconfig.exe", "/flushdns", Short)],
+        [RepairKind.RestartAudio] =
+        [
+            new("net.exe", "stop audiosrv /y", Short, MustSucceed: false), new("net.exe", "stop AudioEndpointBuilder /y", Short, MustSucceed: false),
+            new("net.exe", "start AudioEndpointBuilder", Short, MustSucceed: false), new("net.exe", "start audiosrv", Short),
+        ],
+        [RepairKind.NetworkReset] =
+        [
+            new("ipconfig.exe", "/flushdns", Short), new("netsh.exe", "winsock reset", Short), new("netsh.exe", "int ip reset", Short),
+            new("netsh.exe", "int ipv6 reset", Short, MustSucceed: false),
+        ],
+        [RepairKind.WindowsUpdateReset] =
+        [
+            new("net.exe", "stop wuauserv /y", Short, MustSucceed: false), new("net.exe", "stop bits /y", Short, MustSucceed: false),
+            new("net.exe", "stop cryptsvc /y", Short, MustSucceed: false),
+            new(string.Empty, string.Empty, Short, RenameFolder: "SoftwareDistribution"), new(string.Empty, string.Empty, Short, RenameFolder: @"System32\catroot2"),
+            new("net.exe", "start cryptsvc", Short, MustSucceed: false), new("net.exe", "start bits", Short, MustSucceed: false),
+            new("net.exe", "start wuauserv", Short, MustSucceed: false),
+        ],
     };
+
+    /// <summary>🟠 : la réinitialisation réseau efface les adresses fixes et les réglages de VPN ; celle de Windows Update son historique.</summary>
+    public static RiskLevel RiskOf(RepairKind repair) => repair is RepairKind.NetworkReset or RepairKind.WindowsUpdateReset ? RiskLevel.Conditional : RiskLevel.Safe;
+
+    /// <summary>Redémarrage nécessaire après ces réparations.</summary>
+    public static bool AlwaysNeedsReboot(RepairKind repair) => repair is RepairKind.NetworkReset;
 
     /// <summary>Chaque ligne affichée par l'outil (progression dans la page).</summary>
     public event EventHandler<string>? Output;
@@ -44,8 +79,8 @@ public sealed class RepairFixer(IProcessRunner runner) : IFixer
     public static Finding FindingFor(RepairKind repair) => new(
         $"diagnostic.repair.{repair}".ToLowerInvariant(), DiagnosticModule.Id, Severity.Info,
         new LocalizedText($"Repair.{repair}.Title"), new LocalizedText($"Repair.{repair}.Explanation"),
-        $"{Commands[repair].Tool} {Commands[repair].Arguments}",
-        FixAvailable: true, Risk: RiskLevel.Safe, Reversible: false,
+        string.Join(" ; ", Steps[repair].Select(s => s.RenameFolder is { } f ? $"rename {f}" : $"{s.Tool} {s.Arguments}")),
+        FixAvailable: true, Risk: RiskOf(repair), Reversible: false,
         FixData: JsonSerializer.Serialize(new Data(repair.ToString())));
 
     public bool CanFix(Finding finding) => Parse(finding) is not null;
@@ -59,21 +94,75 @@ public sealed class RepairFixer(IProcessRunner runner) : IFixer
     public async Task ApplyAsync(Finding finding, CancellationToken cancellationToken)
     {
         var repair = Parse(finding) ?? throw new InvalidOperationException("Not a repair");
-        var (tool, arguments, timeout) = Commands[repair];
-        var exit = await runner.RunHiddenAsync(tool, arguments, line => Output?.Invoke(this, line), cancellationToken, timeout)
-            .ConfigureAwait(false);
-        switch (exit)
+        Exception? renameError = null;
+        foreach (var step in Steps[repair])
         {
-            case 0:
-                return;
-            case RebootRequiredCode when repair != RepairKind.FlushDns:
-                RebootRequired?.Invoke(this, EventArgs.Empty);
-                return;
-            case SourceNotFound:
-                throw new InvalidOperationException($"{tool}: repair source not found (0x800F081F) — Windows Update could not provide healthy files");
-            default:
-                throw new InvalidOperationException($"{tool} exited with code {exit} (0x{exit:X8})");
+            if (step.RenameFolder is { } folder)
+            {
+                try
+                {
+                    Rename(folder);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    renameError ??= ex; // les services sont tout de même redémarrés par les étapes suivantes
+                }
+
+                continue;
+            }
+
+            var exit = await runner.RunHiddenAsync(step.Tool, step.Arguments, line => Output?.Invoke(this, line), cancellationToken, step.Timeout)
+                .ConfigureAwait(false);
+            switch (exit)
+            {
+                case 0:
+                    break;
+                case RebootRequiredCode when repair != RepairKind.FlushDns:
+                    RebootRequired?.Invoke(this, EventArgs.Empty);
+                    break;
+                case SourceNotFound:
+                    throw new InvalidOperationException($"{step.Tool}: repair source not found (0x800F081F) — Windows Update could not provide healthy files");
+                case var _ when !step.MustSucceed:
+                    break;
+                default:
+                    throw new InvalidOperationException($"{step.Tool} {step.Arguments} exited with code {exit} (0x{exit:X8})");
+            }
         }
+
+        if (renameError is not null)
+        {
+            throw new InvalidOperationException($"A Windows Update folder is in use: {renameError.Message}", renameError);
+        }
+
+        if (AlwaysNeedsReboot(repair))
+        {
+            RebootRequired?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>Renomme un dossier de Windows en « .pcdoc-old » (l'ancien « .pcdoc-old » est supprimé) : Windows le recrée vide.</summary>
+    private void Rename(string relative)
+    {
+        if (renameFolder is not null)
+        {
+            renameFolder(relative);
+            return;
+        }
+
+        var windows = windowsDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        var path = Path.Combine(windows, relative);
+        var old = path + ".pcdoc-old";
+        if (!Directory.Exists(path) || new DirectoryInfo(path).Attributes.HasFlag(FileAttributes.ReparsePoint))
+        {
+            return;
+        }
+
+        if (Directory.Exists(old))
+        {
+            Directory.Delete(old, recursive: true); // Directory.Delete ne suit pas les liens
+        }
+
+        Directory.Move(path, old);
     }
 
     public Task<bool> IsUnchangedSinceAsync(UndoEntry entry, CancellationToken cancellationToken) => Task.FromResult(false);

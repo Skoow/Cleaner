@@ -93,6 +93,7 @@
             <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding RepairOutput, Mode=OneWay}" Height="160"
                      VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AutomationProperties.Name="{app:T Diag.RepairOutput}" />
           </StackPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
           <ItemsControl ItemsSource="{Binding Repairs}" Focusable="False">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="{x:Type d:RepairRow}">
@@ -101,10 +102,40 @@
                     <Button DockPanel.Dock="Right" Content="{app:T Diag.Run}" VerticalAlignment="Center" AutomationProperties.Name="{Binding Title}"
                             Command="{Binding DataContext.RunRepairCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             CommandParameter="{Binding Kind}" />
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding RiskLabel}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" Margin="12,0" />
                     <StackPanel>
                       <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
-                      <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" />
+                      <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" />
                     </StackPanel>
+                  </DockPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Diag.Tab.Assistants}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{app:T Assistant.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Content="{app:T Assistant.NoInternet}" Command="{Binding NoInternetCommand}" Margin="0,0,8,0" MinWidth="150"
+                    AutomationProperties.Name="{app:T Assistant.NoInternet}" />
+            <Button Content="{app:T Assistant.NoSound}" Command="{Binding NoSoundCommand}" MinWidth="150" AutomationProperties.Name="{app:T Assistant.NoSound}" />
+          </StackPanel>
+          <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                       Visibility="{Binding AssistantRunning, Converter={StaticResource BoolToVisibility}}" />
+          <ItemsControl ItemsSource="{Binding AssistantResults}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type d:AssistantRow}">
+                <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6">
+                  <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="{Binding RepairTitle}" VerticalAlignment="Center" Margin="12,0,0,0"
+                            Visibility="{Binding HasRepair, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{Binding RepairTitle}"
+                            Command="{Binding DataContext.RunRepairCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding Repair}" />
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding Status}" FontWeight="SemiBold" Width="110" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" />
                   </DockPanel>
                 </Border>
               </DataTemplate>

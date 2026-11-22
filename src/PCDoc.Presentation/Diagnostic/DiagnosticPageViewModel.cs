@@ -15,7 +15,13 @@ public sealed record AppCrashRow(string App, int Count, string Module, string La
 
 public sealed record DiskRow(string Name, string Health, string Wear, string Temperature);
 
-public sealed record RepairRow(RepairKind Kind, string Title, string Explanation);
+public sealed record RepairRow(RepairKind Kind, string Title, string Explanation, string RiskLabel);
+
+/// <summary>Résultat d'une étape d'assistant ; <paramref name="Repair"/> = réparation conseillée.</summary>
+public sealed record AssistantRow(string Status, string Text, RepairKind? Repair, string? RepairTitle)
+{
+    public bool HasRepair => Repair is not null;
+}
 
 /// <summary>Page Diagnostic : écrans bleus, plantages, périphériques, disques, réparations, aide.</summary>
 public sealed partial class DiagnosticPageViewModel : ObservableObject
@@ -44,8 +50,15 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
     [ObservableProperty]
     private string _repairOutput = string.Empty;
 
-    public DiagnosticPageViewModel(IDiagnosticSource source, ILocalizer localizer, RepairFixer? repairs = null, FixConfirmationViewModel? fixes = null)
+    private readonly IAssistants? _assistants;
+
+    [ObservableProperty]
+    private bool _assistantRunning;
+
+    public DiagnosticPageViewModel(IDiagnosticSource source, ILocalizer localizer, RepairFixer? repairs = null, FixConfirmationViewModel? fixes = null,
+        IAssistants? assistants = null)
     {
+        _assistants = assistants;
         _source = source;
         _localizer = localizer;
         Fixes = fixes;
@@ -108,6 +121,39 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
         }
     }
 
+    public ObservableCollection<AssistantRow> AssistantResults { get; } = [];
+
+    public bool HasAssistants => _assistants is not null;
+
+    [RelayCommand]
+    private Task NoInternetAsync() => RunAssistantAsync(a => a.NoInternetAsync(CancellationToken.None));
+
+    [RelayCommand]
+    private Task NoSoundAsync() => RunAssistantAsync(a => a.NoSoundAsync(CancellationToken.None));
+
+    private async Task RunAssistantAsync(Func<IAssistants, Task<IReadOnlyList<AssistantCheck>>> run)
+    {
+        if (_assistants is null || AssistantRunning)
+        {
+            return;
+        }
+
+        AssistantRunning = true;
+        AssistantResults.Clear();
+        try
+        {
+            foreach (var check in await Task.Run(() => run(_assistants)).ConfigureAwait(true))
+            {
+                AssistantResults.Add(new AssistantRow(_localizer[$"Assistant.Status.{check.Status}"], _localizer.Format(check.Text), check.Repair,
+                    check.Repair is { } r ? _localizer[$"Repair.{r}.Title"] : null));
+            }
+        }
+        finally
+        {
+            AssistantRunning = false;
+        }
+    }
+
     private bool CanRunRepair(RepairKind kind) => Fixes is { IsOpen: false, IsRunning: false };
 
     [RelayCommand(CanExecute = nameof(CanRunRepair))]
@@ -126,7 +172,7 @@ public sealed partial class DiagnosticPageViewModel : ObservableObject
         Repairs.Clear();
         foreach (var kind in Enum.GetValues<RepairKind>())
         {
-            Repairs.Add(new RepairRow(kind, T($"Repair.{kind}.Title"), T($"Repair.{kind}.Explanation")));
+            Repairs.Add(new RepairRow(kind, T($"Repair.{kind}.Title"), T($"Repair.{kind}.Explanation"), T($"Risk.{RepairFixer.RiskOf(kind)}")));
         }
 
         if (_report is not { } r)
