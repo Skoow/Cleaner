@@ -241,6 +241,7 @@ internal static class Composition
             NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired)
         {
             BackupDrivers = ct => services.GetRequiredService<UpdatesEngine>().BackupDriversAsync(ct, force: true),
+            Activity = services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(),
             UpdateStore = async ct =>
             {
                 await services.GetRequiredService<IStoreUpdates>().TriggerAsync(ct).ConfigureAwait(false);

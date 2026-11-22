@@ -30,6 +30,8 @@ public sealed partial class ShellViewModel : ObservableObject
 
     public bool HasSearchResults => SearchResults.Count > 0;
 
+    public bool ShowNoSearchResult => SearchText.Trim().Length >= 2 && SearchResults.Count == 0;
+
     partial void OnSearchTextChanged(string value)
     {
         SearchResults.Clear();
@@ -43,6 +45,7 @@ public sealed partial class ShellViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(HasSearchResults));
+        OnPropertyChanged(nameof(ShowNoSearchResult));
     }
 
     [RelayCommand]

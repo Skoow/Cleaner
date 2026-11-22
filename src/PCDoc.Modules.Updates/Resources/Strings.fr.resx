@@ -44,5 +44,5 @@
   <data name="Updates.Store" xml:space="preserve"><value>Mettre à jour les applications du Store</value></data>
   <data name="Updates.Store.Running" xml:space="preserve"><value>Demande au Microsoft Store de mettre à jour ses applications…</value></data>
   <data name="Updates.Store.Done" xml:space="preserve"><value>Mises à jour du Microsoft Store demandées : elles s'installent en arrière-plan dans les minutes qui viennent.</value></data>
-  <data name="Updates.Store.Failed" xml:space="preserve"><value>Le Microsoft Store n'a pas répondu (Store retiré ou service arrêté).</value></data>
+  <data name="Updates.Store.Failed" xml:space="preserve"><value>Le Microsoft Store n'a pas accepté la demande.</value></data>
 </root>

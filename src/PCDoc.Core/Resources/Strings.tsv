@@ -191,7 +191,7 @@ Maintenance.Day	Day	Jour
 Maintenance.Hour	Time	Heure
 Maintenance.Cleanup	Clean temporary files and caches	Nettoyer les fichiers temporaires et les caches
 Maintenance.Software	Update software (winget)	Mettre à jour les logiciels (winget)
-Maintenance.Windows	Install Windows updates	Installer les mises à jour de Windows
+Maintenance.Windows	Install Windows updates (and Microsoft Store apps)	Installer les mises à jour de Windows (et des applications du Store)
 Maintenance.Defender	Quick antivirus scan (Defender)	Analyse antivirus rapide (Defender)
 Maintenance.Save	Save	Enregistrer
 Maintenance.Install	Install PCDoc in Program Files	Installer PCDoc dans Program Files
@@ -216,3 +216,4 @@ Portable.Done	PCDoc copied in portable mode: {0}	PCDoc copié en mode portable :
 Portable.Failed	PCDoc could not be copied to the drive.	PCDoc n'a pas pu être copié sur la clé.
 Search.Placeholder	Search a feature…	Rechercher une fonction…
 Search.Results	Search results	Résultats de la recherche
+Search.None	Nothing found	Aucun résultat

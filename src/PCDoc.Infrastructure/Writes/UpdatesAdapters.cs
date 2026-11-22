@@ -359,8 +359,11 @@ public sealed class StoreUpdates(IProcessRunner runner) : IStoreUpdates
     private const string Script = "$env:PSModulePath = $PSHOME + '\\Modules'\n"
                                   + "Import-Module ($PSHOME + '\\Modules\\CimCmdlets') -ErrorAction Stop\n"
                                   + "$ErrorActionPreference = 'Stop'\n"
-                                  + "try { Get-CimInstance -Namespace 'root\\cimv2\\mdm\\dmmap' -ClassName 'MDM_EnterpriseModernAppManagement_AppManagement01' | "
-                                  + "Invoke-CimMethod -MethodName UpdateScanMethod | Out-Null; exit 0 } catch { Write-Output $_.Exception.Message; exit 1 }";
+                                  + "try { $i = Get-CimInstance -Namespace 'root\\cimv2\\mdm\\dmmap' -ClassName 'MDM_EnterpriseModernAppManagement_AppManagement01'\n"
+                                  + "if (-not $i) { Write-Output 'No Store management instance'; exit 2 }\n"
+                                  + "$r = $i | Invoke-CimMethod -MethodName UpdateScanMethod\n"
+                                  + "if ($r.ReturnValue -ne 0) { Write-Output ('UpdateScanMethod returned ' + $r.ReturnValue); exit 3 }\n"
+                                  + "exit 0 } catch { Write-Output $_.Exception.Message; exit 1 }";
 
     public async Task TriggerAsync(CancellationToken cancellationToken)
     {

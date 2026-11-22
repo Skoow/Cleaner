@@ -192,4 +192,18 @@ public class OptimizeTests
         await fixer.PrepareAsync(await FindingAsync(engine, "game-dvr-off"), CancellationToken.None);
         backups.Saved.Should().HaveCount(2);
     }
+
+    [Fact]
+    public async Task AppSettings_AreOfferedOnlyWhenTheAppIsInstalled()
+    {
+        var registry = new FakeRegistryReader();
+        var engine = new OptimizeEngine(OptimizeModule.Privacy, registry, new Writer(registry), new Powercfg(), new FakeWmiQuery());
+
+        (await engine.AnalyzeAsync(CancellationToken.None)).Single(s => s.Tweak.Id == "firefox-telemetry-off").Available.Should().BeFalse();
+
+        registry.Set(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\firefox.exe", string.Empty,
+            @"C:\Program Files\Mozilla Firefox\firefox.exe", RegistryView.Registry64);
+        (await engine.AnalyzeAsync(CancellationToken.None)).Single(s => s.Tweak.Id == "firefox-telemetry-off").Available.Should().BeTrue();
+        (await engine.AnalyzeAsync(CancellationToken.None)).Single(s => s.Tweak.Id == "telemetry-min").Available.Should().BeTrue("réglage de Windows");
+    }
 }

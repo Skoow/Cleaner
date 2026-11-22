@@ -33,6 +33,51 @@ public partial class MainWindow : Window
         Closing += (_, _) => SavePlacement();
     }
 
+    /// <summary>Flèche bas : vers les résultats ; Entrée : ouvre le premier ; Échap : efface.</summary>
+    private void OnSearchKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Down && SearchList.Items.Count > 0)
+        {
+            SearchList.SelectedIndex = 0;
+            (SearchList.ItemContainerGenerator.ContainerFromIndex(0) as ListBoxItem)?.Focus();
+            e.Handled = true;
+        }
+        else if (e.Key == System.Windows.Input.Key.Enter && SearchList.Items.Count > 0)
+        {
+            OpenSearch(SearchList.Items[0]);
+            e.Handled = true;
+        }
+        else if (e.Key == System.Windows.Input.Key.Escape)
+        {
+            _shell.SearchText = string.Empty;
+            e.Handled = true;
+        }
+    }
+
+    private void OnSearchListKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter && SearchList.SelectedItem is { } item)
+        {
+            OpenSearch(item);
+            e.Handled = true;
+        }
+    }
+
+    private void OnSearchListClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (SearchList.SelectedItem is { } item)
+        {
+            OpenSearch(item);
+        }
+    }
+
+    /// <summary>Ouvre la page du résultat puis place le focus dans le menu (il n'est jamais perdu).</summary>
+    private void OpenSearch(object item)
+    {
+        _shell.OpenSearchResultCommand.Execute(item);
+        MainNav.Focus();
+    }
+
     private void OnMainNavChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_syncing || MainNav.SelectedItem is null)

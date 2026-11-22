@@ -39,4 +39,4 @@ Updates.DriverBackup.Failed	The drivers could not be backed up.	Les pilotes n'on
 Updates.Store	Update Microsoft Store apps	Mettre à jour les applications du Store
 Updates.Store.Running	Asking the Microsoft Store to update its apps…	Demande au Microsoft Store de mettre à jour ses applications…
 Updates.Store.Done	Microsoft Store updates requested: they install in the background over the next minutes.	Mises à jour du Microsoft Store demandées : elles s'installent en arrière-plan dans les minutes qui viennent.
-Updates.Store.Failed	The Microsoft Store did not answer (Store removed or its service is stopped).	Le Microsoft Store n'a pas répondu (Store retiré ou service arrêté).
+Updates.Store.Failed	The Microsoft Store did not accept the request.	Le Microsoft Store n'a pas accepté la demande.

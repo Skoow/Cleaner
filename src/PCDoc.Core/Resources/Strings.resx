@@ -196,7 +196,7 @@
   <data name="Maintenance.Hour" xml:space="preserve"><value>Time</value></data>
   <data name="Maintenance.Cleanup" xml:space="preserve"><value>Clean temporary files and caches</value></data>
   <data name="Maintenance.Software" xml:space="preserve"><value>Update software (winget)</value></data>
-  <data name="Maintenance.Windows" xml:space="preserve"><value>Install Windows updates</value></data>
+  <data name="Maintenance.Windows" xml:space="preserve"><value>Install Windows updates (and Microsoft Store apps)</value></data>
   <data name="Maintenance.Defender" xml:space="preserve"><value>Quick antivirus scan (Defender)</value></data>
   <data name="Maintenance.Save" xml:space="preserve"><value>Save</value></data>
   <data name="Maintenance.Install" xml:space="preserve"><value>Install PCDoc in Program Files</value></data>
@@ -221,4 +221,5 @@
   <data name="Portable.Failed" xml:space="preserve"><value>PCDoc could not be copied to the drive.</value></data>
   <data name="Search.Placeholder" xml:space="preserve"><value>Search a feature…</value></data>
   <data name="Search.Results" xml:space="preserve"><value>Search results</value></data>
+  <data name="Search.None" xml:space="preserve"><value>Nothing found</value></data>
 </root>

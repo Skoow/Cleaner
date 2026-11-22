@@ -38,7 +38,8 @@ public sealed record Tweak(
     bool AbsentIsApplied = false,
     string Module = "optimize",
     string TextPrefix = "Optimize",
-    Severity Severity = Severity.Info);
+    Severity Severity = Severity.Info,
+    IReadOnlyList<string>? RequiresApp = null);
 
 public sealed class TweakCatalog
 {
@@ -82,7 +83,7 @@ public sealed class TweakCatalog
             if (valid && !string.IsNullOrWhiteSpace(t.Id) && t.Risk is not RiskLevel.Locked)
             {
                 tweaks.Add(new Tweak(t.Id, t.Kind, t.Risk, t.DesktopRisk, t.Bilan, t.Profiles ?? [], values, t.Plan?.ToLowerInvariant(), t.AbsentIsApplied,
-                    module, textPrefix, t.Severity ?? Severity.Info));
+                    module, textPrefix, t.Severity ?? Severity.Info, t.RequiresApp?.Where(a => a.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)).ToList()));
             }
         }
 
@@ -101,7 +102,7 @@ public sealed class TweakCatalog
     private sealed record CatalogFile(int Version, Item[]? Tweaks);
 
     private sealed record Item(string Id, TweakKind Kind, RiskLevel Risk, RiskLevel? DesktopRisk, bool Bilan, string[]? Profiles, ValueItem[]? Values,
-        string? Plan, bool AbsentIsApplied, Severity? Severity);
+        string? Plan, bool AbsentIsApplied, Severity? Severity, string[]? RequiresApp);
 
     private sealed record ValueItem(RegistryHive Hive, string? Path, string? Name, int? Dword, string? Text, int[]? AcceptableDwords, string[]? AcceptableTexts);
 #pragma warning restore CA1812

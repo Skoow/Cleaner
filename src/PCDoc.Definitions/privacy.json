@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "comment": "Confidentialité de Windows : réglages réversibles (même format que optimize.json). Profils : recommended (sans effet visible), strict (plus complet).",
+  "comment": "Confidentialité : réglages réversibles (même format que optimize.json). Profils : recommended (sûr, sans perte de fonction ; navigateurs et Office seulement s'ils sont installés), strict (plus complet). requiresApp : exécutables dont l'un doit être installé (App Paths).",
   "tweaks": [
     {
       "id": "telemetry-min",
@@ -303,10 +303,16 @@
         },
         {
           "hive": "TargetUser",
-          "path": "Software\\Policies\\Microsoft\\office\\16.0\\common\\clienttelemetry",
+          "path": "Software\\Policies\\Microsoft\\office\\common\\clienttelemetry",
           "name": "DisableTelemetry",
           "dword": 1
         }
+      ],
+      "requiresApp": [
+        "winword.exe",
+        "excel.exe",
+        "outlook.exe",
+        "powerpnt.exe"
       ]
     },
     {
@@ -329,6 +335,12 @@
           "name": "surveyenabled",
           "dword": 0
         }
+      ],
+      "requiresApp": [
+        "winword.exe",
+        "excel.exe",
+        "outlook.exe",
+        "powerpnt.exe"
       ]
     },
     {
@@ -344,6 +356,12 @@
           "name": "controllerconnectedservicesenabled",
           "dword": 2
         }
+      ],
+      "requiresApp": [
+        "winword.exe",
+        "excel.exe",
+        "outlook.exe",
+        "powerpnt.exe"
       ]
     },
     {
@@ -378,6 +396,9 @@
           "name": "EdgeShoppingAssistantEnabled",
           "dword": 0
         }
+      ],
+      "requiresApp": [
+        "msedge.exe"
       ]
     },
     {
@@ -391,15 +412,17 @@
           "hive": "LocalMachine",
           "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
           "name": "DiagnosticData",
-          "dword": 0
+          "dword": 1
         }
+      ],
+      "requiresApp": [
+        "msedge.exe"
       ]
     },
     {
       "id": "chrome-metrics-off",
-      "risk": "Safe",
+      "risk": "Conditional",
       "profiles": [
-        "recommended",
         "strict"
       ],
       "values": [
@@ -409,6 +432,9 @@
           "name": "MetricsReportingEnabled",
           "dword": 0
         }
+      ],
+      "requiresApp": [
+        "chrome.exe"
       ]
     },
     {
@@ -431,6 +457,9 @@
           "name": "DisableFirefoxStudies",
           "dword": 1
         }
+      ],
+      "requiresApp": [
+        "firefox.exe"
       ]
     }
   ]

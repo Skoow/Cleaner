@@ -55,6 +55,9 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
     [ObservableProperty]
     private string? _storeStatus;
 
+    /// <summary>Journal d'activité (échecs de la mise à jour du Store).</summary>
+    public Core.Activity.IActivityLog? Activity { get; init; }
+
     /// <summary>Mise à jour des applications du Store (null = indisponible).</summary>
     public Func<CancellationToken, Task>? UpdateStore { get; init; }
 
@@ -76,7 +79,8 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
         catch (Exception ex) when (ex is not OperationCanceledException)
 #pragma warning restore CA1031
         {
-            StoreStatus = _localizer["Updates.Store.Failed"];
+            StoreStatus = _localizer["Updates.Store.Failed"] + " (" + ex.Message + ")";
+            Activity?.Write("updates", StoreStatus);
         }
     }
 

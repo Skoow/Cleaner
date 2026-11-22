@@ -35,7 +35,7 @@ public sealed partial class OptimizeEngine(
             TweakKind.PowerPlan => t.Plan == active,
             TweakKind.Hibernate => !HibernateEnabled(),
             _ => IsApplied(t),
-        }, t.Kind == TweakKind.PowerPlan ? plans.Contains(t.Plan!) : t.Kind != TweakKind.Registry || IsCompatible(t)))];
+        }, (t.Kind == TweakKind.PowerPlan ? plans.Contains(t.Plan!) : t.Kind != TweakKind.Registry || IsCompatible(t)) && IsAppInstalled(t)))];
     }
 
     public RiskLevel RiskOf(Tweak tweak)
@@ -92,6 +92,17 @@ public sealed partial class OptimizeEngine(
     {
         ArgumentNullException.ThrowIfNull(tweak);
         return tweak.Values.All(v => Read(v) is not { } current || current.GetType() == v.Target.GetType());
+    }
+
+    /// <summary>Réglage d'un logiciel (navigateur, Office) : proposé seulement si l'un de ses exécutables est déclaré dans App Paths.</summary>
+    public bool IsAppInstalled(Tweak tweak)
+    {
+        ArgumentNullException.ThrowIfNull(tweak);
+        const string appPaths = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
+        return tweak.RequiresApp is not { Count: > 0 } apps
+               || apps.Any(exe => reader.GetValue(RegistryHive.LocalMachine, $@"{appPaths}\{exe}", string.Empty, RegistryView.Registry64) is string
+                                  || reader.GetValue(RegistryHive.LocalMachine, $@"{appPaths}\{exe}", string.Empty, RegistryView.Registry32) is string
+                                  || reader.GetValue(RegistryHive.TargetUser, $@"{appPaths}\{exe}", string.Empty, RegistryView.Registry64) is string);
     }
 
     /// <summary>HibernateEnabled, à défaut HibernateEnabledDefault ; inconnu → considérée active.</summary>

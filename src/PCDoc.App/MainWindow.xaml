@@ -45,22 +45,26 @@
     <!-- Menu latéral : ListBox = navigation au clavier (flèches) et lecteurs d'écran. -->
     <DockPanel Grid.Column="0" Margin="6,8,6,8">
       <StackPanel DockPanel.Dock="Top" Margin="4,0,4,8">
-        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=150}" AutomationProperties.Name="{app:T Search.Placeholder}"
-                 ToolTip="{app:T Search.Placeholder}" />
-        <ListBox ItemsSource="{Binding SearchResults}" MaxHeight="320" Margin="0,4,0,0" AutomationProperties.Name="{app:T Search.Results}"
-                 Visibility="{Binding HasSearchResults, Converter={StaticResource BoolToVisibility}}">
+        <Grid>
+          <TextBox x:Name="SearchBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=150}"
+                   AutomationProperties.Name="{app:T Search.Placeholder}" PreviewKeyDown="OnSearchKeyDown" />
+          <TextBlock Text="{app:T Search.Placeholder}" Style="{StaticResource Pcdoc.Muted}" Margin="8,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
+                     Visibility="{Binding Text.IsEmpty, ElementName=SearchBox, Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
+        <ListBox x:Name="SearchList" ItemsSource="{Binding SearchResults}" MaxHeight="320" Margin="0,4,0,0" AutomationProperties.Name="{app:T Search.Results}"
+                 Visibility="{Binding HasSearchResults, Converter={StaticResource BoolToVisibility}}"
+                 KeyDown="OnSearchListKeyDown" MouseLeftButtonUp="OnSearchListClick">
           <ListBox.ItemTemplate>
             <DataTemplate DataType="{x:Type pr:SearchResult}">
-              <Button Command="{Binding DataContext.OpenSearchResultCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"
-                      HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" Padding="2" AutomationProperties.Name="{Binding Title}">
-                <StackPanel>
-                  <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="12" />
-                  <TextBlock Text="{Binding PageLabel}" Style="{StaticResource Pcdoc.Muted}" FontSize="11" />
-                </StackPanel>
-              </Button>
+              <StackPanel AutomationProperties.Name="{Binding Title}">
+                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="12" />
+                <TextBlock Text="{Binding PageLabel}" Style="{StaticResource Pcdoc.Muted}" FontSize="11" />
+              </StackPanel>
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
+        <TextBlock Text="{app:T Search.None}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" Margin="2,4,0,0"
+                   Visibility="{Binding ShowNoSearchResult, Converter={StaticResource BoolToVisibility}}" />
       </StackPanel>
       <ListBox x:Name="SettingsNav" DockPanel.Dock="Bottom" BorderThickness="0" Background="Transparent"
                AutomationProperties.Name="{app:T Nav.Settings}"
