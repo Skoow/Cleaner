@@ -29,7 +29,7 @@ public sealed class UpdatesOnWindowsTests
         try
         {
             var updates = await new WindowsUpdate().SearchAsync(timeout.Token);
-            updates.Should().OnlyContain(u => u.Id.Length > 0 && u.Title.Length > 0);
+            updates.Should().NotContain(u => u.Id.Length == 0 || u.Title.Length == 0, "une liste vide (aucune mise à jour) est valide");
         }
         catch (COMException)
         {
