@@ -95,11 +95,11 @@
   <data name="Ext.Disabled" xml:space="preserve"><value>disabled</value></data>
   <data name="Security.extension.Title" xml:space="preserve"><value>Block the extension {0} ({1})</value></data>
   <data name="Security.extension.Explanation" xml:space="preserve"><value>The browser disables and removes it, and it cannot be reinstalled. Reversible from History.</value></data>
-  <data name="SecondOpinion.Intro" xml:space="preserve"><value>Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. Their report is saved with PCDoc's reports.</value></data>
+  <data name="SecondOpinion.Intro" xml:space="preserve"><value>Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. They only scan (nothing is deleted): read their report, then remove what they found with Defender or by uninstalling the program.</value></data>
   <data name="SecondOpinion.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner</value></data>
   <data name="SecondOpinion.AdwCleaner" xml:space="preserve"><value>Malwarebytes AdwCleaner</value></data>
-  <data name="SecondOpinion.Running.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner: download and quick scan (can take 10 to 30 minutes)…</value></data>
-  <data name="SecondOpinion.Running.AdwCleaner" xml:space="preserve"><value>AdwCleaner: download, scan and removal of adware…</value></data>
+  <data name="SecondOpinion.Running.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner: download and quick scan, detection only (10 to 30 minutes)…</value></data>
+  <data name="SecondOpinion.Running.AdwCleaner" xml:space="preserve"><value>AdwCleaner: download and scan for adware, detection only…</value></data>
   <data name="SecondOpinion.Done" xml:space="preserve"><value>{0} finished (code {1}). See its report below and in History.</value></data>
   <data name="SecondOpinion.Failed" xml:space="preserve"><value>{0} could not run: {1}</value></data>
   <data name="SecondOpinion.Cancelled" xml:space="preserve"><value>Stopped.</value></data>

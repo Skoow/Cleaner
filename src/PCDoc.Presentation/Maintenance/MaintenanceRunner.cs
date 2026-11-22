@@ -27,6 +27,7 @@ public sealed class MaintenanceRunner(
     public async Task<FixSessionResult?> RunAsync(MaintenanceOptions options, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(options);
+        var firstLine = activity.ReadAll().Count;
         activity.Write("maintenance", localizer["Maintenance.Started"]);
         var findings = new List<Finding>();
         if (options.SoftwareUpdates || options.WindowsUpdates)
@@ -91,7 +92,7 @@ public sealed class MaintenanceRunner(
         activity.Write("maintenance", localizer["Maintenance.Finished"]);
         try
         {
-            reports?.Save($"Entretien-PCDoc-{DateTime.Now:yyyyMMdd-HHmmss}.txt", buildReport(activity.ReadAll()));
+            reports?.Save($"Entretien-PCDoc-{DateTime.Now:yyyyMMdd-HHmmss}.txt", buildReport([.. activity.ReadAll().Skip(firstLine)]));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {

@@ -158,13 +158,18 @@ public sealed class VirusTotalCheck(IAutorunSource autoruns, IVirusTotal client,
             {
                 row = new VirusTotalRow(entry.Name, entry.FilePath!, hash, await client.LookupAsync(hash, cancellationToken).ConfigureAwait(false), null);
             }
-            catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
+            catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or JsonException or KeyNotFoundException
+                                           or TaskCanceledException && !cancellationToken.IsCancellationRequested)
             {
                 row = new VirusTotalRow(entry.Name, entry.FilePath!, hash, null, ex.Message);
             }
 
             rows.Add(row);
             progress?.Invoke(row);
+            if (row.Error?.Contains("refused the API key", StringComparison.Ordinal) == true)
+            {
+                break; // clé refusée : inutile d'attendre 16 s par fichier restant
+            }
         }
 
         return rows;

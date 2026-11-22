@@ -18,7 +18,8 @@ public enum RepairKind
 }
 
 /// <summary>Une étape : outil de System32 et ses arguments, ou renommage d'un dossier de Windows (<see cref="RenameFolder"/>).</summary>
-public sealed record RepairStep(string Tool, string Arguments, TimeSpan Timeout, bool MustSucceed = true, string? RenameFolder = null);
+/// <param name="Always">Étape toujours exécutée, même si une étape précédente a échoué ou a été annulée (redémarrage des services).</param>
+public sealed record RepairStep(string Tool, string Arguments, TimeSpan Timeout, bool MustSucceed = true, string? RenameFolder = null, bool Always = false);
 
 /// <summary>
 /// Lance un outil officiel de Windows, caché, et relaie sa sortie. Les réparations passent par le pipeline sûr
@@ -39,24 +40,29 @@ public sealed class RepairFixer(IProcessRunner runner, Action<string>? renameFol
         [RepairKind.FlushDns] = [new("ipconfig.exe", "/flushdns", Short)],
         [RepairKind.SystemFiles] = [new("sfc.exe", "/scannow", TimeSpan.FromHours(2))],
         [RepairKind.WindowsImage] = [new("dism.exe", "/Online /Cleanup-Image /RestoreHealth", TimeSpan.FromHours(4))],
-        [RepairKind.RenewIp] = [new("ipconfig.exe", "/release", Short, MustSucceed: false), new("ipconfig.exe", "/renew", Short), new("ipconfig.exe", "/flushdns", Short)],
+        // /renew échoue si une seule carte (débranchée, adresse fixe) ne peut pas renouveler : pas un échec de la réparation.
+        [RepairKind.RenewIp] =
+        [
+            new("ipconfig.exe", "/release", Short, MustSucceed: false), new("ipconfig.exe", "/renew", Short, MustSucceed: false),
+            new("ipconfig.exe", "/flushdns", Short, Always: true),
+        ],
+        // Seul le service Audio est arrêté (sans /y : aucun service dépendant de fabricant n'est coupé) ; « déjà démarré » n'est pas une erreur.
         [RepairKind.RestartAudio] =
         [
-            new("net.exe", "stop audiosrv /y", Short, MustSucceed: false), new("net.exe", "stop AudioEndpointBuilder /y", Short, MustSucceed: false),
-            new("net.exe", "start AudioEndpointBuilder", Short, MustSucceed: false), new("net.exe", "start audiosrv", Short),
+            new("net.exe", "stop audiosrv", Short, MustSucceed: false),
+            new("net.exe", "start AudioEndpointBuilder", Short, MustSucceed: false, Always: true), new("net.exe", "start audiosrv", Short, MustSucceed: false, Always: true),
         ],
         [RepairKind.NetworkReset] =
         [
-            new("ipconfig.exe", "/flushdns", Short), new("netsh.exe", "winsock reset", Short), new("netsh.exe", "int ip reset", Short),
+            new("ipconfig.exe", "/flushdns", Short), new("netsh.exe", "winsock reset", Short), new("netsh.exe", "int ip reset", Short, MustSucceed: false),
             new("netsh.exe", "int ipv6 reset", Short, MustSucceed: false),
         ],
+        // wuauserv et BITS seulement (cryptsvc a des services dépendants, AppLocker par exemple) ; redémarrés quoi qu'il arrive.
         [RepairKind.WindowsUpdateReset] =
         [
-            new("net.exe", "stop wuauserv /y", Short, MustSucceed: false), new("net.exe", "stop bits /y", Short, MustSucceed: false),
-            new("net.exe", "stop cryptsvc /y", Short, MustSucceed: false),
-            new(string.Empty, string.Empty, Short, RenameFolder: "SoftwareDistribution"), new(string.Empty, string.Empty, Short, RenameFolder: @"System32\catroot2"),
-            new("net.exe", "start cryptsvc", Short, MustSucceed: false), new("net.exe", "start bits", Short, MustSucceed: false),
-            new("net.exe", "start wuauserv", Short, MustSucceed: false),
+            new("net.exe", "stop wuauserv", Short, MustSucceed: false), new("net.exe", "stop bits", Short, MustSucceed: false),
+            new(string.Empty, string.Empty, Short, RenameFolder: "SoftwareDistribution"),
+            new("net.exe", "start bits", Short, MustSucceed: false, Always: true), new("net.exe", "start wuauserv", Short, MustSucceed: false, Always: true),
         ],
     };
 
@@ -94,49 +100,64 @@ public sealed class RepairFixer(IProcessRunner runner, Action<string>? renameFol
     public async Task ApplyAsync(Finding finding, CancellationToken cancellationToken)
     {
         var repair = Parse(finding) ?? throw new InvalidOperationException("Not a repair");
-        Exception? renameError = null;
+        Exception? error = null;
         foreach (var step in Steps[repair])
         {
-            if (step.RenameFolder is { } folder)
+            if (error is not null && !step.Always)
             {
-                try
-                {
-                    Rename(folder);
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-                {
-                    renameError ??= ex; // les services sont tout de même redémarrés par les étapes suivantes
-                }
-
-                continue;
+                continue; // après un échec, seules les étapes « toujours » (redémarrage des services) sont faites
             }
 
-            var exit = await runner.RunHiddenAsync(step.Tool, step.Arguments, line => Output?.Invoke(this, line), cancellationToken, step.Timeout)
-                .ConfigureAwait(false);
-            switch (exit)
+            try
             {
-                case 0:
-                    break;
-                case RebootRequiredCode when repair != RepairKind.FlushDns:
-                    RebootRequired?.Invoke(this, EventArgs.Empty);
-                    break;
-                case SourceNotFound:
-                    throw new InvalidOperationException($"{step.Tool}: repair source not found (0x800F081F) — Windows Update could not provide healthy files");
-                case var _ when !step.MustSucceed:
-                    break;
-                default:
-                    throw new InvalidOperationException($"{step.Tool} {step.Arguments} exited with code {exit} (0x{exit:X8})");
+                await RunStepAsync(repair, step, error is null ? cancellationToken : CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or TimeoutException
+                                           or OperationCanceledException)
+            {
+                error ??= ex;
             }
         }
 
-        if (renameError is not null)
+        if (error is OperationCanceledException)
         {
-            throw new InvalidOperationException($"A Windows Update folder is in use: {renameError.Message}", renameError);
+            throw error;
+        }
+
+        if (error is not null)
+        {
+            throw new InvalidOperationException(error.Message, error);
         }
 
         if (AlwaysNeedsReboot(repair))
         {
             RebootRequired?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private async Task RunStepAsync(RepairKind repair, RepairStep step, CancellationToken cancellationToken)
+    {
+        if (step.RenameFolder is { } folder)
+        {
+            Rename(folder);
+            return;
+        }
+
+        var exit = await runner.RunHiddenAsync(step.Tool, step.Arguments, line => Output?.Invoke(this, line), cancellationToken, step.Timeout)
+            .ConfigureAwait(false);
+        switch (exit)
+        {
+            case 0:
+                return;
+            case RebootRequiredCode when repair != RepairKind.FlushDns:
+                RebootRequired?.Invoke(this, EventArgs.Empty);
+                return;
+            case SourceNotFound:
+                throw new InvalidOperationException($"{step.Tool}: repair source not found (0x800F081F) — Windows Update could not provide healthy files");
+            case var _ when !step.MustSucceed:
+                return;
+            default:
+                throw new InvalidOperationException($"{step.Tool} {step.Arguments} exited with code {exit} (0x{exit:X8})");
         }
     }
 

@@ -318,6 +318,12 @@ public sealed class DriverBackup(IProcessRunner runner, IClock clock) : IDriverB
     public async Task<string> BackupAsync(CancellationToken cancellationToken)
     {
         var root = SecureFolders.EnsureChild("drivers");
+        var free = new DriveInfo(Path.GetPathRoot(root)!).AvailableFreeSpace;
+        if (free < 5L * 1024 * 1024 * 1024)
+        {
+            throw new IOException("Less than 5 GB free: driver backup skipped");
+        }
+
         var folder = Path.Combine(root, clock.Now.ToLocalTime().ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
         Directory.CreateDirectory(folder);
         var exit = await runner.RunHiddenAsync("pnputil.exe", $"/export-driver * \"{folder}\"", null, cancellationToken, TimeSpan.FromMinutes(20))
@@ -325,6 +331,19 @@ public sealed class DriverBackup(IProcessRunner runner, IClock clock) : IDriverB
         if (exit != 0)
         {
             throw new InvalidOperationException($"pnputil /export-driver exited with code {exit}");
+        }
+
+        // Seules les 2 dernières sauvegardes sont gardées (une exportation peut peser plusieurs Go).
+        foreach (var old in new DirectoryInfo(root).EnumerateDirectories().OrderByDescending(d => d.Name, StringComparer.Ordinal).Skip(2))
+        {
+            try
+            {
+                CleanupFileSystem.DeleteTree(old.FullName, SecureFolders.Root);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Nouvel essai à la prochaine sauvegarde.
+            }
         }
 
         return folder;

@@ -205,6 +205,12 @@ public sealed partial class SecurityToolsViewModel(
         {
             VirusTotalStatus = localizer["SecondOpinion.Cancelled"];
         }
+#pragma warning disable CA1031 // VirusTotal ou la lecture du démarrage en échec : message, jamais de plantage
+        catch (Exception ex)
+#pragma warning restore CA1031
+        {
+            VirusTotalStatus = localizer.Format(new LocalizedText("VT.Error", ex.Message));
+        }
         finally
         {
             _tool = null;

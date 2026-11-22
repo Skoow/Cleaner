@@ -13,14 +13,33 @@ using Serilog.Core;
 namespace PCDoc.App;
 
 /// <summary>Démarrage de PCDoc : protections, journal, paramètres, langue, thème, fenêtre.</summary>
+#pragma warning disable CA1001 // l'application WPF libère ses ressources dans OnExit
 public partial class App : Application
 {
+#pragma warning disable CA2213 // libéré dans OnExit (cycle de vie WPF, pas IDisposable)
+    private System.Threading.Mutex? _instance;
+#pragma warning restore CA2213
+
     private ServiceProvider? _services;
     private Logger? _logger;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         var clock = Stopwatch.StartNew();
+        // Une seule instance (fenêtre ou entretien automatique) : deux séries de corrections sur le même journal se gêneraient.
+        _instance = new System.Threading.Mutex(initiallyOwned: true, @"Global\PCDoc-Instance", out var first);
+        if (!first)
+        {
+            if (!e.Args.Contains("--maintenance", StringComparer.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("PCDoc est déjà ouvert (ou un entretien automatique est en cours). / PCDoc is already running.", "PCDoc",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            Shutdown();
+            return;
+        }
+
         // Plusieurs analyses lancent des outils de Windows en parallèle : assez de fils dès le départ.
         System.Threading.ThreadPool.GetMinThreads(out var workers, out var io);
         System.Threading.ThreadPool.SetMinThreads(Math.Max(workers, 32), io);
@@ -140,10 +159,10 @@ public partial class App : Application
         _logger?.Information("Exit");
         _services?.Dispose();
         _logger?.Dispose();
+        _instance?.Dispose(); // libère le mutex (aussi libéré par Windows à la fin du processus)
         base.OnExit(e);
     }
 
-    /// <summary>Toute erreur inattendue est journalisée et affichée dans un bandeau : jamais de boîte de dialogue.</summary>
     /// <summary>Entretien automatique sans fenêtre, puis fermeture (journal et rapport dans l'Historique).</summary>
     private async void RunMaintenance(ISettingsStore store, bool fixesAvailable)
     {
@@ -169,6 +188,7 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Toute erreur inattendue est journalisée et affichée dans un bandeau : jamais de boîte de dialogue.</summary>
     private void HookErrors(ShellViewModel shell, ILocalizer localizer)
     {
         DispatcherUnhandledException += (_, args) =>
@@ -187,3 +207,4 @@ public partial class App : Application
             _logger?.Fatal(args.ExceptionObject as Exception, "Fatal exception");
     }
 }
+#pragma warning restore CA1001

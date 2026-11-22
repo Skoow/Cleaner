@@ -62,7 +62,7 @@ public sealed class AssistantsAndRepairsTests
         var fixer = new RepairFixer(runner, folder =>
         {
             renamed.Add(folder);
-            if (folder.Contains("catroot2", StringComparison.Ordinal))
+            if (folder == "SoftwareDistribution")
             {
                 throw new IOException("in use");
             }
@@ -73,7 +73,7 @@ public sealed class AssistantsAndRepairsTests
         var act = () => fixer.ApplyAsync(finding, CancellationToken.None);
 
         await act.Should().ThrowAsync<InvalidOperationException>();
-        renamed.Should().Equal("SoftwareDistribution", @"System32\catroot2");
+        renamed.Should().Equal("SoftwareDistribution");
         runner.Calls[^1].Should().Be("net.exe start wuauserv", "les services sont redémarrés malgré l'échec");
     }
 
@@ -87,5 +87,27 @@ public sealed class AssistantsAndRepairsTests
         await fixer.ApplyAsync(RepairFixer.FindingFor(RepairKind.NetworkReset), CancellationToken.None);
 
         reboot.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task WindowsUpdateReset_ServicesRestartedEvenWhenAStopTimesOut()
+    {
+        var calls = new List<string>();
+        var runner = new TimeoutRunner(calls);
+        var fixer = new RepairFixer(runner, _ => { });
+
+        var act = () => fixer.ApplyAsync(RepairFixer.FindingFor(RepairKind.WindowsUpdateReset), CancellationToken.None);
+
+        await act.Should().ThrowAsync<InvalidOperationException>();
+        calls.Should().Equal("net.exe stop wuauserv", "net.exe start bits", "net.exe start wuauserv");
+    }
+
+    private sealed class TimeoutRunner(List<string> calls) : IProcessRunner
+    {
+        public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken, TimeSpan? timeout = null)
+        {
+            calls.Add($"{system32Tool} {arguments}");
+            return arguments.StartsWith("stop", StringComparison.Ordinal) ? throw new TimeoutException("hung") : Task.FromResult(0);
+        }
     }
 }

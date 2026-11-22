@@ -201,7 +201,8 @@ public sealed class BrowserExtensions(IUserProfileResolver profiles) : IBrowserE
             {
                 foreach (var extension in Dirs(Path.Combine(userProfile, "Extensions")))
                 {
-                    var version = Dirs(extension).OrderByDescending(Path.GetFileName, StringComparer.Ordinal).FirstOrDefault();
+                    var version = Dirs(extension)
+                        .OrderByDescending(d => Version.TryParse(Path.GetFileName(d).Split('_')[0], out var v) ? v : new Version(0, 0)).FirstOrDefault();
                     if (version is not null && ReadChromium(browser, Path.GetFileName(extension), version) is { } item)
                     {
                         result.Add(item);
@@ -309,6 +310,11 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
 {
     private const long MaxDownload = 600L * 1024 * 1024;
 
+    // Noms exacts des éditeurs (certificat de signature) et domaines de téléchargement acceptés.
+    private static readonly HashSet<string> Microsoft = new(StringComparer.Ordinal) { "Microsoft Corporation" };
+    private static readonly HashSet<string> Malwarebytes = new(StringComparer.Ordinal) { "Malwarebytes Inc.", "Malwarebytes Inc", "Malwarebytes Corporation" };
+    private static readonly string[] AllowedHosts = ["microsoft.com", "malwarebytes.com", "mbamupdates.com"];
+
     private static readonly HttpClient Http = new(new HttpClientHandler { AllowAutoRedirect = true, MaxAutomaticRedirections = 10 })
     {
         Timeout = TimeSpan.FromMinutes(20),
@@ -318,10 +324,11 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
     {
         var (url, file, publisher, arguments, timeout) = tool switch
         {
-            SecondOpinionTool.AdwCleaner => ("https://downloads.malwarebytes.com/file/adwcleaner", "adwcleaner.exe", "Malwarebytes", "/eula /clean /noreboot /path \"{0}\"",
+            // Analyse seule (/scan, /N) : rien n'est supprimé sans retour possible ; l'utilisateur décide ensuite.
+            SecondOpinionTool.AdwCleaner => ("https://downloads.malwarebytes.com/file/adwcleaner", "adwcleaner.exe", Malwarebytes, "/eula /scan /noreboot /path \"{0}\"",
                 TimeSpan.FromHours(1)),
             _ => (RuntimeInformation.OSArchitecture == Architecture.X86 ? "https://go.microsoft.com/fwlink/?LinkId=212733" : "https://go.microsoft.com/fwlink/?LinkId=212732",
-                "msert.exe", "Microsoft Corporation", "/Q", TimeSpan.FromHours(3)),
+                "msert.exe", Microsoft, "/Q /N", TimeSpan.FromHours(3)),
         };
         if (tool == SecondOpinionTool.SafetyScanner && RuntimeInformation.OSArchitecture == Architecture.Arm64)
         {
@@ -336,7 +343,7 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
             onOutput?.Invoke($"Download {url}");
             await DownloadAsync(url, exe, cancellationToken).ConfigureAwait(false);
             var signature = signatures.Verify(exe);
-            if (signature.Status != SignatureStatus.Signed || signature.Publisher?.Contains(publisher, StringComparison.OrdinalIgnoreCase) != true)
+            if (signature.Status != SignatureStatus.Signed || signature.Publisher is null || !publisher.Contains(signature.Publisher))
             {
                 throw new InvalidOperationException($"{file}: signature {signature.Status} ({signature.Publisher}) refused");
             }
@@ -375,9 +382,11 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
     private static async Task DownloadAsync(string url, string path, CancellationToken cancellationToken)
     {
         using var response = await Http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-        if (response.RequestMessage?.RequestUri?.Scheme != Uri.UriSchemeHttps)
+        var final = response.RequestMessage?.RequestUri;
+        if (final?.Scheme != Uri.UriSchemeHttps
+            || !AllowedHosts.Any(h => final.Host.Equals(h, StringComparison.OrdinalIgnoreCase) || final.Host.EndsWith("." + h, StringComparison.OrdinalIgnoreCase)))
         {
-            throw new InvalidOperationException("Download was redirected outside HTTPS");
+            throw new InvalidOperationException($"Download was redirected to an unexpected site ({final?.Host})");
         }
 
         response.EnsureSuccessStatusCode();
@@ -414,6 +423,8 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
             RedirectStandardError = true,
             WorkingDirectory = Path.GetDirectoryName(exe)!,
         };
+        start.Environment["TEMP"] = Path.GetDirectoryName(exe)!; // dossier protégé, pas le TEMP de l'utilisateur
+        start.Environment["TMP"] = Path.GetDirectoryName(exe)!;
         var gate = new object();
         using var process = new Process { StartInfo = start };
         process.OutputDataReceived += (_, e) => { if (!string.IsNullOrWhiteSpace(e.Data)) { lock (gate) { onOutput?.Invoke(e.Data.Trim()); } } };
@@ -534,7 +545,12 @@ public sealed partial class VirusTotalClient(string keyFile) : IVirusTotal
             response.EnsureSuccessStatusCode();
             using var doc = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false),
                 cancellationToken: cancellationToken).ConfigureAwait(false);
-            var stats = doc.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("last_analysis_stats");
+            if (!doc.RootElement.TryGetProperty("data", out var data) || !data.TryGetProperty("attributes", out var attributes)
+                || !attributes.TryGetProperty("last_analysis_stats", out var stats))
+            {
+                throw new InvalidOperationException("Unexpected VirusTotal answer");
+            }
+
             int Get(string name) => stats.TryGetProperty(name, out var v) && v.TryGetInt32(out var i) ? i : 0;
             return new VirusTotalStats(Get("malicious"), Get("suspicious"), Get("harmless"), Get("undetected"));
         }

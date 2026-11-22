@@ -59,7 +59,19 @@ public sealed partial class SettingsPageViewModel
             MaintenanceSoftware = options.SoftwareUpdates;
             MaintenanceWindows = options.WindowsUpdates;
             MaintenanceDefender = options.DefenderScan;
-            MaintenanceEnabled = SafeIsScheduled();
+            // schtasks peut prendre quelques secondes : lu hors du fil de l'interface.
+            var context = SynchronizationContext.Current;
+            _ = Task.Run(SafeIsScheduled).ContinueWith(t =>
+            {
+                if (context is null)
+                {
+                    MaintenanceEnabled = t.Result;
+                }
+                else
+                {
+                    context.Post(_ => MaintenanceEnabled = t.Result, null);
+                }
+            }, TaskScheduler.Default);
         }
     }
 
@@ -87,9 +99,9 @@ public sealed partial class SettingsPageViewModel
         }
 
         var options = new MaintenanceOptions(MaintenanceDay, MaintenanceHour, MaintenanceCleanup, MaintenanceSoftware, MaintenanceWindows, MaintenanceDefender);
-        _store.Save(_store.Load() with { Maintenance = options });
         try
         {
+            _store.Save(_store.Load() with { Maintenance = options });
             if (!MaintenanceEnabled)
             {
                 _scheduler.Unschedule();
@@ -107,7 +119,8 @@ public sealed partial class SettingsPageViewModel
             MaintenanceStatus = _localizer.Format(new LocalizedText("Maintenance.Scheduled",
                 Days.First(d => d.Day == MaintenanceDay).Label, MaintenanceHour));
         }
-        catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException or ArgumentException)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException or ArgumentException or TimeoutException
+                                       or global::System.ComponentModel.Win32Exception)
         {
             MaintenanceStatus = _localizer["Maintenance.Failed"];
         }
@@ -169,7 +182,9 @@ public sealed partial class SettingsPageViewModel
         {
             return _scheduler?.IsScheduled() ?? false;
         }
-        catch (Exception ex) when (ex is InvalidOperationException or IOException)
+#pragma warning disable CA1031 // planificateur indisponible : simplement « non planifié »
+        catch (Exception)
+#pragma warning restore CA1031
         {
             return false;
         }

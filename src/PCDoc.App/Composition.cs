@@ -153,7 +153,7 @@ internal static class Composition
         // Sécurité et clés USB (v0.7).
         services.AddSingleton<IDefenderCommand, DefenderCommand>();
         services.AddSingleton<IRemovableDrives, RemovableDrives>();
-        services.AddSingleton<IMaintenanceScheduler>(sp => new MaintenanceScheduler(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IRemovableDrives>()));
+        services.AddSingleton<IMaintenanceScheduler>(sp => new MaintenanceScheduler(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IRemovableDrives>(), sp.GetRequiredService<ISignatureVerifier>()));
         services.AddSingleton(sp =>
         {
             var settings = new OptimizeEngine(SecurityModule.Settings, sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(),
@@ -239,7 +239,7 @@ internal static class Composition
         PageId.Updates => new UpdatesPageViewModel(services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired)
         {
-            BackupDrivers = ct => services.GetRequiredService<UpdatesEngine>().BackupDriversAsync(ct),
+            BackupDrivers = ct => services.GetRequiredService<UpdatesEngine>().BackupDriversAsync(ct, force: true),
         },
         PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),

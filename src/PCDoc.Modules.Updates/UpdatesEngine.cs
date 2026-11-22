@@ -34,11 +34,17 @@ public sealed class UpdatesEngine(IWindowsUpdate windowsUpdate, IWingetRunner wi
     public Action<string>? DriversBackedUp { get; set; }
 
     /// <summary>Sauvegarde des pilotes, une seule fois par session (réutilisée pour les pilotes suivants).</summary>
-    public async Task<string?> BackupDriversAsync(CancellationToken cancellationToken)
+    /// <param name="force">Vrai pour le bouton « Sauvegarder » : nouvelle sauvegarde même si une existe déjà pour cette session.</param>
+    public async Task<string?> BackupDriversAsync(CancellationToken cancellationToken, bool force = false)
     {
         if (driverBackup is null)
         {
             return null;
+        }
+
+        if (force)
+        {
+            _driverBackup = null;
         }
 
         _driverBackup ??= driverBackup.BackupAsync(cancellationToken);

@@ -90,11 +90,11 @@ Ext.Blocked	blocked	bloquée
 Ext.Disabled	disabled	désactivée
 Security.extension.Title	Block the extension {0} ({1})	Bloquer l'extension {0} ({1})
 Security.extension.Explanation	The browser disables and removes it, and it cannot be reinstalled. Reversible from History.	Le navigateur la désactive et la retire, et elle ne peut plus être réinstallée. Annulable depuis l'Historique.
-SecondOpinion.Intro	Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. Their report is saved with PCDoc's reports.	Outils gratuits d'autres éditeurs, téléchargés depuis leur site officiel seulement quand vous cliquez, signature vérifiée, lancés sans fenêtre, puis supprimés. Leur rapport est enregistré avec ceux de PCDoc.
+SecondOpinion.Intro	Free tools from other publishers, downloaded from their official site only when you click, signature checked, run without any window, then deleted. They only scan (nothing is deleted): read their report, then remove what they found with Defender or by uninstalling the program.	Outils gratuits d'autres éditeurs, téléchargés depuis leur site officiel seulement quand vous cliquez, signature vérifiée, lancés sans fenêtre, puis supprimés. Ils analysent seulement (rien n'est supprimé) : lisez leur rapport, puis retirez ce qu'ils ont trouvé avec Defender ou en désinstallant le programme.
 SecondOpinion.SafetyScanner	Microsoft Safety Scanner	Microsoft Safety Scanner
 SecondOpinion.AdwCleaner	Malwarebytes AdwCleaner	Malwarebytes AdwCleaner
-SecondOpinion.Running.SafetyScanner	Microsoft Safety Scanner: download and quick scan (can take 10 to 30 minutes)…	Microsoft Safety Scanner : téléchargement et analyse rapide (10 à 30 minutes)…
-SecondOpinion.Running.AdwCleaner	AdwCleaner: download, scan and removal of adware…	AdwCleaner : téléchargement, analyse et suppression des logiciels publicitaires…
+SecondOpinion.Running.SafetyScanner	Microsoft Safety Scanner: download and quick scan, detection only (10 to 30 minutes)…	Microsoft Safety Scanner : téléchargement et analyse rapide, détection seule (10 à 30 minutes)…
+SecondOpinion.Running.AdwCleaner	AdwCleaner: download and scan for adware, detection only…	AdwCleaner : téléchargement et recherche des logiciels publicitaires, détection seule…
 SecondOpinion.Done	{0} finished (code {1}). See its report below and in History.	{0} terminé (code {1}). Voir son rapport ci-dessous et dans l'Historique.
 SecondOpinion.Failed	{0} could not run: {1}	{0} n'a pas pu s'exécuter : {1}
 SecondOpinion.Cancelled	Stopped.	Arrêté.

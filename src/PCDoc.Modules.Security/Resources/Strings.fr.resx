@@ -95,11 +95,11 @@
   <data name="Ext.Disabled" xml:space="preserve"><value>désactivée</value></data>
   <data name="Security.extension.Title" xml:space="preserve"><value>Bloquer l'extension {0} ({1})</value></data>
   <data name="Security.extension.Explanation" xml:space="preserve"><value>Le navigateur la désactive et la retire, et elle ne peut plus être réinstallée. Annulable depuis l'Historique.</value></data>
-  <data name="SecondOpinion.Intro" xml:space="preserve"><value>Outils gratuits d'autres éditeurs, téléchargés depuis leur site officiel seulement quand vous cliquez, signature vérifiée, lancés sans fenêtre, puis supprimés. Leur rapport est enregistré avec ceux de PCDoc.</value></data>
+  <data name="SecondOpinion.Intro" xml:space="preserve"><value>Outils gratuits d'autres éditeurs, téléchargés depuis leur site officiel seulement quand vous cliquez, signature vérifiée, lancés sans fenêtre, puis supprimés. Ils analysent seulement (rien n'est supprimé) : lisez leur rapport, puis retirez ce qu'ils ont trouvé avec Defender ou en désinstallant le programme.</value></data>
   <data name="SecondOpinion.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner</value></data>
   <data name="SecondOpinion.AdwCleaner" xml:space="preserve"><value>Malwarebytes AdwCleaner</value></data>
-  <data name="SecondOpinion.Running.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner : téléchargement et analyse rapide (10 à 30 minutes)…</value></data>
-  <data name="SecondOpinion.Running.AdwCleaner" xml:space="preserve"><value>AdwCleaner : téléchargement, analyse et suppression des logiciels publicitaires…</value></data>
+  <data name="SecondOpinion.Running.SafetyScanner" xml:space="preserve"><value>Microsoft Safety Scanner : téléchargement et analyse rapide, détection seule (10 à 30 minutes)…</value></data>
+  <data name="SecondOpinion.Running.AdwCleaner" xml:space="preserve"><value>AdwCleaner : téléchargement et recherche des logiciels publicitaires, détection seule…</value></data>
   <data name="SecondOpinion.Done" xml:space="preserve"><value>{0} terminé (code {1}). Voir son rapport ci-dessous et dans l'Historique.</value></data>
   <data name="SecondOpinion.Failed" xml:space="preserve"><value>{0} n'a pas pu s'exécuter : {1}</value></data>
   <data name="SecondOpinion.Cancelled" xml:space="preserve"><value>Arrêté.</value></data>

@@ -26,7 +26,7 @@ public sealed class V09OnWindowsTests
     [Fact]
     public void Maintenance_IsBlockedUnlessInstalledInProgramFiles()
     {
-        var scheduler = new MaintenanceScheduler(new ProcessRunner(), new RemovableDrives());
+        var scheduler = new MaintenanceScheduler(new ProcessRunner(), new RemovableDrives(), new PCDoc.Infrastructure.Signatures.SignatureVerifier());
 
         scheduler.BlockedReason().Should().Be("Maintenance.NotInstalled");
         var act = () => scheduler.Schedule(DayOfWeek.Sunday, 12);
