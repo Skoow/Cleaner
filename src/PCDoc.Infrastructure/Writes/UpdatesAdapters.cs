@@ -349,3 +349,28 @@ public sealed class DriverBackup(IProcessRunner runner, IClock clock) : IDriverB
         return folder;
     }
 }
+
+/// <summary>
+/// Mise à jour des applications du Store par le fournisseur officiel de gestion des appareils
+/// (MDM_EnterpriseModernAppManagement_AppManagement01.UpdateScanMethod), via PowerShell limité aux modules de Windows.
+/// </summary>
+public sealed class StoreUpdates(IProcessRunner runner) : IStoreUpdates
+{
+    private const string Script = "$env:PSModulePath = $PSHOME + '\\Modules'\n"
+                                  + "Import-Module ($PSHOME + '\\Modules\\CimCmdlets') -ErrorAction Stop\n"
+                                  + "$ErrorActionPreference = 'Stop'\n"
+                                  + "try { Get-CimInstance -Namespace 'root\\cimv2\\mdm\\dmmap' -ClassName 'MDM_EnterpriseModernAppManagement_AppManagement01' | "
+                                  + "Invoke-CimMethod -MethodName UpdateScanMethod | Out-Null; exit 0 } catch { Write-Output $_.Exception.Message; exit 1 }";
+
+    public async Task TriggerAsync(CancellationToken cancellationToken)
+    {
+        var output = new List<string>();
+        var exit = await runner.RunHiddenAsync(@"WindowsPowerShell\v1.0\powershell.exe",
+            "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand " + Convert.ToBase64String(Encoding.Unicode.GetBytes(Script)),
+            output.Add, cancellationToken, TimeSpan.FromMinutes(3)).ConfigureAwait(false);
+        if (exit != 0)
+        {
+            throw new InvalidOperationException($"Store update scan failed: {string.Join(' ', output).Trim()}");
+        }
+    }
+}

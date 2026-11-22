@@ -219,4 +219,6 @@
   <data name="Portable.NoDrive" xml:space="preserve"><value>No USB drive plugged in.</value></data>
   <data name="Portable.Done" xml:space="preserve"><value>PCDoc copied in portable mode: {0}</value></data>
   <data name="Portable.Failed" xml:space="preserve"><value>PCDoc could not be copied to the drive.</value></data>
+  <data name="Search.Placeholder" xml:space="preserve"><value>Search a feature…</value></data>
+  <data name="Search.Results" xml:space="preserve"><value>Search results</value></data>
 </root>

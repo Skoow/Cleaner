@@ -22,7 +22,8 @@ public sealed class MaintenanceRunner(
     IActivityLog activity,
     IReportWriter? reports,
     ILocalizer localizer,
-    Func<IReadOnlyList<string>, string> buildReport)
+    Func<IReadOnlyList<string>, string> buildReport,
+    Core.Abstractions.IStoreUpdates? store = null)
 {
     public async Task<FixSessionResult?> RunAsync(MaintenanceOptions options, CancellationToken cancellationToken)
     {
@@ -73,6 +74,21 @@ public sealed class MaintenanceRunner(
             if (result.NeedsConfirmationWithoutRestorePoint)
             {
                 activity.Write("maintenance", localizer["Maintenance.NoRestorePoint"]);
+            }
+        }
+
+        if (options.WindowsUpdates && store is not null)
+        {
+            try
+            {
+                await store.TriggerAsync(cancellationToken).ConfigureAwait(false);
+                activity.Write("maintenance", localizer["Updates.Store.Done"]);
+            }
+#pragma warning disable CA1031
+            catch (Exception ex) when (ex is not OperationCanceledException)
+#pragma warning restore CA1031
+            {
+                activity.Write("maintenance", localizer.Format(new LocalizedText("Maintenance.SourceFailed", "store", ex.Message)));
             }
         }
 

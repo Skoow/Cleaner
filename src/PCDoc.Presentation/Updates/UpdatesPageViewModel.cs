@@ -52,6 +52,34 @@ public sealed partial class UpdatesPageViewModel : ObservableObject
     [ObservableProperty]
     private bool _isBackingUp;
 
+    [ObservableProperty]
+    private string? _storeStatus;
+
+    /// <summary>Mise à jour des applications du Store (null = indisponible).</summary>
+    public Func<CancellationToken, Task>? UpdateStore { get; init; }
+
+    [RelayCommand]
+    private async Task UpdateStoreAppsAsync()
+    {
+        if (UpdateStore is null)
+        {
+            return;
+        }
+
+        StoreStatus = _localizer["Updates.Store.Running"];
+        try
+        {
+            await Task.Run(() => UpdateStore(CancellationToken.None)).ConfigureAwait(true);
+            StoreStatus = _localizer["Updates.Store.Done"];
+        }
+#pragma warning disable CA1031 // Store absent ou service arrêté : message, jamais de plantage
+        catch (Exception ex) when (ex is not OperationCanceledException)
+#pragma warning restore CA1031
+        {
+            StoreStatus = _localizer["Updates.Store.Failed"];
+        }
+    }
+
     /// <summary>Sauvegarde des pilotes (dossier créé) ; null = indisponible.</summary>
     public Func<CancellationToken, Task<string?>>? BackupDrivers { get; init; }
 

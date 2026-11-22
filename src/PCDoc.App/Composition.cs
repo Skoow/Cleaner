@@ -124,6 +124,7 @@ internal static class Composition
         // Mises à jour et optimisation (v0.6).
         services.AddSingleton<IWindowsUpdate, WindowsUpdate>();
         services.AddSingleton<IWingetRunner, WingetRunner>();
+        services.AddSingleton<IStoreUpdates>(sp => new StoreUpdates(sp.GetRequiredService<IProcessRunner>()));
         services.AddSingleton<IDriverBackup>(sp => new DriverBackup(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new UpdatesEngine(sp.GetRequiredService<IWindowsUpdate>(), sp.GetRequiredService<IWingetRunner>(), null,
             sp.GetRequiredService<IDriverBackup>())
@@ -212,7 +213,7 @@ internal static class Composition
         services.AddSingleton<IThemeApplier>(sp => sp.GetRequiredService<ThemeApplier>());
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddSingleton<IAppDataCleaner, AppDataCleaner>();
-        services.AddSingleton(sp => new ShellViewModel(page => CreatePage(sp, page)));
+        services.AddSingleton(sp => new ShellViewModel(page => CreatePage(sp, page)) { Translate = key => sp.GetRequiredService<ILocalizer>()[key] });
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }
@@ -240,6 +241,11 @@ internal static class Composition
             NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired)
         {
             BackupDrivers = ct => services.GetRequiredService<UpdatesEngine>().BackupDriversAsync(ct, force: true),
+            UpdateStore = async ct =>
+            {
+                await services.GetRequiredService<IStoreUpdates>().TriggerAsync(ct).ConfigureAwait(false);
+                services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>().Write("updates", services.GetRequiredService<ILocalizer>()["Updates.Store.Done"]);
+            },
         },
         PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
@@ -290,7 +296,7 @@ internal static class Composition
         services.GetRequiredService<FixPipeline>(), services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(),
         services.GetRequiredService<PCDoc.Core.Activity.IReportWriter>(), services.GetRequiredService<ILocalizer>(),
         lines => PCDoc.Core.Activity.ActivityReport.Build(lines, PCDoc.Core.AppInfo.ProductName, PCDoc.Core.AppInfo.Version, Environment.MachineName,
-            Environment.OSVersion.VersionString, DateTimeOffset.Now));
+            Environment.OSVersion.VersionString, DateTimeOffset.Now), services.GetRequiredService<IStoreUpdates>());
 
     /// <summary>Mode actuel, relu à chaque fois (il peut changer dans les Paramètres).</summary>
     private static Func<AppMode> Mode(IServiceProvider services)

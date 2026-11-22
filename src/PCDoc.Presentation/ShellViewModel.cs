@@ -18,6 +18,43 @@ public sealed partial class ShellViewModel : ObservableObject
     [ObservableProperty]
     private string? _errorBanner;
 
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    private IReadOnlyList<SearchEntry>? _searchIndex;
+
+    /// <summary>Traduction des titres pour la recherche (null = recherche désactivée).</summary>
+    public Func<string, string>? Translate { get; init; }
+
+    public System.Collections.ObjectModel.ObservableCollection<SearchResult> SearchResults { get; } = [];
+
+    public bool HasSearchResults => SearchResults.Count > 0;
+
+    partial void OnSearchTextChanged(string value)
+    {
+        SearchResults.Clear();
+        if (Translate is not null)
+        {
+            _searchIndex ??= SearchIndex.Build();
+            foreach (var r in SearchIndex.Find(_searchIndex, value, Translate))
+            {
+                SearchResults.Add(r);
+            }
+        }
+
+        OnPropertyChanged(nameof(HasSearchResults));
+    }
+
+    [RelayCommand]
+    private void OpenSearchResult(SearchResult? result)
+    {
+        if (result is not null)
+        {
+            CurrentPage = result.Page;
+            SearchText = string.Empty;
+        }
+    }
+
     /// <summary>Assistant du premier lancement affiché par-dessus les pages (null = terminé).</summary>
     [ObservableProperty]
     private FirstRunViewModel? _firstRun;

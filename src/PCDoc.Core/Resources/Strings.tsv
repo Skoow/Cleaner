@@ -214,3 +214,5 @@ Portable.Copy	Copy PCDoc to the drive	Copier PCDoc sur la clé
 Portable.NoDrive	No USB drive plugged in.	Aucune clé USB branchée.
 Portable.Done	PCDoc copied in portable mode: {0}	PCDoc copié en mode portable : {0}
 Portable.Failed	PCDoc could not be copied to the drive.	PCDoc n'a pas pu être copié sur la clé.
+Search.Placeholder	Search a feature…	Rechercher une fonction…
+Search.Results	Search results	Résultats de la recherche

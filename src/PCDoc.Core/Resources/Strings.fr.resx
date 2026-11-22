@@ -219,4 +219,6 @@
   <data name="Portable.NoDrive" xml:space="preserve"><value>Aucune clé USB branchée.</value></data>
   <data name="Portable.Done" xml:space="preserve"><value>PCDoc copié en mode portable : {0}</value></data>
   <data name="Portable.Failed" xml:space="preserve"><value>PCDoc n'a pas pu être copié sur la clé.</value></data>
+  <data name="Search.Placeholder" xml:space="preserve"><value>Rechercher une fonction…</value></data>
+  <data name="Search.Results" xml:space="preserve"><value>Résultats de la recherche</value></data>
 </root>

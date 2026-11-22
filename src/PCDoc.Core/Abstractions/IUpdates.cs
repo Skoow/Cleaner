@@ -41,3 +41,9 @@ public interface IDriverBackup
     /// <summary>Dossier de la sauvegarde créée.</summary>
     Task<string> BackupAsync(CancellationToken cancellationToken);
 }
+
+/// <summary>Demande au Microsoft Store de rechercher et d'installer les mises à jour de ses applications (en arrière-plan).</summary>
+public interface IStoreUpdates
+{
+    Task TriggerAsync(CancellationToken cancellationToken);
+}

@@ -68,4 +68,18 @@
   <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Météo, Cartes, « Localiser mon appareil » et le fuseau horaire automatique ne savent plus où vous êtes, pour tous les comptes.</value></data>
   <data name="Privacy.error-reporting-off.Title" xml:space="preserve"><value>Désactiver l'envoi des rapports d'erreurs à Microsoft</value></data>
   <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Les rapports de plantage ne sont plus créés ni envoyés (le Moniteur de fiabilité en montre moins). Microsoft ne peut plus vous proposer de solution pour un plantage connu.</value></data>
+  <data name="Privacy.office-telemetry-off.Title" xml:space="preserve"><value>Arrêter les données de diagnostic d'Office</value></data>
+  <data name="Privacy.office-telemetry-off.Explanation" xml:space="preserve"><value>Word, Excel, Outlook… n'envoient plus de données d'utilisation à Microsoft (Microsoft 365 / Office 2016 et suivants).</value></data>
+  <data name="Privacy.office-feedback-off.Title" xml:space="preserve"><value>Plus de demandes d'avis dans Office</value></data>
+  <data name="Privacy.office-feedback-off.Explanation" xml:space="preserve"><value>Retire le bouton « Envoyer un sourire » et les questionnaires dans Office.</value></data>
+  <data name="Privacy.office-connected-optional-off.Title" xml:space="preserve"><value>Désactiver les services en ligne facultatifs d'Office</value></data>
+  <data name="Privacy.office-connected-optional-off.Explanation" xml:space="preserve"><value>Images en ligne, modèles 3D, assistant CV LinkedIn… ne sont plus disponibles. L'enregistrement sur OneDrive continue de fonctionner.</value></data>
+  <data name="Privacy.edge-tracking-off.Title" xml:space="preserve"><value>Edge : plus de publicité personnalisée, d'achats ni de suggestions</value></data>
+  <data name="Privacy.edge-tracking-off.Explanation" xml:space="preserve"><value>Désactive la personnalisation des publicités, l'assistant d'achat, les recommandations et les demandes d'avis. Edge affichera « géré par votre organisation ».</value></data>
+  <data name="Privacy.edge-diagnostic-off.Title" xml:space="preserve"><value>Edge : aucune donnée de diagnostic</value></data>
+  <data name="Privacy.edge-diagnostic-off.Explanation" xml:space="preserve"><value>Edge n'envoie plus de rapports de plantage ni d'utilisation. Microsoft ne peut plus corriger un plantage qui n'arrive que chez vous.</value></data>
+  <data name="Privacy.chrome-metrics-off.Title" xml:space="preserve"><value>Chrome : plus de statistiques d'utilisation</value></data>
+  <data name="Privacy.chrome-metrics-off.Explanation" xml:space="preserve"><value>Chrome n'envoie plus de statistiques ni de rapports de plantage à Google. Chrome affichera « géré par votre organisation ».</value></data>
+  <data name="Privacy.firefox-telemetry-off.Title" xml:space="preserve"><value>Firefox : plus de télémétrie ni d'études</value></data>
+  <data name="Privacy.firefox-telemetry-off.Explanation" xml:space="preserve"><value>Firefox n'envoie plus de données d'utilisation et n'installe plus les « études » de Mozilla.</value></data>
 </root>

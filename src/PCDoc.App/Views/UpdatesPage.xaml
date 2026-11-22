@@ -25,6 +25,11 @@
               AutomationProperties.Name="{app:T Updates.DriverBackup}" />
       <TextBlock Text="{Binding DriverBackupStatus}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" TextWrapping="Wrap" />
     </DockPanel>
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Left" Content="{app:T Updates.Store}" Command="{Binding UpdateStoreAppsCommand}" Margin="0,0,12,0"
+              AutomationProperties.Name="{app:T Updates.Store}" />
+      <TextBlock Text="{Binding StoreStatus}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" TextWrapping="Wrap" />
+    </DockPanel>
     <TabControl>
       <TabItem Header="{app:T Updates.Tab.Windows}">
         <DockPanel Margin="0,12,0,0">
