@@ -164,6 +164,9 @@ public class SystemPageViewModelTests
     [Fact]
     public async Task Refresh_LoadsAllSourcesInParallel()
     {
+        // Comme l'application au démarrage (App.OnStartup) : assez de fils pour des lectures bloquantes en parallèle.
+        ThreadPool.GetMinThreads(out var workers, out var io);
+        ThreadPool.SetMinThreads(Math.Max(workers, 32), io);
         var (vm, _) = Make(
             () => { Thread.Sleep(600); return Pc(); },
             () => { Thread.Sleep(600); return new BootHistory([]); },
