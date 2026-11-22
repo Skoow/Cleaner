@@ -21,6 +21,9 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         var clock = Stopwatch.StartNew();
+        // Plusieurs analyses lancent des outils de Windows en parallèle : assez de fils dès le départ.
+        System.Threading.ThreadPool.GetMinThreads(out var workers, out var io);
+        System.Threading.ThreadPool.SetMinThreads(Math.Max(workers, 32), io);
         var dllSearchRestricted = NativeSafety.RestrictDllSearch();
         base.OnStartup(e);
 
@@ -110,6 +113,17 @@ public partial class App : Application
         }
 
         var window = new MainWindow(shell, store, _services.GetRequiredService<IAppDataCleaner>());
+        var pipeline = _services.GetRequiredService<PCDoc.Core.Fixing.FixPipeline>();
+        pipeline.SessionCompleted += (_, _) => Dispatcher.BeginInvoke(shell.ForgetOtherPages);
+        window.Closing += (_, args) =>
+        {
+            // Fermer pendant une correction laisserait une installation ou une réparation à moitié faite.
+            if (pipeline.IsRunning)
+            {
+                args.Cancel = true;
+                shell.ShowError(localizer["App.BusyClosing"]);
+            }
+        };
         MainWindow = window;
         window.Show();
         _logger.Information("Window shown in {Ms} ms", clock.ElapsedMilliseconds);

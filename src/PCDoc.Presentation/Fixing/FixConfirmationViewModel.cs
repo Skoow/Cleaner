@@ -61,6 +61,12 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
     public void Request(IEnumerable<Finding> findings)
     {
         ArgumentNullException.ThrowIfNull(findings);
+        if (IsRunning || AwaitingNoRestorePointConfirmation)
+        {
+            // Une série est en cours ou attend une confirmation : jamais remplacer ce que l'utilisateur a confirmé.
+            return;
+        }
+
         var mode = _mode();
         _pending = [.. findings.Where(f => FixPolicy.IsOffered(f, mode))];
         Items.Clear();
@@ -83,7 +89,8 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanConfirm))]
     private Task ConfirmAsync() => RunAsync(allowWithoutRestorePoint: false);
 
-    private bool CanConfirmWithoutRestorePoint() => AwaitingNoRestorePointConfirmation && !IsRunning;
+    private bool CanConfirmWithoutRestorePoint() =>
+        AwaitingNoRestorePointConfirmation && !IsRunning && (!NeedsStrongConfirmation || RiskAcknowledged);
 
     [RelayCommand(CanExecute = nameof(CanConfirmWithoutRestorePoint))]
     private Task ConfirmWithoutRestorePointAsync() => RunAsync(allowWithoutRestorePoint: true);

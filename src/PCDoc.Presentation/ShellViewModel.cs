@@ -63,6 +63,15 @@ public sealed partial class ShellViewModel : ObservableObject
     [RelayCommand]
     private void DismissError() => ErrorBanner = null;
 
+    /// <summary>Après des corrections : les autres pages seront recréées (et réanalysées) à leur prochaine ouverture.</summary>
+    public void ForgetOtherPages()
+    {
+        foreach (var page in _pages.Keys.Where(p => p != CurrentPage && p is not PageId.Settings).ToList())
+        {
+            _pages.Remove(page);
+        }
+    }
+
     private object PageFor(PageId page)
     {
         if (!_pages.TryGetValue(page, out var vm))

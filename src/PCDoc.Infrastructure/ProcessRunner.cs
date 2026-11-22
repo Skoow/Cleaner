@@ -49,8 +49,10 @@ public sealed partial class ProcessRunner : IProcessRunner
         }
 
         using var process = new Process { StartInfo = start, EnableRaisingEvents = true };
-        process.OutputDataReceived += (_, e) => Forward(e.Data, onOutput);
-        process.ErrorDataReceived += (_, e) => Forward(e.Data, onOutput);
+        // Sortie et erreurs arrivent sur deux fils : transmises une à la fois (les appelants ajoutent à une simple liste).
+        var outputLock = new object();
+        process.OutputDataReceived += (_, e) => { lock (outputLock) { Forward(e.Data, onOutput); } };
+        process.ErrorDataReceived += (_, e) => { lock (outputLock) { Forward(e.Data, onOutput); } };
         process.Start();
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();

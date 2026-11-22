@@ -53,6 +53,7 @@ public sealed partial class AppsPageViewModel : ObservableObject
 
     // Sélection des applications préinstallées : initialisée une seule fois (🟢 cochées), puis gardée telle quelle.
     private HashSet<string>? _selected;
+    private bool _analyzeAgain;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -96,11 +97,22 @@ public sealed partial class AppsPageViewModel : ObservableObject
     [RelayCommand]
     private async Task AnalyzeAsync()
     {
+        if (IsLoading)
+        {
+            _analyzeAgain = true; // analyse déjà en cours : une seule, relancée à la fin si besoin
+            return;
+        }
+
         IsLoading = true;
         try
         {
-            _report = await _source.AnalyzeAsync(CancellationToken.None).ConfigureAwait(true);
-            Build();
+            do
+            {
+                _analyzeAgain = false;
+                _report = await Task.Run(() => _source.AnalyzeAsync(CancellationToken.None)).ConfigureAwait(true);
+                Build();
+            }
+            while (_analyzeAgain);
         }
         finally
         {

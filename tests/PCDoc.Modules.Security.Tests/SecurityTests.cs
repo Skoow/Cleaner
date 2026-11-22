@@ -24,25 +24,35 @@ public class SecurityTests
 
     private sealed class Runner : IProcessRunner
     {
-        public bool Smb1 { get; set; } = true;
+        public Dictionary<string, bool> Features { get; } = new(StringComparer.Ordinal)
+        {
+            ["SMB1Protocol"] = true, ["SMB1Protocol-Client"] = true, ["SMB1Protocol-Server"] = false, ["SMB1Protocol-Deprecation"] = true,
+        };
+
+        public Action? Changed { get; set; }
+
+        public bool Smb1 => Features["SMB1Protocol"];
 
         public List<string> Calls { get; } = [];
 
         public Task<int> RunHiddenAsync(string system32Tool, string arguments, Action<string>? onOutput, CancellationToken cancellationToken, TimeSpan? timeout = null)
         {
             Calls.Add($"{system32Tool} {arguments}");
-            if (arguments.Contains("/Get-FeatureInfo", StringComparison.Ordinal))
+            var name = arguments.Contains("/FeatureName:", StringComparison.Ordinal) ? arguments.Split("/FeatureName:")[1].Split(' ')[0] : null;
+            if (arguments.Contains("/Disable-Feature", StringComparison.Ordinal) && name is not null)
             {
-                onOutput?.Invoke("Feature Name : SMB1Protocol");
-                onOutput?.Invoke(Smb1 ? "State : Enabled" : "State : Disabled");
+                // Comme DISM : désactiver le parent désactive aussi les sous-fonctions.
+                foreach (var key in Features.Keys.Where(k => k == name || name == "SMB1Protocol").ToList())
+                {
+                    Features[key] = false;
+                }
+
+                Changed?.Invoke();
             }
-            else if (arguments.Contains("/Disable-Feature", StringComparison.Ordinal))
+            else if (arguments.Contains("/Enable-Feature", StringComparison.Ordinal) && name is not null)
             {
-                Smb1 = false;
-            }
-            else if (arguments.Contains("/Enable-Feature", StringComparison.Ordinal))
-            {
-                Smb1 = true;
+                Features[name] = true;
+                Changed?.Invoke();
             }
 
             return Task.FromResult(arguments.Contains("Disable-Feature", StringComparison.Ordinal) ? 3010 : 0);
@@ -113,6 +123,10 @@ public class SecurityTests
         }
 
         var runner = new Runner();
+        void Publish() => wmi.Replace(@"root\cimv2", "Win32_OptionalFeature",
+            [.. runner.Features.Select(f => new Dictionary<string, object?> { ["Name"] = f.Key, ["InstallState"] = f.Value ? 1u : 2u })]);
+        runner.Changed = Publish;
+        Publish();
         var writer = new Writer(registry);
         var settings = new OptimizeEngine(SecurityModule.Settings, registry, writer, runner, wmi);
         var defender = new Defender();
@@ -197,8 +211,12 @@ public class SecurityTests
         var e = await feature.PrepareAsync(smb, CancellationToken.None);
         await feature.ApplyAsync(smb, CancellationToken.None);
         s.Runner.Smb1.Should().BeFalse();
+        s.Runner.Features.Values.Should().OnlyContain(v => !v);
         await feature.UndoAsync(e, CancellationToken.None);
-        s.Runner.Smb1.Should().BeTrue();
+        s.Runner.Features.Should().Equal(new Dictionary<string, bool>
+        {
+            ["SMB1Protocol"] = true, ["SMB1Protocol-Client"] = true, ["SMB1Protocol-Server"] = false, ["SMB1Protocol-Deprecation"] = true,
+        }, "l'annulation remet exactement chaque fonction");
 
         var settings = new TweakFixer(s.Engine.Settings, s.Writer, new NoBackup(), () => DateTimeOffset.UnixEpoch, SecurityModule.SettingKind);
         var autorun = await Find(s.Engine, "security.autorun-off");

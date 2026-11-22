@@ -29,7 +29,7 @@ public sealed class AutorunToggleFixer(
     public bool CanFix(Finding finding)
     {
         ArgumentNullException.ThrowIfNull(finding);
-        return ToggleRequest.Parse(finding.FixData) is { } r && IsWellFormed(r) && IsAllowed(r, finding.Risk);
+        return finding.Module == SystemModule.Id && ToggleRequest.Parse(finding.FixData) is { } r && IsWellFormed(r) && IsAllowed(r, finding.Risk);
     }
 
     private static bool IsWellFormed(ToggleRequest r) =>

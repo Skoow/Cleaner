@@ -109,7 +109,7 @@ public sealed partial class SecurityPageViewModel : ObservableObject
             do
             {
                 _analyzeAgain = false;
-                _report = await _source.AnalyzeAsync(CancellationToken.None).ConfigureAwait(true);
+                _report = await Task.Run(() => _source.AnalyzeAsync(CancellationToken.None)).ConfigureAwait(true);
                 _selected = null;
                 Build();
             }

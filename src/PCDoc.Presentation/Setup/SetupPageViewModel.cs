@@ -232,7 +232,8 @@ public sealed partial class SetupPageViewModel : ObservableObject
     {
         try
         {
-            return await run().ConfigureAwait(false);
+            // Hors du fil de l'interface : certaines analyses commencent par des requêtes WMI bloquantes.
+            return await Task.Run(run).ConfigureAwait(false);
         }
 #pragma warning disable CA1031
         catch (Exception ex) when (ex is not OperationCanceledException)

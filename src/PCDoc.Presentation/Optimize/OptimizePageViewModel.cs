@@ -40,6 +40,7 @@ public sealed partial class OptimizePageViewModel : ObservableObject
     private readonly Func<Core.Settings.AppMode> _mode;
     private IReadOnlyList<TweakState>? _states;
     private HashSet<string>? _selected;
+    private bool _analyzeAgain;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -83,12 +84,23 @@ public sealed partial class OptimizePageViewModel : ObservableObject
     [RelayCommand]
     private async Task AnalyzeAsync()
     {
+        if (IsLoading)
+        {
+            _analyzeAgain = true; // analyse déjà en cours : une seule, relancée à la fin si besoin
+            return;
+        }
+
         IsLoading = true;
         try
         {
-            _states = await _source.AnalyzeAsync(CancellationToken.None).ConfigureAwait(true);
-            _selected = null; // après une correction, l'état a changé : sélection recalculée
-            Build();
+            do
+            {
+                _analyzeAgain = false;
+                _states = await Task.Run(() => _source.AnalyzeAsync(CancellationToken.None)).ConfigureAwait(true);
+                _selected = null; // après une correction, l'état a changé : sélection recalculée
+                Build();
+            }
+            while (_analyzeAgain);
         }
         finally
         {

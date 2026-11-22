@@ -46,12 +46,19 @@ public sealed partial class OptimizeEngine(
 
     private static RiskLevel RiskOn(Tweak t, bool desktop) => desktop && t.DesktopRisk is { } d ? d : t.Risk;
 
-    /// <summary>Pas de batterie → PC fixe ; WMI indisponible → prudence (considéré portable).</summary>
+    private bool? _desktop;
+
+    /// <summary>Pas de batterie → PC fixe ; WMI indisponible → prudence (considéré portable). Lu une seule fois.</summary>
     public bool IsDesktop()
     {
+        if (_desktop is { } known)
+        {
+            return known;
+        }
+
         try
         {
-            return wmi.Query(@"root\cimv2", "SELECT Name FROM Win32_Battery").Count == 0;
+            return (_desktop = wmi.Query(@"root\cimv2", "SELECT Name FROM Win32_Battery").Count == 0).Value;
         }
         catch (WmiUnavailableException)
         {

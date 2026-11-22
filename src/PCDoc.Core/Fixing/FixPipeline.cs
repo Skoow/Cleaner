@@ -34,11 +34,22 @@ public sealed record FixSessionResult(
 /// Applique des corrections déjà confirmées par l'utilisateur, de façon sûre : mode et niveau de risque respectés,
 /// un point de restauration par série, entrée d'annulation écrite avant chaque modification.
 /// </summary>
-public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService restorePoints, UndoJournal journal)
+public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService restorePoints, UndoJournal journal) : IDisposable
 {
     private readonly IReadOnlyList<IFixer> _fixers = [.. fixers];
 
+    // Une seule série à la fois dans toute l'application (Windows Update, MSI et DISM n'acceptent qu'une installation à la fois).
+    private readonly SemaphoreSlim _gate = new(1, 1);
+
+    /// <summary>Vrai pendant une série de corrections ou une annulation.</summary>
+    public bool IsRunning => _gate.CurrentCount == 0;
+
+    /// <summary>Après une série qui a appliqué au moins une correction : modules concernés (les pages se rafraîchissent).</summary>
+    public event EventHandler<IReadOnlyCollection<string>>? SessionCompleted;
+
     public UndoJournal Journal => journal;
+
+    public void Dispose() => _gate.Dispose();
 
     /// <summary>Journal lisible (date et heure de chaque action) ; désactivé par défaut.</summary>
     public Activity.IActivityLog Activity { get; set; } = new Activity.NullActivityLog();
@@ -47,6 +58,27 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
     public Func<LocalizedText, string> Describe { get; set; } = t => t.Key;
 
     public async Task<FixSessionResult> RunAsync(
+        IReadOnlyList<Finding> findings, AppMode mode, bool allowWithoutRestorePoint, CancellationToken cancellationToken)
+    {
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            var result = await RunLockedAsync(findings, mode, allowWithoutRestorePoint, cancellationToken).ConfigureAwait(false);
+            var modules = result.Outcomes.Where(o => o.Status == FixStatus.Applied).Select(o => o.Finding.Module).ToHashSet(StringComparer.Ordinal);
+            if (modules.Count > 0)
+            {
+                SessionCompleted?.Invoke(this, modules);
+            }
+
+            return result;
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    private async Task<FixSessionResult> RunLockedAsync(
         IReadOnlyList<Finding> findings, AppMode mode, bool allowWithoutRestorePoint, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(findings);
@@ -137,6 +169,19 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
     public async Task<UndoOutcome> UndoAsync(UndoEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            return await UndoLockedAsync(entry, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    private async Task<UndoOutcome> UndoLockedAsync(UndoEntry entry, CancellationToken cancellationToken)
+    {
         var fixer = _fixers.FirstOrDefault(f => f.UndoKind == entry.Kind);
         if (fixer is not { SupportsUndo: true })
         {

@@ -174,4 +174,5 @@
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.</value></data>
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Nettoyage</value></data>
   <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).</value></data>
+  <data name="App.BusyClosing" xml:space="preserve"><value>Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.</value></data>
 </root>

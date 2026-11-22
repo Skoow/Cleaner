@@ -174,4 +174,5 @@
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Updates installed software through winget, then installs the software chosen below.</value></data>
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Cleanup</value></data>
   <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).</value></data>
+  <data name="App.BusyClosing" xml:space="preserve"><value>Please wait: changes are in progress. PCDoc can be closed once they are finished.</value></data>
 </root>

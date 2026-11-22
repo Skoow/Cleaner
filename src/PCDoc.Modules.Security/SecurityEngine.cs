@@ -75,10 +75,33 @@ public sealed partial class SecurityEngine(
 
     public async Task<SecurityReport> AnalyzeAsync(CancellationToken cancellationToken)
     {
-        var antivirus = ReadAntivirus();
-        var defenderInfo = ReadDefender(antivirus);
-        var findings = new List<Finding>();
+        // Parties indépendantes lancées en parallèle (hors du fil de l'interface) : le temps total est celui de la plus lente.
+        var antivirusTask = Task.Run(ReadAntivirus, cancellationToken);
+        var firewallTask = Task.Run(() => ThirdPartyFirewall() ? [] : DisabledFirewallProfiles(), cancellationToken);
+        var smb1Task = Task.Run(() => Smb1EnabledOrNullAsync(cancellationToken), cancellationToken);
+        var hidingTask = Task.Run(() =>
+        {
+            var list = new List<Finding>(IfeoDebuggers().Select(d => RegistryRepairFixer.IfeoFinding(d.Path, d.Exe, d.Debugger)));
+            if (CurrentUserinit() is { } userinit && !IsExpectedUserinit(userinit))
+            {
+                list.Add(RegistryRepairFixer.UserinitFinding(userinit));
+            }
 
+            if (HostsFinding() is { } hosts)
+            {
+                list.Add(hosts);
+            }
+
+            return list;
+        }, cancellationToken);
+        var settingsTask = Task.Run(() => settings.AnalyzeAsync(cancellationToken), cancellationToken);
+        var usbTask = Task.Run(ScanUsb, cancellationToken);
+        var detectionsTask = Task.Run(ReadDetections, cancellationToken);
+        await Task.WhenAll(antivirusTask, firewallTask, smb1Task, hidingTask, settingsTask, usbTask, detectionsTask).ConfigureAwait(false);
+
+        var antivirus = antivirusTask.Result;
+        var defenderInfo = await Task.Run(() => ReadDefender(antivirus), cancellationToken).ConfigureAwait(false);
+        var findings = new List<Finding>();
         if (!antivirus.Any(a => a.Enabled) && !defenderInfo.Active)
         {
             findings.Add(SecurityFindings.NoAntivirus());
@@ -94,33 +117,30 @@ public sealed partial class SecurityEngine(
             findings.Add(DefenderFixer.SignaturesFinding(defenderInfo.SignatureAgeDays.Value));
         }
 
-        if (!ThirdPartyFirewall())
-        {
-            findings.AddRange(DisabledFirewallProfiles().Select(FirewallFixer.FindingFor));
-        }
-
-        if (await Smb1EnabledAsync(cancellationToken).ConfigureAwait(false))
+        findings.AddRange(firewallTask.Result.Select(FirewallFixer.FindingFor));
+        if (smb1Task.Result == true)
         {
             findings.Add(FeatureFixer.Smb1Finding());
         }
 
-        findings.AddRange(IfeoDebuggers().Select(d => RegistryRepairFixer.IfeoFinding(d.Path, d.Exe, d.Debugger)));
-        if (CurrentUserinit() is { } userinit && !IsExpectedUserinit(userinit))
-        {
-            findings.Add(RegistryRepairFixer.UserinitFinding(userinit));
-        }
-
-        if (HostsFinding() is { } hosts)
-        {
-            findings.Add(hosts);
-        }
-
-        var states = await settings.AnalyzeAsync(cancellationToken).ConfigureAwait(false);
-        findings.AddRange(states.Where(s => s.Available && !s.Applied).Select(TweakFixer.FindingFor));
-
-        var usb = ScanUsb();
+        findings.AddRange(hidingTask.Result);
+        findings.AddRange(settingsTask.Result.Where(s => s.Available && !s.Applied).Select(TweakFixer.FindingFor));
+        var usb = usbTask.Result;
         findings.AddRange(usb.Where(u => u.IsInfected).Select(UsbFixer.FindingFor));
-        return new SecurityReport(antivirus, defenderInfo, ReadDetections(), findings, usb);
+        return new SecurityReport(antivirus, defenderInfo, detectionsTask.Result, findings, usb);
+    }
+
+    /// <summary>État inconnu (WMI indisponible) → null : ni alerte ni « désactivé » à tort.</summary>
+    private async Task<bool?> Smb1EnabledOrNullAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await Smb1EnabledAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 
     public async Task<int> ScanAsync(int scanType, string? root, Action<string>? onOutput, CancellationToken cancellationToken)
@@ -289,30 +309,44 @@ public sealed partial class SecurityEngine(
 
     public Task<bool> Smb1EnabledAsync(CancellationToken cancellationToken) => FeatureEnabledAsync("SMB1Protocol", cancellationToken);
 
-    public async Task<bool> FeatureEnabledAsync(string feature, CancellationToken cancellationToken)
+    /// <summary>
+    /// État d'une fonction SMBv1 par WMI (Win32_OptionalFeature, une requête, bien plus rapide que DISM).
+    /// État illisible → <see cref="InvalidOperationException"/> : jamais pris pour « désactivé ».
+    /// </summary>
+    public async Task<bool> FeatureEnabledAsync(string feature, CancellationToken cancellationToken) =>
+        (await Smb1StatesAsync(cancellationToken).ConfigureAwait(false)).TryGetValue(feature, out var on) ? on
+        : throw new InvalidOperationException($"{feature} state unknown");
+
+    /// <summary>État de chaque fonction SMBv1 (pour une annulation exacte). InstallState 1 = activée.</summary>
+    public Task<Dictionary<string, bool>> Smb1StatesAsync(CancellationToken cancellationToken) => Task.Run(() =>
     {
-        if (!Smb1Features.Contains(feature))
+        IReadOnlyList<IReadOnlyDictionary<string, object?>> rows;
+        try
         {
-            throw new ArgumentException("Unknown feature", nameof(feature));
+            rows = wmi.Query(@"root\cimv2", "SELECT Name, InstallState FROM Win32_OptionalFeature WHERE Name LIKE 'SMB1Protocol%'");
+        }
+        catch (WmiUnavailableException ex)
+        {
+            throw new InvalidOperationException("Optional features unavailable", ex);
         }
 
-        var lines = new List<string>();
-        var exit = await runner.RunHiddenAsync("dism.exe", $"/English /Online /Get-FeatureInfo /FeatureName:{feature}", lines.Add, cancellationToken,
-            DismTimeout).ConfigureAwait(false);
-        return exit == 0 && lines.Any(l => StateLine().Match(l) is { Success: true } m && m.Groups[1].Value.StartsWith("Enable", StringComparison.OrdinalIgnoreCase));
-    }
-
-    /// <summary>État de chaque fonction SMBv1 avant la correction (pour une annulation exacte).</summary>
-    public async Task<Dictionary<string, bool>> Smb1StatesAsync(CancellationToken cancellationToken)
-    {
         var states = new Dictionary<string, bool>(StringComparer.Ordinal);
+        foreach (var row in rows)
+        {
+            if (row.GetValueOrDefault("Name") is string name && Smb1Features.Contains(name))
+            {
+                states[name] = Convert.ToInt32(row.GetValueOrDefault("InstallState") ?? 0, CultureInfo.InvariantCulture) == 1;
+            }
+        }
+
+        // Fonction absente de Windows (SMBv1 retiré) : désactivée.
         foreach (var f in Smb1Features)
         {
-            states[f] = await FeatureEnabledAsync(f, cancellationToken).ConfigureAwait(false);
+            states.TryAdd(f, false);
         }
 
         return states;
-    }
+    }, cancellationToken);
 
     public async Task SetSmb1Async(bool enabled, CancellationToken cancellationToken) =>
         await SetFeatureAsync("SMB1Protocol", enabled, cancellationToken).ConfigureAwait(false);
@@ -447,6 +481,4 @@ public sealed partial class SecurityEngine(
     [GeneratedRegex(@"^[A-Za-z0-9_.\- ]{1,100}$")]
     private static partial Regex IfeoName();
 
-    [GeneratedRegex(@"^\s*State\s*:\s*(\S.*)$", RegexOptions.IgnoreCase)]
-    private static partial Regex StateLine();
 }

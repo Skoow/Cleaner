@@ -111,6 +111,19 @@ public sealed class FixConfirmationViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task WhileAwaitingNoRestorePoint_ANewRequest_CannotReplaceWhatWasConfirmed()
+    {
+        var (vm, fixer) = Make(RestorePointOutcome.ProtectionDisabled);
+        vm.Request([F("a")]);
+        await vm.ConfirmCommand.ExecuteAsync(null);
+
+        vm.Request([F("b")]);
+        await vm.ConfirmWithoutRestorePointCommand.ExecuteAsync(null);
+
+        fixer.Applied.Should().Equal("a");
+    }
+
+    [Fact]
     public async Task NoRestorePoint_AsksSecondConfirmation_ThenApplies()
     {
         var (vm, fixer) = Make(RestorePointOutcome.ProtectionDisabled);

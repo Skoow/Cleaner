@@ -44,6 +44,7 @@ public sealed partial class CleanupPageViewModel : ObservableObject
     private readonly Func<Core.Settings.AppMode> _mode;
     private CleanupReport? _report;
     private IReadOnlyList<Core.Abstractions.FileEntry> _bigFiles = [];
+    private bool _analyzeAgain;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -80,11 +81,22 @@ public sealed partial class CleanupPageViewModel : ObservableObject
     [RelayCommand]
     private async Task AnalyzeAsync()
     {
+        if (IsLoading)
+        {
+            _analyzeAgain = true; // analyse déjà en cours : une seule, relancée à la fin si besoin
+            return;
+        }
+
         IsLoading = true;
         try
         {
-            (_report, _bigFiles) = await Task.Run(() => (_source.Analyze(), _source.BigFiles())).ConfigureAwait(true);
-            Build();
+            do
+            {
+                _analyzeAgain = false;
+                (_report, _bigFiles) = await Task.Run(() => (_source.Analyze(), _source.BigFiles())).ConfigureAwait(true);
+                Build();
+            }
+            while (_analyzeAgain);
         }
         finally
         {

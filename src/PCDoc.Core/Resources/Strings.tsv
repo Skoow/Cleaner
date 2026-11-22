@@ -169,3 +169,4 @@ Setup.software.Title	6. Software updates and installation	6. Mises à jour et in
 Setup.software.Explanation	Updates installed software through winget, then installs the software chosen below.	Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.
 Setup.cleanup.Title	7. Cleanup	7. Nettoyage
 Setup.cleanup.Explanation	Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).	Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).
+App.BusyClosing	Please wait: changes are in progress. PCDoc can be closed once they are finished.	Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.

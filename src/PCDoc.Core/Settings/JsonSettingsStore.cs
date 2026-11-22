@@ -19,7 +19,12 @@ public sealed class JsonSettingsStore(string filePath, CultureInfo uiCulture) : 
 
     private const long MaxFileSize = 64 * 1024;
 
-    public AppSettings Load()
+    private AppSettings? _cached;
+
+    /// <summary>Lu sur le disque une seule fois, puis gardé en mémoire (remplacé à chaque <see cref="Save"/>).</summary>
+    public AppSettings Load() => _cached ??= LoadFromDisk();
+
+    private AppSettings LoadFromDisk()
     {
         var defaults = AppSettings.DefaultsFor(uiCulture);
         try
@@ -49,5 +54,6 @@ public sealed class JsonSettingsStore(string filePath, CultureInfo uiCulture) : 
         var temp = filePath + ".tmp";
         File.WriteAllText(temp, JsonSerializer.Serialize(settings, Options));
         File.Move(temp, filePath, overwrite: true);
+        _cached = settings;
     }
 }
