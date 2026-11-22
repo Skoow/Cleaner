@@ -41,7 +41,7 @@
   <data name="Privacy.Profile.recommended" xml:space="preserve"><value>Recommended</value></data>
   <data name="Privacy.Profile.strict" xml:space="preserve"><value>Strict</value></data>
   <data name="Privacy.telemetry-min.Title" xml:space="preserve"><value>Send Microsoft only the required diagnostic data</value></data>
-  <data name="Privacy.telemetry-min.Explanation" xml:space="preserve"><value>Stops the "optional" data (browsing in Edge, app usage, typing…). Windows Update keeps working.</value></data>
+  <data name="Privacy.telemetry-min.Explanation" xml:space="preserve"><value>Stops the "optional" data (browsing in Edge, app usage, typing…). Windows Update keeps working. Settings will show "managed by your organization", and Windows Insider builds need optional data.</value></data>
   <data name="Privacy.advertising-id-off.Title" xml:space="preserve"><value>Turn off the advertising ID</value></data>
   <data name="Privacy.advertising-id-off.Explanation" xml:space="preserve"><value>Apps can no longer use it to show you targeted ads.</value></data>
   <data name="Privacy.tailored-off.Title" xml:space="preserve"><value>Turn off tailored experiences</value></data>
@@ -56,18 +56,16 @@
   <data name="Privacy.activity-history-off.Explanation" xml:space="preserve"><value>Windows stops recording the files and sites you open.</value></data>
   <data name="Privacy.feedback-off.Title" xml:space="preserve"><value>Never ask for feedback</value></data>
   <data name="Privacy.feedback-off.Explanation" xml:space="preserve"><value>No more "How likely are you to recommend Windows?" pop-ups.</value></data>
-  <data name="Privacy.typing-data-off.Title" xml:space="preserve"><value>Stop collecting typing and handwriting data</value></data>
-  <data name="Privacy.typing-data-off.Explanation" xml:space="preserve"><value>What you type and write is no longer used to "improve" recognition.</value></data>
+  <data name="Privacy.typing-data-off.Title" xml:space="preserve"><value>Stop sending typing and handwriting data to Microsoft</value></data>
+  <data name="Privacy.typing-data-off.Explanation" xml:space="preserve"><value>Stops "improving inking and typing" (data sent to Microsoft). Word suggestions on this PC keep working.</value></data>
   <data name="Privacy.recall-off.Title" xml:space="preserve"><value>Turn off Recall (screen snapshots)</value></data>
   <data name="Privacy.recall-off.Explanation" xml:space="preserve"><value>On Copilot+ PCs, Windows no longer takes regular snapshots of your screen.</value></data>
   <data name="Privacy.web-search-off.Title" xml:space="preserve"><value>No web results in Start search</value></data>
-  <data name="Privacy.web-search-off.Explanation" xml:space="preserve"><value>Your searches are no longer sent to Bing. Start search only finds files, apps and settings. Applies after signing in again.</value></data>
+  <data name="Privacy.web-search-off.Explanation" xml:space="preserve"><value>Your searches are no longer sent to Bing: Start search only finds files, apps and settings. Also removes recent searches in File Explorer. Applies after signing in again.</value></data>
   <data name="Privacy.app-tracking-off.Title" xml:space="preserve"><value>Stop tracking app launches</value></data>
   <data name="Privacy.app-tracking-off.Explanation" xml:space="preserve"><value>The "Most used" list in Start disappears.</value></data>
-  <data name="Privacy.copilot-off.Title" xml:space="preserve"><value>Turn off Copilot in Windows</value></data>
-  <data name="Privacy.copilot-off.Explanation" xml:space="preserve"><value>Removes the Copilot button and shortcut. Keep it if you use the assistant.</value></data>
   <data name="Privacy.location-off.Title" xml:space="preserve"><value>Turn off location for all apps</value></data>
-  <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Weather, Maps and "Find my device" stop knowing where you are.</value></data>
+  <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Weather, Maps, "Find my device" and the automatic time zone stop knowing where you are, for every account.</value></data>
   <data name="Privacy.error-reporting-off.Title" xml:space="preserve"><value>Turn off error reporting to Microsoft</value></data>
-  <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Crash reports are no longer sent. Microsoft can no longer offer you a fix for a known crash.</value></data>
+  <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Crash reports are no longer created or sent (Reliability Monitor shows fewer details). Microsoft can no longer offer you a fix for a known crash.</value></data>
 </root>

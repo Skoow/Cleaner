@@ -26,7 +26,7 @@ public sealed class NullActivityLog : IActivityLog
 /// Fichier texte UTF-8 (une ligne par action) dans le dossier protégé de PCDoc. Les sauts de ligne d'un message sont
 /// remplacés pour qu'une ligne corresponde toujours à une action.
 /// </summary>
-public sealed class TextActivityLog(string path, IClock clock) : IActivityLog
+public sealed class TextActivityLog(string path, IClock clock, long maxBytes = 4 * 1024 * 1024) : IActivityLog
 {
     private readonly Lock _gate = new();
 
@@ -40,6 +40,12 @@ public sealed class TextActivityLog(string path, IClock clock) : IActivityLog
         {
             try
             {
+                // Taille limitée : l'ancien journal devient « .old.txt » (le précédent est remplacé).
+                if (File.Exists(path) && new FileInfo(path).Length > maxBytes)
+                {
+                    File.Move(path, System.IO.Path.ChangeExtension(path, ".old.txt"), overwrite: true);
+                }
+
                 using var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);
                 var bytes = Encoding.UTF8.GetBytes(line);
                 stream.Write(bytes);

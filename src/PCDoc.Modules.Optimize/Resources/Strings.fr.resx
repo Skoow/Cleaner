@@ -41,7 +41,7 @@
   <data name="Privacy.Profile.recommended" xml:space="preserve"><value>Recommandé</value></data>
   <data name="Privacy.Profile.strict" xml:space="preserve"><value>Strict</value></data>
   <data name="Privacy.telemetry-min.Title" xml:space="preserve"><value>N'envoyer à Microsoft que les données de diagnostic obligatoires</value></data>
-  <data name="Privacy.telemetry-min.Explanation" xml:space="preserve"><value>Arrête l'envoi des données « facultatives » (navigation dans Edge, usage des applications, saisie…). Windows Update continue de fonctionner.</value></data>
+  <data name="Privacy.telemetry-min.Explanation" xml:space="preserve"><value>Arrête l'envoi des données « facultatives » (navigation dans Edge, usage des applications, saisie…). Windows Update continue de fonctionner. Les Paramètres afficheront « géré par votre organisation », et le programme Windows Insider demande les données facultatives.</value></data>
   <data name="Privacy.advertising-id-off.Title" xml:space="preserve"><value>Désactiver l'identifiant de publicité</value></data>
   <data name="Privacy.advertising-id-off.Explanation" xml:space="preserve"><value>Les applications ne peuvent plus s'en servir pour vous montrer des publicités ciblées.</value></data>
   <data name="Privacy.tailored-off.Title" xml:space="preserve"><value>Désactiver les expériences personnalisées</value></data>
@@ -56,18 +56,16 @@
   <data name="Privacy.activity-history-off.Explanation" xml:space="preserve"><value>Windows n'enregistre plus les fichiers et sites que vous ouvrez.</value></data>
   <data name="Privacy.feedback-off.Title" xml:space="preserve"><value>Ne jamais demander d'avis</value></data>
   <data name="Privacy.feedback-off.Explanation" xml:space="preserve"><value>Plus de fenêtres « Recommanderiez-vous Windows ? ».</value></data>
-  <data name="Privacy.typing-data-off.Title" xml:space="preserve"><value>Arrêter la collecte de la saisie et de l'écriture manuscrite</value></data>
-  <data name="Privacy.typing-data-off.Explanation" xml:space="preserve"><value>Ce que vous tapez et écrivez n'est plus utilisé pour « améliorer » la reconnaissance.</value></data>
+  <data name="Privacy.typing-data-off.Title" xml:space="preserve"><value>Ne plus envoyer à Microsoft la saisie et l'écriture manuscrite</value></data>
+  <data name="Privacy.typing-data-off.Explanation" xml:space="preserve"><value>Arrête « Améliorer l'écriture manuscrite et la saisie » (données envoyées à Microsoft). Les suggestions de mots sur ce PC continuent de fonctionner.</value></data>
   <data name="Privacy.recall-off.Title" xml:space="preserve"><value>Désactiver Recall (captures de l'écran)</value></data>
   <data name="Privacy.recall-off.Explanation" xml:space="preserve"><value>Sur les PC Copilot+, Windows ne prend plus de captures régulières de votre écran.</value></data>
   <data name="Privacy.web-search-off.Title" xml:space="preserve"><value>Pas de résultats web dans la recherche de Démarrer</value></data>
-  <data name="Privacy.web-search-off.Explanation" xml:space="preserve"><value>Vos recherches ne sont plus envoyées à Bing. La recherche de Démarrer ne trouve plus que les fichiers, applications et paramètres. Appliqué à la prochaine ouverture de session.</value></data>
+  <data name="Privacy.web-search-off.Explanation" xml:space="preserve"><value>Vos recherches ne sont plus envoyées à Bing : la recherche de Démarrer ne trouve plus que les fichiers, applications et paramètres. Retire aussi les recherches récentes de l'Explorateur. Appliqué à la prochaine ouverture de session.</value></data>
   <data name="Privacy.app-tracking-off.Title" xml:space="preserve"><value>Ne plus suivre le lancement des applications</value></data>
   <data name="Privacy.app-tracking-off.Explanation" xml:space="preserve"><value>La liste « Les plus utilisées » de Démarrer disparaît.</value></data>
-  <data name="Privacy.copilot-off.Title" xml:space="preserve"><value>Désactiver Copilot dans Windows</value></data>
-  <data name="Privacy.copilot-off.Explanation" xml:space="preserve"><value>Retire le bouton et le raccourci de Copilot. À garder si vous utilisez l'assistant.</value></data>
   <data name="Privacy.location-off.Title" xml:space="preserve"><value>Désactiver la localisation pour toutes les applications</value></data>
-  <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Météo, Cartes et « Localiser mon appareil » ne savent plus où vous êtes.</value></data>
+  <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Météo, Cartes, « Localiser mon appareil » et le fuseau horaire automatique ne savent plus où vous êtes, pour tous les comptes.</value></data>
   <data name="Privacy.error-reporting-off.Title" xml:space="preserve"><value>Désactiver l'envoi des rapports d'erreurs à Microsoft</value></data>
-  <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Les rapports de plantage ne sont plus envoyés. Microsoft ne peut plus vous proposer de solution pour un plantage connu.</value></data>
+  <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Les rapports de plantage ne sont plus créés ni envoyés (le Moniteur de fiabilité en montre moins). Microsoft ne peut plus vous proposer de solution pour un plantage connu.</value></data>
 </root>

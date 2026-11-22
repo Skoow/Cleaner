@@ -209,7 +209,9 @@ public sealed class WingetRunner(IProcessRunner runner) : IWingetRunner, IDispos
 
         // Dossier temporaire réservé aux administrateurs : l'installateur téléchargé ne peut pas être remplacé entre la
         // vérification de son empreinte par winget et son lancement.
-        var temp = SecureFolders.EnsureChild("temp");
+        // Un sous-dossier par exécution : deux winget en même temps ne suppriment jamais les fichiers l'un de l'autre.
+        var temp = Path.Combine(SecureFolders.EnsureChild("temp"), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(temp);
         start.Environment["TEMP"] = temp;
         start.Environment["TMP"] = temp;
         var output = new List<string>();

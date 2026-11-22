@@ -155,7 +155,7 @@ internal static class Composition
                 sp.GetRequiredService<IRemovableDrives>(), settings, Environment.GetFolderPath(Environment.SpecialFolder.Windows))
             {
                 ScanCompleted = (type, exit) => sp.GetRequiredService<PCDoc.Core.Activity.IActivityLog>().Write("security",
-                    sp.GetRequiredService<ILocalizer>().Format(new PCDoc.Core.Findings.LocalizedText("Activity.Scan", type switch { 1 => "quick", 2 => "full", _ => "USB" }, exit))),
+                    sp.GetRequiredService<ILocalizer>().Format(new PCDoc.Core.Findings.LocalizedText("Activity.Scan", sp.GetRequiredService<ILocalizer>()[type switch { 1 => "Security.QuickScan", 2 => "Security.FullScan", _ => "Security.ScanDrive" }], exit))),
             };
         });
         services.AddSingleton<ISecuritySource>(sp => sp.GetRequiredService<SecurityEngine>());

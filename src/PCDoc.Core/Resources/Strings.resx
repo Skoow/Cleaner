@@ -163,7 +163,7 @@
   <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Privacy</value></data>
   <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.</value></data>
   <data name="Setup.security.Title" xml:space="preserve"><value>2. Security</value></data>
-  <data name="Setup.security.Explanation" xml:space="preserve"><value>Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes.</value></data>
+  <data name="Setup.security.Explanation" xml:space="preserve"><value>Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes (the others stay on the Security page).</value></data>
   <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimization</value></data>
   <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Settings of the chosen profile (power plan, game mode, start-up delay…).</value></data>
   <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Preinstalled apps</value></data>
@@ -173,5 +173,5 @@
   <data name="Setup.software.Title" xml:space="preserve"><value>6. Software updates and installation</value></data>
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Updates installed software through winget, then installs the software chosen below.</value></data>
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Cleanup</value></data>
-  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches, including those left by the updates.</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).</value></data>
 </root>

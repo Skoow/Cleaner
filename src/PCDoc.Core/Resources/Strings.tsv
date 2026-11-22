@@ -158,7 +158,7 @@ Setup.Count	{0} actions	{0} actions
 Setup.privacy.Title	1. Privacy	1. Confidentialité
 Setup.privacy.Explanation	Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.	Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.
 Setup.security.Title	2. Security	2. Sécurité
-Setup.security.Explanation	Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes.	Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres.
+Setup.security.Explanation	Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes (the others stay on the Security page).	Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres (les autres restent dans la page Sécurité).
 Setup.optimize.Title	3. Optimization	3. Optimisation
 Setup.optimize.Explanation	Settings of the chosen profile (power plan, game mode, start-up delay…).	Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).
 Setup.bloatware.Title	4. Preinstalled apps	4. Applications préinstallées
@@ -168,4 +168,4 @@ Setup.windows.Explanation	Security and quality updates from Windows Update (driv
 Setup.software.Title	6. Software updates and installation	6. Mises à jour et installation de logiciels
 Setup.software.Explanation	Updates installed software through winget, then installs the software chosen below.	Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.
 Setup.cleanup.Title	7. Cleanup	7. Nettoyage
-Setup.cleanup.Explanation	Deletes temporary files and caches, including those left by the updates.	Supprime les fichiers temporaires et les caches, y compris ceux laissés par les mises à jour.
+Setup.cleanup.Explanation	Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).	Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).

@@ -56,7 +56,7 @@ public sealed record SetupSources(
 /// Page « Nouveau PC » : prépare un PC en une fois, dans le bon ordre et avec un seul point de restauration —
 /// confidentialité, sécurité, optimisation (profil au choix), applications préinstallées, mises à jour de Windows et
 /// des logiciels, installation de logiciels, nettoyage. Seules les corrections proposées dans le mode actuel sont
-/// incluses (🟢 en mode novice).
+/// incluses, et seulement les 🟢 (même en mode expert : une préparation automatique ne fait que ce qui est sûr).
 /// </summary>
 public sealed partial class SetupPageViewModel : ObservableObject
 {
@@ -64,8 +64,10 @@ public sealed partial class SetupPageViewModel : ObservableObject
     private readonly ILocalizer _localizer;
     private readonly Func<Core.Settings.AppMode> _mode;
     private bool _loaded;
+    private IReadOnlyList<TweakState> _optimizeStates = [];
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RunCommand), nameof(AnalyzeCommand))]
     private bool _isLoading;
 
     [ObservableProperty]
@@ -82,7 +84,19 @@ public sealed partial class SetupPageViewModel : ObservableObject
         Fixes = fixes;
         if (fixes is not null)
         {
-            fixes.Completed += (_, _) => Status = _localizer["Setup.Done"];
+            fixes.Completed += async (_, _) =>
+            {
+                await AnalyzeAsync().ConfigureAwait(true); // état réel après la série (rien n'est redemandé deux fois)
+                Status = _localizer["Setup.Done"];
+            };
+            fixes.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(FixConfirmationViewModel.IsRunning))
+                {
+                    RunCommand.NotifyCanExecuteChanged();
+                    AnalyzeCommand.NotifyCanExecuteChanged();
+                }
+            };
         }
 
         Software = [.. sources.Updates.Catalog.Select(p => new SetupSoftware(p, localizer[$"Updates.Category.{p.Category}"]))];
@@ -99,7 +113,25 @@ public sealed partial class SetupPageViewModel : ObservableObject
 
     public Task EnsureLoadedAsync() => _loaded ? Task.CompletedTask : AnalyzeAsync();
 
-    partial void OnProfileChanged(string value) => _ = AnalyzeAsync();
+    /// <summary>Changer de profil ne relance pas toutes les analyses : seule l'étape d'optimisation est recalculée.</summary>
+    partial void OnProfileChanged(string value)
+    {
+        var index = Steps.ToList().FindIndex(s => s.Id == "optimize");
+        if (index < 0)
+        {
+            return;
+        }
+
+        Steps.RemoveAt(index);
+        Steps.Insert(index, MakeStep("optimize", OptimizeFindings()));
+    }
+
+    private bool IsBusy => IsLoading || Fixes?.IsRunning == true;
+
+    private bool CanStart() => !IsBusy;
+
+    private IEnumerable<Finding> OptimizeFindings() =>
+        _optimizeStates.Where(s => s.Available && !s.Applied && s.Tweak.Profiles.Contains(Profile)).Select(TweakFixer.FindingFor);
 
     [RelayCommand]
     private void SelectProfile(string? profile)
@@ -110,10 +142,10 @@ public sealed partial class SetupPageViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanStart))]
     private async Task AnalyzeAsync()
     {
-        if (IsLoading)
+        if (IsBusy)
         {
             return;
         }
@@ -134,9 +166,11 @@ public sealed partial class SetupPageViewModel : ObservableObject
             Steps.Clear();
             Add("privacy", privacy.Result.Where(s => s.Available && !s.Applied && s.Tweak.Profiles.Contains("recommended")).Select(TweakFixer.FindingFor));
             Add("security", security.Result?.Findings.Where(f => f.FixAvailable && !f.Id.StartsWith("security.usb.", StringComparison.Ordinal)) ?? []);
-            Add("optimize", optimize.Result.Where(s => s.Available && !s.Applied && s.Tweak.Profiles.Contains(Profile)).Select(TweakFixer.FindingFor));
+            _optimizeStates = optimize.Result;
+            Add("optimize", OptimizeFindings());
             Add("bloatware", apps.Result?.Apps.Where(a => a.IsBloat && a.CanUninstall).Select(UninstallFixer.FindingFor) ?? []);
-            Add("windows", updates.Result?.Windows.Select(UpdateFixer.ForWindows) ?? []);
+            // Les définitions de l'antivirus passent par l'étape Sécurité (Defender) : pas deux fois.
+            Add("windows", updates.Result?.Windows.Where(w => !IsDefenderDefinitions(w)).Select(UpdateFixer.ForWindows) ?? []);
             Add("software", updates.Result?.Software.Select(UpdateFixer.ForUpgrade) ?? []);
             Add("cleanup", cleanup.Result?.Categories.Where(c => c.Bytes > 0).Select(c => CleanupFixer.FindingFor(c.Id, c.Risk, c.Bytes, c.Files)) ?? []);
             _loaded = true;
@@ -149,7 +183,7 @@ public sealed partial class SetupPageViewModel : ObservableObject
     }
 
     /// <summary>Lance toutes les étapes cochées, dans l'ordre, en une seule série (un seul point de restauration).</summary>
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanStart))]
     private void Run()
     {
         var findings = new List<Finding>();
@@ -176,15 +210,21 @@ public sealed partial class SetupPageViewModel : ObservableObject
         }
     }
 
-    private void Add(string id, IEnumerable<Finding> findings)
+    private static bool IsDefenderDefinitions(Core.Abstractions.WindowsUpdateItem update) =>
+        update.KbArticle == "2267602" || update.Title.Contains("Security Intelligence", StringComparison.OrdinalIgnoreCase)
+        || update.Title.Contains("Defender Antivirus", StringComparison.OrdinalIgnoreCase);
+
+    private void Add(string id, IEnumerable<Finding> findings) => Steps.Add(MakeStep(id, findings));
+
+    private SetupStep MakeStep(string id, IEnumerable<Finding> findings)
     {
         var step = new SetupStep(id, _localizer[$"Setup.{id}.Title"], _localizer[$"Setup.{id}.Explanation"]);
-        step.Findings.AddRange(findings.Where(f => FixPolicy.IsOffered(f, _mode())));
+        step.Findings.AddRange(findings.Where(f => FixPolicy.IsOffered(f, _mode()) && FixPolicy.IsInFixAll(f)));
         step.Summary = step.Findings.Count == 0
             ? _localizer["Setup.NothingToDo"]
             : _localizer.Format(new LocalizedText("Setup.Count", step.Findings.Count));
         step.IsSelected = step.Findings.Count > 0;
-        Steps.Add(step);
+        return step;
     }
 
     /// <summary>Une analyse qui échoue (module indisponible) n'empêche pas les autres étapes.</summary>

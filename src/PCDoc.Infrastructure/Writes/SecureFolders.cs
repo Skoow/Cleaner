@@ -54,6 +54,50 @@ public static class SecureFolders
         return Ensure(Path.Combine(Root, name));
     }
 
+    /// <summary>
+    /// Sous-dossier protégé que <paramref name="reader"/> peut seulement lire (rapports) : personne d'autre que les
+    /// administrateurs ne peut y écrire ni y placer de lien.
+    /// </summary>
+    public static string EnsureReadableChild(string name, SecurityIdentifier reader)
+    {
+        ArgumentNullException.ThrowIfNull(reader);
+        Ensure(Root);
+        var path = Path.Combine(Root, name);
+        RemoveIfLink(path);
+        var security = Protected(isDirectory: true);
+        security.AddAccessRule(new FileSystemAccessRule(reader, FileSystemRights.ReadAndExecute,
+            InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+        var info = new DirectoryInfo(path);
+        if (!info.Exists)
+        {
+            info.Create(security);
+        }
+        else
+        {
+            info.SetAccessControl(security);
+        }
+
+        var actual = new DirectoryInfo(path).GetAccessControl();
+        if (actual.GetOwner(typeof(SecurityIdentifier)) is not SecurityIdentifier owner || !(owner == Administrators || owner == LocalSystem)
+            || !actual.AreAccessRulesProtected || File.GetAttributes(path).HasFlag(FileAttributes.ReparsePoint))
+        {
+            throw new UnsafeFolderException($"{path} is not a protected folder");
+        }
+
+        foreach (FileSystemAccessRule rule in actual.GetAccessRules(true, true, typeof(SecurityIdentifier)))
+        {
+            const FileSystemRights write = FileSystemRights.WriteData | FileSystemRights.AppendData | FileSystemRights.Delete
+                                           | FileSystemRights.ChangePermissions | FileSystemRights.TakeOwnership | FileSystemRights.DeleteSubdirectoriesAndFiles;
+            if (rule.AccessControlType == AccessControlType.Allow && rule.IdentityReference is SecurityIdentifier sid
+                && sid != Administrators && sid != LocalSystem && (rule.FileSystemRights & write) != 0)
+            {
+                throw new UnsafeFolderException($"{path} grants write access to {sid}");
+            }
+        }
+
+        return path;
+    }
+
     public static string Ensure(string path)
     {
         RemoveIfLink(path);

@@ -163,7 +163,7 @@
   <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Confidentialité</value></data>
   <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.</value></data>
   <data name="Setup.security.Title" xml:space="preserve"><value>2. Sécurité</value></data>
-  <data name="Setup.security.Explanation" xml:space="preserve"><value>Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres.</value></data>
+  <data name="Setup.security.Explanation" xml:space="preserve"><value>Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres (les autres restent dans la page Sécurité).</value></data>
   <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimisation</value></data>
   <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).</value></data>
   <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Applications préinstallées</value></data>
@@ -173,5 +173,5 @@
   <data name="Setup.software.Title" xml:space="preserve"><value>6. Mises à jour et installation de logiciels</value></data>
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.</value></data>
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Nettoyage</value></data>
-  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches, y compris ceux laissés par les mises à jour.</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).</value></data>
 </root>

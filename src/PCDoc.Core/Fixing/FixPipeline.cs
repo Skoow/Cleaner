@@ -75,11 +75,12 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
         }
 
         var restore = await restorePoints.EnsureAsync("PCDoc", cancellationToken).ConfigureAwait(false);
-        Activity.Write("restore", Describe(new LocalizedText($"Activity.Restore.{restore}")));
         if (restore is RestorePointOutcome.ProtectionDisabled or RestorePointOutcome.Failed && !allowWithoutRestorePoint)
         {
             return new FixSessionResult(restore, true, []);
         }
+
+        Activity.Write("restore", Describe(new LocalizedText($"Activity.Restore.{restore}")));
 
         foreach (var (finding, fixer) in allowed)
         {
