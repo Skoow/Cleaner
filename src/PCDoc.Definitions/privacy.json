@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "comment": "Confidentialité de Windows : réglages réversibles (même format que optimize.json). Profils : recommended (sans effet visible), strict (plus complet).",
+  "tweaks": [
+    { "id": "telemetry-min", "risk": "Safe", "bilan": true, "profiles": ["recommended", "strict"],
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection", "name": "AllowTelemetry", "dword": 1, "acceptableDwords": [0] } ] },
+    { "id": "advertising-id-off", "risk": "Safe", "bilan": true, "profiles": ["recommended", "strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo", "name": "Enabled", "dword": 0 } ] },
+    { "id": "tailored-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Privacy", "name": "TailoredExperiencesWithDiagnosticDataEnabled", "dword": 0 } ] },
+    { "id": "silent-apps-off", "risk": "Safe", "bilan": true, "profiles": ["recommended", "strict"],
+      "values": [
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SilentInstalledAppsEnabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "OemPreInstalledAppsEnabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "PreInstalledAppsEnabled", "dword": 0 } ] },
+    { "id": "suggestions-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SystemPaneSuggestionsEnabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338388Enabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338389Enabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-353694Enabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SoftLandingEnabled", "dword": 0 } ] },
+    { "id": "lockscreen-ads-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "RotatingLockScreenOverlayEnabled", "dword": 0 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338387Enabled", "dword": 0 } ] },
+    { "id": "activity-history-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [
+        { "hive": "LocalMachine", "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "PublishUserActivities", "dword": 0 },
+        { "hive": "LocalMachine", "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "UploadUserActivities", "dword": 0 } ] },
+    { "id": "feedback-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Siuf\\Rules", "name": "NumberOfSIUFInPeriod", "dword": 0 } ] },
+    { "id": "typing-data-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitTextCollection", "dword": 1 },
+        { "hive": "TargetUser", "path": "Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitInkCollection", "dword": 1 } ] },
+    { "id": "recall-off", "risk": "Safe", "profiles": ["recommended", "strict"],
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI", "name": "DisableAIDataAnalysis", "dword": 1 } ] },
+    { "id": "web-search-off", "risk": "Conditional", "profiles": ["strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Policies\\Microsoft\\Windows\\Explorer", "name": "DisableSearchBoxSuggestions", "dword": 1 } ] },
+    { "id": "app-tracking-off", "risk": "Conditional", "profiles": ["strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "Start_TrackProgs", "dword": 0 } ] },
+    { "id": "copilot-off", "risk": "Conditional", "profiles": ["strict"],
+      "values": [ { "hive": "TargetUser", "path": "Software\\Policies\\Microsoft\\Windows\\WindowsCopilot", "name": "TurnOffWindowsCopilot", "dword": 1 } ] },
+    { "id": "location-off", "risk": "Conditional", "profiles": ["strict"],
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location", "name": "Value", "text": "Deny" } ] },
+    { "id": "error-reporting-off", "risk": "Conditional", "profiles": ["strict"],
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting", "name": "Disabled", "dword": 1 } ] }
+  ]
+}

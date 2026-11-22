@@ -8,9 +8,9 @@
     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
       <Button DockPanel.Dock="Right" Content="{app:T Optimize.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
               AutomationProperties.Name="{app:T Optimize.Analyze}" />
-      <TextBlock Text="{app:T Optimize.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+      <TextBlock Text="{Binding Title}" Style="{StaticResource Pcdoc.PageTitle}" />
     </DockPanel>
-    <TextBlock DockPanel.Dock="Top" Text="{app:T Optimize.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
     <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
     <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
                  Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />

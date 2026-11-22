@@ -148,4 +148,30 @@
   <data name="History.ReportFailed" xml:space="preserve"><value>The report could not be saved.</value></data>
   <data name="History.OpenFolder" xml:space="preserve"><value>Open the folder</value></data>
   <data name="History.ActivityTitle" xml:space="preserve"><value>Activity (date and time of each action)</value></data>
+  <data name="Nav.Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Nav.Setup" xml:space="preserve"><value>New PC</value></data>
+  <data name="Setup.Title" xml:space="preserve"><value>Prepare this PC</value></data>
+  <data name="Setup.Intro" xml:space="preserve"><value>For a new or freshly installed PC: everything that should be done, in the right order, in one go. A restore point is created first and every action is written to the report.</value></data>
+  <data name="Setup.Analyze" xml:space="preserve"><value>Analyze again</value></data>
+  <data name="Setup.Run" xml:space="preserve"><value>Start the preparation</value></data>
+  <data name="Setup.Profile" xml:space="preserve"><value>Use of the PC:</value></data>
+  <data name="Setup.Software" xml:space="preserve"><value>Software to install (free, from official sources, silently)</value></data>
+  <data name="Setup.Analyzing" xml:space="preserve"><value>Analyzing the PC… Windows Update can take a few minutes.</value></data>
+  <data name="Setup.Done" xml:space="preserve"><value>Preparation finished. Export the report from History, and restart the PC if updates ask for it.</value></data>
+  <data name="Setup.NothingToDo" xml:space="preserve"><value>Nothing to do</value></data>
+  <data name="Setup.Count" xml:space="preserve"><value>{0} actions</value></data>
+  <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Privacy</value></data>
+  <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.</value></data>
+  <data name="Setup.security.Title" xml:space="preserve"><value>2. Security</value></data>
+  <data name="Setup.security.Explanation" xml:space="preserve"><value>Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes.</value></data>
+  <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimization</value></data>
+  <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Settings of the chosen profile (power plan, game mode, start-up delay…).</value></data>
+  <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Preinstalled apps</value></data>
+  <data name="Setup.bloatware.Explanation" xml:space="preserve"><value>Removes the useless apps added by Microsoft or the manufacturer (only the safe ones in novice mode).</value></data>
+  <data name="Setup.windows.Title" xml:space="preserve"><value>5. Windows updates</value></data>
+  <data name="Setup.windows.Explanation" xml:space="preserve"><value>Security and quality updates from Windows Update (drivers in expert mode).</value></data>
+  <data name="Setup.software.Title" xml:space="preserve"><value>6. Software updates and installation</value></data>
+  <data name="Setup.software.Explanation" xml:space="preserve"><value>Updates installed software through winget, then installs the software chosen below.</value></data>
+  <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Cleanup</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches, including those left by the updates.</value></data>
 </root>

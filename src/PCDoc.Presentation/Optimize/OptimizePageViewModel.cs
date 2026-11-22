@@ -44,8 +44,11 @@ public sealed partial class OptimizePageViewModel : ObservableObject
     [ObservableProperty]
     private bool _isLoading;
 
-    public OptimizePageViewModel(IOptimizeSource source, ILocalizer localizer, FixConfirmationViewModel? fixes, Func<Core.Settings.AppMode>? mode = null)
+    /// <param name="textPrefix">« Optimize » ou « Privacy » : titres, textes et profils de la page.</param>
+    public OptimizePageViewModel(IOptimizeSource source, ILocalizer localizer, FixConfirmationViewModel? fixes, Func<Core.Settings.AppMode>? mode = null,
+        string textPrefix = "Optimize")
     {
+        TextPrefix = textPrefix;
         _source = source;
         _localizer = localizer;
         _mode = mode ?? (() => Core.Settings.AppMode.Novice);
@@ -62,7 +65,16 @@ public sealed partial class OptimizePageViewModel : ObservableObject
 
     public ObservableCollection<TweakRow> Tweaks { get; } = [];
 
-    public IReadOnlyList<ProfileChoice> Profiles => [.. TweakCatalog.ProfileIds.Select(p => new ProfileChoice(p, _localizer[$"Optimize.Profile.{p}"]))];
+    public string TextPrefix { get; }
+
+    public string Title => _localizer[$"{TextPrefix}.Title"];
+
+    public string Intro => _localizer[$"{TextPrefix}.Intro"];
+
+    /// <summary>Profils trouvés dans le catalogue, dans l'ordre où ils apparaissent.</summary>
+    public IReadOnlyList<ProfileChoice> Profiles =>
+        [.. (_states ?? []).SelectMany(s => s.Tweak.Profiles).Distinct(StringComparer.Ordinal)
+            .Select(p => new ProfileChoice(p, _localizer[$"{TextPrefix}.Profile.{p}"]))];
 
     public bool HasLoaded => _states is not null;
 
@@ -112,7 +124,8 @@ public sealed partial class OptimizePageViewModel : ObservableObject
             var finding = TweakFixer.FindingFor(state);
             var canSelect = FixPolicy.IsOffered(finding, _mode());
             var status = !state.Available ? _localizer["Optimize.Unavailable"] : state.Applied ? _localizer["Optimize.Applied"] : string.Empty;
-            var row = new TweakRow(state, _localizer[$"Optimize.{state.Tweak.Id}.Title"], _localizer[$"Optimize.{state.Tweak.Id}.Explanation"], status,
+            var row = new TweakRow(state, _localizer[$"{state.Tweak.TextPrefix}.{state.Tweak.Id}.Title"],
+                _localizer[$"{state.Tweak.TextPrefix}.{state.Tweak.Id}.Explanation"], status,
                 _localizer[$"Risk.{state.Risk}"], finding, canSelect)
             {
                 IsSelected = canSelect && selected.Contains(state.Tweak.Id),
@@ -135,6 +148,8 @@ public sealed partial class OptimizePageViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(Profiles));
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(Intro));
         OnPropertyChanged(nameof(HasLoaded));
     }
 }

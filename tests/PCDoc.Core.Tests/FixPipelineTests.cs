@@ -97,6 +97,48 @@ public sealed class FixPipelineTests : IDisposable
         journal.Entries().Should().HaveCount(2).And.OnlyContain(e => e.Status == UndoStatus.Applied);
     }
 
+    private sealed class MemoryLog : PCDoc.Core.Activity.IActivityLog
+    {
+        public List<string> Lines { get; } = [];
+
+        public void Write(string category, string message) => Lines.Add($"[{category}] {message}");
+
+        public IReadOnlyList<string> ReadAll() => Lines;
+    }
+
+    private sealed class ThrowingCanFix : PCDoc.Core.Modules.IFixer
+    {
+        public string UndoKind => "throws";
+
+        public bool CanFix(Finding finding) => throw new ArgumentNullException(nameof(finding));
+
+        public Task<UndoEntry> PrepareAsync(Finding finding, CancellationToken ct) => throw new NotSupportedException();
+
+        public Task ApplyAsync(Finding finding, CancellationToken ct) => throw new NotSupportedException();
+
+        public Task<bool> IsUnchangedSinceAsync(UndoEntry entry, CancellationToken ct) => throw new NotSupportedException();
+
+        public Task UndoAsync(UndoEntry entry, CancellationToken ct) => throw new NotSupportedException();
+    }
+
+    [Fact]
+    public async Task Run_WritesEachActionToTheActivityLog_AndSurvivesAFixerThatThrowsInCanFix()
+    {
+        var state = new Dictionary<string, string> { ["fake.a"] = "on" };
+        var journal = new UndoJournal(Path.Combine(_dir, "undo2.jsonl"), new Clock());
+        var log = new MemoryLog();
+        var sut = new FixPipeline([new ThrowingCanFix(), new FakeFixer(state, journal)], new FakeRestore(RestorePointOutcome.Created), journal)
+        {
+            Activity = log,
+            Describe = t => t.Key,
+        };
+
+        var result = await sut.RunAsync([F("fake.a")], AppMode.Novice, false, CancellationToken.None);
+
+        result.Outcomes.Should().ContainSingle().Which.Status.Should().Be(FixStatus.Applied);
+        log.Lines.Should().Equal("[restore] Activity.Restore.Created", "[system] Activity.Applied");
+    }
+
     [Fact]
     public async Task Run_WritesPendingEntryBeforeChangingTheSystem()
     {

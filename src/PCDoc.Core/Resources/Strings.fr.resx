@@ -148,4 +148,30 @@
   <data name="History.ReportFailed" xml:space="preserve"><value>Le rapport n'a pas pu être enregistré.</value></data>
   <data name="History.OpenFolder" xml:space="preserve"><value>Ouvrir le dossier</value></data>
   <data name="History.ActivityTitle" xml:space="preserve"><value>Activité (date et heure de chaque action)</value></data>
+  <data name="Nav.Privacy" xml:space="preserve"><value>Confidentialité</value></data>
+  <data name="Nav.Setup" xml:space="preserve"><value>Nouveau PC</value></data>
+  <data name="Setup.Title" xml:space="preserve"><value>Préparer ce PC</value></data>
+  <data name="Setup.Intro" xml:space="preserve"><value>Pour un PC neuf ou fraîchement installé : tout ce qu'il faut faire, dans le bon ordre, en une fois. Un point de restauration est créé avant et chaque action est inscrite dans le rapport.</value></data>
+  <data name="Setup.Analyze" xml:space="preserve"><value>Analyser à nouveau</value></data>
+  <data name="Setup.Run" xml:space="preserve"><value>Lancer la préparation</value></data>
+  <data name="Setup.Profile" xml:space="preserve"><value>Usage du PC :</value></data>
+  <data name="Setup.Software" xml:space="preserve"><value>Logiciels à installer (gratuits, depuis leurs sources officielles, sans fenêtre)</value></data>
+  <data name="Setup.Analyzing" xml:space="preserve"><value>Analyse du PC… Windows Update peut prendre quelques minutes.</value></data>
+  <data name="Setup.Done" xml:space="preserve"><value>Préparation terminée. Exportez le rapport depuis l'Historique, et redémarrez le PC si des mises à jour le demandent.</value></data>
+  <data name="Setup.NothingToDo" xml:space="preserve"><value>Rien à faire</value></data>
+  <data name="Setup.Count" xml:space="preserve"><value>{0} actions</value></data>
+  <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Confidentialité</value></data>
+  <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.</value></data>
+  <data name="Setup.security.Title" xml:space="preserve"><value>2. Sécurité</value></data>
+  <data name="Setup.security.Explanation" xml:space="preserve"><value>Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres.</value></data>
+  <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimisation</value></data>
+  <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).</value></data>
+  <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Applications préinstallées</value></data>
+  <data name="Setup.bloatware.Explanation" xml:space="preserve"><value>Retire les applications inutiles ajoutées par Microsoft ou le fabricant (seulement les sûres en mode novice).</value></data>
+  <data name="Setup.windows.Title" xml:space="preserve"><value>5. Mises à jour de Windows</value></data>
+  <data name="Setup.windows.Explanation" xml:space="preserve"><value>Mises à jour de sécurité et de qualité de Windows Update (pilotes en mode expert).</value></data>
+  <data name="Setup.software.Title" xml:space="preserve"><value>6. Mises à jour et installation de logiciels</value></data>
+  <data name="Setup.software.Explanation" xml:space="preserve"><value>Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.</value></data>
+  <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Nettoyage</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches, y compris ceux laissés par les mises à jour.</value></data>
 </root>

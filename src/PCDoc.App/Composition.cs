@@ -32,6 +32,7 @@ using PCDoc.Modules.Optimize;
 using PCDoc.Presentation.Optimize;
 using PCDoc.Modules.Security;
 using PCDoc.Presentation.Security;
+using PCDoc.Presentation.Setup;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -133,6 +134,15 @@ internal static class Composition
         services.AddSingleton<IFixer>(sp => new TweakFixer(sp.GetRequiredService<OptimizeEngine>(), sp.GetRequiredService<IRegistryWriter>(),
             sp.GetRequiredService<IBackupStore>(), () => sp.GetRequiredService<IClock>().Now));
 
+        // Confidentialité (v0.8) : même moteur que l'optimisation, catalogue privacy.json.
+        services.AddKeyedSingleton<OptimizeEngine>(OptimizeModule.PrivacyId, (sp, _) => new OptimizeEngine(OptimizeModule.Privacy,
+            sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(), sp.GetRequiredService<IProcessRunner>(),
+            sp.GetRequiredService<IWmiQuery>()));
+        services.AddSingleton<IScanner>(sp => new OptimizeScanner(sp.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId), OptimizeModule.PrivacyId));
+        services.AddSingleton<IFixer>(sp => new TweakFixer(sp.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId),
+            sp.GetRequiredService<IRegistryWriter>(), sp.GetRequiredService<IBackupStore>(), () => sp.GetRequiredService<IClock>().Now,
+            OptimizeModule.PrivacyKind));
+
         // Sécurité et clés USB (v0.7).
         services.AddSingleton<IDefenderCommand, DefenderCommand>();
         services.AddSingleton<IRemovableDrives, RemovableDrives>();
@@ -214,6 +224,13 @@ internal static class Composition
             NewFixPanel(services), Mode(services)),
         PageId.Security => new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
+        PageId.Privacy => new OptimizePageViewModel(services.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId),
+            services.GetRequiredService<ILocalizer>(), NewFixPanel(services), Mode(services), "Privacy"),
+        PageId.Setup => new SetupPageViewModel(new SetupSources(
+                services.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId), services.GetRequiredService<ISecuritySource>(),
+                services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<IAppsSource>(), services.GetRequiredService<IUpdatesSource>(),
+                services.GetRequiredService<ICleanupSource>()),
+            services.GetRequiredService<ILocalizer>(), NewFixPanel(services), Mode(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(), services.GetRequiredService<PCDoc.Core.Activity.IReportWriter>(),
             lines => PCDoc.Core.Activity.ActivityReport.Build(lines, PCDoc.Core.AppInfo.ProductName, PCDoc.Core.AppInfo.Version, Environment.MachineName,

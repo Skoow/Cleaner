@@ -143,3 +143,29 @@ History.ReportSaved	Report saved: {0}	Rapport enregistré : {0}
 History.ReportFailed	The report could not be saved.	Le rapport n'a pas pu être enregistré.
 History.OpenFolder	Open the folder	Ouvrir le dossier
 History.ActivityTitle	Activity (date and time of each action)	Activité (date et heure de chaque action)
+Nav.Privacy	Privacy	Confidentialité
+Nav.Setup	New PC	Nouveau PC
+Setup.Title	Prepare this PC	Préparer ce PC
+Setup.Intro	For a new or freshly installed PC: everything that should be done, in the right order, in one go. A restore point is created first and every action is written to the report.	Pour un PC neuf ou fraîchement installé : tout ce qu'il faut faire, dans le bon ordre, en une fois. Un point de restauration est créé avant et chaque action est inscrite dans le rapport.
+Setup.Analyze	Analyze again	Analyser à nouveau
+Setup.Run	Start the preparation	Lancer la préparation
+Setup.Profile	Use of the PC:	Usage du PC :
+Setup.Software	Software to install (free, from official sources, silently)	Logiciels à installer (gratuits, depuis leurs sources officielles, sans fenêtre)
+Setup.Analyzing	Analyzing the PC… Windows Update can take a few minutes.	Analyse du PC… Windows Update peut prendre quelques minutes.
+Setup.Done	Preparation finished. Export the report from History, and restart the PC if updates ask for it.	Préparation terminée. Exportez le rapport depuis l'Historique, et redémarrez le PC si des mises à jour le demandent.
+Setup.NothingToDo	Nothing to do	Rien à faire
+Setup.Count	{0} actions	{0} actions
+Setup.privacy.Title	1. Privacy	1. Confidentialité
+Setup.privacy.Explanation	Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.	Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.
+Setup.security.Title	2. Security	2. Sécurité
+Setup.security.Explanation	Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes.	Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres.
+Setup.optimize.Title	3. Optimization	3. Optimisation
+Setup.optimize.Explanation	Settings of the chosen profile (power plan, game mode, start-up delay…).	Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).
+Setup.bloatware.Title	4. Preinstalled apps	4. Applications préinstallées
+Setup.bloatware.Explanation	Removes the useless apps added by Microsoft or the manufacturer (only the safe ones in novice mode).	Retire les applications inutiles ajoutées par Microsoft ou le fabricant (seulement les sûres en mode novice).
+Setup.windows.Title	5. Windows updates	5. Mises à jour de Windows
+Setup.windows.Explanation	Security and quality updates from Windows Update (drivers in expert mode).	Mises à jour de sécurité et de qualité de Windows Update (pilotes en mode expert).
+Setup.software.Title	6. Software updates and installation	6. Mises à jour et installation de logiciels
+Setup.software.Explanation	Updates installed software through winget, then installs the software chosen below.	Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.
+Setup.cleanup.Title	7. Cleanup	7. Nettoyage
+Setup.cleanup.Explanation	Deletes temporary files and caches, including those left by the updates.	Supprime les fichiers temporaires et les caches, y compris ceux laissés par les mises à jour.

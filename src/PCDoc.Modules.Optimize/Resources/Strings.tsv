@@ -30,3 +30,38 @@ Optimize.Profile	Profile:	Profil :
 Optimize.Profile.gaming	Gaming	Jeu
 Optimize.Profile.office	Office	Bureautique
 Optimize.Profile.battery	Battery	Batterie
+Module.privacy	Privacy	Confidentialité
+Privacy.Title	Privacy	Confidentialité
+Privacy.Intro	Turn off Windows tracking, advertising and suggestions. Each change can be undone from History.	Désactivez le pistage, la publicité et les suggestions de Windows. Chaque modification peut être annulée depuis l'Historique.
+Privacy.Profile.recommended	Recommended	Recommandé
+Privacy.Profile.strict	Strict	Strict
+Privacy.telemetry-min.Title	Send Microsoft only the required diagnostic data	N'envoyer à Microsoft que les données de diagnostic obligatoires
+Privacy.telemetry-min.Explanation	Stops the "optional" data (browsing in Edge, app usage, typing…). Windows Update keeps working.	Arrête l'envoi des données « facultatives » (navigation dans Edge, usage des applications, saisie…). Windows Update continue de fonctionner.
+Privacy.advertising-id-off.Title	Turn off the advertising ID	Désactiver l'identifiant de publicité
+Privacy.advertising-id-off.Explanation	Apps can no longer use it to show you targeted ads.	Les applications ne peuvent plus s'en servir pour vous montrer des publicités ciblées.
+Privacy.tailored-off.Title	Turn off tailored experiences	Désactiver les expériences personnalisées
+Privacy.tailored-off.Explanation	Microsoft stops using your diagnostic data for tips and offers.	Microsoft n'utilise plus vos données de diagnostic pour des astuces et des offres.
+Privacy.silent-apps-off.Title	Stop Windows from installing suggested apps by itself	Empêcher Windows d'installer tout seul des applications suggérées
+Privacy.silent-apps-off.Explanation	Candy Crush, TikTok and other promoted apps are no longer added to the Start menu.	Candy Crush, TikTok et autres applications promues ne sont plus ajoutées au menu Démarrer.
+Privacy.suggestions-off.Title	Turn off tips and suggestions	Désactiver les astuces et suggestions
+Privacy.suggestions-off.Explanation	No more suggestions in Start, Settings and after updates ("Finish setting up your device").	Plus de suggestions dans Démarrer, les Paramètres et après les mises à jour (« Terminer la configuration de votre appareil »).
+Privacy.lockscreen-ads-off.Title	Turn off ads on the lock screen	Désactiver les publicités sur l'écran de verrouillage
+Privacy.lockscreen-ads-off.Explanation	Removes the "fun facts" and offers shown over the lock screen picture.	Retire les « anecdotes » et offres affichées par-dessus l'image de l'écran de verrouillage.
+Privacy.activity-history-off.Title	Turn off activity history	Désactiver l'historique des activités
+Privacy.activity-history-off.Explanation	Windows stops recording the files and sites you open.	Windows n'enregistre plus les fichiers et sites que vous ouvrez.
+Privacy.feedback-off.Title	Never ask for feedback	Ne jamais demander d'avis
+Privacy.feedback-off.Explanation	No more "How likely are you to recommend Windows?" pop-ups.	Plus de fenêtres « Recommanderiez-vous Windows ? ».
+Privacy.typing-data-off.Title	Stop collecting typing and handwriting data	Arrêter la collecte de la saisie et de l'écriture manuscrite
+Privacy.typing-data-off.Explanation	What you type and write is no longer used to "improve" recognition.	Ce que vous tapez et écrivez n'est plus utilisé pour « améliorer » la reconnaissance.
+Privacy.recall-off.Title	Turn off Recall (screen snapshots)	Désactiver Recall (captures de l'écran)
+Privacy.recall-off.Explanation	On Copilot+ PCs, Windows no longer takes regular snapshots of your screen.	Sur les PC Copilot+, Windows ne prend plus de captures régulières de votre écran.
+Privacy.web-search-off.Title	No web results in Start search	Pas de résultats web dans la recherche de Démarrer
+Privacy.web-search-off.Explanation	Your searches are no longer sent to Bing. Start search only finds files, apps and settings. Applies after signing in again.	Vos recherches ne sont plus envoyées à Bing. La recherche de Démarrer ne trouve plus que les fichiers, applications et paramètres. Appliqué à la prochaine ouverture de session.
+Privacy.app-tracking-off.Title	Stop tracking app launches	Ne plus suivre le lancement des applications
+Privacy.app-tracking-off.Explanation	The "Most used" list in Start disappears.	La liste « Les plus utilisées » de Démarrer disparaît.
+Privacy.copilot-off.Title	Turn off Copilot in Windows	Désactiver Copilot dans Windows
+Privacy.copilot-off.Explanation	Removes the Copilot button and shortcut. Keep it if you use the assistant.	Retire le bouton et le raccourci de Copilot. À garder si vous utilisez l'assistant.
+Privacy.location-off.Title	Turn off location for all apps	Désactiver la localisation pour toutes les applications
+Privacy.location-off.Explanation	Weather, Maps and "Find my device" stop knowing where you are.	Météo, Cartes et « Localiser mon appareil » ne savent plus où vous êtes.
+Privacy.error-reporting-off.Title	Turn off error reporting to Microsoft	Désactiver l'envoi des rapports d'erreurs à Microsoft
+Privacy.error-reporting-off.Explanation	Crash reports are no longer sent. Microsoft can no longer offer you a fix for a known crash.	Les rapports de plantage ne sont plus envoyés. Microsoft ne peut plus vous proposer de solution pour un plantage connu.

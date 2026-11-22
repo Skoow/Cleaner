@@ -35,4 +35,39 @@
   <data name="Optimize.Profile.gaming" xml:space="preserve"><value>Gaming</value></data>
   <data name="Optimize.Profile.office" xml:space="preserve"><value>Office</value></data>
   <data name="Optimize.Profile.battery" xml:space="preserve"><value>Battery</value></data>
+  <data name="Module.privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Privacy.Intro" xml:space="preserve"><value>Turn off Windows tracking, advertising and suggestions. Each change can be undone from History.</value></data>
+  <data name="Privacy.Profile.recommended" xml:space="preserve"><value>Recommended</value></data>
+  <data name="Privacy.Profile.strict" xml:space="preserve"><value>Strict</value></data>
+  <data name="Privacy.telemetry-min.Title" xml:space="preserve"><value>Send Microsoft only the required diagnostic data</value></data>
+  <data name="Privacy.telemetry-min.Explanation" xml:space="preserve"><value>Stops the "optional" data (browsing in Edge, app usage, typing…). Windows Update keeps working.</value></data>
+  <data name="Privacy.advertising-id-off.Title" xml:space="preserve"><value>Turn off the advertising ID</value></data>
+  <data name="Privacy.advertising-id-off.Explanation" xml:space="preserve"><value>Apps can no longer use it to show you targeted ads.</value></data>
+  <data name="Privacy.tailored-off.Title" xml:space="preserve"><value>Turn off tailored experiences</value></data>
+  <data name="Privacy.tailored-off.Explanation" xml:space="preserve"><value>Microsoft stops using your diagnostic data for tips and offers.</value></data>
+  <data name="Privacy.silent-apps-off.Title" xml:space="preserve"><value>Stop Windows from installing suggested apps by itself</value></data>
+  <data name="Privacy.silent-apps-off.Explanation" xml:space="preserve"><value>Candy Crush, TikTok and other promoted apps are no longer added to the Start menu.</value></data>
+  <data name="Privacy.suggestions-off.Title" xml:space="preserve"><value>Turn off tips and suggestions</value></data>
+  <data name="Privacy.suggestions-off.Explanation" xml:space="preserve"><value>No more suggestions in Start, Settings and after updates ("Finish setting up your device").</value></data>
+  <data name="Privacy.lockscreen-ads-off.Title" xml:space="preserve"><value>Turn off ads on the lock screen</value></data>
+  <data name="Privacy.lockscreen-ads-off.Explanation" xml:space="preserve"><value>Removes the "fun facts" and offers shown over the lock screen picture.</value></data>
+  <data name="Privacy.activity-history-off.Title" xml:space="preserve"><value>Turn off activity history</value></data>
+  <data name="Privacy.activity-history-off.Explanation" xml:space="preserve"><value>Windows stops recording the files and sites you open.</value></data>
+  <data name="Privacy.feedback-off.Title" xml:space="preserve"><value>Never ask for feedback</value></data>
+  <data name="Privacy.feedback-off.Explanation" xml:space="preserve"><value>No more "How likely are you to recommend Windows?" pop-ups.</value></data>
+  <data name="Privacy.typing-data-off.Title" xml:space="preserve"><value>Stop collecting typing and handwriting data</value></data>
+  <data name="Privacy.typing-data-off.Explanation" xml:space="preserve"><value>What you type and write is no longer used to "improve" recognition.</value></data>
+  <data name="Privacy.recall-off.Title" xml:space="preserve"><value>Turn off Recall (screen snapshots)</value></data>
+  <data name="Privacy.recall-off.Explanation" xml:space="preserve"><value>On Copilot+ PCs, Windows no longer takes regular snapshots of your screen.</value></data>
+  <data name="Privacy.web-search-off.Title" xml:space="preserve"><value>No web results in Start search</value></data>
+  <data name="Privacy.web-search-off.Explanation" xml:space="preserve"><value>Your searches are no longer sent to Bing. Start search only finds files, apps and settings. Applies after signing in again.</value></data>
+  <data name="Privacy.app-tracking-off.Title" xml:space="preserve"><value>Stop tracking app launches</value></data>
+  <data name="Privacy.app-tracking-off.Explanation" xml:space="preserve"><value>The "Most used" list in Start disappears.</value></data>
+  <data name="Privacy.copilot-off.Title" xml:space="preserve"><value>Turn off Copilot in Windows</value></data>
+  <data name="Privacy.copilot-off.Explanation" xml:space="preserve"><value>Removes the Copilot button and shortcut. Keep it if you use the assistant.</value></data>
+  <data name="Privacy.location-off.Title" xml:space="preserve"><value>Turn off location for all apps</value></data>
+  <data name="Privacy.location-off.Explanation" xml:space="preserve"><value>Weather, Maps and "Find my device" stop knowing where you are.</value></data>
+  <data name="Privacy.error-reporting-off.Title" xml:space="preserve"><value>Turn off error reporting to Microsoft</value></data>
+  <data name="Privacy.error-reporting-off.Explanation" xml:space="preserve"><value>Crash reports are no longer sent. Microsoft can no longer offer you a fix for a known crash.</value></data>
 </root>

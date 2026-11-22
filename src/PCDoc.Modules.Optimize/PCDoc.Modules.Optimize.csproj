@@ -10,5 +10,7 @@
   <ItemGroup>
     <EmbeddedResource Include="..\PCDoc.Definitions\optimize.json" LogicalName="PCDoc.Definitions.optimize.json" />
     <None Include="..\PCDoc.Definitions\optimize.json" Link="Definitions\optimize.json" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="..\PCDoc.Definitions\privacy.json" LogicalName="PCDoc.Definitions.privacy.json" />
+    <None Include="..\PCDoc.Definitions\privacy.json" Link="Definitions\privacy.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

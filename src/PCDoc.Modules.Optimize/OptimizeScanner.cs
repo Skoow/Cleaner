@@ -4,9 +4,9 @@ using PCDoc.Core.Modules;
 namespace PCDoc.Modules.Optimize;
 
 /// <summary>Bilan : réglages 🟢 marqués « bilan » pas encore appliqués → « Info » corrigeables.</summary>
-public sealed class OptimizeScanner(IOptimizeSource source) : IScanner
+public sealed class OptimizeScanner(IOptimizeSource source, string moduleId = OptimizeModule.Id) : IScanner
 {
-    public string ModuleId => OptimizeModule.Id;
+    public string ModuleId => moduleId;
 
     public async Task<IReadOnlyList<Finding>> ScanAsync(CancellationToken cancellationToken)
     {

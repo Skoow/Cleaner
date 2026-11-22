@@ -11,6 +11,8 @@ public enum PageId
     Updates,
     Optimize,
     Security,
+    Privacy,
+    Setup,
     History,
     Settings,
 }

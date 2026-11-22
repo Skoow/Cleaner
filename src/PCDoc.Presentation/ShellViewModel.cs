@@ -39,6 +39,7 @@ public sealed partial class ShellViewModel : ObservableObject
     public IReadOnlyList<NavItem> NavItems { get; } =
     [
         new(PageId.Bilan, "Nav.Bilan", ""),
+        new(PageId.Setup, "Nav.Setup", "\uE8B1"),
         new(PageId.System, "Nav.System", ""),
         new(PageId.Diagnostic, "Nav.Diagnostic", "\uE9D9"),
         new(PageId.Cleanup, "Nav.Cleanup", "\uE74D"),
@@ -46,6 +47,7 @@ public sealed partial class ShellViewModel : ObservableObject
         new(PageId.Updates, "Nav.Updates", "\uE895"),
         new(PageId.Optimize, "Nav.Optimize", "\uE945"),
         new(PageId.Security, "Nav.Security", "\uE72E"),
+        new(PageId.Privacy, "Nav.Privacy", "\uE8D7"),
         new(PageId.History, "Nav.History", "\uE81C"),
         new(PageId.Settings, "Nav.Settings", ""),
     ];
