@@ -75,7 +75,7 @@ public sealed class DiagnosticPageViewModelTests : IDisposable
         vm.Devices.Single().Explanation.Should().Contain("ne peut pas démarrer");
         vm.DisksUnavailable.Should().BeTrue();
         vm.RebootPending.Should().BeTrue();
-        vm.Repairs.Select(r => r.Kind).Should().Equal(RepairKind.FlushDns, RepairKind.SystemFiles, RepairKind.WindowsImage);
+        vm.Repairs.Select(r => r.Kind).Should().Equal(Enum.GetValues<RepairKind>());
     }
 
     [Fact]

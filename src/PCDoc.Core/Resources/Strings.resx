@@ -175,4 +175,48 @@
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Cleanup</value></data>
   <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).</value></data>
   <data name="App.BusyClosing" xml:space="preserve"><value>Please wait: changes are in progress. PCDoc can be closed once they are finished.</value></data>
+  <data name="Setup.Compare.Title" xml:space="preserve"><value>Before → after the preparation</value></data>
+  <data name="Setup.Compare.Free" xml:space="preserve"><value>Free space on the Windows disk: {0} → {1}</value></data>
+  <data name="Setup.Compare.Actions" xml:space="preserve"><value>Actions still to do: {0} → {1}</value></data>
+  <data name="Setup.Compare.Apps" xml:space="preserve"><value>Installed applications: {0} → {1}</value></data>
+  <data name="Setup.Compare.Windows" xml:space="preserve"><value>Windows updates waiting: {0} → {1}</value></data>
+  <data name="Setup.Compare.Software" xml:space="preserve"><value>Software updates waiting: {0} → {1}</value></data>
+  <data name="Setup.Compare.Cleanable" xml:space="preserve"><value>Space that can be cleaned: {0} → {1}</value></data>
+  <data name="Setup.TechProfile" xml:space="preserve"><value>Technician profile</value></data>
+  <data name="Setup.TechProfile.Help" xml:space="preserve"><value>Save your choices (steps, use, software) under a name, then pick the profile on the next PC. In portable mode the profiles travel with PCDoc on the USB drive.</value></data>
+  <data name="Setup.Profile.NameLabel" xml:space="preserve"><value>Profile name</value></data>
+  <data name="Setup.Profile.Save" xml:space="preserve"><value>Save as profile</value></data>
+  <data name="Setup.Profile.NeedName" xml:space="preserve"><value>Type a name for the profile first.</value></data>
+  <data name="Setup.Profile.Saved" xml:space="preserve"><value>Profile saved: {0}</value></data>
+  <data name="Setup.Profile.SaveFailed" xml:space="preserve"><value>The profile could not be saved.</value></data>
+  <data name="Maintenance.Title" xml:space="preserve"><value>Automatic maintenance</value></data>
+  <data name="Maintenance.Intro" xml:space="preserve"><value>Once a week, PCDoc cleans, updates and scans the PC by itself, without any window, then writes a report (History). Only safe actions, with a restore point. The UAC is asked only once, now.</value></data>
+  <data name="Maintenance.Enable" xml:space="preserve"><value>Turn on automatic maintenance</value></data>
+  <data name="Maintenance.Day" xml:space="preserve"><value>Day</value></data>
+  <data name="Maintenance.Hour" xml:space="preserve"><value>Time</value></data>
+  <data name="Maintenance.Cleanup" xml:space="preserve"><value>Clean temporary files and caches</value></data>
+  <data name="Maintenance.Software" xml:space="preserve"><value>Update software (winget)</value></data>
+  <data name="Maintenance.Windows" xml:space="preserve"><value>Install Windows updates</value></data>
+  <data name="Maintenance.Defender" xml:space="preserve"><value>Quick antivirus scan (Defender)</value></data>
+  <data name="Maintenance.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Maintenance.Install" xml:space="preserve"><value>Install PCDoc in Program Files</value></data>
+  <data name="Maintenance.NotInstalled" xml:space="preserve"><value>To protect the PC, automatic maintenance only runs PCDoc installed in Program Files. Click "Install PCDoc in Program Files", then Save.</value></data>
+  <data name="Maintenance.Scheduled" xml:space="preserve"><value>Automatic maintenance every {0} at {1}:00.</value></data>
+  <data name="Maintenance.Disabled" xml:space="preserve"><value>Automatic maintenance is off.</value></data>
+  <data name="Maintenance.Failed" xml:space="preserve"><value>The scheduled task could not be created.</value></data>
+  <data name="Maintenance.Installed" xml:space="preserve"><value>PCDoc installed: {0}</value></data>
+  <data name="Maintenance.InstallFailed" xml:space="preserve"><value>PCDoc could not be copied to Program Files.</value></data>
+  <data name="Maintenance.Started" xml:space="preserve"><value>Automatic maintenance started</value></data>
+  <data name="Maintenance.Finished" xml:space="preserve"><value>Automatic maintenance finished</value></data>
+  <data name="Maintenance.SourceFailed" xml:space="preserve"><value>Automatic maintenance: {0} could not be checked ({1})</value></data>
+  <data name="Maintenance.NoRestorePoint" xml:space="preserve"><value>Automatic maintenance stopped: no restore point could be created (system protection is off).</value></data>
+  <data name="Portable.Title" xml:space="preserve"><value>Portable version (USB drive)</value></data>
+  <data name="Portable.Intro" xml:space="preserve"><value>Copies PCDoc to a USB drive to use it on any PC without installing it. Settings and technician profiles stay on the drive.</value></data>
+  <data name="Portable.Active" xml:space="preserve"><value>PCDoc is running in portable mode.</value></data>
+  <data name="Portable.Refresh" xml:space="preserve"><value>Find USB drives</value></data>
+  <data name="Portable.Drive" xml:space="preserve"><value>USB drive</value></data>
+  <data name="Portable.Copy" xml:space="preserve"><value>Copy PCDoc to the drive</value></data>
+  <data name="Portable.NoDrive" xml:space="preserve"><value>No USB drive plugged in.</value></data>
+  <data name="Portable.Done" xml:space="preserve"><value>PCDoc copied in portable mode: {0}</value></data>
+  <data name="Portable.Failed" xml:space="preserve"><value>PCDoc could not be copied to the drive.</value></data>
 </root>

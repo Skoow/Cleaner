@@ -17,12 +17,29 @@
                  Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
     <TextBlock DockPanel.Dock="Top" Text="{Binding Status}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"
                AutomationProperties.LiveSetting="Polite" Visibility="{Binding Status, Converter={StaticResource NotNullToVisibility}}" />
+    <Border DockPanel.Dock="Top" Style="{StaticResource Pcdoc.Card}" Padding="12" Margin="0,0,0,8"
+            Visibility="{Binding Comparison, Converter={StaticResource NotNullToVisibility}}">
+      <TextBlock Text="{Binding Comparison}" FontFamily="Consolas" FontSize="12" TextWrapping="Wrap" />
+    </Border>
     <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
       <Button DockPanel.Dock="Right" Content="{app:T Setup.Run}" Command="{Binding RunCommand}" MinWidth="180" FontWeight="SemiBold"
               AutomationProperties.Name="{app:T Setup.Run}" />
     </DockPanel>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
       <StackPanel>
+        <Border Style="{StaticResource Pcdoc.Card}" Padding="12" Margin="0,0,0,12">
+          <StackPanel>
+            <TextBlock Text="{app:T Setup.TechProfile}" FontWeight="SemiBold" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+              <ComboBox ItemsSource="{Binding TechProfiles}" SelectedItem="{Binding SelectedTechProfile}" DisplayMemberPath="Name" MinWidth="200"
+                        Margin="0,0,12,0" AutomationProperties.Name="{app:T Setup.TechProfile}" />
+              <TextBox Text="{Binding ProfileName, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Margin="0,0,8,0"
+                       AutomationProperties.Name="{app:T Setup.Profile.NameLabel}" ToolTip="{app:T Setup.Profile.NameLabel}" />
+              <Button Content="{app:T Setup.Profile.Save}" Command="{Binding SaveTechProfileCommand}" AutomationProperties.Name="{app:T Setup.Profile.Save}" />
+            </StackPanel>
+            <TextBlock Text="{app:T Setup.TechProfile.Help}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0" />
+          </StackPanel>
+        </Border>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
           <TextBlock Text="{app:T Setup.Profile}" VerticalAlignment="Center" Margin="0,0,8,0" />
           <ItemsControl ItemsSource="{Binding Profiles}" Focusable="False">

@@ -85,6 +85,12 @@ public partial class App : Application
         theme.Apply(settings.Theme);
         ThemeApplier.Hook(theme);
 
+        if (e.Args.Contains("--maintenance", StringComparer.OrdinalIgnoreCase))
+        {
+            RunMaintenance(store, journalPath is not null);
+            return;
+        }
+
         var shell = _services.GetRequiredService<ShellViewModel>();
         HookErrors(shell, localizer);
 
@@ -138,6 +144,31 @@ public partial class App : Application
     }
 
     /// <summary>Toute erreur inattendue est journalisée et affichée dans un bandeau : jamais de boîte de dialogue.</summary>
+    /// <summary>Entretien automatique sans fenêtre, puis fermeture (journal et rapport dans l'Historique).</summary>
+    private async void RunMaintenance(ISettingsStore store, bool fixesAvailable)
+    {
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        try
+        {
+            if (fixesAvailable)
+            {
+                _services!.GetRequiredService<PCDoc.Core.Fixing.FixPipeline>().ResolveInterrupted();
+                await Composition.Maintenance(_services!).RunAsync(store.Load().Maintenance ?? new MaintenanceOptions(), CancellationToken.None)
+                    .ConfigureAwait(true);
+            }
+        }
+#pragma warning disable CA1031 // l'entretien automatique ne doit jamais laisser un processus bloqué
+        catch (Exception ex)
+#pragma warning restore CA1031
+        {
+            _logger?.Error(ex, "Automatic maintenance failed");
+        }
+        finally
+        {
+            Shutdown();
+        }
+    }
+
     private void HookErrors(ShellViewModel shell, ILocalizer localizer)
     {
         DispatcherUnhandledException += (_, args) =>

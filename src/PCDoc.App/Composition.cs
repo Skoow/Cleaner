@@ -153,6 +153,7 @@ internal static class Composition
         // Sécurité et clés USB (v0.7).
         services.AddSingleton<IDefenderCommand, DefenderCommand>();
         services.AddSingleton<IRemovableDrives, RemovableDrives>();
+        services.AddSingleton<IMaintenanceScheduler>(sp => new MaintenanceScheduler(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IRemovableDrives>()));
         services.AddSingleton(sp =>
         {
             var settings = new OptimizeEngine(SecurityModule.Settings, sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(),
@@ -241,7 +242,12 @@ internal static class Composition
                 services.GetRequiredKeyedService<OptimizeEngine>(OptimizeModule.PrivacyId), services.GetRequiredService<ISecuritySource>(),
                 services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<IAppsSource>(), services.GetRequiredService<IUpdatesSource>(),
                 services.GetRequiredService<ICleanupSource>()),
-            services.GetRequiredService<ILocalizer>(), NewFixPanel(services), Mode(services)),
+            services.GetRequiredService<ILocalizer>(), NewFixPanel(services), Mode(services))
+        {
+            TechProfileFolder = new TechProfileStore(AppPaths.ProfilesDir),
+            FreeSpace = () => new DriveInfo(Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.Windows))!).AvailableFreeSpace,
+            Activity = services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(),
+        },
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(),
             services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(), services.GetRequiredService<PCDoc.Core.Activity.IReportWriter>(),
             lines => PCDoc.Core.Activity.ActivityReport.Build(lines, PCDoc.Core.AppInfo.ProductName, PCDoc.Core.AppInfo.Version, Environment.MachineName,
@@ -251,8 +257,20 @@ internal static class Composition
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<ISettingsStore>(),
             services.GetRequiredService<IThemeApplier>(), services.GetRequiredService<IUserProfileResolver>(),
             services.GetRequiredService<IAppDataCleaner>(), services.GetRequiredService<IClipboardService>(),
-            AppPaths.LogsDir, ReadLicense),
+            AppPaths.LogsDir, ReadLicense)
+        {
+            Scheduler = services.GetRequiredService<IMaintenanceScheduler>(),
+            RemovableRoots = () => [.. services.GetRequiredService<IRemovableDrives>().List().Select(d => d.Root)],
+        },
     };
+
+    /// <summary>Entretien automatique sans fenêtre (tâche planifiée lancée avec « --maintenance »).</summary>
+    public static PCDoc.Presentation.Maintenance.MaintenanceRunner Maintenance(IServiceProvider services) => new(
+        services.GetRequiredService<ICleanupSource>(), services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ISecuritySource>(),
+        services.GetRequiredService<FixPipeline>(), services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(),
+        services.GetRequiredService<PCDoc.Core.Activity.IReportWriter>(), services.GetRequiredService<ILocalizer>(),
+        lines => PCDoc.Core.Activity.ActivityReport.Build(lines, PCDoc.Core.AppInfo.ProductName, PCDoc.Core.AppInfo.Version, Environment.MachineName,
+            Environment.OSVersion.VersionString, DateTimeOffset.Now));
 
     /// <summary>Mode actuel, relu à chaque fois (il peut changer dans les Paramètres).</summary>
     private static Func<AppMode> Mode(IServiceProvider services)

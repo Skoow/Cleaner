@@ -136,6 +136,9 @@ public static class SecureFolders
         }
     }
 
+    /// <summary>Supprime un lien (jamais sa cible) placé à <paramref name="path"/>.</summary>
+    public static void RemoveLinkIfAny(string path) => RemoveIfLink(path);
+
     private static void RemoveIfLink(string path)
     {
         var attributes = File.Exists(path) || Directory.Exists(path) ? File.GetAttributes(path) : (FileAttributes?)null;

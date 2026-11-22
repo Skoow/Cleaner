@@ -170,3 +170,47 @@ Setup.software.Explanation	Updates installed software through winget, then insta
 Setup.cleanup.Title	7. Cleanup	7. Nettoyage
 Setup.cleanup.Explanation	Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).	Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).
 App.BusyClosing	Please wait: changes are in progress. PCDoc can be closed once they are finished.	Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.
+Setup.Compare.Title	Before → after the preparation	Avant → après la préparation
+Setup.Compare.Free	Free space on the Windows disk: {0} → {1}	Espace libre sur le disque de Windows : {0} → {1}
+Setup.Compare.Actions	Actions still to do: {0} → {1}	Actions restant à faire : {0} → {1}
+Setup.Compare.Apps	Installed applications: {0} → {1}	Applications installées : {0} → {1}
+Setup.Compare.Windows	Windows updates waiting: {0} → {1}	Mises à jour de Windows en attente : {0} → {1}
+Setup.Compare.Software	Software updates waiting: {0} → {1}	Mises à jour de logiciels en attente : {0} → {1}
+Setup.Compare.Cleanable	Space that can be cleaned: {0} → {1}	Espace nettoyable : {0} → {1}
+Setup.TechProfile	Technician profile	Profil de technicien
+Setup.TechProfile.Help	Save your choices (steps, use, software) under a name, then pick the profile on the next PC. In portable mode the profiles travel with PCDoc on the USB drive.	Enregistrez vos choix (étapes, usage, logiciels) sous un nom, puis choisissez ce profil sur le PC suivant. En mode portable, les profils voyagent avec PCDoc sur la clé USB.
+Setup.Profile.NameLabel	Profile name	Nom du profil
+Setup.Profile.Save	Save as profile	Enregistrer comme profil
+Setup.Profile.NeedName	Type a name for the profile first.	Tapez d'abord un nom pour le profil.
+Setup.Profile.Saved	Profile saved: {0}	Profil enregistré : {0}
+Setup.Profile.SaveFailed	The profile could not be saved.	Le profil n'a pas pu être enregistré.
+Maintenance.Title	Automatic maintenance	Entretien automatique
+Maintenance.Intro	Once a week, PCDoc cleans, updates and scans the PC by itself, without any window, then writes a report (History). Only safe actions, with a restore point. The UAC is asked only once, now.	Une fois par semaine, PCDoc nettoie, met à jour et analyse le PC tout seul, sans fenêtre, puis écrit un rapport (Historique). Uniquement des actions sûres, avec point de restauration. L'UAC n'est demandé qu'une fois, maintenant.
+Maintenance.Enable	Turn on automatic maintenance	Activer l'entretien automatique
+Maintenance.Day	Day	Jour
+Maintenance.Hour	Time	Heure
+Maintenance.Cleanup	Clean temporary files and caches	Nettoyer les fichiers temporaires et les caches
+Maintenance.Software	Update software (winget)	Mettre à jour les logiciels (winget)
+Maintenance.Windows	Install Windows updates	Installer les mises à jour de Windows
+Maintenance.Defender	Quick antivirus scan (Defender)	Analyse antivirus rapide (Defender)
+Maintenance.Save	Save	Enregistrer
+Maintenance.Install	Install PCDoc in Program Files	Installer PCDoc dans Program Files
+Maintenance.NotInstalled	To protect the PC, automatic maintenance only runs PCDoc installed in Program Files. Click "Install PCDoc in Program Files", then Save.	Pour protéger le PC, l'entretien automatique ne lance que PCDoc installé dans Program Files. Cliquez sur « Installer PCDoc dans Program Files », puis Enregistrer.
+Maintenance.Scheduled	Automatic maintenance every {0} at {1}:00.	Entretien automatique chaque {0} à {1} h.
+Maintenance.Disabled	Automatic maintenance is off.	L'entretien automatique est désactivé.
+Maintenance.Failed	The scheduled task could not be created.	La tâche planifiée n'a pas pu être créée.
+Maintenance.Installed	PCDoc installed: {0}	PCDoc installé : {0}
+Maintenance.InstallFailed	PCDoc could not be copied to Program Files.	PCDoc n'a pas pu être copié dans Program Files.
+Maintenance.Started	Automatic maintenance started	Entretien automatique commencé
+Maintenance.Finished	Automatic maintenance finished	Entretien automatique terminé
+Maintenance.SourceFailed	Automatic maintenance: {0} could not be checked ({1})	Entretien automatique : {0} n'a pas pu être vérifié ({1})
+Maintenance.NoRestorePoint	Automatic maintenance stopped: no restore point could be created (system protection is off).	Entretien automatique arrêté : aucun point de restauration n'a pu être créé (protection du système désactivée).
+Portable.Title	Portable version (USB drive)	Version portable (clé USB)
+Portable.Intro	Copies PCDoc to a USB drive to use it on any PC without installing it. Settings and technician profiles stay on the drive.	Copie PCDoc sur une clé USB pour l'utiliser sur n'importe quel PC sans l'installer. Les réglages et les profils de technicien restent sur la clé.
+Portable.Active	PCDoc is running in portable mode.	PCDoc fonctionne en mode portable.
+Portable.Refresh	Find USB drives	Chercher les clés USB
+Portable.Drive	USB drive	Clé USB
+Portable.Copy	Copy PCDoc to the drive	Copier PCDoc sur la clé
+Portable.NoDrive	No USB drive plugged in.	Aucune clé USB branchée.
+Portable.Done	PCDoc copied in portable mode: {0}	PCDoc copié en mode portable : {0}
+Portable.Failed	PCDoc could not be copied to the drive.	PCDoc n'a pas pu être copié sur la clé.

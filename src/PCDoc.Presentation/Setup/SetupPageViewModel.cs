@@ -43,6 +43,9 @@ public sealed partial class SetupSoftware(WingetPackage package, string category
     public string Category { get; } = category;
 }
 
+/// <summary>Mesures avant/après une préparation.</summary>
+public sealed record SetupSnapshot(long FreeBytes, int Actions, int Apps, int WindowsUpdates, int SoftwareUpdates, long CleanableBytes);
+
 /// <summary>Les sources de chaque module utilisées par la préparation.</summary>
 public sealed record SetupSources(
     IOptimizeSource Privacy,
@@ -65,6 +68,96 @@ public sealed partial class SetupPageViewModel : ObservableObject
     private readonly Func<Core.Settings.AppMode> _mode;
     private bool _loaded;
     private IReadOnlyList<TweakState> _optimizeStates = [];
+    private SetupSnapshot? _current;
+    private SetupSnapshot? _before;
+
+    [ObservableProperty]
+    private string? _comparison;
+
+    [ObservableProperty]
+    private string _profileName = string.Empty;
+
+    [ObservableProperty]
+    private TechProfile? _selectedTechProfile;
+
+    private TechProfile? _pendingProfile;
+
+    /// <summary>Dossier des profils de technicien (null = fonction désactivée).</summary>
+    public TechProfileStore? TechProfileFolder { get; init; }
+
+    public ObservableCollection<TechProfile> TechProfiles { get; } = [];
+
+    /// <summary>Enregistre les choix actuels (étapes, usage, logiciels) comme profil réutilisable.</summary>
+    [RelayCommand]
+    private void SaveTechProfile()
+    {
+        if (TechProfileFolder is null || TechProfileStore.SafeName(ProfileName).Length == 0)
+        {
+            Status = _localizer["Setup.Profile.NeedName"];
+            return;
+        }
+
+        try
+        {
+            var path = TechProfileFolder.Save(new TechProfile(ProfileName, Profile, [.. Steps.Where(s => s.IsSelected).Select(s => s.Id)],
+                [.. Software.Where(s => s.IsSelected).Select(s => s.Package.Id)]));
+            Status = _localizer.Format(new LocalizedText("Setup.Profile.Saved", path));
+            RefreshTechProfiles();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            Status = _localizer["Setup.Profile.SaveFailed"];
+        }
+    }
+
+    partial void OnSelectedTechProfileChanged(TechProfile? value)
+    {
+        if (value is not null)
+        {
+            ApplyTechProfile(value);
+        }
+    }
+
+    /// <summary>Applique un profil : usage, étapes et logiciels (identifiants inconnus ignorés).</summary>
+    internal void ApplyTechProfile(TechProfile profile)
+    {
+        ProfileName = profile.Name;
+        if (TweakCatalog.ProfileIds.Contains(profile.Usage))
+        {
+            Profile = profile.Usage;
+        }
+
+        foreach (var s in Software)
+        {
+            s.IsSelected = profile.Software.Contains(s.Package.Id, StringComparer.OrdinalIgnoreCase);
+        }
+
+        if (Steps.Count == 0)
+        {
+            _pendingProfile = profile; // appliqué à la fin de l'analyse
+            return;
+        }
+
+        foreach (var step in Steps)
+        {
+            step.IsSelected = step.Findings.Count > 0 && profile.Steps.Contains(step.Id);
+        }
+    }
+
+    private void RefreshTechProfiles()
+    {
+        TechProfiles.Clear();
+        foreach (var p in TechProfileFolder?.List() ?? [])
+        {
+            TechProfiles.Add(p);
+        }
+    }
+
+    /// <summary>Espace libre du disque de Windows (mesure avant/après).</summary>
+    public Func<long>? FreeSpace { get; init; }
+
+    /// <summary>Journal d'activité : la comparaison avant/après y est inscrite.</summary>
+    public Core.Activity.IActivityLog? Activity { get; init; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RunCommand), nameof(AnalyzeCommand))]
@@ -88,6 +181,14 @@ public sealed partial class SetupPageViewModel : ObservableObject
             {
                 await AnalyzeAsync().ConfigureAwait(true); // état réel après la série (rien n'est redemandé deux fois)
                 Status = _localizer["Setup.Done"];
+                if (_before is { } before && _current is { } after)
+                {
+                    Comparison = Compare(before, after);
+                    foreach (var line in Comparison.Split('\n'))
+                    {
+                        Activity?.Write("setup", line);
+                    }
+                }
             };
             fixes.PropertyChanged += (_, e) =>
             {
@@ -111,7 +212,15 @@ public sealed partial class SetupPageViewModel : ObservableObject
     public IReadOnlyList<Optimize.ProfileChoice> Profiles =>
         [.. TweakCatalog.ProfileIds.Select(p => new Optimize.ProfileChoice(p, _localizer[$"Optimize.Profile.{p}"]))];
 
-    public Task EnsureLoadedAsync() => _loaded ? Task.CompletedTask : AnalyzeAsync();
+    public Task EnsureLoadedAsync()
+    {
+        if (TechProfiles.Count == 0)
+        {
+            RefreshTechProfiles();
+        }
+
+        return _loaded ? Task.CompletedTask : AnalyzeAsync();
+    }
 
     /// <summary>Changer de profil ne relance pas toutes les analyses : seule l'étape d'optimisation est recalculée.</summary>
     partial void OnProfileChanged(string value)
@@ -173,8 +282,16 @@ public sealed partial class SetupPageViewModel : ObservableObject
             Add("windows", updates.Result?.Windows.Where(w => !IsDefenderDefinitions(w)).Select(UpdateFixer.ForWindows) ?? []);
             Add("software", updates.Result?.Software.Select(UpdateFixer.ForUpgrade) ?? []);
             Add("cleanup", cleanup.Result?.Categories.Where(c => c.Bytes > 0).Select(c => CleanupFixer.FindingFor(c.Id, c.Risk, c.Bytes, c.Files)) ?? []);
+            _current = new SetupSnapshot(
+                SafeFree(), Steps.Sum(s => s.Findings.Count), apps.Result?.Apps.Count ?? 0, updates.Result?.Windows.Count ?? 0,
+                updates.Result?.Software.Count ?? 0, cleanup.Result?.Categories.Sum(c => c.Bytes) ?? 0);
             _loaded = true;
             Status = null;
+            if (_pendingProfile is { } pending)
+            {
+                _pendingProfile = null;
+                ApplyTechProfile(pending);
+            }
         }
         finally
         {
@@ -206,8 +323,36 @@ public sealed partial class SetupPageViewModel : ObservableObject
 
         if (findings.Count > 0)
         {
+            _before = _current;
+            Comparison = null;
             Fixes?.Request(findings);
         }
+    }
+
+    private long SafeFree()
+    {
+        try
+        {
+            return FreeSpace?.Invoke() ?? 0;
+        }
+        catch (IOException)
+        {
+            return 0;
+        }
+    }
+
+    /// <summary>Texte avant → après, une ligne par mesure.</summary>
+    internal string Compare(SetupSnapshot before, SetupSnapshot after)
+    {
+        string Gb(long b) => _localizer.Format(new LocalizedText("Size.GB", b / (double)(1L << 30)));
+        return string.Join('\n',
+            _localizer.Format(new LocalizedText("Setup.Compare.Title")),
+            _localizer.Format(new LocalizedText("Setup.Compare.Free", Gb(before.FreeBytes), Gb(after.FreeBytes))),
+            _localizer.Format(new LocalizedText("Setup.Compare.Actions", before.Actions, after.Actions)),
+            _localizer.Format(new LocalizedText("Setup.Compare.Apps", before.Apps, after.Apps)),
+            _localizer.Format(new LocalizedText("Setup.Compare.Windows", before.WindowsUpdates, after.WindowsUpdates)),
+            _localizer.Format(new LocalizedText("Setup.Compare.Software", before.SoftwareUpdates, after.SoftwareUpdates)),
+            _localizer.Format(new LocalizedText("Setup.Compare.Cleanable", Gb(before.CleanableBytes), Gb(after.CleanableBytes))));
     }
 
     private static bool IsDefenderDefinitions(Core.Abstractions.WindowsUpdateItem update) =>

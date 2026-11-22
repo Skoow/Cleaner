@@ -175,4 +175,48 @@
   <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Nettoyage</value></data>
   <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).</value></data>
   <data name="App.BusyClosing" xml:space="preserve"><value>Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.</value></data>
+  <data name="Setup.Compare.Title" xml:space="preserve"><value>Avant → après la préparation</value></data>
+  <data name="Setup.Compare.Free" xml:space="preserve"><value>Espace libre sur le disque de Windows : {0} → {1}</value></data>
+  <data name="Setup.Compare.Actions" xml:space="preserve"><value>Actions restant à faire : {0} → {1}</value></data>
+  <data name="Setup.Compare.Apps" xml:space="preserve"><value>Applications installées : {0} → {1}</value></data>
+  <data name="Setup.Compare.Windows" xml:space="preserve"><value>Mises à jour de Windows en attente : {0} → {1}</value></data>
+  <data name="Setup.Compare.Software" xml:space="preserve"><value>Mises à jour de logiciels en attente : {0} → {1}</value></data>
+  <data name="Setup.Compare.Cleanable" xml:space="preserve"><value>Espace nettoyable : {0} → {1}</value></data>
+  <data name="Setup.TechProfile" xml:space="preserve"><value>Profil de technicien</value></data>
+  <data name="Setup.TechProfile.Help" xml:space="preserve"><value>Enregistrez vos choix (étapes, usage, logiciels) sous un nom, puis choisissez ce profil sur le PC suivant. En mode portable, les profils voyagent avec PCDoc sur la clé USB.</value></data>
+  <data name="Setup.Profile.NameLabel" xml:space="preserve"><value>Nom du profil</value></data>
+  <data name="Setup.Profile.Save" xml:space="preserve"><value>Enregistrer comme profil</value></data>
+  <data name="Setup.Profile.NeedName" xml:space="preserve"><value>Tapez d'abord un nom pour le profil.</value></data>
+  <data name="Setup.Profile.Saved" xml:space="preserve"><value>Profil enregistré : {0}</value></data>
+  <data name="Setup.Profile.SaveFailed" xml:space="preserve"><value>Le profil n'a pas pu être enregistré.</value></data>
+  <data name="Maintenance.Title" xml:space="preserve"><value>Entretien automatique</value></data>
+  <data name="Maintenance.Intro" xml:space="preserve"><value>Une fois par semaine, PCDoc nettoie, met à jour et analyse le PC tout seul, sans fenêtre, puis écrit un rapport (Historique). Uniquement des actions sûres, avec point de restauration. L'UAC n'est demandé qu'une fois, maintenant.</value></data>
+  <data name="Maintenance.Enable" xml:space="preserve"><value>Activer l'entretien automatique</value></data>
+  <data name="Maintenance.Day" xml:space="preserve"><value>Jour</value></data>
+  <data name="Maintenance.Hour" xml:space="preserve"><value>Heure</value></data>
+  <data name="Maintenance.Cleanup" xml:space="preserve"><value>Nettoyer les fichiers temporaires et les caches</value></data>
+  <data name="Maintenance.Software" xml:space="preserve"><value>Mettre à jour les logiciels (winget)</value></data>
+  <data name="Maintenance.Windows" xml:space="preserve"><value>Installer les mises à jour de Windows</value></data>
+  <data name="Maintenance.Defender" xml:space="preserve"><value>Analyse antivirus rapide (Defender)</value></data>
+  <data name="Maintenance.Save" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="Maintenance.Install" xml:space="preserve"><value>Installer PCDoc dans Program Files</value></data>
+  <data name="Maintenance.NotInstalled" xml:space="preserve"><value>Pour protéger le PC, l'entretien automatique ne lance que PCDoc installé dans Program Files. Cliquez sur « Installer PCDoc dans Program Files », puis Enregistrer.</value></data>
+  <data name="Maintenance.Scheduled" xml:space="preserve"><value>Entretien automatique chaque {0} à {1} h.</value></data>
+  <data name="Maintenance.Disabled" xml:space="preserve"><value>L'entretien automatique est désactivé.</value></data>
+  <data name="Maintenance.Failed" xml:space="preserve"><value>La tâche planifiée n'a pas pu être créée.</value></data>
+  <data name="Maintenance.Installed" xml:space="preserve"><value>PCDoc installé : {0}</value></data>
+  <data name="Maintenance.InstallFailed" xml:space="preserve"><value>PCDoc n'a pas pu être copié dans Program Files.</value></data>
+  <data name="Maintenance.Started" xml:space="preserve"><value>Entretien automatique commencé</value></data>
+  <data name="Maintenance.Finished" xml:space="preserve"><value>Entretien automatique terminé</value></data>
+  <data name="Maintenance.SourceFailed" xml:space="preserve"><value>Entretien automatique : {0} n'a pas pu être vérifié ({1})</value></data>
+  <data name="Maintenance.NoRestorePoint" xml:space="preserve"><value>Entretien automatique arrêté : aucun point de restauration n'a pu être créé (protection du système désactivée).</value></data>
+  <data name="Portable.Title" xml:space="preserve"><value>Version portable (clé USB)</value></data>
+  <data name="Portable.Intro" xml:space="preserve"><value>Copie PCDoc sur une clé USB pour l'utiliser sur n'importe quel PC sans l'installer. Les réglages et les profils de technicien restent sur la clé.</value></data>
+  <data name="Portable.Active" xml:space="preserve"><value>PCDoc fonctionne en mode portable.</value></data>
+  <data name="Portable.Refresh" xml:space="preserve"><value>Chercher les clés USB</value></data>
+  <data name="Portable.Drive" xml:space="preserve"><value>Clé USB</value></data>
+  <data name="Portable.Copy" xml:space="preserve"><value>Copier PCDoc sur la clé</value></data>
+  <data name="Portable.NoDrive" xml:space="preserve"><value>Aucune clé USB branchée.</value></data>
+  <data name="Portable.Done" xml:space="preserve"><value>PCDoc copié en mode portable : {0}</value></data>
+  <data name="Portable.Failed" xml:space="preserve"><value>PCDoc n'a pas pu être copié sur la clé.</value></data>
 </root>

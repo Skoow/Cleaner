@@ -137,6 +137,46 @@
                    Visibility="{Binding LicenseText, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.Name="{app:T About.LicenseText}" />
         </StackPanel>
       </Border>
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,12" Padding="16">
+        <StackPanel>
+          <TextBlock Text="{app:T Maintenance.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />
+          <TextBlock Text="{app:T Maintenance.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <CheckBox Content="{app:T Maintenance.Enable}" IsChecked="{Binding MaintenanceEnabled}" Margin="0,0,0,6"
+                    AutomationProperties.Name="{app:T Maintenance.Enable}" />
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+            <ComboBox ItemsSource="{Binding Days}" SelectedValuePath="Day" DisplayMemberPath="Label" SelectedValue="{Binding MaintenanceDay}"
+                      MinWidth="140" Margin="0,0,8,0" AutomationProperties.Name="{app:T Maintenance.Day}" />
+            <ComboBox ItemsSource="{Binding Hours}" SelectedItem="{Binding MaintenanceHour}" ItemStringFormat="{}{0:00}:00" MinWidth="90"
+                      AutomationProperties.Name="{app:T Maintenance.Hour}" />
+          </StackPanel>
+          <CheckBox Content="{app:T Maintenance.Cleanup}" IsChecked="{Binding MaintenanceCleanup}" AutomationProperties.Name="{app:T Maintenance.Cleanup}" />
+          <CheckBox Content="{app:T Maintenance.Software}" IsChecked="{Binding MaintenanceSoftware}" AutomationProperties.Name="{app:T Maintenance.Software}" />
+          <CheckBox Content="{app:T Maintenance.Windows}" IsChecked="{Binding MaintenanceWindows}" AutomationProperties.Name="{app:T Maintenance.Windows}" />
+          <CheckBox Content="{app:T Maintenance.Defender}" IsChecked="{Binding MaintenanceDefender}" AutomationProperties.Name="{app:T Maintenance.Defender}" />
+          <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+            <Button Content="{app:T Maintenance.Save}" Command="{Binding SaveMaintenanceCommand}" Margin="0,0,8,0" AutomationProperties.Name="{app:T Maintenance.Save}" />
+            <Button Content="{app:T Maintenance.Install}" Command="{Binding InstallToProgramFilesCommand}" AutomationProperties.Name="{app:T Maintenance.Install}" />
+          </StackPanel>
+          <TextBlock Text="{Binding MaintenanceStatus}" TextWrapping="Wrap" Margin="0,6,0,0"
+                     Visibility="{Binding MaintenanceStatus, Converter={StaticResource NotNullToVisibility}}" />
+        </StackPanel>
+      </Border>
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,12" Padding="16">
+        <StackPanel>
+          <TextBlock Text="{app:T Portable.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />
+          <TextBlock Text="{app:T Portable.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <TextBlock Text="{app:T Portable.Active}" FontWeight="SemiBold" Margin="0,0,0,6"
+                     Visibility="{Binding IsPortable, Converter={StaticResource BoolToVisibility}}" />
+          <StackPanel Orientation="Horizontal">
+            <Button Content="{app:T Portable.Refresh}" Command="{Binding RefreshDrivesCommand}" Margin="0,0,8,0" AutomationProperties.Name="{app:T Portable.Refresh}" />
+            <ComboBox ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" MinWidth="80" Margin="0,0,8,0"
+                      AutomationProperties.Name="{app:T Portable.Drive}" />
+            <Button Content="{app:T Portable.Copy}" Command="{Binding CopyPortableCommand}" AutomationProperties.Name="{app:T Portable.Copy}" />
+          </StackPanel>
+          <TextBlock Text="{Binding PortableStatus}" TextWrapping="Wrap" Margin="0,6,0,0"
+                     Visibility="{Binding PortableStatus, Converter={StaticResource NotNullToVisibility}}" />
+        </StackPanel>
+      </Border>
     </StackPanel>
   </ScrollViewer>
 </UserControl>
