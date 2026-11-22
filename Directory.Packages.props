@@ -4,7 +4,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.15" />
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageVersion Include="System.Management" Version="10.0.15" />
+    <PackageVersion Include="System.Management" Version="11.0.0" />
     <PackageVersion Include="TaskScheduler" Version="2.12.2" />
     <PackageVersion Include="System.Diagnostics.EventLog" Version="10.0.15" />
     <!-- Tests -->
