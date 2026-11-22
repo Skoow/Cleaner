@@ -165,14 +165,14 @@ public class SystemPageViewModelTests
     public async Task Refresh_LoadsAllSourcesInParallel()
     {
         var (vm, _) = Make(
-            () => { Thread.Sleep(300); return Pc(); },
-            () => { Thread.Sleep(300); return new BootHistory([]); },
-            () => { Thread.Sleep(300); return SampleAutoruns; });
+            () => { Thread.Sleep(600); return Pc(); },
+            () => { Thread.Sleep(600); return new BootHistory([]); },
+            () => { Thread.Sleep(600); return SampleAutoruns; });
 
         var watch = Stopwatch.StartNew();
         await vm.RefreshCommand.ExecuteAsync(null);
 
-        watch.Elapsed.Should().BeLessThan(TimeSpan.FromMilliseconds(800));
+        watch.Elapsed.Should().BeLessThan(TimeSpan.FromMilliseconds(1500));
         vm.Inventory.Should().NotBeNull();
         vm.IsLoading.Should().BeFalse();
     }
