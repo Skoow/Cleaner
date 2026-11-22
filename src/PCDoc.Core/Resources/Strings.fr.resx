@@ -133,4 +133,5 @@
   <data name="Nav.Apps" xml:space="preserve"><value>Applications</value></data>
   <data name="Nav.Updates" xml:space="preserve"><value>Mises à jour</value></data>
   <data name="Nav.Optimize" xml:space="preserve"><value>Optimisation</value></data>
+  <data name="Nav.Security" xml:space="preserve"><value>Sécurité</value></data>
 </root>

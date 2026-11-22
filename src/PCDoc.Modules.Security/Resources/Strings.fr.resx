@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.security" xml:space="preserve"><value>Sécurité</value></data>
+  <data name="Security.av.none.Title" xml:space="preserve"><value>Aucun antivirus actif</value></data>
+  <data name="Security.av.none.Explanation" xml:space="preserve"><value>Activez Microsoft Defender dans Sécurité Windows (Protection contre les virus et menaces), ou installez un antivirus.</value></data>
+  <data name="Security.defender.realtime.Title" xml:space="preserve"><value>La protection en temps réel est désactivée</value></data>
+  <data name="Security.defender.realtime.Explanation" xml:space="preserve"><value>Réactivez-la dans Sécurité Windows &gt; Protection contre les virus et menaces &gt; Gérer les paramètres. PCDoc ne la modifie pas lui-même, pour qu'un logiciel malveillant ne puisse pas s'en servir pour la couper.</value></data>
+  <data name="Security.defender.signatures.Title" xml:space="preserve"><value>Les définitions de l'antivirus datent de {0} jours</value></data>
+  <data name="Security.defender.signatures.Explanation" xml:space="preserve"><value>Télécharge les dernières définitions depuis Microsoft.</value></data>
+  <data name="Security.defender.signatures.Done" xml:space="preserve"><value>Définitions de Defender mises à jour</value></data>
+  <data name="Security.firewall.Title" xml:space="preserve"><value>Pare-feu désactivé pour les réseaux {0}</value></data>
+  <data name="Security.firewall.Explanation" xml:space="preserve"><value>Réactive le pare-feu de Windows. Il bloque les connexions entrantes indésirables.</value></data>
+  <data name="Security.firewall.Undo" xml:space="preserve"><value>Pare-feu réactivé ({0})</value></data>
+  <data name="Security.firewall.Domain" xml:space="preserve"><value>de domaine</value></data>
+  <data name="Security.firewall.Private" xml:space="preserve"><value>privés</value></data>
+  <data name="Security.firewall.Public" xml:space="preserve"><value>publics</value></data>
+  <data name="Security.smb1.Title" xml:space="preserve"><value>SMBv1 est activé</value></data>
+  <data name="Security.smb1.Explanation" xml:space="preserve"><value>Ancien protocole de partage de fichiers utilisé par des rançongiciels comme WannaCry. À garder seulement pour un très vieux NAS ou une vieille imprimante. Pris en compte après un redémarrage.</value></data>
+  <data name="Security.ifeo.Title" xml:space="preserve"><value>{0} est redirigé vers un autre programme</value></data>
+  <data name="Security.ifeo.Explanation" xml:space="preserve"><value>Une valeur « Debugger » fait lancer un autre programme à la place de celui-ci : une ruse de logiciels malveillants, mais aussi de certains outils (Process Explorer qui remplace le Gestionnaire des tâches).</value></data>
+  <data name="Security.userinit.Title" xml:space="preserve"><value>Le programme d'ouverture de session a été modifié</value></data>
+  <data name="Security.userinit.Explanation" xml:space="preserve"><value>« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants. Remet la valeur de Windows.</value></data>
+  <data name="Security.hosts.Title" xml:space="preserve"><value>Le fichier hosts modifie des sites importants</value></data>
+  <data name="Security.hosts.Redirected" xml:space="preserve"><value>Des sites de Microsoft ou d'antivirus sont envoyés vers une autre adresse : souvent l'œuvre d'un logiciel malveillant. Vérifiez les lignes ci-dessous.</value></data>
+  <data name="Security.hosts.Blocked" xml:space="preserve"><value>Des sites de Microsoft ou d'antivirus sont bloqués (souvent par un outil anti-pistage). Windows Update ou l'antivirus peuvent mal fonctionner.</value></data>
+  <data name="Security.usb.Title" xml:space="preserve"><value>Clé USB {0} {1} : virus raccourci</value></data>
+  <data name="Security.usb.Explanation" xml:space="preserve"><value>Des raccourcis qui lancent un script remplacent vos dossiers, qui ont été cachés. Les raccourcis sont désactivés et vos dossiers réaffichés (réversible). Analysez ensuite la clé avec Defender.</value></data>
+  <data name="Security.uac-on.Title" xml:space="preserve"><value>Le contrôle de compte d'utilisateur est désactivé</value></data>
+  <data name="Security.uac-on.Explanation" xml:space="preserve"><value>Sans UAC, tous les programmes ont tous les droits. Le réactive ; pris en compte après un redémarrage.</value></data>
+  <data name="Security.uac-prompt.Title" xml:space="preserve"><value>Des programmes peuvent obtenir les droits d'administrateur sans demander</value></data>
+  <data name="Security.uac-prompt.Explanation" xml:space="preserve"><value>Remet le réglage de Windows : une confirmation est demandée avant qu'un programme obtienne tous les droits.</value></data>
+  <data name="Security.autorun-off.Title" xml:space="preserve"><value>Les clés USB et les CD peuvent lancer des programmes tout seuls</value></data>
+  <data name="Security.autorun-off.Explanation" xml:space="preserve"><value>Désactive l'exécution automatique pour tous les lecteurs, principal moyen de propagation des virus de clé USB. Vous pouvez toujours ouvrir la clé vous-même.</value></data>
+  <data name="Security.smartscreen-on.Title" xml:space="preserve"><value>SmartScreen est désactivé</value></data>
+  <data name="Security.smartscreen-on.Explanation" xml:space="preserve"><value>SmartScreen prévient avant de lancer un programme téléchargé inconnu. Réactive l'avertissement.</value></data>
+  <data name="Security.rdp-off.Title" xml:space="preserve"><value>Le Bureau à distance est activé</value></data>
+  <data name="Security.rdp-off.Explanation" xml:space="preserve"><value>D'autres ordinateurs peuvent se connecter à ce PC. Désactivez-le si vous ne vous en servez pas.</value></data>
+  <data name="Security.appinit-off.Title" xml:space="preserve"><value>Des DLL sont injectées dans tous les programmes (AppInit)</value></data>
+  <data name="Security.appinit-off.Explanation" xml:space="preserve"><value>AppInit_DLLs charge un fichier dans tous les programmes : utilisé par des logiciels malveillants et de vieux logiciels. Désactive ce chargement.</value></data>
+  <data name="Security.winlogon-shell.Title" xml:space="preserve"><value>Le shell de Windows a été remplacé</value></data>
+  <data name="Security.winlogon-shell.Explanation" xml:space="preserve"><value>« Shell » de Winlogon devrait être explorer.exe. Une autre valeur lance souvent un logiciel malveillant à chaque ouverture de session. Remet explorer.exe.</value></data>
+  <data name="Security.wdigest-off.Title" xml:space="preserve"><value>Les mots de passe sont gardés en mémoire en clair (WDigest)</value></data>
+  <data name="Security.wdigest-off.Explanation" xml:space="preserve"><value>Permet aux outils de vol de mots de passe de lire votre mot de passe. Le désactive (réglage par défaut de Windows).</value></data>
+  <data name="Security.Title" xml:space="preserve"><value>Sécurité</value></data>
+  <data name="Security.Intro" xml:space="preserve"><value>Antivirus, pare-feu, cachettes des logiciels malveillants et clés USB.</value></data>
+  <data name="Security.Analyze" xml:space="preserve"><value>Vérifier</value></data>
+  <data name="Security.Tab.Protection" xml:space="preserve"><value>Protection</value></data>
+  <data name="Security.Tab.Audit" xml:space="preserve"><value>Audit</value></data>
+  <data name="Security.Tab.Usb" xml:space="preserve"><value>Clés USB</value></data>
+  <data name="Security.Antivirus" xml:space="preserve"><value>Antivirus</value></data>
+  <data name="Security.Enabled" xml:space="preserve"><value>Activé</value></data>
+  <data name="Security.Disabled" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Security.UpToDate" xml:space="preserve"><value>à jour</value></data>
+  <data name="Security.OutOfDate" xml:space="preserve"><value>pas à jour</value></data>
+  <data name="Security.QuickScan" xml:space="preserve"><value>Analyse rapide</value></data>
+  <data name="Security.FullScan" xml:space="preserve"><value>Analyse complète</value></data>
+  <data name="Security.ScanDrive" xml:space="preserve"><value>Analyser avec Defender</value></data>
+  <data name="Security.Scanning" xml:space="preserve"><value>Analyse en cours… vous pouvez continuer à utiliser le PC.</value></data>
+  <data name="Security.ScanClean" xml:space="preserve"><value>Analyse terminée : aucune menace trouvée.</value></data>
+  <data name="Security.ScanThreats" xml:space="preserve"><value>Analyse terminée : des menaces ont été trouvées et traitées par Defender. Voir la liste ci-dessous.</value></data>
+  <data name="Security.ScanFailed" xml:space="preserve"><value>L'analyse n'a pas pu se faire (Defender est désactivé ou remplacé par un autre antivirus).</value></data>
+  <data name="Security.Detections" xml:space="preserve"><value>Détections récentes</value></data>
+  <data name="Security.Removed" xml:space="preserve"><value>supprimée</value></data>
+  <data name="Security.NotRemoved" xml:space="preserve"><value>action nécessaire</value></data>
+  <data name="Security.NoDetection" xml:space="preserve"><value>Aucune détection.</value></data>
+  <data name="Security.NoProblem" xml:space="preserve"><value>Aucun problème trouvé.</value></data>
+  <data name="Security.NoUsb" xml:space="preserve"><value>Aucune clé USB branchée.</value></data>
+  <data name="Security.UsbClean" xml:space="preserve"><value>Aucun virus raccourci trouvé.</value></data>
+  <data name="Security.FixSelected" xml:space="preserve"><value>Corriger la sélection</value></data>
+</root>

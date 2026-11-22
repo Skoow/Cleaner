@@ -74,7 +74,7 @@ public sealed partial class OptimizeEngine(
     public bool IsApplied(Tweak tweak)
     {
         ArgumentNullException.ThrowIfNull(tweak);
-        return tweak.Values.All(v => Read(v) is { } current ? Equals(current, v.Target) : tweak.AbsentIsApplied);
+        return tweak.Values.All(v => Read(v) is { } current ? v.IsSatisfiedBy(current) : tweak.AbsentIsApplied);
     }
 
     /// <summary>

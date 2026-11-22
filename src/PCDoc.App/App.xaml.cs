@@ -42,6 +42,7 @@ public partial class App : Application
         PCDoc.Modules.Apps.AppsModule.RegisterResources(localizer);
         PCDoc.Modules.Updates.UpdatesModule.RegisterResources(localizer);
         PCDoc.Modules.Optimize.OptimizeModule.RegisterResources(localizer);
+        PCDoc.Modules.Security.SecurityModule.RegisterResources(localizer);
         localizer.Language = settings.Language;
         Loc.Instance = localizer;
 

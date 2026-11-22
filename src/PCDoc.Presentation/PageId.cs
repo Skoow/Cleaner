@@ -10,6 +10,7 @@ public enum PageId
     Apps,
     Updates,
     Optimize,
+    Security,
     History,
     Settings,
 }

@@ -10,19 +10,20 @@ namespace PCDoc.Modules.Optimize;
 /// Applique un réglage du catalogue ; toujours réversible (valeurs d'origine dans le journal, .reg sauvegardé).
 /// L'annulation relit le catalogue : le journal ne peut faire écrire que les valeurs prévues par ce réglage.
 /// </summary>
-public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBackupStore backups, Func<DateTimeOffset> now) : IFixer
+public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBackupStore backups, Func<DateTimeOffset> now, string kind = TweakFixer.Kind)
+    : IFixer
 {
     public const string Kind = "optimize.tweak";
 
-    public string UndoKind => Kind;
+    public string UndoKind => kind;
 
     public static Finding FindingFor(TweakState state)
     {
         ArgumentNullException.ThrowIfNull(state);
         return new Finding(
-            $"optimize.{state.Tweak.Id}", OptimizeModule.Id, Severity.Info,
-            new LocalizedText($"Optimize.{state.Tweak.Id}.Title"),
-            new LocalizedText($"Optimize.{state.Tweak.Id}.Explanation"),
+            $"{state.Tweak.Module}.{state.Tweak.Id}", state.Tweak.Module, state.Applied ? Severity.Info : state.Tweak.Severity,
+            new LocalizedText($"{state.Tweak.TextPrefix}.{state.Tweak.Id}.Title"),
+            new LocalizedText($"{state.Tweak.TextPrefix}.{state.Tweak.Id}.Explanation"),
             state.Tweak.Id,
             FixAvailable: state.Available && !state.Applied, Risk: state.Risk, Reversible: true,
             FixData: JsonSerializer.Serialize(new Data(state.Tweak.Id)));
@@ -55,7 +56,7 @@ public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBa
                 break;
         }
 
-        return UndoEntry.Create(finding.Id, Kind, JsonSerializer.Serialize(before), $"Optimize.{tweak.Id}.Title", []);
+        return UndoEntry.Create(finding.Id, kind, JsonSerializer.Serialize(before), $"{tweak.TextPrefix}.{tweak.Id}.Title", []);
     }
 
     public async Task ApplyAsync(Finding finding, CancellationToken cancellationToken)
@@ -124,8 +125,8 @@ public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBa
 
         try
         {
-            return JsonSerializer.Deserialize<Data>(finding.FixData)?.Tweak is { } id && finding.Id == $"optimize.{id}"
-                   && engine.Catalog.Find(id) is { } tweak && (int)finding.Risk >= (int)engine.RiskOf(tweak)
+            return JsonSerializer.Deserialize<Data>(finding.FixData)?.Tweak is { } id
+                   && engine.Catalog.Find(id) is { } tweak && finding.Id == $"{tweak.Module}.{id}" && (int)finding.Risk >= (int)engine.RiskOf(tweak)
                    && (tweak.Kind != TweakKind.Registry || engine.IsCompatible(tweak))
                 ? tweak
                 : null;
@@ -159,7 +160,7 @@ public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBa
                                   && v.Select((s, i) => s.Value is null || s.Value.GetType() == tweak.Values[i].Target.GetType()).All(x => x),
             _ => false,
         };
-        return ok && entry.FindingId == $"optimize.{tweak!.Id}" ? (tweak, payload!) : throw new InvalidOperationException("Undo refused: invalid entry");
+        return ok && entry.FindingId == $"{tweak!.Module}.{tweak.Id}" ? (tweak, payload!) : throw new InvalidOperationException("Undo refused: invalid entry");
     }
 
     private sealed record Data(string Tweak);

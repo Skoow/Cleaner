@@ -1,6 +1,6 @@
 # Ce qui reste à faire
 
-Mis à jour le 2026-11-21, après la v0.6. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
+Mis à jour le 2026-11-21, après la v0.7. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
 
 ## Fait
 | Version | Contenu |
@@ -11,14 +11,15 @@ Mis à jour le 2026-11-21, après la v0.6. Détail des décisions : `docs/superp
 | v0.4 | Nettoyage : temporaires, caches (Windows Update, navigateurs, graphiques), rapports d'erreurs, vidages, corbeille, anciennes mises à jour, gros fichiers |
 | v0.5 | Applications : liste Win32 + Store, désinstallation silencieuse quand possible, applications préinstallées (paquets provisionnés compris), restes en quarantaine 7 jours |
 | v0.6 | Mises à jour (Windows Update et pilotes sans fenêtre, logiciels via winget, installation groupée) + Optimisation (réglages réversibles, mode d'alimentation, veille prolongée, profils Jeu/Bureautique/Batterie) |
+| v0.7 | Sécurité : antivirus et Defender (analyses, définitions, détections), pare-feu, SMBv1, cachettes (IFEO, Winlogon, AppInit, hosts), réglages UAC/AutoRun/SmartScreen/RDP/WDigest, virus raccourci des clés USB |
 
 ## Prochaines versions
 | Version | Contenu prévu |
 |---|---|
-| v0.7 | **Sécurité** (Defender, AdwCleaner/Emsisoft cachés, VirusTotal par empreinte, cachettes de malwares, audit de sécurité, extensions des navigateurs) + **Protection USB** + page Activité réseau + maintenance planifiée + mises à jour du Store |
-| v0.8 | **Confidentialité** Windows, Office et logiciels tiers (catalogue de l'annexe) + recherche globale |
-| v0.9 | **Traces et données** + effacement sécurisé |
-| v0.10 | **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) |
+| v0.8 | VirusTotal par empreinte, AdwCleaner/Emsisoft cachés, extensions des navigateurs, activité réseau, maintenance planifiée, mises à jour du Store |
+| v0.9 | **Confidentialité** Windows, Office et logiciels tiers (catalogue de l'annexe) + recherche globale |
+| v0.10 | **Traces et données** + effacement sécurisé |
+| v0.11 | **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) |
 | v1.0 | Signature du code, installateur MSI dans Program Files, tâche planifiée (UAC une seule fois), mise à jour automatique, page de téléchargement |
 
 ## Reporté des versions précédentes (petits points)

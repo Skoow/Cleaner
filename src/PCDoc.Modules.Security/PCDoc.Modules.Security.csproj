@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PCDoc.Core\PCDoc.Core.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.System\PCDoc.Modules.System.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
+    <InternalsVisibleTo Include="PCDoc.Modules.Security.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\PCDoc.Definitions\security.json" LogicalName="PCDoc.Definitions.security.json" />
+    <None Include="..\PCDoc.Definitions\security.json" Link="Definitions\security.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

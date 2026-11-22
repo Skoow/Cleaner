@@ -10,6 +10,7 @@
     <ProjectReference Include="..\PCDoc.Modules.Apps\PCDoc.Modules.Apps.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Updates\PCDoc.Modules.Updates.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Security\PCDoc.Modules.Security.csproj" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
 </Project>

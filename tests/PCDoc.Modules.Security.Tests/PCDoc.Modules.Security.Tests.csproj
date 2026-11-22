@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Security\PCDoc.Modules.Security.csproj" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeRegistryReader.cs" Link="Fakes\FakeRegistryReader.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeWmiQuery.cs" Link="Fakes\FakeWmiQuery.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\Fakes\FakeFileProbe.cs" Link="Fakes\FakeFileProbe.cs" />
+    <Compile Include="..\PCDoc.Modules.System.Tests\LnkParserTests.cs" Link="Fakes\LnkParserTests.cs" />
+  </ItemGroup>
+</Project>

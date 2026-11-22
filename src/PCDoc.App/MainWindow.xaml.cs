@@ -47,6 +47,7 @@ public partial class MainWindow : Window
             : MainNav.SelectedItem == AppsItem ? PageId.Apps
             : MainNav.SelectedItem == UpdatesItem ? PageId.Updates
             : MainNav.SelectedItem == OptimizeItem ? PageId.Optimize
+            : MainNav.SelectedItem == SecurityItem ? PageId.Security
             : MainNav.SelectedItem == HistoryItem ? PageId.History
             : PageId.Bilan);
     }
@@ -72,6 +73,7 @@ public partial class MainWindow : Window
             PageId.Apps => AppsItem,
             PageId.Updates => UpdatesItem,
             PageId.Optimize => OptimizeItem,
+            PageId.Security => SecurityItem,
             PageId.History => HistoryItem,
             _ => null,
         };

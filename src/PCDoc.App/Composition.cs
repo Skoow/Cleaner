@@ -30,6 +30,8 @@ using PCDoc.Modules.Updates;
 using PCDoc.Presentation.Updates;
 using PCDoc.Modules.Optimize;
 using PCDoc.Presentation.Optimize;
+using PCDoc.Modules.Security;
+using PCDoc.Presentation.Security;
 using PCDoc.Core.Bilan;
 using PCDoc.Core.Modules;
 using PCDoc.Modules.System;
@@ -131,6 +133,27 @@ internal static class Composition
         services.AddSingleton<IFixer>(sp => new TweakFixer(sp.GetRequiredService<OptimizeEngine>(), sp.GetRequiredService<IRegistryWriter>(),
             sp.GetRequiredService<IBackupStore>(), () => sp.GetRequiredService<IClock>().Now));
 
+        // Sécurité et clés USB (v0.7).
+        services.AddSingleton<IDefenderCommand, DefenderCommand>();
+        services.AddSingleton<IRemovableDrives, RemovableDrives>();
+        services.AddSingleton(sp =>
+        {
+            var settings = new OptimizeEngine(SecurityModule.Settings, sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(),
+                sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IWmiQuery>());
+            return new SecurityEngine(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(),
+                sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IDefenderCommand>(), sp.GetRequiredService<IFileProbe>(),
+                sp.GetRequiredService<IRemovableDrives>(), settings, Environment.GetFolderPath(Environment.SpecialFolder.Windows));
+        });
+        services.AddSingleton<ISecuritySource>(sp => sp.GetRequiredService<SecurityEngine>());
+        services.AddSingleton<IScanner>(sp => new SecurityScanner(sp.GetRequiredService<ISecuritySource>()));
+        services.AddSingleton<IFixer>(sp => new TweakFixer(sp.GetRequiredService<SecurityEngine>().Settings, sp.GetRequiredService<IRegistryWriter>(),
+            sp.GetRequiredService<IBackupStore>(), () => sp.GetRequiredService<IClock>().Now, SecurityModule.SettingKind));
+        services.AddSingleton<IFixer>(sp => new DefenderFixer(sp.GetRequiredService<SecurityEngine>()));
+        services.AddSingleton<IFixer>(sp => new FirewallFixer(sp.GetRequiredService<SecurityEngine>()));
+        services.AddSingleton<IFixer>(sp => new FeatureFixer(sp.GetRequiredService<SecurityEngine>()));
+        services.AddSingleton<IFixer>(sp => new RegistryRepairFixer(sp.GetRequiredService<SecurityEngine>()));
+        services.AddSingleton<IFixer>(sp => new UsbFixer(sp.GetRequiredService<SecurityEngine>()));
+
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
         services.AddSingleton(sp => new FixPipeline(
             sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
@@ -176,6 +199,8 @@ internal static class Composition
         PageId.Updates => new UpdatesPageViewModel(services.GetRequiredService<IUpdatesSource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services), () => services.GetRequiredService<UpdatesEngine>().RebootRequired),
         PageId.Optimize => new OptimizePageViewModel(services.GetRequiredService<IOptimizeSource>(), services.GetRequiredService<ILocalizer>(),
+            NewFixPanel(services), Mode(services)),
+        PageId.Security => new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
         PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],

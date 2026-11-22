@@ -1,0 +1,130 @@
+<UserControl x:Class="PCDoc.App.Views.SecurityPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:PCDoc.App"
+             xmlns:v="clr-namespace:PCDoc.App.Views"
+             xmlns:s="clr-namespace:PCDoc.Presentation.Security;assembly=PCDoc.Presentation">
+  <DockPanel Margin="28,20,28,20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <Button DockPanel.Dock="Right" Content="{app:T Security.Analyze}" Command="{Binding AnalyzeCommand}" MinWidth="110"
+              AutomationProperties.Name="{app:T Security.Analyze}" />
+      <TextBlock Text="{app:T Security.Title}" Style="{StaticResource Pcdoc.PageTitle}" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{app:T Security.Intro}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,12" TextWrapping="Wrap" />
+    <v:FixPanel DockPanel.Dock="Top" DataContext="{Binding Fixes}" />
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="3" Margin="0,0,0,8"
+                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+    <Border DockPanel.Dock="Top" Margin="0,0,0,8" Padding="12,8" CornerRadius="6" Background="{DynamicResource Pcdoc.Warning.Background}"
+            Visibility="{Binding ScanStatus, Converter={StaticResource NotNullToVisibility}}" AutomationProperties.LiveSetting="Polite">
+      <StackPanel>
+        <TextBlock Text="{Binding ScanStatus}" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding ScanLine}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextTrimming="CharacterEllipsis" />
+        <ProgressBar IsIndeterminate="True" Height="3" Margin="0,4,0,0" Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibility}}" />
+      </StackPanel>
+    </Border>
+    <TabControl>
+      <TabItem Header="{app:T Security.Tab.Protection}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,12,0,0">
+            <TextBlock Text="{app:T Security.Antivirus}" FontWeight="SemiBold" Margin="0,0,0,6" />
+            <ItemsControl ItemsSource="{Binding Antivirus}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type s:AntivirusRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <TextBlock DockPanel.Dock="Right" Text="{Binding Status}" Style="{StaticResource Pcdoc.Muted}" />
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,16">
+              <Button Content="{app:T Security.QuickScan}" Command="{Binding QuickScanCommand}" Margin="0,0,8,0" MinWidth="130"
+                      AutomationProperties.Name="{app:T Security.QuickScan}" />
+              <Button Content="{app:T Security.FullScan}" Command="{Binding FullScanCommand}" MinWidth="130"
+                      AutomationProperties.Name="{app:T Security.FullScan}" />
+            </StackPanel>
+            <TextBlock Text="{app:T Security.Detections}" FontWeight="SemiBold" Margin="0,0,0,6" />
+            <DataGrid ItemsSource="{Binding Detections}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      GridLinesVisibility="None" AutomationProperties.Name="{app:T Security.Detections}" MaxHeight="260">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="{app:T Column.Name}" Binding="{Binding Name}" Width="2*" />
+                <DataGridTextColumn Header="{app:T Column.Date}" Binding="{Binding When}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Column.Status}" Binding="{Binding Status}" Width="Auto" />
+                <DataGridTextColumn Header="{app:T Column.File}" Binding="{Binding Resource}" Width="3*" />
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="{app:T Security.Tab.Audit}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{Binding AuditStatus}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8"
+                     Visibility="{Binding AuditStatus, Converter={StaticResource NotNullToVisibility}}" />
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Right" Content="{app:T Security.FixSelected}" Command="{Binding FixSelectedCommand}"
+                    AutomationProperties.Name="{app:T Security.FixSelected}" />
+          </DockPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Audit}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type s:AuditRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <StackPanel DockPanel.Dock="Right" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <Border Style="{StaticResource Pcdoc.Pill}" Background="{DynamicResource Pcdoc.Critical.Background}" Margin="0,0,0,4">
+                          <TextBlock Text="{Binding SeverityLabel}" FontSize="12" />
+                        </Border>
+                        <TextBlock Text="{Binding RiskLabel}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" HorizontalAlignment="Center" />
+                      </StackPanel>
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Top"
+                                AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Details}" FontFamily="Consolas" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"
+                                     Style="{StaticResource Pcdoc.Muted}" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T Security.Tab.Usb}">
+        <DockPanel Margin="0,12,0,0">
+          <TextBlock DockPanel.Dock="Top" Text="{Binding UsbStatus}" Style="{StaticResource Pcdoc.Muted}" Margin="0,0,0,8"
+                     Visibility="{Binding UsbStatus, Converter={StaticResource NotNullToVisibility}}" />
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Usb}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type s:UsbRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,6" Padding="12">
+                    <DockPanel>
+                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                        <Button Content="{app:T Bilan.Fix}" Margin="0,0,8,0" IsEnabled="{Binding CanFix}" AutomationProperties.Name="{app:T Bilan.Fix}"
+                                Command="{Binding DataContext.FixUsbCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="{app:T Security.ScanDrive}" AutomationProperties.Name="{app:T Security.ScanDrive}"
+                                Command="{Binding DataContext.ScanDriveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Status}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

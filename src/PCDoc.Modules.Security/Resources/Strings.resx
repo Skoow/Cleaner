@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.security" xml:space="preserve"><value>Security</value></data>
+  <data name="Security.av.none.Title" xml:space="preserve"><value>No active antivirus</value></data>
+  <data name="Security.av.none.Explanation" xml:space="preserve"><value>Turn on Microsoft Defender in Windows Security (Virus &amp; threat protection), or install an antivirus.</value></data>
+  <data name="Security.defender.realtime.Title" xml:space="preserve"><value>Real-time protection is off</value></data>
+  <data name="Security.defender.realtime.Explanation" xml:space="preserve"><value>Turn it back on in Windows Security &gt; Virus &amp; threat protection &gt; Manage settings. PCDoc does not change it itself, so that malware cannot use PCDoc to turn it off.</value></data>
+  <data name="Security.defender.signatures.Title" xml:space="preserve"><value>Antivirus definitions are {0} days old</value></data>
+  <data name="Security.defender.signatures.Explanation" xml:space="preserve"><value>Downloads the latest definitions from Microsoft.</value></data>
+  <data name="Security.defender.signatures.Done" xml:space="preserve"><value>Defender definitions updated</value></data>
+  <data name="Security.firewall.Title" xml:space="preserve"><value>Firewall off for {0} networks</value></data>
+  <data name="Security.firewall.Explanation" xml:space="preserve"><value>Turns the Windows firewall back on. It blocks unwanted incoming connections.</value></data>
+  <data name="Security.firewall.Undo" xml:space="preserve"><value>Firewall turned on ({0})</value></data>
+  <data name="Security.firewall.Domain" xml:space="preserve"><value>domain</value></data>
+  <data name="Security.firewall.Private" xml:space="preserve"><value>private</value></data>
+  <data name="Security.firewall.Public" xml:space="preserve"><value>public</value></data>
+  <data name="Security.smb1.Title" xml:space="preserve"><value>SMBv1 is enabled</value></data>
+  <data name="Security.smb1.Explanation" xml:space="preserve"><value>Old file-sharing protocol used by ransomware such as WannaCry. Keep it only for a very old NAS or printer. Takes effect after a restart.</value></data>
+  <data name="Security.ifeo.Title" xml:space="preserve"><value>{0} is redirected to another program</value></data>
+  <data name="Security.ifeo.Explanation" xml:space="preserve"><value>A "Debugger" value makes Windows start another program instead of this one: a trick used by malware, but also by some tools (Process Explorer replacing the Task Manager).</value></data>
+  <data name="Security.userinit.Title" xml:space="preserve"><value>The session start-up program was changed</value></data>
+  <data name="Security.userinit.Explanation" xml:space="preserve"><value>Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick. Restores the Windows value.</value></data>
+  <data name="Security.hosts.Title" xml:space="preserve"><value>The hosts file changes important websites</value></data>
+  <data name="Security.hosts.Redirected" xml:space="preserve"><value>Microsoft or antivirus websites are sent to another address: often the work of malware. Check the lines below.</value></data>
+  <data name="Security.hosts.Blocked" xml:space="preserve"><value>Microsoft or antivirus websites are blocked (often by an anti-tracking tool). Windows Update or your antivirus may not work properly.</value></data>
+  <data name="Security.usb.Title" xml:space="preserve"><value>USB drive {0} {1}: shortcut virus</value></data>
+  <data name="Security.usb.Explanation" xml:space="preserve"><value>Shortcuts that start a script replace your folders, which were hidden. The shortcuts are disabled and your folders shown again (reversible). Then scan the drive with Defender.</value></data>
+  <data name="Security.uac-on.Title" xml:space="preserve"><value>User Account Control is off</value></data>
+  <data name="Security.uac-on.Explanation" xml:space="preserve"><value>Without UAC every program runs with full rights. Turns it back on; takes effect after a restart.</value></data>
+  <data name="Security.uac-prompt.Title" xml:space="preserve"><value>Programs can get administrator rights without asking</value></data>
+  <data name="Security.uac-prompt.Explanation" xml:space="preserve"><value>Restores the Windows default: a confirmation is asked before a program gets full rights.</value></data>
+  <data name="Security.autorun-off.Title" xml:space="preserve"><value>USB drives and CDs can start programs by themselves</value></data>
+  <data name="Security.autorun-off.Explanation" xml:space="preserve"><value>Turns off AutoRun for all drives, the main way USB viruses spread. You can still open the drive yourself.</value></data>
+  <data name="Security.smartscreen-on.Title" xml:space="preserve"><value>SmartScreen is off</value></data>
+  <data name="Security.smartscreen-on.Explanation" xml:space="preserve"><value>SmartScreen warns before running unknown downloaded programs. Turns the warning back on.</value></data>
+  <data name="Security.rdp-off.Title" xml:space="preserve"><value>Remote Desktop is enabled</value></data>
+  <data name="Security.rdp-off.Explanation" xml:space="preserve"><value>Other computers can connect to this PC. Turn it off if you do not use it.</value></data>
+  <data name="Security.appinit-off.Title" xml:space="preserve"><value>DLLs are injected into every program (AppInit)</value></data>
+  <data name="Security.appinit-off.Explanation" xml:space="preserve"><value>AppInit_DLLs loads a file into every program: used by malware and some old software. Turns loading off.</value></data>
+  <data name="Security.winlogon-shell.Title" xml:space="preserve"><value>The Windows shell was replaced</value></data>
+  <data name="Security.winlogon-shell.Explanation" xml:space="preserve"><value>Winlogon "Shell" should be explorer.exe. Another value often starts malware at each sign-in. Restores explorer.exe.</value></data>
+  <data name="Security.wdigest-off.Title" xml:space="preserve"><value>Passwords are kept in memory in clear text (WDigest)</value></data>
+  <data name="Security.wdigest-off.Explanation" xml:space="preserve"><value>Lets password-stealing tools read your password. Turns it off (Windows default).</value></data>
+  <data name="Security.Title" xml:space="preserve"><value>Security</value></data>
+  <data name="Security.Intro" xml:space="preserve"><value>Antivirus, firewall, places where malware hides, and USB drives.</value></data>
+  <data name="Security.Analyze" xml:space="preserve"><value>Check</value></data>
+  <data name="Security.Tab.Protection" xml:space="preserve"><value>Protection</value></data>
+  <data name="Security.Tab.Audit" xml:space="preserve"><value>Audit</value></data>
+  <data name="Security.Tab.Usb" xml:space="preserve"><value>USB drives</value></data>
+  <data name="Security.Antivirus" xml:space="preserve"><value>Antivirus</value></data>
+  <data name="Security.Enabled" xml:space="preserve"><value>On</value></data>
+  <data name="Security.Disabled" xml:space="preserve"><value>Off</value></data>
+  <data name="Security.UpToDate" xml:space="preserve"><value>up to date</value></data>
+  <data name="Security.OutOfDate" xml:space="preserve"><value>out of date</value></data>
+  <data name="Security.QuickScan" xml:space="preserve"><value>Quick scan</value></data>
+  <data name="Security.FullScan" xml:space="preserve"><value>Full scan</value></data>
+  <data name="Security.ScanDrive" xml:space="preserve"><value>Scan with Defender</value></data>
+  <data name="Security.Scanning" xml:space="preserve"><value>Scanning… you can keep using the PC.</value></data>
+  <data name="Security.ScanClean" xml:space="preserve"><value>Scan finished: no threat found.</value></data>
+  <data name="Security.ScanThreats" xml:space="preserve"><value>Scan finished: threats were found and handled by Defender. See the list below.</value></data>
+  <data name="Security.ScanFailed" xml:space="preserve"><value>The scan could not run (Defender is off or replaced by another antivirus).</value></data>
+  <data name="Security.Detections" xml:space="preserve"><value>Recent detections</value></data>
+  <data name="Security.Removed" xml:space="preserve"><value>removed</value></data>
+  <data name="Security.NotRemoved" xml:space="preserve"><value>action needed</value></data>
+  <data name="Security.NoDetection" xml:space="preserve"><value>No detection.</value></data>
+  <data name="Security.NoProblem" xml:space="preserve"><value>No problem found.</value></data>
+  <data name="Security.NoUsb" xml:space="preserve"><value>No USB drive plugged in.</value></data>
+  <data name="Security.UsbClean" xml:space="preserve"><value>No shortcut virus found.</value></data>
+  <data name="Security.FixSelected" xml:space="preserve"><value>Fix the selection</value></data>
+</root>

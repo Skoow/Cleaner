@@ -20,6 +20,7 @@
     <ProjectReference Include="..\PCDoc.Modules.Apps\PCDoc.Modules.Apps.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
     <ProjectReference Include="..\PCDoc.Modules.Updates\PCDoc.Modules.Updates.csproj" />
+    <ProjectReference Include="..\PCDoc.Modules.Security\PCDoc.Modules.Security.csproj" />
     <ProjectReference Include="..\PCDoc.Presentation\PCDoc.Presentation.csproj" />
   </ItemGroup>
   <ItemGroup>

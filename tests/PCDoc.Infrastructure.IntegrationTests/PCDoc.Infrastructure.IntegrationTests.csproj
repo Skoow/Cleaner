@@ -9,5 +9,6 @@
     <ProjectReference Include="..\..\src\PCDoc.Modules.Apps\PCDoc.Modules.Apps.csproj" />
     <ProjectReference Include="..\..\src\PCDoc.Modules.Optimize\PCDoc.Modules.Optimize.csproj" />
     <ProjectReference Include="..\..\src\PCDoc.Modules.Updates\PCDoc.Modules.Updates.csproj" />
+    <ProjectReference Include="..\..\src\PCDoc.Modules.Security\PCDoc.Modules.Security.csproj" />
   </ItemGroup>
 </Project>

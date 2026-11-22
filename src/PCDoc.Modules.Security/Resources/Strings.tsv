@@ -1,0 +1,68 @@
+# Clé	Anglais	Français — régénérer : python3 tools/resx.py src/PCDoc.Modules.Security/Resources/Strings.tsv src/PCDoc.Modules.Security/Resources
+Module.security	Security	Sécurité
+Security.av.none.Title	No active antivirus	Aucun antivirus actif
+Security.av.none.Explanation	Turn on Microsoft Defender in Windows Security (Virus & threat protection), or install an antivirus.	Activez Microsoft Defender dans Sécurité Windows (Protection contre les virus et menaces), ou installez un antivirus.
+Security.defender.realtime.Title	Real-time protection is off	La protection en temps réel est désactivée
+Security.defender.realtime.Explanation	Turn it back on in Windows Security > Virus & threat protection > Manage settings. PCDoc does not change it itself, so that malware cannot use PCDoc to turn it off.	Réactivez-la dans Sécurité Windows > Protection contre les virus et menaces > Gérer les paramètres. PCDoc ne la modifie pas lui-même, pour qu'un logiciel malveillant ne puisse pas s'en servir pour la couper.
+Security.defender.signatures.Title	Antivirus definitions are {0} days old	Les définitions de l'antivirus datent de {0} jours
+Security.defender.signatures.Explanation	Downloads the latest definitions from Microsoft.	Télécharge les dernières définitions depuis Microsoft.
+Security.defender.signatures.Done	Defender definitions updated	Définitions de Defender mises à jour
+Security.firewall.Title	Firewall off for {0} networks	Pare-feu désactivé pour les réseaux {0}
+Security.firewall.Explanation	Turns the Windows firewall back on. It blocks unwanted incoming connections.	Réactive le pare-feu de Windows. Il bloque les connexions entrantes indésirables.
+Security.firewall.Undo	Firewall turned on ({0})	Pare-feu réactivé ({0})
+Security.firewall.Domain	domain	de domaine
+Security.firewall.Private	private	privés
+Security.firewall.Public	public	publics
+Security.smb1.Title	SMBv1 is enabled	SMBv1 est activé
+Security.smb1.Explanation	Old file-sharing protocol used by ransomware such as WannaCry. Keep it only for a very old NAS or printer. Takes effect after a restart.	Ancien protocole de partage de fichiers utilisé par des rançongiciels comme WannaCry. À garder seulement pour un très vieux NAS ou une vieille imprimante. Pris en compte après un redémarrage.
+Security.ifeo.Title	{0} is redirected to another program	{0} est redirigé vers un autre programme
+Security.ifeo.Explanation	A "Debugger" value makes Windows start another program instead of this one: a trick used by malware, but also by some tools (Process Explorer replacing the Task Manager).	Une valeur « Debugger » fait lancer un autre programme à la place de celui-ci : une ruse de logiciels malveillants, mais aussi de certains outils (Process Explorer qui remplace le Gestionnaire des tâches).
+Security.userinit.Title	The session start-up program was changed	Le programme d'ouverture de session a été modifié
+Security.userinit.Explanation	Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick. Restores the Windows value.	« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants. Remet la valeur de Windows.
+Security.hosts.Title	The hosts file changes important websites	Le fichier hosts modifie des sites importants
+Security.hosts.Redirected	Microsoft or antivirus websites are sent to another address: often the work of malware. Check the lines below.	Des sites de Microsoft ou d'antivirus sont envoyés vers une autre adresse : souvent l'œuvre d'un logiciel malveillant. Vérifiez les lignes ci-dessous.
+Security.hosts.Blocked	Microsoft or antivirus websites are blocked (often by an anti-tracking tool). Windows Update or your antivirus may not work properly.	Des sites de Microsoft ou d'antivirus sont bloqués (souvent par un outil anti-pistage). Windows Update ou l'antivirus peuvent mal fonctionner.
+Security.usb.Title	USB drive {0} {1}: shortcut virus	Clé USB {0} {1} : virus raccourci
+Security.usb.Explanation	Shortcuts that start a script replace your folders, which were hidden. The shortcuts are disabled and your folders shown again (reversible). Then scan the drive with Defender.	Des raccourcis qui lancent un script remplacent vos dossiers, qui ont été cachés. Les raccourcis sont désactivés et vos dossiers réaffichés (réversible). Analysez ensuite la clé avec Defender.
+Security.uac-on.Title	User Account Control is off	Le contrôle de compte d'utilisateur est désactivé
+Security.uac-on.Explanation	Without UAC every program runs with full rights. Turns it back on; takes effect after a restart.	Sans UAC, tous les programmes ont tous les droits. Le réactive ; pris en compte après un redémarrage.
+Security.uac-prompt.Title	Programs can get administrator rights without asking	Des programmes peuvent obtenir les droits d'administrateur sans demander
+Security.uac-prompt.Explanation	Restores the Windows default: a confirmation is asked before a program gets full rights.	Remet le réglage de Windows : une confirmation est demandée avant qu'un programme obtienne tous les droits.
+Security.autorun-off.Title	USB drives and CDs can start programs by themselves	Les clés USB et les CD peuvent lancer des programmes tout seuls
+Security.autorun-off.Explanation	Turns off AutoRun for all drives, the main way USB viruses spread. You can still open the drive yourself.	Désactive l'exécution automatique pour tous les lecteurs, principal moyen de propagation des virus de clé USB. Vous pouvez toujours ouvrir la clé vous-même.
+Security.smartscreen-on.Title	SmartScreen is off	SmartScreen est désactivé
+Security.smartscreen-on.Explanation	SmartScreen warns before running unknown downloaded programs. Turns the warning back on.	SmartScreen prévient avant de lancer un programme téléchargé inconnu. Réactive l'avertissement.
+Security.rdp-off.Title	Remote Desktop is enabled	Le Bureau à distance est activé
+Security.rdp-off.Explanation	Other computers can connect to this PC. Turn it off if you do not use it.	D'autres ordinateurs peuvent se connecter à ce PC. Désactivez-le si vous ne vous en servez pas.
+Security.appinit-off.Title	DLLs are injected into every program (AppInit)	Des DLL sont injectées dans tous les programmes (AppInit)
+Security.appinit-off.Explanation	AppInit_DLLs loads a file into every program: used by malware and some old software. Turns loading off.	AppInit_DLLs charge un fichier dans tous les programmes : utilisé par des logiciels malveillants et de vieux logiciels. Désactive ce chargement.
+Security.winlogon-shell.Title	The Windows shell was replaced	Le shell de Windows a été remplacé
+Security.winlogon-shell.Explanation	Winlogon "Shell" should be explorer.exe. Another value often starts malware at each sign-in. Restores explorer.exe.	« Shell » de Winlogon devrait être explorer.exe. Une autre valeur lance souvent un logiciel malveillant à chaque ouverture de session. Remet explorer.exe.
+Security.wdigest-off.Title	Passwords are kept in memory in clear text (WDigest)	Les mots de passe sont gardés en mémoire en clair (WDigest)
+Security.wdigest-off.Explanation	Lets password-stealing tools read your password. Turns it off (Windows default).	Permet aux outils de vol de mots de passe de lire votre mot de passe. Le désactive (réglage par défaut de Windows).
+Security.Title	Security	Sécurité
+Security.Intro	Antivirus, firewall, places where malware hides, and USB drives.	Antivirus, pare-feu, cachettes des logiciels malveillants et clés USB.
+Security.Analyze	Check	Vérifier
+Security.Tab.Protection	Protection	Protection
+Security.Tab.Audit	Audit	Audit
+Security.Tab.Usb	USB drives	Clés USB
+Security.Antivirus	Antivirus	Antivirus
+Security.Enabled	On	Activé
+Security.Disabled	Off	Désactivé
+Security.UpToDate	up to date	à jour
+Security.OutOfDate	out of date	pas à jour
+Security.QuickScan	Quick scan	Analyse rapide
+Security.FullScan	Full scan	Analyse complète
+Security.ScanDrive	Scan with Defender	Analyser avec Defender
+Security.Scanning	Scanning… you can keep using the PC.	Analyse en cours… vous pouvez continuer à utiliser le PC.
+Security.ScanClean	Scan finished: no threat found.	Analyse terminée : aucune menace trouvée.
+Security.ScanThreats	Scan finished: threats were found and handled by Defender. See the list below.	Analyse terminée : des menaces ont été trouvées et traitées par Defender. Voir la liste ci-dessous.
+Security.ScanFailed	The scan could not run (Defender is off or replaced by another antivirus).	L'analyse n'a pas pu se faire (Defender est désactivé ou remplacé par un autre antivirus).
+Security.Detections	Recent detections	Détections récentes
+Security.Removed	removed	supprimée
+Security.NotRemoved	action needed	action nécessaire
+Security.NoDetection	No detection.	Aucune détection.
+Security.NoProblem	No problem found.	Aucun problème trouvé.
+Security.NoUsb	No USB drive plugged in.	Aucune clé USB branchée.
+Security.UsbClean	No shortcut virus found.	Aucun virus raccourci trouvé.
+Security.FixSelected	Fix the selection	Corriger la sélection
