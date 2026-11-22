@@ -154,7 +154,7 @@ public sealed class V02PagesTests : IDisposable
     {
         var shell = new ShellViewModel(p => p.ToString());
 
-        shell.NavItems.Select(n => n.Id).Should().Equal(PageId.Bilan, PageId.Setup, PageId.Cleanup, PageId.Apps, PageId.Security, PageId.Privacy, PageId.Updates, PageId.Optimize, PageId.Diagnostic, PageId.System, PageId.History, PageId.Settings);
+        shell.NavItems.Select(n => n.Id).Should().Equal(PageId.Bilan, PageId.Cleanup, PageId.Apps, PageId.Security, PageId.Privacy, PageId.Updates, PageId.Optimize, PageId.Diagnostic, PageId.System, PageId.Setup, PageId.History, PageId.Settings);
     }
 
     private sealed class NoTheme : IThemeApplier

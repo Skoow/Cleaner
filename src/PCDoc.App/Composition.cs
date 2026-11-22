@@ -215,7 +215,10 @@ internal static class Composition
         services.AddSingleton<IThemeApplier>(sp => sp.GetRequiredService<ThemeApplier>());
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddSingleton<IAppDataCleaner, AppDataCleaner>();
-        services.AddSingleton(sp => new ShellViewModel(page => CreatePage(sp, page)) { Translate = key => sp.GetRequiredService<ILocalizer>()[key] });
+        services.AddSingleton(sp => new ShellViewModel(page => CreatePage(sp, page)) {
+            Translate = key => sp.GetRequiredService<ILocalizer>()[key],
+            IsExpertMode = () => sp.GetRequiredService<ISettingsStore>().Load().Mode == AppMode.Expert,
+        });
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

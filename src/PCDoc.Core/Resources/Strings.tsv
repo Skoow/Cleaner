@@ -128,7 +128,7 @@ Module.cleanup	Cleanup	Nettoyage
 Nav.Apps	Applications	Applications
 Nav.Updates	Updates	Mises à jour
 Nav.Optimize	Optimization	Optimisation
-Nav.Security	Security	Sécurité
+Nav.Security	Antivirus & security	Antivirus et sécurité
 Activity.Applied	Done: {0} ({1})	Fait : {0} ({1})
 Activity.Failed	FAILED: {0} — {1}	ÉCHEC : {0} — {1}
 Activity.Undone	Undone: {0}	Annulé : {0}
@@ -224,6 +224,7 @@ Nav.Group.Start	GET STARTED	DÉMARRER
 Nav.Group.Clean	CLEAN	NETTOYER
 Nav.Group.Protect	PROTECT	PROTÉGER
 Nav.Group.Update	UPDATE AND SPEED UP	METTRE À JOUR ET ACCÉLÉRER
-Nav.Group.Tools	TOOLS	OUTILS
+Nav.Group.Tools	TROUBLESHOOT	DÉPANNER
+Nav.Group.Expert	EXPERT (OCCASIONAL)	EXPERT (PONCTUEL)
 Fix.Stop	Stop	Arrêter
 Fix.Stopped	Stopped: the actions already done are in History.	Arrêté : les actions déjà faites sont dans l'Historique.

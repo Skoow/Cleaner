@@ -133,7 +133,7 @@
   <data name="Nav.Apps" xml:space="preserve"><value>Applications</value></data>
   <data name="Nav.Updates" xml:space="preserve"><value>Updates</value></data>
   <data name="Nav.Optimize" xml:space="preserve"><value>Optimization</value></data>
-  <data name="Nav.Security" xml:space="preserve"><value>Security</value></data>
+  <data name="Nav.Security" xml:space="preserve"><value>Antivirus &amp; security</value></data>
   <data name="Activity.Applied" xml:space="preserve"><value>Done: {0} ({1})</value></data>
   <data name="Activity.Failed" xml:space="preserve"><value>FAILED: {0} — {1}</value></data>
   <data name="Activity.Undone" xml:space="preserve"><value>Undone: {0}</value></data>
@@ -228,7 +228,8 @@
   <data name="Nav.Group.Clean" xml:space="preserve"><value>CLEAN</value></data>
   <data name="Nav.Group.Protect" xml:space="preserve"><value>PROTECT</value></data>
   <data name="Nav.Group.Update" xml:space="preserve"><value>UPDATE AND SPEED UP</value></data>
-  <data name="Nav.Group.Tools" xml:space="preserve"><value>TOOLS</value></data>
+  <data name="Nav.Group.Tools" xml:space="preserve"><value>TROUBLESHOOT</value></data>
+  <data name="Nav.Group.Expert" xml:space="preserve"><value>EXPERT (OCCASIONAL)</value></data>
   <data name="Fix.Stop" xml:space="preserve"><value>Stop</value></data>
   <data name="Fix.Stopped" xml:space="preserve"><value>Stopped: the actions already done are in History.</value></data>
 </root>

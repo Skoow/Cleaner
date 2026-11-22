@@ -38,7 +38,7 @@ public sealed partial class ShellViewModel : ObservableObject
         if (Translate is not null)
         {
             _searchIndex ??= SearchIndex.Build();
-            foreach (var r in SearchIndex.Find(_searchIndex, value, Translate))
+            foreach (var r in SearchIndex.Find(_searchIndex, value, Translate).Where(r => ShowExpert || r.Page != PageId.Setup))
             {
                 SearchResults.Add(r);
             }
@@ -79,7 +79,6 @@ public sealed partial class ShellViewModel : ObservableObject
     public IReadOnlyList<NavItem> NavItems { get; } =
     [
         new(PageId.Bilan, "Nav.Bilan", ""),
-        new(PageId.Setup, "Nav.Setup", "\uE8B1"),
         new(PageId.Cleanup, "Nav.Cleanup", "\uE74D"),
         new(PageId.Apps, "Nav.Apps", "\uE71D"),
         new(PageId.Security, "Nav.Security", "\uE72E"),
@@ -88,6 +87,7 @@ public sealed partial class ShellViewModel : ObservableObject
         new(PageId.Optimize, "Nav.Optimize", "\uE945"),
         new(PageId.Diagnostic, "Nav.Diagnostic", "\uE9D9"),
         new(PageId.System, "Nav.System", ""),
+        new(PageId.Setup, "Nav.Setup", "\uE8B1"),
         new(PageId.History, "Nav.History", "\uE81C"),
         new(PageId.Settings, "Nav.Settings", ""),
     ];
@@ -98,7 +98,16 @@ public sealed partial class ShellViewModel : ObservableObject
     [RelayCommand]
     private void Navigate(PageId page) => CurrentPage = page;
 
-    partial void OnCurrentPageChanged(PageId value) => CurrentViewModel = PageFor(value);
+    partial void OnCurrentPageChanged(PageId value)
+    {
+        CurrentViewModel = PageFor(value);
+        OnPropertyChanged(nameof(ShowExpert)); // le mode a pu changer dans les Paramètres
+    }
+
+    /// <summary>Mode expert actif (les outils occasionnels, comme « Nouveau PC », ne sont montrés qu'en mode expert).</summary>
+    public Func<bool>? IsExpertMode { get; init; }
+
+    public bool ShowExpert => IsExpertMode?.Invoke() ?? true;
 
     [RelayCommand]
     private void DismissError() => ErrorBanner = null;

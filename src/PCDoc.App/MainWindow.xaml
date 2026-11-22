@@ -81,6 +81,7 @@
                AutomationProperties.Name="{app:T Nav.Menu}"
                SelectionChanged="OnMainNavChanged">
 
+
         <ListBoxItem x:Name="BilanItem" AutomationProperties.Name="{app:T Nav.Bilan}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE9D9;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0"
@@ -88,19 +89,10 @@
             <TextBlock Text="{app:T Nav.Bilan}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Start}">
-          <TextBlock Text="{app:T Nav.Group.Start}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
-        </ListBoxItem>
-
-        <ListBoxItem x:Name="SetupItem" AutomationProperties.Name="{app:T Nav.Setup}">
-          <StackPanel Orientation="Horizontal" Margin="4,6">
-            <TextBlock Text="&#xE8B1;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
-            <TextBlock Text="{app:T Nav.Setup}" VerticalAlignment="Center" FontSize="14" />
-          </StackPanel>
-        </ListBoxItem>
         <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Clean}">
           <TextBlock Text="{app:T Nav.Group.Clean}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
+
 
         <ListBoxItem x:Name="CleanupItem" AutomationProperties.Name="{app:T Nav.Cleanup}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
@@ -108,6 +100,7 @@
             <TextBlock Text="{app:T Nav.Cleanup}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
+
 
         <ListBoxItem x:Name="AppsItem" AutomationProperties.Name="{app:T Nav.Apps}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
@@ -119,12 +112,14 @@
           <TextBlock Text="{app:T Nav.Group.Protect}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
+
         <ListBoxItem x:Name="SecurityItem" AutomationProperties.Name="{app:T Nav.Security}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE72E;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.Security}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
+
 
         <ListBoxItem x:Name="PrivacyItem" AutomationProperties.Name="{app:T Nav.Privacy}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
@@ -136,12 +131,14 @@
           <TextBlock Text="{app:T Nav.Group.Update}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
+
         <ListBoxItem x:Name="UpdatesItem" AutomationProperties.Name="{app:T Nav.Updates}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE895;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.Updates}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
+
 
         <ListBoxItem x:Name="OptimizeItem" AutomationProperties.Name="{app:T Nav.Optimize}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
@@ -153,12 +150,14 @@
           <TextBlock Text="{app:T Nav.Group.Tools}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
+
         <ListBoxItem x:Name="DiagnosticItem" AutomationProperties.Name="{app:T Nav.Diagnostic}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE90F;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.Diagnostic}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
+
 
         <ListBoxItem x:Name="SystemItem" AutomationProperties.Name="{app:T Nav.System}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
@@ -168,10 +167,22 @@
           </StackPanel>
         </ListBoxItem>
 
+
         <ListBoxItem x:Name="HistoryItem" AutomationProperties.Name="{app:T Nav.History}">
           <StackPanel Orientation="Horizontal" Margin="4,6">
             <TextBlock Text="&#xE81C;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Text="{app:T Nav.History}" VerticalAlignment="Center" FontSize="14" />
+          </StackPanel>
+        </ListBoxItem>
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Expert}" Visibility="{Binding ShowExpert, Converter={StaticResource BoolToVisibility}}">
+          <TextBlock Text="{app:T Nav.Group.Expert}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
+        </ListBoxItem>
+
+
+        <ListBoxItem x:Name="SetupItem" Visibility="{Binding ShowExpert, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{app:T Nav.Setup}">
+          <StackPanel Orientation="Horizontal" Margin="4,6">
+            <TextBlock Text="&#xE8B1;" FontFamily="{StaticResource Pcdoc.Icons}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <TextBlock Text="{app:T Nav.Setup}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
       </ListBox>
