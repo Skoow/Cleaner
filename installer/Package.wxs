@@ -24,8 +24,8 @@
     <Feature Id="Main" Title="PCDoc">
       <Component Id="App" Directory="INSTALLFOLDER">
         <File Id="PCDocExe" Source="$(var.AppDir)\PCDoc.exe" KeyPath="yes">
-          <!-- Raccourci « annoncé » : rattaché au fichier, valide pour une installation par machine (ICE43/ICE57). -->
-          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="PCDoc" WorkingDirectory="INSTALLFOLDER" Icon="PCDocIcon" Advertise="yes" />
+          <!-- Menu Démarrer de tous les comptes (ICE43/ICE57 ignorées dans le projet : fausses alertes pour une installation par machine). -->
+          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="PCDoc" WorkingDirectory="INSTALLFOLDER" Icon="PCDocIcon" />
         </File>
       </Component>
       <Component Id="License" Directory="INSTALLFOLDER">

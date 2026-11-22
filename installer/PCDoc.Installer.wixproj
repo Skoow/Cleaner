@@ -7,6 +7,9 @@
   <PropertyGroup>
     <OutputName>PCDoc</OutputName>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!-- ICE43/ICE57 supposent un raccourci par utilisateur ; ici le paquet est par machine (ALLUSERS=1, menu Démarrer commun).
+         ICE61 : AllowSameVersionUpgrades voulu (préversion remplacée par la version finale). -->
+    <SuppressIces>ICE43;ICE57;ICE61</SuppressIces>
     <ProductVersion Condition="'$(ProductVersion)' == ''">$(Version)</ProductVersion>
     <AppDir Condition="'$(AppDir)' == ''">$(MSBuildThisFileDirectory)..\out\win-x64</AppDir>
     <DefineConstants>ProductVersion=$(ProductVersion);AppDir=$(AppDir);RepoDir=$(MSBuildThisFileDirectory)..;Icon=$(MSBuildThisFileDirectory)..\src\PCDoc.App\Assets\pcdoc.ico</DefineConstants>
