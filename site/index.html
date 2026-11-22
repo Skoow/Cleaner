@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCDoc — télécharger</title>
+<meta name="description" content="PCDoc : outil gratuit et libre (GPL-3.0) pour diagnostiquer, réparer, nettoyer, mettre à jour et protéger un PC Windows 10/11.">
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1b1f24; --muted:#5b6470; --accent:#0a64c8; --border:#dde1e6; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16181c; --card:#1f2228; --text:#e8eaed; --muted:#a3abb5; --accent:#5aa6ff; --border:#30353d; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.55; }
+  main { max-width:860px; margin:0 auto; padding:40px 16px 64px; }
+  h1 { font-size:2.2rem; margin:0 0 4px; } h2 { font-size:1.25rem; margin:32px 0 12px; }
+  .lead { color:var(--muted); font-size:1.1rem; margin:0 0 28px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; }
+  .card h3 { margin:0 0 6px; font-size:1.05rem; } .card p { margin:0 0 14px; color:var(--muted); font-size:.95rem; }
+  a.btn { display:inline-block; background:var(--accent); color:#fff; text-decoration:none; padding:9px 16px; border-radius:6px; font-weight:600; }
+  a.btn.alt { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  ul { padding-left:20px; } li { margin:4px 0; } code { background:var(--card); border:1px solid var(--border); padding:1px 5px; border-radius:4px; }
+  footer { margin-top:40px; color:var(--muted); font-size:.9rem; }
+  .lang { float:right; font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <a class="lang" href="#en">English</a>
+  <h1>PCDoc</h1>
+  <p class="lead">Diagnostiquer, réparer, nettoyer, mettre à jour et protéger un PC Windows 10 et 11, au même endroit. Gratuit, libre (GPL-3.0), sans publicité ni télémétrie.</p>
+
+  <h2>Télécharger</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Installateur (recommandé)</h3>
+      <p>Installe PCDoc pour tous les comptes dans Program Files, avec raccourci dans le menu Démarrer et mises à jour vérifiées.</p>
+      <a class="btn" href="https://github.com/Skoow/Cleaner/releases/latest">Fichier <code>.msi</code> (x64 ou ARM64)</a>
+    </div>
+    <div class="card">
+      <h3>Version portable</h3>
+      <p>Pour les dépanneurs : rien à installer, à copier sur une clé USB. Réglages gardés à côté de PCDoc.exe.</p>
+      <a class="btn alt" href="https://github.com/Skoow/Cleaner/releases/latest">Fichier <code>.zip</code></a>
+    </div>
+  </div>
+  <p>Vérifiez le fichier avec <code>SHA256SUMS.txt</code> (publié avec chaque version) : <code>Get-FileHash fichier.msi</code> dans PowerShell.</p>
+
+  <h2>Ce que fait PCDoc</h2>
+  <ul>
+    <li><b>Bilan</b> de santé du PC en un coup d'œil, et rapport anonyme à coller sur un forum.</li>
+    <li><b>Nettoyer</b> : fichiers inutiles, cookies et traces, applications, effacement sécurisé.</li>
+    <li><b>Protéger</b> : Microsoft Defender, pare-feu, analyses AdwCleaner, Kaspersky VRT, Safety Scanner, VirusTotal ; confidentialité de Windows, Office et des navigateurs.</li>
+    <li><b>Mettre à jour et accélérer</b> : Windows, pilotes, logiciels (winget) et Store, en silence et depuis les sources officielles ; réglages de performance.</li>
+    <li><b>Dépanner</b> : réparations de Windows, du réseau et du son, DNS, Wi-Fi, licences, démarrage.</li>
+    <li>Chaque modification est <b>annulable</b> (point de restauration, sauvegarde, historique daté).</li>
+  </ul>
+
+  <h2 id="en">English</h2>
+  <p>PCDoc diagnoses, repairs, cleans, updates and protects Windows 10 and 11 PCs in one place. Free and open source (GPL-3.0), no ads, no telemetry.
+     Download the <a href="https://github.com/Skoow/Cleaner/releases/latest">installer (.msi) or the portable version (.zip)</a> and check it against <code>SHA256SUMS.txt</code>.</p>
+
+  <footer>
+    <a href="https://github.com/Skoow/Cleaner">Code source</a> ·
+    <a href="https://github.com/Skoow/Cleaner/blob/main/PRIVACY.md">Confidentialité</a> ·
+    <a href="https://github.com/Skoow/Cleaner/blob/main/SECURITY.md">Sécurité</a> ·
+    <a href="https://github.com/Skoow/Cleaner/blob/main/LICENSE">Licence GPL-3.0</a>
+  </footer>
+</main>
+</body>
+</html>

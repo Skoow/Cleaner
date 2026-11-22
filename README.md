@@ -9,28 +9,37 @@ optimiser, sécuriser et rendre confidentiel votre PC. Une seule fenêtre, aucun
 secure and de-track your PC. One window, no ads, no telemetry.
 
 ## État / Status
-Version 0.3 (prérelease) : Bilan, informations système, corrections sûres et annulables, Diagnostic.
-Version 0.2 (prerelease): health check, system information and first safe, undoable fixes.
+Version 1.0 : Bilan, Nettoyer (fichiers, traces, applications, effacement sécurisé), Protéger (antivirus et analyses
+d'autres éditeurs, confidentialité), Mettre à jour et accélérer (Windows, pilotes, logiciels, Store, réglages),
+Dépanner (diagnostic, réparations, réseau, licences), Historique, Nouveau PC (expert), installateur MSI et mises à jour.
 
-## Fonctions de la v0.1 / v0.1 features
-- **Bilan** : « Analyser mon PC », note sur 100, problèmes classés Critique / Attention / Info, détails techniques.
-- **Système** (lecture seule) : Windows, matériel, disques, compatibilité Windows 11, temps de démarrage,
-  programmes au démarrage, tâches planifiées, services et pilotes avec vérification des signatures numériques.
-- **Paramètres** : français / anglais, thème clair / sombre / système, mode novice / expert, journal, effacement des données.
-- **v0.2 — corrections sûres** : conseiller (sûr / selon l'usage / déconseillé / verrouillé), désactiver ou réactiver
-  programmes au démarrage, services et tâches, point de restauration avant chaque série, sauvegarde .reg,
-  page Historique pour tout annuler, assistant de premier lancement.
-- **v0.3 — Diagnostic** : écrans bleus expliqués, plantages d'applications, périphériques en erreur, santé des disques,
-  redémarrage en attente, pilotes anciens, réparations en un clic (cache DNS, SFC, DISM) lancées sans fenêtre,
-  fiche « Le PC ne démarre plus ».
+Version 1.0: health check, cleanup, protection (antivirus and second-opinion scans, privacy), updates and tuning,
+troubleshooting, history, new-PC setup (expert), MSI installer and verified updates.
 
 Guide pas à pas (GitHub, téléchargement) : [docs/guide-debutant.md](docs/guide-debutant.md).
 Tests manuels : [docs/tests-manuels-v0.1.md](docs/tests-manuels-v0.1.md).
 
-## Télécharger une version de test / Download a test build
-*Actions* → dernier run vert / latest green run → *Artifacts* → `PCDoc-portable-win-x64` (ou / or `win-arm64`).
-Windows SmartScreen : « Informations complémentaires » → « Exécuter quand même » (l'app n'est pas encore signée /
-the app is not signed yet).
+## Télécharger / Download
+Page **Releases** du dépôt / repository *Releases* page :
+- `PCDoc-x.y.z-x64.msi` (ou / or `arm64`) : installateur pour tous les comptes / per-machine installer ;
+- `PCDoc-x.y.z-portable-win-x64.zip` : version portable (clé USB) / portable build ;
+- `SHA256SUMS.txt` : sommes de contrôle / checksums.
+
+Page de téléchargement / download page : `site/index.html` (GitHub Pages).
+Tant que la version n'est pas signée, Windows SmartScreen affiche « Informations complémentaires » → « Exécuter quand
+même » / until builds are signed, SmartScreen asks to confirm.
+
+## Publier une version / Make a release
+```bash
+git tag v1.0.0
+```
+
+```bash
+git push origin v1.0.0
+```
+
+La signature (Azure Trusted Signing) est faite si les secrets `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
+`AZURE_CLIENT_SECRET` et les variables `SIGNING_ENDPOINT`, `SIGNING_ACCOUNT`, `SIGNING_PROFILE` sont configurés.
 
 ## Compiler / Build
 ```bash

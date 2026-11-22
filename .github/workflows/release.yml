@@ -13,18 +13,33 @@ env:
 
 jobs:
   build:
-    name: Build and test ${{ matrix.rid }}
+    name: Build, sign and package ${{ matrix.rid }}
     runs-on: windows-latest
     strategy:
       matrix:
         rid: [win-x64, win-arm64]
+    env:
+      # Signature (Azure Trusted Signing) seulement si les secrets sont configurés ; sinon la version n'est pas signée
+      # et PCDoc propose alors la page de téléchargement au lieu d'installer la mise à jour tout seul.
+      SIGN: ${{ secrets.AZURE_CLIENT_ID != '' && 'true' || 'false' }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           global-json-file: global.json
+      - name: Version from the tag
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') { Write-Error "Bad tag $version"; exit 1 }
+          "VERSION=$version" >> $env:GITHUB_ENV
+          "MSI_VERSION=$($version.Split('-')[0])" >> $env:GITHUB_ENV
+          "ARCH=$('${{ matrix.rid }}'.Replace('win-', ''))" >> $env:GITHUB_ENV
       - run: dotnet restore PCDoc.slnx --locked-mode
-      - run: dotnet build PCDoc.slnx -c Release --no-restore
+      - run: dotnet build PCDoc.slnx -c Release --no-restore -p:Version=${{ env.VERSION }}
       - name: Tests
         if: matrix.rid == 'win-x64'
         run: dotnet test PCDoc.slnx -c Release --no-build
@@ -32,12 +47,31 @@ jobs:
         run: >
           dotnet publish src/PCDoc.App/PCDoc.App.csproj -c Release -r ${{ matrix.rid }} --self-contained
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true
-          -o out/${{ matrix.rid }}
-      - name: Zip
+          -p:Version=${{ env.VERSION }} -o out/${{ matrix.rid }}
+      - name: Signing tool
+        if: env.SIGN == 'true'
+        run: dotnet tool install --global sign --prerelease
+      - name: Sign PCDoc.exe
+        if: env.SIGN == 'true'
+        run: >
+          sign code trusted-signing "out/${{ matrix.rid }}/PCDoc.exe"
+          --trusted-signing-endpoint "${{ vars.SIGNING_ENDPOINT }}" --trusted-signing-account "${{ vars.SIGNING_ACCOUNT }}"
+          --trusted-signing-certificate-profile "${{ vars.SIGNING_PROFILE }}"
+      - name: Installer (MSI)
         shell: pwsh
         run: |
-          $version = "${{ github.ref_name }}".TrimStart('v')
-          Compress-Archive -Path "out/${{ matrix.rid }}/*" -DestinationPath "PCDoc-$version-portable-${{ matrix.rid }}.zip"
+          dotnet build installer/PCDoc.Installer.wixproj -c Release -p:InstallerPlatform=$env:ARCH -p:AppDir="$PWD/out/${{ matrix.rid }}" -p:ProductVersion=$env:MSI_VERSION -o out/msi
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Move-Item out/msi/PCDoc.msi "PCDoc-$env:VERSION-$env:ARCH.msi"
+      - name: Sign the installer
+        if: env.SIGN == 'true'
+        run: >
+          sign code trusted-signing "PCDoc-${{ env.VERSION }}-${{ env.ARCH }}.msi"
+          --trusted-signing-endpoint "${{ vars.SIGNING_ENDPOINT }}" --trusted-signing-account "${{ vars.SIGNING_ACCOUNT }}"
+          --trusted-signing-certificate-profile "${{ vars.SIGNING_PROFILE }}"
+      - name: Zip (portable)
+        shell: pwsh
+        run: Compress-Archive -Path "out/${{ matrix.rid }}/*" -DestinationPath "PCDoc-$env:VERSION-portable-${{ matrix.rid }}.zip"
       - name: SBOM (CycloneDX)
         run: |
           dotnet tool install --global CycloneDX --version 6.3.2
@@ -47,10 +81,11 @@ jobs:
           name: release-${{ matrix.rid }}
           path: |
             PCDoc-*.zip
+            PCDoc-*.msi
             sbom-*.cdx.json
 
   publish:
-    name: GitHub prerelease
+    name: GitHub release
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -61,11 +96,13 @@ jobs:
           path: dist
           merge-multiple: true
       - name: Checksums
-        run: cd dist && sha256sum PCDoc-*.zip > SHA256SUMS.txt && cat SHA256SUMS.txt
+        run: cd dist && sha256sum PCDoc-*.zip PCDoc-*.msi > SHA256SUMS.txt && cat SHA256SUMS.txt
       - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
-          prerelease: true
+          # Une version « x.y.z-beta » reste une préversion : la mise à jour automatique ne la propose pas.
+          prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             dist/PCDoc-*.zip
+            dist/PCDoc-*.msi
             dist/SHA256SUMS.txt
             dist/sbom-*.cdx.json

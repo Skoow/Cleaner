@@ -21,7 +21,8 @@ Mis à jour le 2026-11-21, après la v0.11. Détail des décisions : `docs/super
 | v0.10 | Confidentialité d'Office, Edge, Chrome, Firefox (seulement s'ils sont installés), mises à jour des applications du Store, recherche globale |
 | v0.11 | Menu en sections dans l'ordre logique, Nouveau PC réordonné avec analyse antivirus, cookies/historique/fichiers récents, Kaspersky VRT et AdwCleaner (suppression) |
 | v0.12 ✅ | Effacement sécurisé, **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) — fait |
-| v1.0 | Signature du code, installateur MSI dans Program Files, tâche planifiée (UAC une seule fois), mise à jour automatique, page de téléchargement |
+| v1.0 ✅ | Installateur MSI (Program Files), mise à jour vérifiée, signature prête (à activer), page de téléchargement — fait |
+| après v1.0 | Lancement sans UAC par tâche planifiée (à réévaluer), import de corrections (expert), traductions (Weblate) |
 
 ## Reporté des versions précédentes (petits points)
 - Diagnostic : pilote en cause d'un écran bleu (analyse des minidumps), températures (LibreHardwareMonitor/PawnIO), assistants guidés (« Pas d'internet », « Pas de son »…), réinitialisation réseau, réparation de Windows Update, processus gourmands, codes de sortie de SFC à vérifier sur un vrai Windows.
