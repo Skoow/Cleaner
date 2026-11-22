@@ -174,7 +174,7 @@ public sealed partial class CleanupFileSystem : IFileSystem
     }
 
     /// <summary>
-    /// Effacement sûr d'un fichier : ouvert sans suivre de lien final et sans partage, refusé s'il est un lien, a
+    /// Effacement sûr d'un fichier : ouvert sans suivre de lien final, sans partage en lecture ni en écriture, refusé s'il est un lien, a
     /// plusieurs liens physiques, est compressé, chiffré, fragmenté (sparse), seulement dans le cloud ou sur un système
     /// de fichiers à copie sur écriture (ReFS). Le vrai chemin, lu sur le handle (dossiers liés, noms courts résolus),
     /// doit être accepté par <paramref name="realPathAllowed"/>. Les flux de données secondaires puis le contenu sont
@@ -192,8 +192,8 @@ public sealed partial class CleanupFileSystem : IFileSystem
             return false; // syntaxe de flux (« fichier:flux », « dossier::$INDEX_ALLOCATION ») refusée
         }
 
-        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), GenericWrite | Delete | FileReadAttributes, 0, IntPtr.Zero, OpenExisting,
-            FlagOpenReparsePoint | FlagWriteThrough, IntPtr.Zero);
+        using var handle = CreateFileW(@"\\?\" + Path.GetFullPath(path), GenericWrite | Delete | FileReadAttributes, FileShareDelete, IntPtr.Zero, OpenExisting,
+            FlagOpenReparsePoint | FlagWriteThrough, IntPtr.Zero); // partage « suppression » seul : requis par NTFS pour ouvrir les flux secondaires
         if (handle.IsInvalid)
         {
             reason = $"open failed ({Marshal.GetLastPInvokeError()})";
@@ -304,7 +304,7 @@ public sealed partial class CleanupFileSystem : IFileSystem
 
         foreach (var (name, size) in streams)
         {
-            using var stream = CreateFileW(@"\\?\" + realPath + name, GenericWrite, 0, IntPtr.Zero, OpenExisting, FlagWriteThrough, IntPtr.Zero);
+            using var stream = CreateFileW(@"\\?\" + realPath + name, GenericWrite, FileShareDelete, IntPtr.Zero, OpenExisting, FlagWriteThrough, IntPtr.Zero);
             if (stream.IsInvalid)
             {
                 return false;
