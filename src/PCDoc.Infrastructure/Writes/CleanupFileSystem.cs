@@ -262,7 +262,8 @@ public sealed partial class CleanupFileSystem : IFileSystem
             return; // rien n'est modifié sur un fichier refusé
         }
 
-        var basic = new FileBasicInfo { FileAttributes = info.Attributes & ~(uint)FileAttributes.ReadOnly };
+        var remaining = info.Attributes & ~(uint)FileAttributes.ReadOnly;
+        var basic = new FileBasicInfo { FileAttributes = remaining == 0 ? (uint)FileAttributes.Normal : remaining }; // 0 voudrait dire « inchangé »
         SetFileInformationByHandle(handle, FileBasicInfoClass, ref basic, (uint)Marshal.SizeOf<FileBasicInfo>());
     }
 
