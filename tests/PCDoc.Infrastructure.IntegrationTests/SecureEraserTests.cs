@@ -52,7 +52,8 @@ public sealed class SecureEraserTests : IDisposable
 
         var items = _eraser.Expand(_root);
         items.Should().Contain(file).And.Contain(Path.Combine(_root, "link"));
-        items.Select(_eraser.Wipe).Should().Equal(items.Select(i => i == file));
+        _eraser.Wipe(Path.Combine(_root, "link")).Should().BeFalse();
+        _eraser.Wipe(file).Should().BeTrue(_eraser.LastError);
 
         File.Exists(file).Should().BeFalse();
         File.Exists(Path.Combine(_outside, "precious.txt")).Should().BeTrue("la cible d'un lien n'est jamais touchée");

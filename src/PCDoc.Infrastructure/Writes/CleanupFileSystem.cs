@@ -180,10 +180,15 @@ public sealed partial class CleanupFileSystem : IFileSystem
     /// doit être accepté par <paramref name="realPathAllowed"/>. Les flux de données secondaires puis le contenu sont
     /// écrasés par des données aléatoires (écriture directe sur le disque), puis le fichier est supprimé par le même handle.
     /// </summary>
-    internal static bool WipeByHandle(string path, Func<string, bool> realPathAllowed, CancellationToken cancellationToken = default)
+    internal static bool WipeByHandle(string path, Func<string, bool> realPathAllowed, CancellationToken cancellationToken = default) =>
+        WipeByHandle(path, realPathAllowed, out _, cancellationToken);
+
+    internal static bool WipeByHandle(string path, Func<string, bool> realPathAllowed, out string? reason, CancellationToken cancellationToken = default)
     {
+        reason = null;
         if (path.IndexOf(':', 2) >= 0)
         {
+            reason = "stream syntax";
             return false; // syntaxe de flux (« fichier:flux », « dossier::$INDEX_ALLOCATION ») refusée
         }
 
@@ -191,6 +196,7 @@ public sealed partial class CleanupFileSystem : IFileSystem
             FlagOpenReparsePoint | FlagWriteThrough, IntPtr.Zero);
         if (handle.IsInvalid)
         {
+            reason = $"open failed ({Marshal.GetLastPInvokeError()})";
             return false;
         }
 
@@ -198,11 +204,25 @@ public sealed partial class CleanupFileSystem : IFileSystem
             | FileAttributes.Encrypted | FileAttributes.SparseFile | FileAttributes.Offline) | RecallOnOpen | RecallOnDataAccess;
         if (!GetFileInformationByHandle(handle, out var info) || (info.Attributes & unsafeAttributes) != 0 || info.NumberOfLinks != 1)
         {
+            reason = $"attributes 0x{info.Attributes:X}, links {info.NumberOfLinks}";
             return false;
         }
 
-        if (FinalPath(handle) is not { } real || !realPathAllowed(real) || !OverwritesInPlace(handle) || !WipeStreams(real, cancellationToken))
+        if (FinalPath(handle) is not { } real || !realPathAllowed(real))
         {
+            reason = "real path refused";
+            return false;
+        }
+
+        if (!OverwritesInPlace(handle))
+        {
+            reason = "file system does not overwrite in place";
+            return false;
+        }
+
+        if (!WipeStreams(real, cancellationToken))
+        {
+            reason = $"alternate stream ({Marshal.GetLastPInvokeError()})";
             return false;
         }
 
@@ -219,7 +239,13 @@ public sealed partial class CleanupFileSystem : IFileSystem
             }
 
             var legacy = new FileDispositionInfo { DeleteFile = 1 };
-            return SetFileInformationByHandle(handle, FileDispositionInfoClass, ref legacy, (uint)Marshal.SizeOf<FileDispositionInfo>());
+            if (SetFileInformationByHandle(handle, FileDispositionInfoClass, ref legacy, (uint)Marshal.SizeOf<FileDispositionInfo>()))
+            {
+                return true;
+            }
+
+            reason = $"delete failed ({Marshal.GetLastPInvokeError()})";
+            return false;
         }
     }
 
@@ -578,7 +604,21 @@ public sealed class SecureEraser(IUserProfileResolver profiles) : ISecureEraser
         return files;
     }
 
-    public bool Wipe(string file) => IsAllowed(file) && File.Exists(file) && CleanupFileSystem.WipeByHandle(file, real => !Denied(real.TrimEnd('\\')));
+    /// <summary>Raison du dernier refus d'effacement (pour le journal et le diagnostic).</summary>
+    public string? LastError { get; private set; }
+
+    public bool Wipe(string file)
+    {
+        if (!IsAllowed(file) || !File.Exists(file))
+        {
+            LastError = "path refused";
+            return false;
+        }
+
+        var ok = CleanupFileSystem.WipeByHandle(file, real => !Denied(real.TrimEnd('\\')), out var reason);
+        LastError = ok ? null : reason;
+        return ok;
+    }
 
     public void RemoveEmptyFolders(string folder)
     {
