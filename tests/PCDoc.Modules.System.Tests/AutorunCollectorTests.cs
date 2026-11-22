@@ -8,11 +8,23 @@ public class AutorunCollectorTests
 {
     private const string Run = @"Software\Microsoft\Windows\CurrentVersion\Run";
 
+    /// <summary>Compte les vérifications simultanées (mesure de parallélisme indépendante de la charge de la machine).</summary>
     private sealed class SlowVerifier : ISignatureVerifier
     {
+        private int _running;
+
+        public int MaxConcurrent { get; private set; }
+
         public SignatureInfo Verify(string filePath)
         {
+            var now = Interlocked.Increment(ref _running);
+            lock (this)
+            {
+                MaxConcurrent = Math.Max(MaxConcurrent, now);
+            }
+
             Thread.Sleep(100);
+            Interlocked.Decrement(ref _running);
             return new SignatureInfo(SignatureStatus.Signed, "Vendor " + filePath, false);
         }
     }
@@ -25,11 +37,11 @@ public class AutorunCollectorTests
             .ToArray();
         var files = new FakeFileProbe().WithFiles([.. services.Select(s => s.ImagePath!)]);
 
-        var watch = global::System.Diagnostics.Stopwatch.StartNew();
-        var entries = new AutorunCollector(new FakeRegistryReader(), files, new FakeProfileResolver(), new SlowVerifier(),
+        var verifier = new SlowVerifier();
+        var entries = new AutorunCollector(new FakeRegistryReader(), files, new FakeProfileResolver(), verifier,
             new FakeTaskReader(), new FakeServiceReader(services)).CollectAll().Entries;
 
-        watch.Elapsed.Should().BeLessThan(TimeSpan.FromMilliseconds(1200), "16 × 100 ms en série prendrait 1,6 s");
+        verifier.MaxConcurrent.Should().BeGreaterThan(1, "les signatures sont vérifiées en parallèle");
         entries.Select(e => e.Name).Should().Equal(services.Select(s => s.DisplayName));
         entries.Should().OnlyContain(e => e.Signature.Publisher == "Vendor " + e.FilePath);
     }
