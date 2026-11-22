@@ -68,6 +68,9 @@ public sealed partial class SecurityEngine(
 
     public OptimizeEngine Settings => settings;
 
+    /// <summary>Appelé à la fin de chaque analyse Defender (type, code de résultat) pour le journal d'activité.</summary>
+    public Action<int, int>? ScanCompleted { get; set; }
+
     public string ExpectedUserinit => windowsDirectory.TrimEnd('\\') + @"\system32\userinit.exe,";
 
     public async Task<SecurityReport> AnalyzeAsync(CancellationToken cancellationToken)
@@ -129,8 +132,10 @@ public sealed partial class SecurityEngine(
             3 when root is not null && DriveRoot().IsMatch(root) && drives.IsRemovableRoot(root) => $"-Scan -ScanType 3 -File {root}",
             _ => throw new ArgumentException("Invalid scan request", nameof(scanType)),
         };
-        return await defender.RunAsync(arguments, onOutput, scanType == 2 ? TimeSpan.FromHours(8) : TimeSpan.FromHours(2), cancellationToken)
+        var exit = await defender.RunAsync(arguments, onOutput, scanType == 2 ? TimeSpan.FromHours(8) : TimeSpan.FromHours(2), cancellationToken)
             .ConfigureAwait(false);
+        ScanCompleted?.Invoke(scanType, exit);
+        return exit;
     }
 
     public Task<int> UpdateSignaturesAsync(CancellationToken cancellationToken) =>

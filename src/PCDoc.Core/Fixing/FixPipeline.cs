@@ -40,6 +40,12 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
 
     public UndoJournal Journal => journal;
 
+    /// <summary>Journal lisible (date et heure de chaque action) ; désactivé par défaut.</summary>
+    public Activity.IActivityLog Activity { get; set; } = new Activity.NullActivityLog();
+
+    /// <summary>Texte d'un problème dans la langue de l'utilisateur (titre).</summary>
+    public Func<LocalizedText, string> Describe { get; set; } = t => t.Key;
+
     public async Task<FixSessionResult> RunAsync(
         IReadOnlyList<Finding> findings, AppMode mode, bool allowWithoutRestorePoint, CancellationToken cancellationToken)
     {
@@ -48,7 +54,7 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
         var allowed = new List<(Finding Finding, IFixer Fixer)>();
         foreach (var finding in findings)
         {
-            var fixer = _fixers.FirstOrDefault(f => f.CanFix(finding));
+            var fixer = _fixers.FirstOrDefault(f => SafeCanFix(f, finding));
             if (!FixPolicy.IsOffered(finding, mode))
             {
                 outcomes.Add(new FixOutcome(finding, FixStatus.NotAllowed));
@@ -69,6 +75,7 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
         }
 
         var restore = await restorePoints.EnsureAsync("PCDoc", cancellationToken).ConfigureAwait(false);
+        Activity.Write("restore", Describe(new LocalizedText($"Activity.Restore.{restore}")));
         if (restore is RestorePointOutcome.ProtectionDisabled or RestorePointOutcome.Failed && !allowWithoutRestorePoint)
         {
             return new FixSessionResult(restore, true, []);
@@ -84,6 +91,7 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
                 await fixer.ApplyAsync(finding, cancellationToken).ConfigureAwait(false);
                 journal.Mark(entry.Id, UndoStatus.Applied);
                 outcomes.Add(new FixOutcome(finding, FixStatus.Applied));
+                Activity.Write(finding.Module, Describe(new LocalizedText("Activity.Applied", Describe(finding.Title), finding.TechnicalDetails)));
             }
             catch (OperationCanceledException)
             {
@@ -99,6 +107,7 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
                 }
 
                 outcomes.Add(new FixOutcome(finding, FixStatus.Failed, ex.Message));
+                Activity.Write(finding.Module, Describe(new LocalizedText("Activity.Failed", Describe(finding.Title), ex.Message)));
             }
         }
 
@@ -142,6 +151,7 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
 
             await fixer.UndoAsync(entry, cancellationToken).ConfigureAwait(false);
             journal.Mark(entry.Id, UndoStatus.Undone);
+            Activity.Write("undo", Describe(new LocalizedText("Activity.Undone", Describe(entry.Title))));
             return UndoOutcome.Undone;
         }
         catch (OperationCanceledException)
@@ -153,6 +163,21 @@ public sealed class FixPipeline(IEnumerable<IFixer> fixers, IRestorePointService
 #pragma warning restore CA1031
         {
             return UndoOutcome.Failed;
+        }
+    }
+
+    /// <summary>Un correcteur qui lève une exception sur un problème qui ne le concerne pas ne bloque pas la série.</summary>
+    private static bool SafeCanFix(IFixer fixer, Finding finding)
+    {
+        try
+        {
+            return fixer.CanFix(finding);
+        }
+#pragma warning disable CA1031
+        catch (Exception ex) when (ex is not OperationCanceledException)
+#pragma warning restore CA1031
+        {
+            return false;
         }
     }
 

@@ -13,9 +13,18 @@
       </Border>
       <TextBlock Text="{Binding MessageText}" TextWrapping="Wrap" Margin="0,0,0,8" AutomationProperties.LiveSetting="Polite"
                  Visibility="{Binding MessageText, Converter={StaticResource NotNullToVisibility}}" />
-      <TextBlock Text="{app:T History.Empty}" Style="{StaticResource Pcdoc.Muted}"
-                 Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+        <Button Content="{app:T History.ExportReport}" Command="{Binding ExportReportCommand}" Margin="0,0,8,0"
+                AutomationProperties.Name="{app:T History.ExportReport}" />
+        <Button Content="{app:T History.OpenFolder}" Command="{Binding OpenReportFolderCommand}" AutomationProperties.Name="{app:T History.OpenFolder}"
+                Visibility="{Binding CanOpenReport, Converter={StaticResource BoolToVisibility}}" />
+      </StackPanel>
     </StackPanel>
+    <TabControl>
+      <TabItem Header="{app:T Nav.History}">
+    <DockPanel Margin="0,8,0,0">
+      <TextBlock DockPanel.Dock="Top" Text="{app:T History.Empty}" Style="{StaticResource Pcdoc.Muted}"
+                 Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
     <DataGrid ItemsSource="{Binding Entries}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
               GridLinesVisibility="None" AutomationProperties.Name="{app:T Nav.History}"
               EnableRowVirtualization="True" VirtualizingPanel.VirtualizationMode="Recycling">
@@ -35,5 +44,12 @@
         </DataGridTemplateColumn>
       </DataGrid.Columns>
     </DataGrid>
+    </DockPanel>
+      </TabItem>
+      <TabItem Header="{app:T History.ActivityTitle}">
+        <ListBox ItemsSource="{Binding Activity}" Margin="0,8,0,0" FontFamily="Consolas" FontSize="12"
+                 AutomationProperties.Name="{app:T History.ActivityTitle}" VirtualizingPanel.IsVirtualizing="True" />
+      </TabItem>
+    </TabControl>
   </DockPanel>
 </UserControl>

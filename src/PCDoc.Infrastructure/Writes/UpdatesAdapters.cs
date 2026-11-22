@@ -244,9 +244,23 @@ public sealed class WingetRunner(IProcessRunner runner) : IWingetRunner, IDispos
             throw new TimeoutException($"winget did not finish within {timeout.TotalMinutes:0} minutes");
         }
 
+        // Téléchargements de winget supprimés dès la fin (ils ne servent qu'à l'installation).
+        Purge(temp);
         lock (output)
         {
             return (process.ExitCode, [.. output]);
+        }
+    }
+
+    private static void Purge(string temp)
+    {
+        try
+        {
+            CleanupFileSystem.DeleteTree(temp, SecureFolders.Root);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Fichier encore ouvert : supprimé au prochain passage.
         }
     }
 

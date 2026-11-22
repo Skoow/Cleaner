@@ -142,7 +142,11 @@ internal static class Composition
                 sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IWmiQuery>());
             return new SecurityEngine(sp.GetRequiredService<IWmiQuery>(), sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>(),
                 sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IDefenderCommand>(), sp.GetRequiredService<IFileProbe>(),
-                sp.GetRequiredService<IRemovableDrives>(), settings, Environment.GetFolderPath(Environment.SpecialFolder.Windows));
+                sp.GetRequiredService<IRemovableDrives>(), settings, Environment.GetFolderPath(Environment.SpecialFolder.Windows))
+            {
+                ScanCompleted = (type, exit) => sp.GetRequiredService<PCDoc.Core.Activity.IActivityLog>().Write("security",
+                    sp.GetRequiredService<ILocalizer>().Format(new PCDoc.Core.Findings.LocalizedText("Activity.Scan", type switch { 1 => "quick", 2 => "full", _ => "USB" }, exit))),
+            };
         });
         services.AddSingleton<ISecuritySource>(sp => sp.GetRequiredService<SecurityEngine>());
         services.AddSingleton<IScanner>(sp => new SecurityScanner(sp.GetRequiredService<ISecuritySource>()));
@@ -155,8 +159,16 @@ internal static class Composition
         services.AddSingleton<IFixer>(sp => new UsbFixer(sp.GetRequiredService<SecurityEngine>()));
 
         services.AddSingleton(sp => new UndoJournal(journalPath ?? Path.Combine(Path.GetTempPath(), "pcdoc-disabled.jsonl"), sp.GetRequiredService<IClock>()));
+        services.AddSingleton<PCDoc.Core.Activity.IActivityLog>(sp => journalPath is null
+            ? new PCDoc.Core.Activity.NullActivityLog()
+            : new PCDoc.Core.Activity.TextActivityLog(Path.Combine(Path.GetDirectoryName(journalPath)!, "activity.txt"), sp.GetRequiredService<IClock>()));
+        services.AddSingleton<PCDoc.Core.Activity.IReportWriter, ReportWriter>();
         services.AddSingleton(sp => new FixPipeline(
-            sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>()));
+            sp.GetServices<IFixer>(), sp.GetRequiredService<IRestorePointService>(), sp.GetRequiredService<UndoJournal>())
+        {
+            Activity = sp.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(),
+            Describe = text => sp.GetRequiredService<ILocalizer>().Format(text),
+        });
 
         services.AddSingleton<IScanner>(sp => new SystemScanner(
             sp.GetRequiredService<IInventorySource>(), sp.GetRequiredService<IBootSource>(), sp.GetRequiredService<IAutorunSource>(),
@@ -202,7 +214,10 @@ internal static class Composition
             NewFixPanel(services), Mode(services)),
         PageId.Security => new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(),
             NewFixPanel(services), Mode(services)),
-        PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>()),
+        PageId.History when _fixesAvailable => new HistoryPageViewModel(services.GetRequiredService<FixPipeline>(), services.GetRequiredService<ILocalizer>(),
+            services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>(), services.GetRequiredService<PCDoc.Core.Activity.IReportWriter>(),
+            lines => PCDoc.Core.Activity.ActivityReport.Build(lines, PCDoc.Core.AppInfo.ProductName, PCDoc.Core.AppInfo.Version, Environment.MachineName,
+                Environment.OSVersion.VersionString, DateTimeOffset.Now)),
         PageId.History => services.GetRequiredService<ILocalizer>()["Fix.Disabled"],
         _ => new SettingsPageViewModel(
             services.GetRequiredService<ILocalizer>(), services.GetRequiredService<ISettingsStore>(),

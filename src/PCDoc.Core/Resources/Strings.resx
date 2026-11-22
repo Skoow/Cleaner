@@ -134,4 +134,18 @@
   <data name="Nav.Updates" xml:space="preserve"><value>Updates</value></data>
   <data name="Nav.Optimize" xml:space="preserve"><value>Optimization</value></data>
   <data name="Nav.Security" xml:space="preserve"><value>Security</value></data>
+  <data name="Activity.Applied" xml:space="preserve"><value>Done: {0} ({1})</value></data>
+  <data name="Activity.Failed" xml:space="preserve"><value>FAILED: {0} — {1}</value></data>
+  <data name="Activity.Undone" xml:space="preserve"><value>Undone: {0}</value></data>
+  <data name="Activity.Restore.Created" xml:space="preserve"><value>Restore point created</value></data>
+  <data name="Activity.Restore.ReusedRecent" xml:space="preserve"><value>Recent restore point reused (less than 24 h old)</value></data>
+  <data name="Activity.Restore.ProtectionDisabled" xml:space="preserve"><value>No restore point: system protection is off</value></data>
+  <data name="Activity.Restore.Failed" xml:space="preserve"><value>Restore point could not be created</value></data>
+  <data name="Activity.Started" xml:space="preserve"><value>{0} {1} started</value></data>
+  <data name="Activity.Scan" xml:space="preserve"><value>Defender scan ({0}): result code {1}</value></data>
+  <data name="History.ExportReport" xml:space="preserve"><value>Export the report (.txt)</value></data>
+  <data name="History.ReportSaved" xml:space="preserve"><value>Report saved: {0}</value></data>
+  <data name="History.ReportFailed" xml:space="preserve"><value>The report could not be saved.</value></data>
+  <data name="History.OpenFolder" xml:space="preserve"><value>Open the folder</value></data>
+  <data name="History.ActivityTitle" xml:space="preserve"><value>Activity (date and time of each action)</value></data>
 </root>

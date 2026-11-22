@@ -60,6 +60,8 @@ public partial class App : Application
         }
 
         _services = Composition.Build(_logger, localizer, store, journalPath);
+        _services.GetRequiredService<PCDoc.Core.Activity.IActivityLog>().Write("app",
+            localizer.Format(new PCDoc.Core.Findings.LocalizedText("Activity.Started", AppInfo.ProductName, AppInfo.Version)));
         if (journalPath is not null)
         {
             // Restes mis en quarantaine il y a plus de 7 jours : supprimés définitivement.

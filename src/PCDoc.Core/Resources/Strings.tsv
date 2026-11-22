@@ -129,3 +129,17 @@ Nav.Apps	Applications	Applications
 Nav.Updates	Updates	Mises à jour
 Nav.Optimize	Optimization	Optimisation
 Nav.Security	Security	Sécurité
+Activity.Applied	Done: {0} ({1})	Fait : {0} ({1})
+Activity.Failed	FAILED: {0} — {1}	ÉCHEC : {0} — {1}
+Activity.Undone	Undone: {0}	Annulé : {0}
+Activity.Restore.Created	Restore point created	Point de restauration créé
+Activity.Restore.ReusedRecent	Recent restore point reused (less than 24 h old)	Point de restauration récent réutilisé (moins de 24 h)
+Activity.Restore.ProtectionDisabled	No restore point: system protection is off	Pas de point de restauration : la protection du système est désactivée
+Activity.Restore.Failed	Restore point could not be created	Le point de restauration n'a pas pu être créé
+Activity.Started	{0} {1} started	{0} {1} démarré
+Activity.Scan	Defender scan ({0}): result code {1}	Analyse Defender ({0}) : code de résultat {1}
+History.ExportReport	Export the report (.txt)	Exporter le rapport (.txt)
+History.ReportSaved	Report saved: {0}	Rapport enregistré : {0}
+History.ReportFailed	The report could not be saved.	Le rapport n'a pas pu être enregistré.
+History.OpenFolder	Open the folder	Ouvrir le dossier
+History.ActivityTitle	Activity (date and time of each action)	Activité (date et heure de chaque action)
