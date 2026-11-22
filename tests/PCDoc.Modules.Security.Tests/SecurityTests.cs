@@ -94,7 +94,7 @@ public class SecurityTests
             .Add(@"root\SecurityCenter2", "AntiVirusProduct", new Dictionary<string, object?> { ["displayName"] = "Windows Defender", ["productState"] = 397568L })
             .Add(@"root\Microsoft\Windows\Defender", "MSFT_MpComputerStatus", new Dictionary<string, object?>
             {
-                ["AntivirusEnabled"] = true, ["RealTimeProtectionEnabled"] = true, ["AntivirusSignatureAge"] = 9u, ["QuickScanAge"] = 2u, ["IsTamperProtected"] = true,
+                ["AntivirusEnabled"] = true, ["RealTimeProtectionEnabled"] = true, ["AntivirusSignatureAge"] = 9u, ["QuickScanAge"] = 4294967295u, ["IsTamperProtected"] = true,
             })
             .Add(@"root\StandardCimv2", "MSFT_NetFirewallProfile",
                 new Dictionary<string, object?> { ["Name"] = "Domain", ["Enabled"] = (ushort)1 },

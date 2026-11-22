@@ -169,7 +169,8 @@ public sealed partial class SecurityEngine(
             }
 
             static bool Flag(object? v) => v is bool b && b;
-            static int? Days(object? v) => v is null ? null : Convert.ToInt32(v, CultureInfo.InvariantCulture) is var d && d is >= 0 and < 65535 ? d : null;
+            // Valeurs non signées ; 4294967295 (ou 65535) = jamais fait.
+            static int? Days(object? v) => v is null ? null : Convert.ToInt64(v, CultureInfo.InvariantCulture) is var d && d is >= 0 and < 65535 ? (int)d : null;
             // Un autre antivirus actif met Defender en mode passif : ce n'est pas un problème.
             var otherActive = antivirus.Any(a => a.Enabled && !a.IsDefender);
             var active = Flag(row.GetValueOrDefault("AntivirusEnabled")) && !otherActive;
