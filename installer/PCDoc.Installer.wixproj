@@ -1,0 +1,14 @@
+<!--
+  Installateur MSI « par machine » de PCDoc (Program Files\PCDoc), construit sur le runner Windows de la CI :
+    dotnet build installer/PCDoc.Installer.wixproj -c Release -p:InstallerPlatform=x64 -p:AppDir=<dossier publié> -p:ProductVersion=1.0.0
+  WiX 5 (licence MS-RL), sans extension.
+-->
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputName>PCDoc</OutputName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">$(Version)</ProductVersion>
+    <AppDir Condition="'$(AppDir)' == ''">$(MSBuildThisFileDirectory)..\out\win-x64</AppDir>
+    <DefineConstants>ProductVersion=$(ProductVersion);AppDir=$(AppDir);RepoDir=$(MSBuildThisFileDirectory)..;Icon=$(MSBuildThisFileDirectory)..\src\PCDoc.App\Assets\pcdoc.ico</DefineConstants>
+  </PropertyGroup>
+</Project>

@@ -177,6 +177,22 @@
                      Visibility="{Binding PortableStatus, Converter={StaticResource NotNullToVisibility}}" />
         </StackPanel>
       </Border>
+      <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,12" Padding="16">
+        <StackPanel>
+          <TextBlock Text="{app:T AppUpdate.Title}" Style="{StaticResource Pcdoc.SectionTitle}" />
+          <TextBlock Text="{Binding VersionText}" Margin="0,0,0,6" />
+          <CheckBox Content="{app:T AppUpdate.Auto}" IsChecked="{Binding CheckAppUpdates}" AutomationProperties.Name="{app:T AppUpdate.Auto}" />
+          <TextBlock Text="{app:T AppUpdate.Privacy}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,4,0,8" />
+          <StackPanel Orientation="Horizontal">
+            <Button Content="{app:T AppUpdate.Check}" Command="{Binding CheckAppUpdateCommand}" Margin="0,0,8,0" AutomationProperties.Name="{app:T AppUpdate.Check}" />
+            <Button Content="{app:T AppUpdate.Install}" Command="{Binding InstallAppUpdateCommand}" Margin="0,0,8,0"
+                    Visibility="{Binding CanInstallAppUpdate, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{app:T AppUpdate.Install}" />
+            <Button Content="{app:T AppUpdate.CopyLink}" Command="{Binding CopyReleaseLinkCommand}" AutomationProperties.Name="{app:T AppUpdate.CopyLink}" />
+          </StackPanel>
+          <TextBlock Text="{Binding AppUpdateStatus}" TextWrapping="Wrap" Margin="0,6,0,0"
+                     Visibility="{Binding AppUpdateStatus, Converter={StaticResource NotNullToVisibility}}" />
+        </StackPanel>
+      </Border>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

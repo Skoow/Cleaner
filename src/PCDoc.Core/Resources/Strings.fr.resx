@@ -235,4 +235,20 @@
   <data name="Bilan.ForumReport" xml:space="preserve"><value>Copier pour un forum</value></data>
   <data name="Bilan.ForumReport.Tip" xml:space="preserve"><value>Copie le rapport sans votre nom, celui du PC, les adresses IP et MAC, les courriels ni les numéros de série, prêt à coller sur un forum d'entraide.</value></data>
   <data name="Bilan.ForumHeader" xml:space="preserve"><value>Rapport anonyme fait avec PCDoc (informations personnelles retirées).</value></data>
+  <data name="AppUpdate.Title" xml:space="preserve"><value>Mises à jour de PCDoc</value></data>
+  <data name="AppUpdate.Auto" xml:space="preserve"><value>Vérifier s'il existe une nouvelle version au démarrage de PCDoc</value></data>
+  <data name="AppUpdate.Privacy" xml:space="preserve"><value>PCDoc lit seulement le numéro de la dernière version sur GitHub : rien sur vous ou votre PC n'est envoyé.</value></data>
+  <data name="AppUpdate.Check" xml:space="preserve"><value>Vérifier maintenant</value></data>
+  <data name="AppUpdate.Install" xml:space="preserve"><value>Installer la mise à jour</value></data>
+  <data name="AppUpdate.CopyLink" xml:space="preserve"><value>Copier le lien de téléchargement</value></data>
+  <data name="AppUpdate.See" xml:space="preserve"><value>Voir</value></data>
+  <data name="AppUpdate.Checking" xml:space="preserve"><value>Vérification…</value></data>
+  <data name="AppUpdate.UpToDate" xml:space="preserve"><value>PCDoc est à jour.</value></data>
+  <data name="AppUpdate.Available" xml:space="preserve"><value>PCDoc {0} est disponible.</value></data>
+  <data name="AppUpdate.Banner" xml:space="preserve"><value>Une nouvelle version de PCDoc ({0}) est disponible.</value></data>
+  <data name="AppUpdate.Downloading" xml:space="preserve"><value>Téléchargement et vérification de l'installateur…</value></data>
+  <data name="AppUpdate.Installing" xml:space="preserve"><value>L'installateur se lance et PCDoc se ferme. Rouvrez ensuite PCDoc depuis le menu Démarrer.</value></data>
+  <data name="AppUpdate.Failed" xml:space="preserve"><value>La mise à jour n'a pas pu se faire : {0}</value></data>
+  <data name="AppUpdate.NotInstalled" xml:space="preserve"><value>L'installation automatique est réservée à PCDoc installé avec son installateur : copiez le lien pour télécharger la nouvelle version.</value></data>
+  <data name="AppUpdate.Unsigned" xml:space="preserve"><value>Cette copie de PCDoc n'est pas signée, l'installateur ne peut donc pas être vérifié : copiez le lien pour le télécharger.</value></data>
 </root>

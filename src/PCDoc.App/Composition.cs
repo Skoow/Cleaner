@@ -159,6 +159,8 @@ internal static class Composition
         // Sécurité et clés USB (v0.7).
         services.AddSingleton<IDefenderCommand, DefenderCommand>();
         services.AddSingleton<IRemovableDrives, RemovableDrives>();
+        services.AddSingleton<PCDoc.Core.AppUpdates.IAppUpdater>(sp => new AppUpdater(sp.GetRequiredService<ISignatureVerifier>()));
+        services.AddSingleton<PCDoc.Core.AppUpdates.AppUpdateState>();
         services.AddSingleton<IMaintenanceScheduler>(sp => new MaintenanceScheduler(sp.GetRequiredService<IProcessRunner>(), sp.GetRequiredService<IRemovableDrives>(), sp.GetRequiredService<ISignatureVerifier>()));
         services.AddSingleton(sp =>
         {
@@ -299,6 +301,10 @@ internal static class Composition
             AppPaths.LogsDir, ReadLicense)
         {
             Scheduler = services.GetRequiredService<IMaintenanceScheduler>(),
+            Updater = services.GetRequiredService<PCDoc.Core.AppUpdates.IAppUpdater>(),
+            State = services.GetRequiredService<PCDoc.Core.AppUpdates.AppUpdateState>(),
+            IsBusy = () => services.GetRequiredService<PCDoc.Core.Fixing.FixPipeline>().IsRunning,
+            ExitApp = () => System.Windows.Application.Current?.MainWindow?.Close(),
             RemovableRoots = () => [.. services.GetRequiredService<IRemovableDrives>().List().Select(d => d.Root)],
         },
     };

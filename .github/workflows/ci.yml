@@ -55,6 +55,25 @@ jobs:
           if (-not $log -or -not (Select-String -Path $log.FullName -Pattern 'Window shown')) { Write-Error "Main window was not shown"; exit 1 }
           if (Select-String -Path $log.FullName -Pattern '\[(ERR|FTL)\]') { Write-Error "Errors in the startup log"; exit 1 }
           Stop-Process -Id $p.Id -Force
+      - name: Installer (MSI) ${{ matrix.rid }}
+        shell: pwsh
+        run: |
+          $arch = "${{ matrix.rid }}".Replace("win-", "")
+          dotnet build installer/PCDoc.Installer.wixproj -c Release -p:InstallerPlatform=$arch -p:AppDir="$PWD/out/${{ matrix.rid }}" -o out/msi-$arch
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Get-ChildItem out/msi-$arch
+      - name: Installer test (install, check, uninstall)
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: |
+          $msi = (Get-ChildItem out/msi-x64 -Filter *.msi | Select-Object -First 1).FullName
+          $p = Start-Process msiexec.exe -ArgumentList "/i `"$msi`" /qn /norestart /l*v install.log" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Get-Content install.log -Tail 60; Write-Error "Install failed ($($p.ExitCode))"; exit 1 }
+          if (-not (Test-Path "$env:ProgramFiles\PCDoc\PCDoc.exe")) { Write-Error "PCDoc.exe not installed"; exit 1 }
+          if (-not (Test-Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PCDoc.lnk")) { Write-Error "Start menu shortcut missing"; exit 1 }
+          $p = Start-Process msiexec.exe -ArgumentList "/x `"$msi`" /qn /norestart /l*v uninstall.log" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Get-Content uninstall.log -Tail 60; Write-Error "Uninstall failed ($($p.ExitCode))"; exit 1 }
+          if (Test-Path "$env:ProgramFiles\PCDoc\PCDoc.exe") { Write-Error "PCDoc.exe left after uninstall"; exit 1 }
       - name: SBOM (CycloneDX)
         run: |
           dotnet tool install --global CycloneDX --version 6.3.2
@@ -63,6 +82,10 @@ jobs:
         with:
           name: PCDoc-portable-${{ matrix.rid }}
           path: out/${{ matrix.rid }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: PCDoc-msi-${{ matrix.rid }}
+          path: out/msi-*/*.msi
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: matrix.rid == 'win-x64' && always()
         with:

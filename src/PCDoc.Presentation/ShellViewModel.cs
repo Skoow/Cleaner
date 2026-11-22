@@ -18,6 +18,10 @@ public sealed partial class ShellViewModel : ObservableObject
     [ObservableProperty]
     private string? _errorBanner;
 
+    /// <summary>Nouvelle version de PCDoc disponible (bandeau discret ; le détail est dans les Paramètres).</summary>
+    [ObservableProperty]
+    private string? _appUpdateBanner;
+
     [ObservableProperty]
     private string _searchText = string.Empty;
 
@@ -111,6 +115,16 @@ public sealed partial class ShellViewModel : ObservableObject
 
     [RelayCommand]
     private void DismissError() => ErrorBanner = null;
+
+    [RelayCommand]
+    private void OpenAppUpdate()
+    {
+        AppUpdateBanner = null;
+        CurrentPage = PageId.Settings;
+    }
+
+    [RelayCommand]
+    private void DismissAppUpdate() => AppUpdateBanner = null;
 
     /// <summary>Après des corrections : les autres pages seront recréées (et réanalysées) à leur prochaine ouverture.</summary>
     public void ForgetOtherPages()

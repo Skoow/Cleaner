@@ -201,6 +201,18 @@
                      TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
         </DockPanel>
       </Border>
+      <!-- Nouvelle version de PCDoc. -->
+      <Border DockPanel.Dock="Top" Margin="16,12,16,0" Padding="12,8" CornerRadius="6" Style="{StaticResource Pcdoc.Card}"
+              Visibility="{Binding AppUpdateBanner, Converter={StaticResource NotNullToVisibility}}"
+              AutomationProperties.LiveSetting="Polite">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Content="{app:T Common.Close}" Command="{Binding DismissAppUpdateCommand}" Margin="8,0,0,0"
+                  AutomationProperties.Name="{app:T Common.Close}" />
+          <Button DockPanel.Dock="Right" Content="{app:T AppUpdate.See}" Command="{Binding OpenAppUpdateCommand}"
+                  AutomationProperties.Name="{app:T AppUpdate.See}" />
+          <TextBlock Text="{Binding AppUpdateBanner}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
+        </DockPanel>
+      </Border>
       <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
     </DockPanel>
 

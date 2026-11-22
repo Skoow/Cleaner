@@ -231,3 +231,19 @@ Fix.Stopped	Stopped: the actions already done are in History.	Arrêté : les act
 Bilan.ForumReport	Copy for a forum	Copier pour un forum
 Bilan.ForumReport.Tip	Copies the report without your name, PC name, IP and MAC addresses, e-mails or serial numbers, ready to paste on a help forum.	Copie le rapport sans votre nom, celui du PC, les adresses IP et MAC, les courriels ni les numéros de série, prêt à coller sur un forum d'entraide.
 Bilan.ForumHeader	Anonymous report made with PCDoc (personal information removed).	Rapport anonyme fait avec PCDoc (informations personnelles retirées).
+AppUpdate.Title	PCDoc updates	Mises à jour de PCDoc
+AppUpdate.Auto	Check for a new version when PCDoc starts	Vérifier s'il existe une nouvelle version au démarrage de PCDoc
+AppUpdate.Privacy	PCDoc only reads the latest version number on GitHub: nothing about you or your PC is sent.	PCDoc lit seulement le numéro de la dernière version sur GitHub : rien sur vous ou votre PC n'est envoyé.
+AppUpdate.Check	Check now	Vérifier maintenant
+AppUpdate.Install	Install the update	Installer la mise à jour
+AppUpdate.CopyLink	Copy the download link	Copier le lien de téléchargement
+AppUpdate.See	See	Voir
+AppUpdate.Checking	Checking…	Vérification…
+AppUpdate.UpToDate	PCDoc is up to date.	PCDoc est à jour.
+AppUpdate.Available	PCDoc {0} is available.	PCDoc {0} est disponible.
+AppUpdate.Banner	A new version of PCDoc ({0}) is available.	Une nouvelle version de PCDoc ({0}) est disponible.
+AppUpdate.Downloading	Downloading and checking the installer…	Téléchargement et vérification de l'installateur…
+AppUpdate.Installing	The installer is running; PCDoc closes. Open PCDoc again from the Start menu afterwards.	L'installateur se lance et PCDoc se ferme. Rouvrez ensuite PCDoc depuis le menu Démarrer.
+AppUpdate.Failed	The update could not be done: {0}	La mise à jour n'a pas pu se faire : {0}
+AppUpdate.NotInstalled	Automatic installation is only for PCDoc installed with its installer: copy the link to download the new version.	L'installation automatique est réservée à PCDoc installé avec son installateur : copiez le lien pour télécharger la nouvelle version.
+AppUpdate.Unsigned	This copy of PCDoc is not signed, so the installer cannot be checked: copy the link to download it.	Cette copie de PCDoc n'est pas signée, l'installateur ne peut donc pas être vérifié : copiez le lien pour le télécharger.

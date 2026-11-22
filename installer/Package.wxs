@@ -1,0 +1,42 @@
+<!-- PCDoc : installation pour tous les comptes dans Program Files\PCDoc (dossier modifiable seulement par les administrateurs). -->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="PCDoc" Manufacturer="PCDoc contributors" Version="$(var.ProductVersion)" Language="1033"
+           UpgradeCode="5E0C2B47-8F3A-4C61-9B7D-2A4E6C8F1D03" Scope="perMachine" Compressed="yes">
+    <SummaryInformation Description="PCDoc - Windows maintenance (GPL-3.0)" Manufacturer="PCDoc contributors" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of PCDoc is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="PCDocIcon" SourceFile="$(var.Icon)" />
+    <Property Id="ARPPRODUCTICON" Value="PCDocIcon" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/Skoow/Cleaner" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="PCDoc" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="System64Folder" />
+
+    <Feature Id="Main" Title="PCDoc">
+      <Component Id="App" Directory="INSTALLFOLDER">
+        <File Id="PCDocExe" Source="$(var.AppDir)\PCDoc.exe" KeyPath="yes">
+          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="PCDoc" WorkingDirectory="INSTALLFOLDER" Icon="PCDocIcon" />
+        </File>
+      </Component>
+      <Component Id="License" Directory="INSTALLFOLDER">
+        <File Id="LicenseTxt" Source="$(var.RepoDir)\LICENSE" Name="LICENSE.txt" KeyPath="yes" />
+      </Component>
+      <Component Id="Notices" Directory="INSTALLFOLDER">
+        <File Id="ThirdParty" Source="$(var.RepoDir)\src\PCDoc.App\THIRD-PARTY-NOTICES.md" KeyPath="yes" />
+      </Component>
+    </Feature>
+
+    <!-- Désinstallation : la tâche d'entretien automatique est supprimée (pas lors d'une mise à jour). -->
+    <CustomAction Id="RemoveMaintenanceTask" Directory="System64Folder"
+                  ExeCommand="&quot;[System64Folder]schtasks.exe&quot; /Delete /F /TN &quot;PCDoc\Maintenance&quot;"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="RemoveMaintenanceTask" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>

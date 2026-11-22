@@ -152,6 +152,35 @@ public partial class App : Application
         MainWindow = window;
         window.Show();
         _logger.Information("Window shown in {Ms} ms", clock.ElapsedMilliseconds);
+        if (settings.CheckAppUpdates)
+        {
+            _ = CheckAppUpdateAsync(shell, localizer);
+        }
+    }
+
+    /// <summary>Vérification discrète de la dernière version de PCDoc (désactivable) ; un échec réseau est ignoré.</summary>
+    private async Task CheckAppUpdateAsync(ShellViewModel shell, ILocalizer localizer)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(true); // après l'affichage, sans ralentir le démarrage
+            if (_services is not { } services)
+            {
+                return;
+            }
+
+            var release = await services.GetRequiredService<PCDoc.Core.AppUpdates.IAppUpdater>().CheckAsync(CancellationToken.None).ConfigureAwait(true);
+            services.GetRequiredService<PCDoc.Core.AppUpdates.AppUpdateState>().Latest = release;
+            if (release is not null)
+            {
+                shell.AppUpdateBanner = localizer.Format(new PCDoc.Core.Findings.LocalizedText("AppUpdate.Banner", release.Version.ToString(3)));
+                _logger?.Information("PCDoc {Version} is available", release.Version);
+            }
+        }
+        catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or TaskCanceledException or InvalidOperationException or System.Text.Json.JsonException)
+        {
+            _logger?.Information("Update check skipped: {Message}", ex.Message);
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)

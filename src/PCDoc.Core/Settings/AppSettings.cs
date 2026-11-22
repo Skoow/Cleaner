@@ -10,7 +10,8 @@ public sealed record AppSettings(
     WindowPlacement? Window = null,
     AppMode Mode = AppMode.Novice,
     bool FirstRunCompleted = false,
-    MaintenanceOptions? Maintenance = null)
+    MaintenanceOptions? Maintenance = null,
+    bool CheckAppUpdates = true)
 {
     /// <summary>Français si Windows est en français, sinon anglais ; thème du système.</summary>
     public static AppSettings DefaultsFor(CultureInfo uiCulture)
