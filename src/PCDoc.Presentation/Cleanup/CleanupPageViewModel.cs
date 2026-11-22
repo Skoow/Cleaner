@@ -129,6 +129,7 @@ public sealed partial class CleanupPageViewModel : ObservableObject
 
         var previous = Categories.ToDictionary(c => c.Id, c => c.IsSelected);
         Categories.Clear();
+        var blocked = r.Categories.Where(c => c.BlockedBy is not null).ToDictionary(c => c.Id, c => c.BlockedBy!);
         var items = r.Categories.Select(c => (c.Id, c.Risk, c.Bytes, c.Files, Known: true))
             .Append((CleanupEngine.RecycleBinId, RiskLevel.Conditional, r.RecycleBinBytes, (int)r.RecycleBinItems, true))
             .Append((CleanupEngine.ComponentStoreId, RiskLevel.Safe, -1L, 0, true));
@@ -137,7 +138,8 @@ public sealed partial class CleanupPageViewModel : ObservableObject
             var finding = CleanupFixer.FindingFor(id, risk, Math.Max(0, bytes), files);
             var canSelect = FixPolicy.IsOffered(finding, _mode());
             var row = new CategoryRow(id, _localizer[$"Cleanup.{id}.Title"], _localizer[$"Cleanup.{id}.Explanation"],
-                bytes < 0 ? "—" : Size(bytes), Math.Max(0, bytes), finding, canSelect, _localizer[$"Risk.{risk}"]);
+                blocked.ContainsKey(id) ? _localizer["Cleanup.BrowserOpen"] : bytes < 0 ? "—" : Size(bytes), Math.Max(0, bytes), finding, canSelect,
+                _localizer[$"Risk.{risk}"]);
             row.IsSelected = previous.TryGetValue(id, out var was) ? was && canSelect : canSelect && risk == RiskLevel.Safe && bytes > 0;
             row.PropertyChanged += (_, _) => UpdateTotal();
             Categories.Add(row);

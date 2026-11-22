@@ -3,7 +3,8 @@ using PCDoc.Core.Findings;
 
 namespace PCDoc.Modules.Cleanup;
 
-public sealed record CategoryResult(string Id, RiskLevel Risk, long Bytes, int Files);
+/// <param name="BlockedBy">Programme ouvert qui empêche ce nettoyage (navigateur), sinon null.</param>
+public sealed record CategoryResult(string Id, RiskLevel Risk, long Bytes, int Files, string? BlockedBy = null);
 
 public sealed record CleanupReport(IReadOnlyList<CategoryResult> Categories, long RecycleBinBytes, long RecycleBinItems);
 
@@ -36,7 +37,7 @@ public sealed class CleanupEngine(
         var results = catalog.Categories.Select(c =>
         {
             var eligible = Eligible(c).ToList();
-            return new CategoryResult(c.Id, c.Risk, eligible.Sum(f => f.Size), eligible.Count);
+            return new CategoryResult(c.Id, c.Risk, eligible.Sum(f => f.Size), eligible.Count, c.RequiresClosed?.FirstOrDefault(guards.IsRunning));
         }).ToList();
         var (bytes, items) = RecycleBinAllowed ? SafeQueryBin() : (0, 0);
         return new CleanupReport(results, bytes, items);
@@ -130,7 +131,8 @@ public sealed class CleanupEngine(
         var limit = clock.Now.AddHours(-c.MinAgeHours);
         foreach (var root in ResolveRoots(c.Roots))
         {
-            var all = files.EnumerateFiles(root, recursive: true).ToList();
+            var all = files.EnumerateFiles(root, recursive: true)
+                .Where(f => c.ExcludeFiles?.Any(x => NameMatches(f.Path[(f.Path.LastIndexOf('\\') + 1)..], x)) != true).ToList();
             if (c.MinAgeHours == 0)
             {
                 foreach (var f in all)
@@ -155,6 +157,11 @@ public sealed class CleanupEngine(
         {
             var cut = file.LastIndexOf('\\');
             var pattern = file[(cut + 1)..];
+            if (pattern == "*")
+            {
+                continue; // jamais « tous les fichiers » d'un dossier par un motif de nom
+            }
+
             var folder = file[..cut];
             // Le fichier lui-même a été vérifié par Resolve ; son dossier peut être une racine autorisée (C:\Windows\MEMORY.DMP).
             IEnumerable<string> parents = folder.Contains('*', StringComparison.Ordinal) ? ResolveRoots([folder]) : files.DirectoryExists(folder) ? [folder] : [];
@@ -214,7 +221,7 @@ public sealed class CleanupEngine(
 
     private string RoamingAppData => profiles.Resolve().ProfilePath.TrimEnd('\\') + @"\AppData\Roaming";
 
-    /// <summary>Seules trois variables sont connues, toutes issues de sources de confiance.</summary>
+    /// <summary>Variables connues : %SystemRoot%, %windir%, %ProgramData%, %LOCALAPPDATA% et %APPDATA% (profil cible).</summary>
     private string Expand(string raw) => raw
         .Replace("%SystemRoot%", known.Windows, StringComparison.OrdinalIgnoreCase)
         .Replace("%windir%", known.Windows, StringComparison.OrdinalIgnoreCase)

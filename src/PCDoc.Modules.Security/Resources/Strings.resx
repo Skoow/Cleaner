@@ -126,9 +126,9 @@
   <data name="Scan.AdwCleaner.Title" xml:space="preserve"><value>Adware scan: Malwarebytes AdwCleaner (detection)</value></data>
   <data name="Scan.AdwCleaner.Explanation" xml:space="preserve"><value>Finds adware, toolbars and unwanted programs. Detection only: read its report in History.</value></data>
   <data name="Scan.AdwCleanerClean.Title" xml:space="preserve"><value>Remove adware with AdwCleaner</value></data>
-  <data name="Scan.AdwCleanerClean.Explanation" xml:space="preserve"><value>AdwCleaner removes what it finds. It sometimes flags useful tools: items go to its quarantine, which can be restored by opening AdwCleaner.</value></data>
+  <data name="Scan.AdwCleanerClean.Explanation" xml:space="preserve"><value>AdwCleaner removes what it finds. It sometimes flags useful tools: removed items are kept in its quarantine (%ProgramData%\PCDoc\adwcleaner); to put one back, run AdwCleaner and open its Quarantine.</value></data>
   <data name="Scan.KasperskyVrt.Title" xml:space="preserve"><value>Virus scan and removal: Kaspersky Virus Removal Tool</value></data>
-  <data name="Scan.KasperskyVrt.Explanation" xml:space="preserve"><value>Free Kaspersky scanner (about 200 MB), downloaded from Kaspersky, signature checked, run without any window. Threats it finds are moved to its quarantine.</value></data>
+  <data name="Scan.KasperskyVrt.Explanation" xml:space="preserve"><value>Free Kaspersky scanner (about 200 MB), downloaded from Kaspersky, signature checked, run without any window and never restarts the PC. Serious threats are disinfected or deleted (a backup copy is kept in %ProgramData%\PCDoc\kvrt). Launching it accepts Kaspersky's licence and its KSN statement (data about threats sent to Kaspersky).</value></data>
   <data name="SecondOpinion.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner (removal)</value></data>
   <data name="SecondOpinion.KasperskyVrt" xml:space="preserve"><value>Kaspersky Virus Removal Tool</value></data>
   <data name="SecondOpinion.Running.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner: scan and removal…</value></data>

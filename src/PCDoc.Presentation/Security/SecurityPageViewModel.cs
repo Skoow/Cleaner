@@ -119,7 +119,11 @@ public sealed partial class SecurityPageViewModel : ObservableObject
         {
             if (value is not null)
             {
-                value.Output += (_, line) => ScanLine = line;
+                value.Output += (_, line) =>
+                {
+                    ScanStatus ??= _localizer["Security.Scanning"];
+                    ScanLine = line;
+                };
             }
         }
     }
@@ -130,10 +134,9 @@ public sealed partial class SecurityPageViewModel : ObservableObject
 
     private void BuildScans()
     {
-        if (Scans.Count > 0)
-        {
-            return;
-        }
+        // Reconstruit à chaque fois (mode et langue peuvent avoir changé) en gardant les cases cochées.
+        var previous = Scans.Count == 0 ? null : Scans.Where(s => s.IsSelected).Select(s => s.Kind).ToHashSet();
+        Scans.Clear();
 
         foreach (var kind in Enum.GetValues<ScanKind>())
         {
@@ -141,7 +144,7 @@ public sealed partial class SecurityPageViewModel : ObservableObject
             var canSelect = FixPolicy.IsOffered(finding, _mode());
             Scans.Add(new ScanRow(kind, _localizer[$"Scan.{kind}.Title"], _localizer[$"Scan.{kind}.Explanation"], _localizer[$"Risk.{finding.Risk}"], canSelect)
             {
-                IsSelected = canSelect && kind is ScanKind.DefenderQuick or ScanKind.AdwCleaner,
+                IsSelected = canSelect && (previous?.Contains(kind) ?? kind is ScanKind.DefenderQuick or ScanKind.AdwCleaner),
             });
         }
     }

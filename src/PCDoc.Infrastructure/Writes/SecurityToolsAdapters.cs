@@ -332,7 +332,7 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
             SecondOpinionTool.AdwCleanerClean => ("https://downloads.malwarebytes.com/file/adwcleaner", "adwcleaner.exe", Malwarebytes,
                 "/eula /clean /noreboot /path \"{1}\"", TimeSpan.FromHours(1)),
             SecondOpinionTool.KasperskyVrt => ("https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe", "KVRT.exe", Kaspersky,
-                "-accepteula -silent -adinsilent -processlevel 2 -dontencrypt -d \"{1}\"", TimeSpan.FromHours(4)),
+                "-accepteula -silent -processlevel 1 -dontencrypt -fixednames -d \"{1}\"", TimeSpan.FromHours(4)),
             _ => (RuntimeInformation.OSArchitecture == Architecture.X86 ? "https://go.microsoft.com/fwlink/?LinkId=212733" : "https://go.microsoft.com/fwlink/?LinkId=212732",
                 "msert.exe", Microsoft, "/Q /N", TimeSpan.FromHours(3)),
         };

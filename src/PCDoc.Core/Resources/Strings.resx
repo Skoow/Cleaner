@@ -229,4 +229,6 @@
   <data name="Nav.Group.Protect" xml:space="preserve"><value>PROTECT</value></data>
   <data name="Nav.Group.Update" xml:space="preserve"><value>UPDATE AND SPEED UP</value></data>
   <data name="Nav.Group.Tools" xml:space="preserve"><value>TOOLS</value></data>
+  <data name="Fix.Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Fix.Stopped" xml:space="preserve"><value>Stopped: the actions already done are in History.</value></data>
 </root>

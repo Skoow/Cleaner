@@ -15,6 +15,7 @@ public sealed record FixItem(string Id, string Title, RiskLevel Risk, string Ris
 /// Panneau de confirmation dans la page (jamais de boîte de dialogue) : liste exacte de ce qui va changer,
 /// niveau de risque, case « Je comprends le risque » pour 🔴, seconde confirmation sans point de restauration.
 /// </summary>
+#pragma warning disable CA1001 // _run est libéré par le « using » de RunAsync
 public sealed partial class FixConfirmationViewModel : ObservableObject
 {
     private readonly FixPipeline _pipeline;
@@ -104,12 +105,19 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
         Items.Clear();
     }
 
+    private CancellationTokenSource? _run;
+
+    /// <summary>Arrête la série après l'action en cours (les analyses longues s'arrêtent aussitôt).</summary>
+    [RelayCommand]
+    private void StopRun() => _run?.Cancel();
+
     private async Task RunAsync(bool allowWithoutRestorePoint)
     {
         IsRunning = true;
+        using var run = _run = new CancellationTokenSource();
         try
         {
-            var result = await _pipeline.RunAsync(_pending, _mode(), allowWithoutRestorePoint, CancellationToken.None).ConfigureAwait(true);
+            var result = await _pipeline.RunAsync(_pending, _mode(), allowWithoutRestorePoint, run.Token).ConfigureAwait(true);
             if (result.NeedsConfirmationWithoutRestorePoint)
             {
                 AwaitingNoRestorePointConfirmation = true;
@@ -125,10 +133,19 @@ public sealed partial class FixConfirmationViewModel : ObservableObject
             IsOpen = false;
             Completed?.Invoke(this, EventArgs.Empty);
         }
+        catch (OperationCanceledException)
+        {
+            ResultText = _localizer["Fix.Stopped"];
+            IsOpen = false;
+            AwaitingNoRestorePointConfirmation = false;
+            Completed?.Invoke(this, EventArgs.Empty);
+        }
         finally
         {
+            _run = null;
             IsRunning = false;
             ConfirmCommand.NotifyCanExecuteChanged();
         }
     }
 }
+#pragma warning restore CA1001

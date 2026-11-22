@@ -48,15 +48,16 @@
   <data name="Cleanup.chrome-history.Title" xml:space="preserve"><value>Historique de Chrome</value></data>
   <data name="Cleanup.chrome-history.Explanation" xml:space="preserve"><value>Sites visités et vignettes des plus visités. Favoris et mots de passe sont gardés. Chrome doit être fermé.</value></data>
   <data name="Cleanup.edge-cookies.Title" xml:space="preserve"><value>Cookies d'Edge</value></data>
-  <data name="Cleanup.edge-cookies.Explanation" xml:space="preserve"><value>Les sites vous oublient : il faudra vous reconnecter partout. Edge doit être fermé.</value></data>
+  <data name="Cleanup.edge-cookies.Explanation" xml:space="preserve"><value>Les sites vous oublient : il faudra vous reconnecter partout. Edge doit être complètement fermé (désactivez aussi « Boost de démarrage » dans ses paramètres s'il reste ouvert en arrière-plan).</value></data>
   <data name="Cleanup.edge-history.Title" xml:space="preserve"><value>Historique d'Edge</value></data>
-  <data name="Cleanup.edge-history.Explanation" xml:space="preserve"><value>Sites visités et vignettes des plus visités. Favoris et mots de passe sont gardés. Edge doit être fermé.</value></data>
+  <data name="Cleanup.edge-history.Explanation" xml:space="preserve"><value>Sites visités et vignettes des plus visités. Favoris et mots de passe sont gardés. Edge doit être complètement fermé (le Boost de démarrage le garde ouvert en arrière-plan).</value></data>
   <data name="Cleanup.firefox-cookies.Title" xml:space="preserve"><value>Cookies de Firefox</value></data>
   <data name="Cleanup.firefox-cookies.Explanation" xml:space="preserve"><value>Les sites vous oublient : il faudra vous reconnecter partout. Firefox doit être fermé. Historique et favoris sont gardés.</value></data>
   <data name="Cleanup.recent-files.Title" xml:space="preserve"><value>Liste des fichiers récents</value></data>
   <data name="Cleanup.recent-files.Explanation" xml:space="preserve"><value>Vide « Récent » dans l'Explorateur et Démarrer. Vos fichiers eux-mêmes ne sont pas touchés.</value></data>
   <data name="Cleanup.jump-lists.Title" xml:space="preserve"><value>Listes de raccourcis</value></data>
-  <data name="Cleanup.jump-lists.Explanation" xml:space="preserve"><value>Éléments récents affichés au clic droit sur une icône de la barre des tâches. Les éléments épinglés dans ces listes sont aussi retirés.</value></data>
+  <data name="Cleanup.jump-lists.Explanation" xml:space="preserve"><value>Éléments récents affichés au clic droit sur une icône de la barre des tâches ; les éléments épinglés dans ces listes sont aussi retirés. Les dossiers épinglés dans l'Accès rapide de l'Explorateur sont gardés.</value></data>
   <data name="Cleanup.thumbnail-cache.Title" xml:space="preserve"><value>Cache des miniatures</value></data>
   <data name="Cleanup.thumbnail-cache.Explanation" xml:space="preserve"><value>Windows recrée les aperçus des images quand il en a besoin. Les fichiers en cours d'utilisation sont ignorés.</value></data>
+  <data name="Cleanup.BrowserOpen" xml:space="preserve"><value>Navigateur ouvert</value></data>
 </root>

@@ -40,6 +40,8 @@
           <Button Content="{app:T Common.Cancel}" Command="{Binding CancelCommand}" AutomationProperties.Name="{app:T Common.Cancel}" />
           <TextBlock Text="{app:T Fix.Running}" Margin="12,0,0,0" VerticalAlignment="Center"
                      Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
+          <Button Content="{app:T Fix.Stop}" Command="{Binding StopRunCommand}" Margin="12,0,0,0" AutomationProperties.Name="{app:T Fix.Stop}"
+                  Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
         </StackPanel>
       </StackPanel>
     </Border>

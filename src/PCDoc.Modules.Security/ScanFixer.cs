@@ -46,6 +46,15 @@ public sealed class ScanFixer(SecurityEngine engine, ISecondOpinion secondOpinio
         switch (kind)
         {
             case ScanKind.DefenderQuick or ScanKind.DefenderFull:
+                try
+                {
+                    await engine.UpdateSignaturesAsync(cancellationToken).ConfigureAwait(false); // définitions à jour avant d'analyser
+                }
+                catch (Exception ex) when (ex is InvalidOperationException or IOException or TimeoutException)
+                {
+                    Line($"Defender: signatures not updated ({ex.Message})");
+                }
+
                 var exit = await engine.ScanAsync(kind == ScanKind.DefenderQuick ? 1 : 2, null, Line, cancellationToken).ConfigureAwait(false);
                 if (exit is not (0 or 2))
                 {

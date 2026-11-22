@@ -225,3 +225,5 @@ Nav.Group.Clean	CLEAN	NETTOYER
 Nav.Group.Protect	PROTECT	PROTÉGER
 Nav.Group.Update	UPDATE AND SPEED UP	METTRE À JOUR ET ACCÉLÉRER
 Nav.Group.Tools	TOOLS	OUTILS
+Fix.Stop	Stop	Arrêter
+Fix.Stopped	Stopped: the actions already done are in History.	Arrêté : les actions déjà faites sont dans l'Historique.

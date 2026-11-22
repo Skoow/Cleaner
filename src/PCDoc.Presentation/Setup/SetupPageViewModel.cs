@@ -312,7 +312,7 @@ public sealed partial class SetupPageViewModel : ObservableObject
             findings.AddRange(step.Findings);
             if (step.Id == "software")
             {
-                // Les installations viennent après les mises à jour des logiciels déjà présents, avant le nettoyage.
+                // Les installations viennent après les mises à jour des logiciels déjà présents.
                 findings.AddRange(Software.Where(s => s.IsSelected).Select(s => UpdateFixer.ForInstall(s.Package)));
             }
         }

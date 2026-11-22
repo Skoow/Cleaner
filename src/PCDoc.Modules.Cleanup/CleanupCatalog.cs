@@ -7,7 +7,8 @@ namespace PCDoc.Modules.Cleanup;
 /// <summary>Une catégorie de nettoyage (Definitions/cleanup.json).</summary>
 public sealed record CleanupCategory(
     string Id, IReadOnlyList<string> Roots, IReadOnlyList<string> Files, int MinAgeHours, RiskLevel Risk, bool RequiresIdleWindowsUpdate = false,
-    IReadOnlyList<string>? RequiresClosed = null);
+    IReadOnlyList<string>? RequiresClosed = null,
+    IReadOnlyList<string>? ExcludeFiles = null);
 
 /// <summary>Catalogue des emplacements nettoyables.</summary>
 public sealed class CleanupCatalog
@@ -36,7 +37,7 @@ public sealed class CleanupCatalog
         return new CleanupCatalog(file.Version, [.. (file.Categories ?? [])
             .Where(c => c.Risk is RiskLevel.Safe or RiskLevel.Conditional) // jamais de catégorie 🔴/🔒 dans un nettoyage
             .Select(c => new CleanupCategory(c.Id, c.Roots ?? [], c.Files ?? [], Math.Max(0, c.MinAgeHours), c.Risk, c.RequiresIdleWindowsUpdate,
-                c.RequiresClosed ?? []))]);
+                c.RequiresClosed ?? [], c.ExcludeFiles ?? []))]);
     }
 
     private static CleanupCatalog LoadEmbedded()
@@ -50,6 +51,6 @@ public sealed class CleanupCatalog
 #pragma warning disable CA1812
     private sealed record CatalogFile(int Version, Item[]? Categories);
 
-    private sealed record Item(string Id, string[]? Roots, string[]? Files, int MinAgeHours, RiskLevel Risk, bool RequiresIdleWindowsUpdate, string[]? RequiresClosed);
+    private sealed record Item(string Id, string[]? Roots, string[]? Files, int MinAgeHours, RiskLevel Risk, bool RequiresIdleWindowsUpdate, string[]? RequiresClosed, string[]? ExcludeFiles);
 #pragma warning restore CA1812
 }

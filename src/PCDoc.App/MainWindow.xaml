@@ -88,7 +88,7 @@
             <TextBlock Text="{app:T Nav.Bilan}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2">
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Start}">
           <TextBlock Text="{app:T Nav.Group.Start}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
@@ -98,7 +98,7 @@
             <TextBlock Text="{app:T Nav.Setup}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2">
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Clean}">
           <TextBlock Text="{app:T Nav.Group.Clean}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
@@ -115,7 +115,7 @@
             <TextBlock Text="{app:T Nav.Apps}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2">
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Protect}">
           <TextBlock Text="{app:T Nav.Group.Protect}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
@@ -132,7 +132,7 @@
             <TextBlock Text="{app:T Nav.Privacy}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2">
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Update}">
           <TextBlock Text="{app:T Nav.Group.Update}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 
@@ -149,7 +149,7 @@
             <TextBlock Text="{app:T Nav.Optimize}" VerticalAlignment="Center" FontSize="14" />
           </StackPanel>
         </ListBoxItem>
-        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2">
+        <ListBoxItem IsEnabled="False" Focusable="False" Padding="4,10,4,2" AutomationProperties.Name="{app:T Nav.Group.Tools}">
           <TextBlock Text="{app:T Nav.Group.Tools}" FontSize="11" FontWeight="SemiBold" Style="{StaticResource Pcdoc.Muted}" />
         </ListBoxItem>
 

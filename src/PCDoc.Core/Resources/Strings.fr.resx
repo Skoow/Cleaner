@@ -229,4 +229,6 @@
   <data name="Nav.Group.Protect" xml:space="preserve"><value>PROTÉGER</value></data>
   <data name="Nav.Group.Update" xml:space="preserve"><value>METTRE À JOUR ET ACCÉLÉRER</value></data>
   <data name="Nav.Group.Tools" xml:space="preserve"><value>OUTILS</value></data>
+  <data name="Fix.Stop" xml:space="preserve"><value>Arrêter</value></data>
+  <data name="Fix.Stopped" xml:space="preserve"><value>Arrêté : les actions déjà faites sont dans l'Historique.</value></data>
 </root>

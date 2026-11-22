@@ -1,6 +1,6 @@
 # Ce qui reste à faire
 
-Mis à jour le 2026-11-21, après la v0.10. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
+Mis à jour le 2026-11-21, après la v0.11. Détail des décisions : `docs/superpowers/plans/2026-11-03-v0.1-decisions.md`.
 
 ## Fait
 | Version | Contenu |
@@ -19,8 +19,8 @@ Mis à jour le 2026-11-21, après la v0.10. Détail des décisions : `docs/super
 | v0.8 | Journal d'activité daté + rapport .txt, page Confidentialité (14 réglages, profils Recommandé/Strict), page « Nouveau PC » (préparation complète en un clic), vérification complète de l'application |
 | v0.9 | Réparations réseau/son/Windows Update + assistants « Pas d'Internet » / « Pas de son », sauvegarde des pilotes, avant/après, profils de technicien, mode portable, entretien automatique hebdomadaire, activité réseau, extensions des navigateurs, seconde analyse (Safety Scanner, AdwCleaner), VirusTotal |
 | v0.10 | Confidentialité d'Office, Edge, Chrome, Firefox (seulement s'ils sont installés), mises à jour des applications du Store, recherche globale |
-| v0.11 | **Traces et données** + effacement sécurisé |
-| v0.12 | **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) |
+| v0.11 | Menu en sections dans l'ordre logique, Nouveau PC réordonné avec analyse antivirus, cookies/historique/fichiers récents, Kaspersky VRT et AdwCleaner (suppression) |
+| v0.12 | Effacement sécurisé, **Réseau**, **Licences**, **Rapport pour forums** (anonymisé) |
 | v1.0 | Signature du code, installateur MSI dans Program Files, tâche planifiée (UAC une seule fois), mise à jour automatique, page de téléchargement |
 
 ## Reporté des versions précédentes (petits points)

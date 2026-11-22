@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Catégories de nettoyage. root : %SystemRoot%, %ProgramData% ou %LOCALAPPDATA% (profil cible) ; « * » dans un segment = tous les sous-dossiers (profils de navigateur). risk : Safe | Conditional. Seuls les fichiers sont supprimés. files : fichiers précis, « * » permis dans les dossiers et le nom. requiresClosed : programmes qui doivent être fermés (navigateurs).",
+  "note": "Catégories de nettoyage. root : %SystemRoot%, %ProgramData% ou %LOCALAPPDATA% (profil cible) ; « * » dans un segment = tous les sous-dossiers (profils de navigateur). risk : Safe | Conditional. Seuls les fichiers sont supprimés. files : fichiers précis, « * » permis dans les dossiers et le nom. requiresClosed : programmes qui doivent être fermés (navigateurs). excludeFiles : noms jamais supprimés. Les fichiers journaux (-wal, -journal) sont listés avant leur base.",
   "categories": [
     {
       "id": "windows-temp",
@@ -91,8 +91,8 @@
       "id": "chrome-cookies",
       "roots": [],
       "files": [
-        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies",
-        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies-journal"
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies-journal",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies"
       ],
       "minAgeHours": 0,
       "risk": "Conditional",
@@ -104,8 +104,9 @@
       "id": "chrome-history",
       "roots": [],
       "files": [
-        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\History",
         "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\History-journal",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Top Sites-journal",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\History",
         "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Visited Links",
         "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Top Sites"
       ],
@@ -119,8 +120,8 @@
       "id": "edge-cookies",
       "roots": [],
       "files": [
-        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies",
-        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies-journal"
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies-journal",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies"
       ],
       "minAgeHours": 0,
       "risk": "Conditional",
@@ -132,8 +133,9 @@
       "id": "edge-history",
       "roots": [],
       "files": [
-        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\History",
         "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\History-journal",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Top Sites-journal",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\History",
         "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Visited Links",
         "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Top Sites"
       ],
@@ -147,8 +149,9 @@
       "id": "firefox-cookies",
       "roots": [],
       "files": [
-        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite",
-        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite-wal"
+        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite-wal",
+        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite-shm",
+        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite"
       ],
       "minAgeHours": 0,
       "risk": "Conditional",
@@ -163,7 +166,7 @@
         "%APPDATA%\\Microsoft\\Windows\\Recent\\*.lnk"
       ],
       "minAgeHours": 0,
-      "risk": "Safe"
+      "risk": "Conditional"
     },
     {
       "id": "jump-lists",
@@ -172,7 +175,10 @@
         "%APPDATA%\\Microsoft\\Windows\\Recent\\CustomDestinations"
       ],
       "minAgeHours": 0,
-      "risk": "Conditional"
+      "risk": "Conditional",
+      "excludeFiles": [
+        "f01b4d95cf55d32a.automaticDestinations-ms"
+      ]
     },
     {
       "id": "thumbnail-cache",
@@ -182,7 +188,7 @@
         "%LOCALAPPDATA%\\Microsoft\\Windows\\Explorer\\iconcache_*.db"
       ],
       "minAgeHours": 0,
-      "risk": "Safe"
+      "risk": "Conditional"
     }
   ]
 }
