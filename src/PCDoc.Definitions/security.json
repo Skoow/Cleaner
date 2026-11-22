@@ -11,7 +11,7 @@
         { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", "name": "NoDriveTypeAutoRun", "dword": 255 },
         { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", "name": "NoAutorun", "dword": 1 } ] },
     { "id": "smartscreen-on", "risk": "Safe", "severity": "Warning", "bilan": true, "absentIsApplied": true,
-      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer", "name": "SmartScreenEnabled", "text": "Warn", "acceptableTexts": ["RequireAdmin", "Prompt", "On"] } ] },
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer", "name": "SmartScreenEnabled", "text": "Warn", "acceptableTexts": ["RequireAdmin", "Prompt", "Block"] } ] },
     { "id": "rdp-off", "risk": "Conditional", "severity": "Info", "bilan": true, "absentIsApplied": true,
       "values": [ { "hive": "LocalMachine", "path": "SYSTEM\\CurrentControlSet\\Control\\Terminal Server", "name": "fDenyTSConnections", "dword": 1 } ] },
     { "id": "appinit-off", "risk": "Conditional", "severity": "Warning", "bilan": true, "absentIsApplied": true,
@@ -19,7 +19,7 @@
         { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows", "name": "LoadAppInit_DLLs", "dword": 0 },
         { "hive": "LocalMachine", "path": "SOFTWARE\\WOW6432Node\\Microsoft\\Windows NT\\CurrentVersion\\Windows", "name": "LoadAppInit_DLLs", "dword": 0 } ] },
     { "id": "winlogon-shell", "risk": "Safe", "severity": "Critical", "bilan": true, "absentIsApplied": true,
-      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", "name": "Shell", "text": "explorer.exe" } ] },
+      "values": [ { "hive": "LocalMachine", "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", "name": "Shell", "text": "explorer.exe", "acceptableTexts": ["C:\\Windows\\explorer.exe", "%SystemRoot%\\explorer.exe", "%windir%\\explorer.exe"] } ] },
     { "id": "wdigest-off", "risk": "Safe", "severity": "Warning", "bilan": true, "absentIsApplied": true,
       "values": [ { "hive": "LocalMachine", "path": "SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest", "name": "UseLogonCredential", "dword": 0 } ] }
   ]

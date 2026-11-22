@@ -20,6 +20,8 @@
         <TextBlock Text="{Binding ScanStatus}" FontWeight="SemiBold" TextWrapping="Wrap" />
         <TextBlock Text="{Binding ScanLine}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextTrimming="CharacterEllipsis" />
         <ProgressBar IsIndeterminate="True" Height="3" Margin="0,4,0,0" Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibility}}" />
+        <Button Content="{app:T Security.CancelScan}" Command="{Binding CancelScanCommand}" HorizontalAlignment="Left" Margin="0,6,0,0"
+                AutomationProperties.Name="{app:T Security.CancelScan}" Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibility}}" />
       </StackPanel>
     </Border>
     <TabControl>

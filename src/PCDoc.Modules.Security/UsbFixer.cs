@@ -30,7 +30,8 @@ public sealed class UsbFixer(SecurityEngine engine) : SecurityFixerBase<UsbFixer
         var drive = engine.ScanDrive(data.Root) ?? throw new InvalidOperationException("Drive removed");
         var plan = new Plan(data.Root,
             [.. drive.HiddenFolders.Select(h => new Folder(h.Path, (int)h.Attributes))],
-            [.. drive.SuspiciousShortcuts.Select(s => new Renamed(s, s + DisabledSuffix))]);
+            [.. drive.SuspiciousShortcuts.Where(s => !engine.Drives.RootItems(data.Root).Any(i => i.Path.Equals(s + DisabledSuffix, StringComparison.OrdinalIgnoreCase)))
+                .Select(s => new Renamed(s, s + DisabledSuffix))]);
         _planned[data.Root] = plan;
         return Task.FromResult(UndoEntry.Create(finding.Id, UndoKind, Json(plan), "Security.usb.Title", [data.Root, drive.Drive.Label ?? string.Empty]));
     }
@@ -43,17 +44,56 @@ public sealed class UsbFixer(SecurityEngine engine) : SecurityFixerBase<UsbFixer
             throw new InvalidOperationException("USB repair not prepared");
         }
 
-        foreach (var r in plan.Shortcuts)
+        // En cas d'échec en cours de route (clé retirée, fichier verrouillé), ce qui a été fait est défait : l'entrée
+        // marquée « échouée » ne laisse donc jamais la clé à moitié modifiée.
+        var renamed = new List<Renamed>();
+        var changed = new List<Folder>();
+        try
         {
-            engine.Drives.Rename(r.From, r.To);
-        }
+            foreach (var r in plan.Shortcuts)
+            {
+                engine.Drives.Rename(r.From, r.To);
+                renamed.Add(r);
+            }
 
-        foreach (var f in plan.Folders)
+            foreach (var f in plan.Folders)
+            {
+                engine.Drives.SetAttributes(f.Path, (FileAttributes)f.Attributes & ~(FileAttributes.Hidden | FileAttributes.System));
+                changed.Add(f);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            engine.Drives.SetAttributes(f.Path, (FileAttributes)f.Attributes & ~(FileAttributes.Hidden | FileAttributes.System));
+            Rollback(renamed, changed);
+            throw;
         }
 
         return Task.CompletedTask;
+    }
+
+    private void Rollback(List<Renamed> renamed, List<Folder> changed)
+    {
+        foreach (var r in renamed)
+        {
+            TryRun(() => engine.Drives.Rename(r.To, r.From));
+        }
+
+        foreach (var f in changed)
+        {
+            TryRun(() => engine.Drives.SetAttributes(f.Path, (FileAttributes)f.Attributes));
+        }
+    }
+
+    private static void TryRun(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // Clé retirée : rien de plus à faire.
+        }
     }
 
     public override Task<bool> IsUnchangedSinceAsync(UndoEntry entry, CancellationToken cancellationToken)
@@ -81,7 +121,7 @@ public sealed class UsbFixer(SecurityEngine engine) : SecurityFixerBase<UsbFixer
     }
 
     protected override Data? Validate(Finding finding, Data data) =>
-        engine.IsRemovableRoot(data.Root) && finding.Id == $"security.usb.{data.Root[0]}" && engine.ScanDrive(data.Root) is { IsInfected: true } ? data : null;
+        data.Root is { Length: 3 } && engine.IsRemovableRoot(data.Root) && finding.Id == $"security.usb.{data.Root[0]}" && engine.ScanDrive(data.Root) is { IsInfected: true } ? data : null;
 
     /// <summary>Le journal est revérifié : uniquement des éléments placés directement à la racine d'un lecteur amovible branché.</summary>
     private Plan Read(UndoEntry entry)

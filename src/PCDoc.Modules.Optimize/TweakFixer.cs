@@ -49,7 +49,7 @@ public sealed class TweakFixer(OptimizeEngine engine, IRegistryWriter paths, IBa
                 var index = 0;
                 foreach (var group in tweak.Values.Select((v, i) => (v, i)).GroupBy(x => (x.v.Hive, x.v.Path)))
                 {
-                    backups.SaveRegistryBackup($"optimize-{tweak.Id}-{now():yyyyMMdd-HHmmss}-{index++}.reg",
+                    backups.SaveRegistryBackup($"{tweak.Module}-{tweak.Id}-{now():yyyyMMdd-HHmmss}-{index++}.reg",
                         RegFile.Format(paths.FullPath(group.Key.Hive, group.Key.Path), group.Select(x => (x.v.Name, values[x.i].Value))));
                 }
 

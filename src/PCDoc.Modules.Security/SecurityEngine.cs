@@ -125,7 +125,8 @@ public sealed partial class SecurityEngine(
         var arguments = scanType switch
         {
             1 or 2 => $"-Scan -ScanType {scanType}",
-            3 when root is not null && DriveRoot().IsMatch(root) && drives.IsRemovableRoot(root) => $"-Scan -ScanType 3 -File \"{root}\"",
+            // Racine vérifiée (« E:\ », sans espace) : non guillemetée, sinon « \" » serait lu comme un guillemet échappé.
+            3 when root is not null && DriveRoot().IsMatch(root) && drives.IsRemovableRoot(root) => $"-Scan -ScanType 3 -File {root}",
             _ => throw new ArgumentException("Invalid scan request", nameof(scanType)),
         };
         return await defender.RunAsync(arguments, onOutput, scanType == 2 ? TimeSpan.FromHours(8) : TimeSpan.FromHours(2), cancellationToken)
@@ -147,7 +148,7 @@ public sealed partial class SecurityEngine(
                 var name = row.GetValueOrDefault("displayName") as string ?? "?";
                 // productState : octet du milieu = activé (0x10), octet bas = signatures à jour (0x00).
                 return new AntivirusInfo(name, ((state >> 12) & 0xF) == 1, ((state >> 4) & 0xF) == 0,
-                    name.Contains("Defender", StringComparison.OrdinalIgnoreCase));
+                    name is "Windows Defender" or "Microsoft Defender Antivirus" or "Microsoft Defender");
             })];
         }
         catch (WmiUnavailableException)
@@ -161,7 +162,7 @@ public sealed partial class SecurityEngine(
         try
         {
             var rows = wmi.Query(DefenderNamespace,
-                "SELECT AntivirusEnabled, RealTimeProtectionEnabled, AntivirusSignatureAge, QuickScanAge, IsTamperProtected FROM MSFT_MpComputerStatus");
+                "SELECT AntivirusEnabled, AMRunningMode, RealTimeProtectionEnabled, AntivirusSignatureAge, QuickScanAge, IsTamperProtected FROM MSFT_MpComputerStatus");
             var row = rows.Count > 0 ? rows[0] : null;
             if (row is null)
             {
@@ -173,7 +174,10 @@ public sealed partial class SecurityEngine(
             static int? Days(object? v) => v is null ? null : Convert.ToInt64(v, CultureInfo.InvariantCulture) is var d && d is >= 0 and < 65535 ? (int)d : null;
             // Un autre antivirus actif met Defender en mode passif : ce n'est pas un problème.
             var otherActive = antivirus.Any(a => a.Enabled && !a.IsDefender);
-            var active = Flag(row.GetValueOrDefault("AntivirusEnabled")) && !otherActive;
+            // AMRunningMode : « Normal » = actif ; « Passive Mode », « SxS Passive Mode », « EDR Block Mode » = passif.
+            var mode = row.GetValueOrDefault("AMRunningMode") as string;
+            var active = Flag(row.GetValueOrDefault("AntivirusEnabled")) && !otherActive
+                         && (mode is null || mode.Equals("Normal", StringComparison.OrdinalIgnoreCase));
             return new DefenderInfo(true, active, Flag(row.GetValueOrDefault("RealTimeProtectionEnabled")),
                 Days(row.GetValueOrDefault("AntivirusSignatureAge")), Days(row.GetValueOrDefault("QuickScanAge")),
                 Flag(row.GetValueOrDefault("IsTamperProtected")));
@@ -201,7 +205,7 @@ public sealed partial class SecurityEngine(
                     var resource = r.GetValueOrDefault("Resources") is string[] { Length: > 0 } res ? res[0] : null;
                     return new Detection(threat?.GetValueOrDefault("ThreatName") as string ?? id,
                         Convert.ToInt32(threat?.GetValueOrDefault("SeverityID") ?? 0, CultureInfo.InvariantCulture),
-                        when is { Length: >= 12 } ? $"{when[6..8]}/{when[4..6]}/{when[..4]} {when[8..10]}:{when[10..12]}" : null,
+                        CimToLocal(when),
                         r.GetValueOrDefault("ActionSuccess") is true, resource);
                 })];
         }
@@ -209,6 +213,19 @@ public sealed partial class SecurityEngine(
         {
             return [];
         }
+    }
+
+    /// <summary>Date CIM « aaaaMMjjHHmmss.ffffff±ooo » (décalage en minutes) → heure locale lisible.</summary>
+    internal static string? CimToLocal(string? cim)
+    {
+        if (cim is not { Length: >= 14 } || !DateTime.TryParseExact(cim[..14], "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t))
+        {
+            return null;
+        }
+
+        var offset = cim.Length >= 25 && int.TryParse(cim[21..25], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var m) ? m : 0;
+        var utc = new DateTimeOffset(t, TimeSpan.FromMinutes(offset)).UtcDateTime;
+        return utc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
     }
 
     // ---------- Pare-feu ----------
@@ -226,7 +243,11 @@ public sealed partial class SecurityEngine(
         }
     }
 
-    public IReadOnlyList<string> DisabledFirewallProfiles()
+    /// <summary>Profils désactivés ; WMI indisponible → <see cref="WmiUnavailableException"/> via <see cref="TryDisabledFirewallProfiles"/>.</summary>
+    public IReadOnlyList<string> DisabledFirewallProfiles() => TryDisabledFirewallProfiles() ?? [];
+
+    /// <summary>Null si l'état du pare-feu n'a pas pu être lu.</summary>
+    public IReadOnlyList<string>? TryDisabledFirewallProfiles()
     {
         try
         {
@@ -237,7 +258,7 @@ public sealed partial class SecurityEngine(
         }
         catch (WmiUnavailableException)
         {
-            return [];
+            return null;
         }
     }
 
@@ -258,19 +279,50 @@ public sealed partial class SecurityEngine(
 
     // ---------- SMBv1 ----------
 
-    public async Task<bool> Smb1EnabledAsync(CancellationToken cancellationToken)
+    /// <summary>SMB1Protocol et ses sous-fonctions (client, serveur, suppression automatique).</summary>
+    public static readonly IReadOnlyList<string> Smb1Features = ["SMB1Protocol", "SMB1Protocol-Client", "SMB1Protocol-Server", "SMB1Protocol-Deprecation"];
+
+    public Task<bool> Smb1EnabledAsync(CancellationToken cancellationToken) => FeatureEnabledAsync("SMB1Protocol", cancellationToken);
+
+    public async Task<bool> FeatureEnabledAsync(string feature, CancellationToken cancellationToken)
     {
+        if (!Smb1Features.Contains(feature))
+        {
+            throw new ArgumentException("Unknown feature", nameof(feature));
+        }
+
         var lines = new List<string>();
-        var exit = await runner.RunHiddenAsync("dism.exe", "/English /Online /Get-FeatureInfo /FeatureName:SMB1Protocol", lines.Add, cancellationToken,
+        var exit = await runner.RunHiddenAsync("dism.exe", $"/English /Online /Get-FeatureInfo /FeatureName:{feature}", lines.Add, cancellationToken,
             DismTimeout).ConfigureAwait(false);
         return exit == 0 && lines.Any(l => StateLine().Match(l) is { Success: true } m && m.Groups[1].Value.StartsWith("Enable", StringComparison.OrdinalIgnoreCase));
     }
 
-    public async Task SetSmb1Async(bool enabled, CancellationToken cancellationToken)
+    /// <summary>État de chaque fonction SMBv1 avant la correction (pour une annulation exacte).</summary>
+    public async Task<Dictionary<string, bool>> Smb1StatesAsync(CancellationToken cancellationToken)
     {
+        var states = new Dictionary<string, bool>(StringComparer.Ordinal);
+        foreach (var f in Smb1Features)
+        {
+            states[f] = await FeatureEnabledAsync(f, cancellationToken).ConfigureAwait(false);
+        }
+
+        return states;
+    }
+
+    public async Task SetSmb1Async(bool enabled, CancellationToken cancellationToken) =>
+        await SetFeatureAsync("SMB1Protocol", enabled, cancellationToken).ConfigureAwait(false);
+
+    public async Task SetFeatureAsync(string feature, bool enabled, CancellationToken cancellationToken)
+    {
+        if (!Smb1Features.Contains(feature))
+        {
+            throw new ArgumentException("Unknown feature", nameof(feature));
+        }
+
+        // Sans /All : seule la fonction demandée est activée (les sous-fonctions sont remises une par une).
         var arguments = enabled
-            ? "/Online /Enable-Feature /FeatureName:SMB1Protocol /All /NoRestart"
-            : "/Online /Disable-Feature /FeatureName:SMB1Protocol /NoRestart";
+            ? $"/Online /Enable-Feature /FeatureName:{feature} /NoRestart"
+            : $"/Online /Disable-Feature /FeatureName:{feature} /NoRestart";
         var exit = await runner.RunHiddenAsync("dism.exe", arguments, null, cancellationToken, DismTimeout).ConfigureAwait(false);
         if (exit is not (0 or 3010))
         {
@@ -321,7 +373,10 @@ public sealed partial class SecurityEngine(
 
         var redirected = new List<string>();
         var blocked = new List<string>();
-        foreach (var raw in Encoding.UTF8.GetString(bytes).Split('\n'))
+        var text = bytes is [0xFF, 0xFE, ..] ? Encoding.Unicode.GetString(bytes, 2, bytes.Length - 2)
+            : bytes is [0xFE, 0xFF, ..] ? Encoding.BigEndianUnicode.GetString(bytes, 2, bytes.Length - 2)
+            : Encoding.UTF8.GetString(bytes);
+        foreach (var raw in text.Split('\n'))
         {
             var line = raw.Split('#')[0].Trim();
             var parts = line.Split((char[])[' ', '\t'], StringSplitOptions.RemoveEmptyEntries);
@@ -330,7 +385,7 @@ public sealed partial class SecurityEngine(
                 continue;
             }
 
-            var loopback = parts[0] is "0.0.0.0" or "127.0.0.1" or "::1" or "::";
+            var loopback = parts[0] is "0.0.0.0" or "::1" or "::" || parts[0].StartsWith("127.", StringComparison.Ordinal);
             foreach (var host in parts[1..].Where(h => SensitiveDomains.Any(d => h.Equals(d, StringComparison.OrdinalIgnoreCase)
                                                                                   || h.EndsWith("." + d, StringComparison.OrdinalIgnoreCase))))
             {
@@ -350,7 +405,7 @@ public sealed partial class SecurityEngine(
     public UsbDrive? ScanDrive(string root)
     {
         var drive = drives.List().FirstOrDefault(d => d.Root.Equals(root, StringComparison.OrdinalIgnoreCase));
-        if (drive is null || !DriveRoot().IsMatch(root))
+        if (drive is null || root is null || !DriveRoot().IsMatch(root))
         {
             return null;
         }
@@ -363,7 +418,7 @@ public sealed partial class SecurityEngine(
         return new UsbDrive(drive, hidden, suspicious);
     }
 
-    public bool IsRemovableRoot(string root) => DriveRoot().IsMatch(root) && drives.IsRemovableRoot(root);
+    public bool IsRemovableRoot(string? root) => root is { Length: 3 } && DriveRoot().IsMatch(root) && drives.IsRemovableRoot(root);
 
     public IRemovableDrives Drives => drives;
 

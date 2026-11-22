@@ -18,7 +18,7 @@ Security.smb1.Explanation	Old file-sharing protocol used by ransomware such as W
 Security.ifeo.Title	{0} is redirected to another program	{0} est redirigé vers un autre programme
 Security.ifeo.Explanation	A "Debugger" value makes Windows start another program instead of this one: a trick used by malware, but also by some tools (Process Explorer replacing the Task Manager).	Une valeur « Debugger » fait lancer un autre programme à la place de celui-ci : une ruse de logiciels malveillants, mais aussi de certains outils (Process Explorer qui remplace le Gestionnaire des tâches).
 Security.userinit.Title	The session start-up program was changed	Le programme d'ouverture de session a été modifié
-Security.userinit.Explanation	Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick. Restores the Windows value.	« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants. Remet la valeur de Windows.
+Security.userinit.Explanation	Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick (some company software does it too). Restores the Windows value.	« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants (certains logiciels d'entreprise le font aussi). Remet la valeur de Windows.
 Security.hosts.Title	The hosts file changes important websites	Le fichier hosts modifie des sites importants
 Security.hosts.Redirected	Microsoft or antivirus websites are sent to another address: often the work of malware. Check the lines below.	Des sites de Microsoft ou d'antivirus sont envoyés vers une autre adresse : souvent l'œuvre d'un logiciel malveillant. Vérifiez les lignes ci-dessous.
 Security.hosts.Blocked	Microsoft or antivirus websites are blocked (often by an anti-tracking tool). Windows Update or your antivirus may not work properly.	Des sites de Microsoft ou d'antivirus sont bloqués (souvent par un outil anti-pistage). Windows Update ou l'antivirus peuvent mal fonctionner.
@@ -57,6 +57,8 @@ Security.ScanDrive	Scan with Defender	Analyser avec Defender
 Security.Scanning	Scanning… you can keep using the PC.	Analyse en cours… vous pouvez continuer à utiliser le PC.
 Security.ScanClean	Scan finished: no threat found.	Analyse terminée : aucune menace trouvée.
 Security.ScanThreats	Scan finished: threats were found and handled by Defender. See the list below.	Analyse terminée : des menaces ont été trouvées et traitées par Defender. Voir la liste ci-dessous.
+Security.ScanCancelled	Scan stopped.	Analyse arrêtée.
+Security.CancelScan	Stop the scan	Arrêter l'analyse
 Security.ScanFailed	The scan could not run (Defender is off or replaced by another antivirus).	L'analyse n'a pas pu se faire (Defender est désactivé ou remplacé par un autre antivirus).
 Security.Detections	Recent detections	Détections récentes
 Security.Removed	removed	supprimée

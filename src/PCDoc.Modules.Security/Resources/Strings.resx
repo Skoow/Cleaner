@@ -23,7 +23,7 @@
   <data name="Security.ifeo.Title" xml:space="preserve"><value>{0} is redirected to another program</value></data>
   <data name="Security.ifeo.Explanation" xml:space="preserve"><value>A "Debugger" value makes Windows start another program instead of this one: a trick used by malware, but also by some tools (Process Explorer replacing the Task Manager).</value></data>
   <data name="Security.userinit.Title" xml:space="preserve"><value>The session start-up program was changed</value></data>
-  <data name="Security.userinit.Explanation" xml:space="preserve"><value>Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick. Restores the Windows value.</value></data>
+  <data name="Security.userinit.Explanation" xml:space="preserve"><value>Winlogon "Userinit" starts an extra program at each sign-in, a common malware trick (some company software does it too). Restores the Windows value.</value></data>
   <data name="Security.hosts.Title" xml:space="preserve"><value>The hosts file changes important websites</value></data>
   <data name="Security.hosts.Redirected" xml:space="preserve"><value>Microsoft or antivirus websites are sent to another address: often the work of malware. Check the lines below.</value></data>
   <data name="Security.hosts.Blocked" xml:space="preserve"><value>Microsoft or antivirus websites are blocked (often by an anti-tracking tool). Windows Update or your antivirus may not work properly.</value></data>
@@ -62,6 +62,8 @@
   <data name="Security.Scanning" xml:space="preserve"><value>Scanning… you can keep using the PC.</value></data>
   <data name="Security.ScanClean" xml:space="preserve"><value>Scan finished: no threat found.</value></data>
   <data name="Security.ScanThreats" xml:space="preserve"><value>Scan finished: threats were found and handled by Defender. See the list below.</value></data>
+  <data name="Security.ScanCancelled" xml:space="preserve"><value>Scan stopped.</value></data>
+  <data name="Security.CancelScan" xml:space="preserve"><value>Stop the scan</value></data>
   <data name="Security.ScanFailed" xml:space="preserve"><value>The scan could not run (Defender is off or replaced by another antivirus).</value></data>
   <data name="Security.Detections" xml:space="preserve"><value>Recent detections</value></data>
   <data name="Security.Removed" xml:space="preserve"><value>removed</value></data>

@@ -23,7 +23,7 @@
   <data name="Security.ifeo.Title" xml:space="preserve"><value>{0} est redirigé vers un autre programme</value></data>
   <data name="Security.ifeo.Explanation" xml:space="preserve"><value>Une valeur « Debugger » fait lancer un autre programme à la place de celui-ci : une ruse de logiciels malveillants, mais aussi de certains outils (Process Explorer qui remplace le Gestionnaire des tâches).</value></data>
   <data name="Security.userinit.Title" xml:space="preserve"><value>Le programme d'ouverture de session a été modifié</value></data>
-  <data name="Security.userinit.Explanation" xml:space="preserve"><value>« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants. Remet la valeur de Windows.</value></data>
+  <data name="Security.userinit.Explanation" xml:space="preserve"><value>« Userinit » de Winlogon lance un programme de plus à chaque ouverture de session, une ruse courante des logiciels malveillants (certains logiciels d'entreprise le font aussi). Remet la valeur de Windows.</value></data>
   <data name="Security.hosts.Title" xml:space="preserve"><value>Le fichier hosts modifie des sites importants</value></data>
   <data name="Security.hosts.Redirected" xml:space="preserve"><value>Des sites de Microsoft ou d'antivirus sont envoyés vers une autre adresse : souvent l'œuvre d'un logiciel malveillant. Vérifiez les lignes ci-dessous.</value></data>
   <data name="Security.hosts.Blocked" xml:space="preserve"><value>Des sites de Microsoft ou d'antivirus sont bloqués (souvent par un outil anti-pistage). Windows Update ou l'antivirus peuvent mal fonctionner.</value></data>
@@ -62,6 +62,8 @@
   <data name="Security.Scanning" xml:space="preserve"><value>Analyse en cours… vous pouvez continuer à utiliser le PC.</value></data>
   <data name="Security.ScanClean" xml:space="preserve"><value>Analyse terminée : aucune menace trouvée.</value></data>
   <data name="Security.ScanThreats" xml:space="preserve"><value>Analyse terminée : des menaces ont été trouvées et traitées par Defender. Voir la liste ci-dessous.</value></data>
+  <data name="Security.ScanCancelled" xml:space="preserve"><value>Analyse arrêtée.</value></data>
+  <data name="Security.CancelScan" xml:space="preserve"><value>Arrêter l'analyse</value></data>
   <data name="Security.ScanFailed" xml:space="preserve"><value>L'analyse n'a pas pu se faire (Defender est désactivé ou remplacé par un autre antivirus).</value></data>
   <data name="Security.Detections" xml:space="preserve"><value>Détections récentes</value></data>
   <data name="Security.Removed" xml:space="preserve"><value>supprimée</value></data>

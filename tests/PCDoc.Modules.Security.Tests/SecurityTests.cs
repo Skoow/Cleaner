@@ -174,6 +174,7 @@ public class SecurityTests
         s.Engine.IfeoDebuggers().Should().ContainSingle();
         fixer.CanFix(userinit).Should().BeFalse("déjà réparé");
 
+        new UsbFixer(s.Engine).CanFix(userinit with { FixData = "{\"Unrelated\":1}" }).Should().BeFalse("données d'un autre module : refus sans exception");
         var forged = UndoEntry.Create("x", "security.repair",
             """{"Target":{"Kind":"ifeo","Root":"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run","Exe":"evil"},"Previous":"x"}""", "t", []);
         var act = () => fixer.UndoAsync(forged, CancellationToken.None);
@@ -240,7 +241,7 @@ public class SecurityTests
 
         (await s.Engine.AnalyzeAsync(CancellationToken.None)).Findings.Should().NotContain(f => f.Id.StartsWith("security.usb", StringComparison.Ordinal));
         await s.Engine.ScanAsync(3, @"E:\", null, CancellationToken.None);
-        s.Defender.Calls.Should().Equal("-Scan -ScanType 3 -File \"E:\\\"");
+        s.Defender.Calls.Should().Equal(@"-Scan -ScanType 3 -File E:\");
         var act = () => s.Engine.ScanAsync(3, @"C:\", null, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentException>("seuls les lecteurs amovibles");
         var act2 = () => s.Engine.ScanAsync(3, "E:\\\" -DisableRemediation \"", null, CancellationToken.None);

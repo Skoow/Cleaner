@@ -36,6 +36,7 @@ public sealed record DetectionRow(string Name, string When, string Status, strin
 public sealed record UsbRow(string Root, string Title, string Status, Finding? Finding, bool CanFix);
 
 /// <summary>Page Sécurité : protection (antivirus, analyses), audit (corrections), clés USB.</summary>
+#pragma warning disable CA1001 // _scan est libéré par le « using » de ScanAsync ; le champ sert seulement à l'annulation
 public sealed partial class SecurityPageViewModel : ObservableObject
 {
     private readonly ISecuritySource _source;
@@ -43,6 +44,8 @@ public sealed partial class SecurityPageViewModel : ObservableObject
     private readonly Func<Core.Settings.AppMode> _mode;
     private SecurityReport? _report;
     private HashSet<string>? _selected;
+    private bool _analyzeAgain;
+    private CancellationTokenSource? _scan;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -96,15 +99,21 @@ public sealed partial class SecurityPageViewModel : ObservableObject
     {
         if (IsLoading)
         {
+            _analyzeAgain = true; // une correction vient de finir pendant l'analyse : on relira l'état ensuite
             return;
         }
 
         IsLoading = true;
         try
         {
-            _report = await _source.AnalyzeAsync(CancellationToken.None).ConfigureAwait(true);
-            _selected = null;
-            Build();
+            do
+            {
+                _analyzeAgain = false;
+                _report = await _source.AnalyzeAsync(CancellationToken.None).ConfigureAwait(true);
+                _selected = null;
+                Build();
+            }
+            while (_analyzeAgain);
         }
         finally
         {
@@ -123,6 +132,10 @@ public sealed partial class SecurityPageViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanScan))]
     private Task ScanDriveAsync(UsbRow? row) => row is null ? Task.CompletedTask : ScanAsync(3, row.Root);
 
+    /// <summary>Arrête l'analyse Defender en cours (une analyse complète peut durer des heures).</summary>
+    [RelayCommand]
+    private void CancelScan() => _scan?.Cancel();
+
     [RelayCommand]
     private void FixSelected() => Fixes?.Request(Audit.Where(r => r.IsSelected && r.CanSelect).Select(r => r.Finding));
 
@@ -139,9 +152,10 @@ public sealed partial class SecurityPageViewModel : ObservableObject
     {
         IsScanning = true;
         ScanStatus = _localizer["Security.Scanning"];
+        using var scan = _scan = new CancellationTokenSource();
         try
         {
-            var exit = await _source.ScanAsync(type, root, line => ScanLine = line, CancellationToken.None).ConfigureAwait(true);
+            var exit = await _source.ScanAsync(type, root, line => ScanLine = line, scan.Token).ConfigureAwait(true);
             ScanStatus = exit switch
             {
                 0 => _localizer["Security.ScanClean"],
@@ -149,14 +163,19 @@ public sealed partial class SecurityPageViewModel : ObservableObject
                 _ => _localizer["Security.ScanFailed"],
             };
         }
+        catch (OperationCanceledException)
+        {
+            ScanStatus = _localizer["Security.ScanCancelled"];
+        }
 #pragma warning disable CA1031 // Defender absent, coupé ou remplacé : message à l'utilisateur, jamais de plantage
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (Exception)
 #pragma warning restore CA1031
         {
             ScanStatus = _localizer["Security.ScanFailed"];
         }
         finally
         {
+            _scan = null;
             IsScanning = false;
             ScanLine = null;
         }
@@ -229,3 +248,4 @@ public sealed partial class SecurityPageViewModel : ObservableObject
         OnPropertyChanged(nameof(HasLoaded));
     }
 }
+#pragma warning restore CA1001
