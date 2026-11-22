@@ -19,9 +19,12 @@
 
     <Feature Id="Main" Title="PCDoc">
       <Component Id="App" Directory="INSTALLFOLDER">
-        <File Id="PCDocExe" Source="$(var.AppDir)\PCDoc.exe" KeyPath="yes">
-          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="PCDoc" WorkingDirectory="INSTALLFOLDER" Icon="PCDocIcon" />
-        </File>
+        <File Id="PCDocExe" Source="$(var.AppDir)\PCDoc.exe" KeyPath="yes" />
+      </Component>
+      <!-- Raccourci dans son propre composant, avec une clé HKMU (= HKLM pour une installation par machine) : ICE43/ICE57. -->
+      <Component Id="StartMenu" Directory="ProgramMenuFolder">
+        <Shortcut Id="StartMenuShortcut" Name="PCDoc" Target="[#PCDocExe]" WorkingDirectory="INSTALLFOLDER" Icon="PCDocIcon" />
+        <RegistryValue Root="HKMU" Key="Software\PCDoc" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
       </Component>
       <Component Id="License" Directory="INSTALLFOLDER">
         <File Id="LicenseTxt" Source="$(var.RepoDir)\LICENSE" Name="LICENSE.txt" KeyPath="yes" />
