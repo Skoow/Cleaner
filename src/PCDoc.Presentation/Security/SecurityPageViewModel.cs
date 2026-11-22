@@ -31,6 +31,23 @@ public sealed partial class AuditRow(Finding finding, string title, string expla
 
 public sealed record AntivirusRow(string Name, string Status);
 
+/// <summary>Analyse antivirus à cocher (Defender, Safety Scanner, AdwCleaner, Kaspersky).</summary>
+public sealed partial class ScanRow(ScanKind kind, string title, string explanation, string riskLabel, bool canSelect) : ObservableObject
+{
+    [ObservableProperty]
+    private bool _isSelected;
+
+    public ScanKind Kind { get; } = kind;
+
+    public string Title { get; } = title;
+
+    public string Explanation { get; } = explanation;
+
+    public string RiskLabel { get; } = riskLabel;
+
+    public bool CanSelect { get; } = canSelect;
+}
+
 public sealed record DetectionRow(string Name, string When, string Status, string Resource);
 
 public sealed record UsbRow(string Root, string Title, string Status, Finding? Finding, bool CanFix);
@@ -92,6 +109,42 @@ public sealed partial class SecurityPageViewModel : ObservableObject
     public ObservableCollection<AuditRow> Audit { get; } = [];
 
     public ObservableCollection<UsbRow> Usb { get; } = [];
+
+    public ObservableCollection<ScanRow> Scans { get; } = [];
+
+    /// <summary>Analyses lancées par le pipeline (leur progression s'affiche dans la page).</summary>
+    public ScanFixer? ScanTools
+    {
+        init
+        {
+            if (value is not null)
+            {
+                value.Output += (_, line) => ScanLine = line;
+            }
+        }
+    }
+
+    /// <summary>Les analyses cochées s'enchaînent dans une seule série (un point de restauration avant celles qui suppriment).</summary>
+    [RelayCommand]
+    private void RunSelectedScans() => Fixes?.Request(Scans.Where(s => s.IsSelected && s.CanSelect).Select(s => ScanFixer.FindingFor(s.Kind)));
+
+    private void BuildScans()
+    {
+        if (Scans.Count > 0)
+        {
+            return;
+        }
+
+        foreach (var kind in Enum.GetValues<ScanKind>())
+        {
+            var finding = ScanFixer.FindingFor(kind);
+            var canSelect = FixPolicy.IsOffered(finding, _mode());
+            Scans.Add(new ScanRow(kind, _localizer[$"Scan.{kind}.Title"], _localizer[$"Scan.{kind}.Explanation"], _localizer[$"Risk.{finding.Risk}"], canSelect)
+            {
+                IsSelected = canSelect && kind is ScanKind.DefenderQuick or ScanKind.AdwCleaner,
+            });
+        }
+    }
 
     public bool HasLoaded => _report is not null;
 
@@ -193,6 +246,7 @@ public sealed partial class SecurityPageViewModel : ObservableObject
             return;
         }
 
+        BuildScans();
         Antivirus.Clear();
         foreach (var av in report.Antivirus)
         {

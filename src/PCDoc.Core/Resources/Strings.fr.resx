@@ -160,20 +160,20 @@
   <data name="Setup.Done" xml:space="preserve"><value>Préparation terminée. Exportez le rapport depuis l'Historique, et redémarrez le PC si des mises à jour le demandent.</value></data>
   <data name="Setup.NothingToDo" xml:space="preserve"><value>Rien à faire</value></data>
   <data name="Setup.Count" xml:space="preserve"><value>{0} actions</value></data>
-  <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Confidentialité</value></data>
+  <data name="Setup.privacy.Title" xml:space="preserve"><value>5. Confidentialité</value></data>
   <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.</value></data>
-  <data name="Setup.security.Title" xml:space="preserve"><value>2. Sécurité</value></data>
+  <data name="Setup.security.Title" xml:space="preserve"><value>4. Sécurité</value></data>
   <data name="Setup.security.Explanation" xml:space="preserve"><value>Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres (les autres restent dans la page Sécurité).</value></data>
-  <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimisation</value></data>
+  <data name="Setup.optimize.Title" xml:space="preserve"><value>6. Optimisation</value></data>
   <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).</value></data>
-  <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Applications préinstallées</value></data>
+  <data name="Setup.bloatware.Title" xml:space="preserve"><value>2. Applications préinstallées</value></data>
   <data name="Setup.bloatware.Explanation" xml:space="preserve"><value>Retire les applications inutiles ajoutées par Microsoft ou le fabricant (seulement les sûres en mode novice).</value></data>
-  <data name="Setup.windows.Title" xml:space="preserve"><value>5. Mises à jour de Windows</value></data>
+  <data name="Setup.windows.Title" xml:space="preserve"><value>7. Mises à jour de Windows</value></data>
   <data name="Setup.windows.Explanation" xml:space="preserve"><value>Mises à jour de sécurité et de qualité de Windows Update (pilotes en mode expert).</value></data>
-  <data name="Setup.software.Title" xml:space="preserve"><value>6. Mises à jour et installation de logiciels</value></data>
+  <data name="Setup.software.Title" xml:space="preserve"><value>8. Mises à jour et installation de logiciels</value></data>
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.</value></data>
-  <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Nettoyage</value></data>
-  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).</value></data>
+  <data name="Setup.cleanup.Title" xml:space="preserve"><value>1. Nettoyage</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Libère d'abord de la place : fichiers temporaires, caches, rapports d'erreurs (ceux des dernières 24 h sont gardés). Les cookies et l'historique ne sont nettoyés que depuis la page Nettoyage.</value></data>
   <data name="App.BusyClosing" xml:space="preserve"><value>Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.</value></data>
   <data name="Setup.Compare.Title" xml:space="preserve"><value>Avant → après la préparation</value></data>
   <data name="Setup.Compare.Free" xml:space="preserve"><value>Espace libre sur le disque de Windows : {0} → {1}</value></data>
@@ -222,4 +222,11 @@
   <data name="Search.Placeholder" xml:space="preserve"><value>Rechercher une fonction…</value></data>
   <data name="Search.Results" xml:space="preserve"><value>Résultats de la recherche</value></data>
   <data name="Search.None" xml:space="preserve"><value>Aucun résultat</value></data>
+  <data name="Setup.antivirus.Title" xml:space="preserve"><value>3. Analyse antivirus</value></data>
+  <data name="Setup.antivirus.Explanation" xml:space="preserve"><value>Analyse rapide Microsoft Defender, puis recherche de logiciels publicitaires AdwCleaner (détection : son rapport est dans l'Historique).</value></data>
+  <data name="Nav.Group.Start" xml:space="preserve"><value>DÉMARRER</value></data>
+  <data name="Nav.Group.Clean" xml:space="preserve"><value>NETTOYER</value></data>
+  <data name="Nav.Group.Protect" xml:space="preserve"><value>PROTÉGER</value></data>
+  <data name="Nav.Group.Update" xml:space="preserve"><value>METTRE À JOUR ET ACCÉLÉRER</value></data>
+  <data name="Nav.Group.Tools" xml:space="preserve"><value>OUTILS</value></data>
 </root>

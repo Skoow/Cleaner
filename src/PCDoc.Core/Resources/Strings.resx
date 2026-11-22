@@ -160,20 +160,20 @@
   <data name="Setup.Done" xml:space="preserve"><value>Preparation finished. Export the report from History, and restart the PC if updates ask for it.</value></data>
   <data name="Setup.NothingToDo" xml:space="preserve"><value>Nothing to do</value></data>
   <data name="Setup.Count" xml:space="preserve"><value>{0} actions</value></data>
-  <data name="Setup.privacy.Title" xml:space="preserve"><value>1. Privacy</value></data>
+  <data name="Setup.privacy.Title" xml:space="preserve"><value>5. Privacy</value></data>
   <data name="Setup.privacy.Explanation" xml:space="preserve"><value>Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.</value></data>
-  <data name="Setup.security.Title" xml:space="preserve"><value>2. Security</value></data>
+  <data name="Setup.security.Title" xml:space="preserve"><value>4. Security</value></data>
   <data name="Setup.security.Explanation" xml:space="preserve"><value>Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes (the others stay on the Security page).</value></data>
-  <data name="Setup.optimize.Title" xml:space="preserve"><value>3. Optimization</value></data>
+  <data name="Setup.optimize.Title" xml:space="preserve"><value>6. Optimization</value></data>
   <data name="Setup.optimize.Explanation" xml:space="preserve"><value>Settings of the chosen profile (power plan, game mode, start-up delay…).</value></data>
-  <data name="Setup.bloatware.Title" xml:space="preserve"><value>4. Preinstalled apps</value></data>
+  <data name="Setup.bloatware.Title" xml:space="preserve"><value>2. Preinstalled apps</value></data>
   <data name="Setup.bloatware.Explanation" xml:space="preserve"><value>Removes the useless apps added by Microsoft or the manufacturer (only the safe ones in novice mode).</value></data>
-  <data name="Setup.windows.Title" xml:space="preserve"><value>5. Windows updates</value></data>
+  <data name="Setup.windows.Title" xml:space="preserve"><value>7. Windows updates</value></data>
   <data name="Setup.windows.Explanation" xml:space="preserve"><value>Security and quality updates from Windows Update (drivers in expert mode).</value></data>
-  <data name="Setup.software.Title" xml:space="preserve"><value>6. Software updates and installation</value></data>
+  <data name="Setup.software.Title" xml:space="preserve"><value>8. Software updates and installation</value></data>
   <data name="Setup.software.Explanation" xml:space="preserve"><value>Updates installed software through winget, then installs the software chosen below.</value></data>
-  <data name="Setup.cleanup.Title" xml:space="preserve"><value>7. Cleanup</value></data>
-  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).</value></data>
+  <data name="Setup.cleanup.Title" xml:space="preserve"><value>1. Cleanup</value></data>
+  <data name="Setup.cleanup.Explanation" xml:space="preserve"><value>Frees space first: temporary files, caches, error reports (files from the last 24 hours are kept). Cookies and history are only cleaned from the Cleanup page.</value></data>
   <data name="App.BusyClosing" xml:space="preserve"><value>Please wait: changes are in progress. PCDoc can be closed once they are finished.</value></data>
   <data name="Setup.Compare.Title" xml:space="preserve"><value>Before → after the preparation</value></data>
   <data name="Setup.Compare.Free" xml:space="preserve"><value>Free space on the Windows disk: {0} → {1}</value></data>
@@ -222,4 +222,11 @@
   <data name="Search.Placeholder" xml:space="preserve"><value>Search a feature…</value></data>
   <data name="Search.Results" xml:space="preserve"><value>Search results</value></data>
   <data name="Search.None" xml:space="preserve"><value>Nothing found</value></data>
+  <data name="Setup.antivirus.Title" xml:space="preserve"><value>3. Antivirus scan</value></data>
+  <data name="Setup.antivirus.Explanation" xml:space="preserve"><value>Quick Microsoft Defender scan, then an AdwCleaner adware search (detection: its report is in History).</value></data>
+  <data name="Nav.Group.Start" xml:space="preserve"><value>GET STARTED</value></data>
+  <data name="Nav.Group.Clean" xml:space="preserve"><value>CLEAN</value></data>
+  <data name="Nav.Group.Protect" xml:space="preserve"><value>PROTECT</value></data>
+  <data name="Nav.Group.Update" xml:space="preserve"><value>UPDATE AND SPEED UP</value></data>
+  <data name="Nav.Group.Tools" xml:space="preserve"><value>TOOLS</value></data>
 </root>

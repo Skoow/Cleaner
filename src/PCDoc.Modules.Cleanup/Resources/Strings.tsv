@@ -38,3 +38,19 @@ Column.Category	Category	Catégorie
 Column.Size	Size	Taille
 Column.Risk	Risk	Risque
 Column.File	File	Fichier
+Cleanup.chrome-cookies.Title	Chrome cookies	Cookies de Chrome
+Cleanup.chrome-cookies.Explanation	Sites forget you: you will have to sign in again everywhere. Chrome must be closed.	Les sites vous oublient : il faudra vous reconnecter partout. Chrome doit être fermé.
+Cleanup.chrome-history.Title	Chrome history	Historique de Chrome
+Cleanup.chrome-history.Explanation	Visited sites and most-visited tiles. Bookmarks and passwords are kept. Chrome must be closed.	Sites visités et vignettes des plus visités. Favoris et mots de passe sont gardés. Chrome doit être fermé.
+Cleanup.edge-cookies.Title	Edge cookies	Cookies d'Edge
+Cleanup.edge-cookies.Explanation	Sites forget you: you will have to sign in again everywhere. Edge must be closed.	Les sites vous oublient : il faudra vous reconnecter partout. Edge doit être fermé.
+Cleanup.edge-history.Title	Edge history	Historique d'Edge
+Cleanup.edge-history.Explanation	Visited sites and most-visited tiles. Favorites and passwords are kept. Edge must be closed.	Sites visités et vignettes des plus visités. Favoris et mots de passe sont gardés. Edge doit être fermé.
+Cleanup.firefox-cookies.Title	Firefox cookies	Cookies de Firefox
+Cleanup.firefox-cookies.Explanation	Sites forget you: you will have to sign in again everywhere. Firefox must be closed. History and bookmarks are kept.	Les sites vous oublient : il faudra vous reconnecter partout. Firefox doit être fermé. Historique et favoris sont gardés.
+Cleanup.recent-files.Title	Recent files list	Liste des fichiers récents
+Cleanup.recent-files.Explanation	Empties "Recent" in File Explorer and Start. Your files themselves are not touched.	Vide « Récent » dans l'Explorateur et Démarrer. Vos fichiers eux-mêmes ne sont pas touchés.
+Cleanup.jump-lists.Title	Jump lists	Listes de raccourcis
+Cleanup.jump-lists.Explanation	Recent items shown when right-clicking a taskbar icon. Items pinned in these lists are removed too.	Éléments récents affichés au clic droit sur une icône de la barre des tâches. Les éléments épinglés dans ces listes sont aussi retirés.
+Cleanup.thumbnail-cache.Title	Thumbnail cache	Cache des miniatures
+Cleanup.thumbnail-cache.Explanation	Windows recreates the picture previews when needed. Files in use are skipped.	Windows recrée les aperçus des images quand il en a besoin. Les fichiers en cours d'utilisation sont ignorés.

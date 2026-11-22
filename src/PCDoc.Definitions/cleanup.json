@@ -1,15 +1,188 @@
 {
   "version": 1,
-  "note": "Catégories de nettoyage. root : %SystemRoot%, %ProgramData% ou %LOCALAPPDATA% (profil cible) ; « * » dans un segment = tous les sous-dossiers (profils de navigateur). risk : Safe | Conditional. Seuls les fichiers sont supprimés.",
+  "note": "Catégories de nettoyage. root : %SystemRoot%, %ProgramData% ou %LOCALAPPDATA% (profil cible) ; « * » dans un segment = tous les sous-dossiers (profils de navigateur). risk : Safe | Conditional. Seuls les fichiers sont supprimés. files : fichiers précis, « * » permis dans les dossiers et le nom. requiresClosed : programmes qui doivent être fermés (navigateurs).",
   "categories": [
-    { "id": "windows-temp", "roots": ["%SystemRoot%\\Temp"], "minAgeHours": 24, "risk": "Safe" },
-    { "id": "user-temp", "roots": ["%LOCALAPPDATA%\\Temp"], "minAgeHours": 24, "risk": "Safe" },
-    { "id": "wu-download", "roots": ["%SystemRoot%\\SoftwareDistribution\\Download"], "minAgeHours": 24, "risk": "Safe", "requiresIdleWindowsUpdate": true },
-    { "id": "error-reports", "roots": ["%ProgramData%\\Microsoft\\Windows\\WER\\ReportArchive", "%ProgramData%\\Microsoft\\Windows\\WER\\ReportQueue"], "minAgeHours": 0, "risk": "Safe" },
-    { "id": "crash-dumps", "roots": ["%SystemRoot%\\Minidump", "%SystemRoot%\\LiveKernelReports", "%LOCALAPPDATA%\\CrashDumps"], "files": ["%SystemRoot%\\MEMORY.DMP"], "minAgeHours": 0, "risk": "Conditional" },
-    { "id": "shader-caches", "roots": ["%LOCALAPPDATA%\\D3DSCache", "%LOCALAPPDATA%\\NVIDIA\\DXCache", "%LOCALAPPDATA%\\NVIDIA\\GLCache", "%LOCALAPPDATA%\\AMD\\DxCache", "%LOCALAPPDATA%\\AMD\\GLCache"], "minAgeHours": 0, "risk": "Safe" },
-    { "id": "chrome-cache", "roots": ["%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Cache\\Cache_Data", "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Code Cache"], "minAgeHours": 0, "risk": "Safe" },
-    { "id": "edge-cache", "roots": ["%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Cache\\Cache_Data", "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Code Cache"], "minAgeHours": 0, "risk": "Safe" },
-    { "id": "firefox-cache", "roots": ["%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cache2"], "minAgeHours": 0, "risk": "Safe" }
+    {
+      "id": "windows-temp",
+      "roots": [
+        "%SystemRoot%\\Temp"
+      ],
+      "minAgeHours": 24,
+      "risk": "Safe"
+    },
+    {
+      "id": "user-temp",
+      "roots": [
+        "%LOCALAPPDATA%\\Temp"
+      ],
+      "minAgeHours": 24,
+      "risk": "Safe"
+    },
+    {
+      "id": "wu-download",
+      "roots": [
+        "%SystemRoot%\\SoftwareDistribution\\Download"
+      ],
+      "minAgeHours": 24,
+      "risk": "Safe",
+      "requiresIdleWindowsUpdate": true
+    },
+    {
+      "id": "error-reports",
+      "roots": [
+        "%ProgramData%\\Microsoft\\Windows\\WER\\ReportArchive",
+        "%ProgramData%\\Microsoft\\Windows\\WER\\ReportQueue"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "crash-dumps",
+      "roots": [
+        "%SystemRoot%\\Minidump",
+        "%SystemRoot%\\LiveKernelReports",
+        "%LOCALAPPDATA%\\CrashDumps"
+      ],
+      "files": [
+        "%SystemRoot%\\MEMORY.DMP"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional"
+    },
+    {
+      "id": "shader-caches",
+      "roots": [
+        "%LOCALAPPDATA%\\D3DSCache",
+        "%LOCALAPPDATA%\\NVIDIA\\DXCache",
+        "%LOCALAPPDATA%\\NVIDIA\\GLCache",
+        "%LOCALAPPDATA%\\AMD\\DxCache",
+        "%LOCALAPPDATA%\\AMD\\GLCache"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "chrome-cache",
+      "roots": [
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Cache\\Cache_Data",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Code Cache"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "edge-cache",
+      "roots": [
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Cache\\Cache_Data",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Code Cache"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "firefox-cache",
+      "roots": [
+        "%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cache2"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "chrome-cookies",
+      "roots": [],
+      "files": [
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Network\\Cookies-journal"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional",
+      "requiresClosed": [
+        "chrome"
+      ]
+    },
+    {
+      "id": "chrome-history",
+      "roots": [],
+      "files": [
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\History",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\History-journal",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Visited Links",
+        "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\*\\Top Sites"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional",
+      "requiresClosed": [
+        "chrome"
+      ]
+    },
+    {
+      "id": "edge-cookies",
+      "roots": [],
+      "files": [
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Network\\Cookies-journal"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional",
+      "requiresClosed": [
+        "msedge"
+      ]
+    },
+    {
+      "id": "edge-history",
+      "roots": [],
+      "files": [
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\History",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\History-journal",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Visited Links",
+        "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\*\\Top Sites"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional",
+      "requiresClosed": [
+        "msedge"
+      ]
+    },
+    {
+      "id": "firefox-cookies",
+      "roots": [],
+      "files": [
+        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite",
+        "%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite-wal"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional",
+      "requiresClosed": [
+        "firefox"
+      ]
+    },
+    {
+      "id": "recent-files",
+      "roots": [],
+      "files": [
+        "%APPDATA%\\Microsoft\\Windows\\Recent\\*.lnk"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    },
+    {
+      "id": "jump-lists",
+      "roots": [
+        "%APPDATA%\\Microsoft\\Windows\\Recent\\AutomaticDestinations",
+        "%APPDATA%\\Microsoft\\Windows\\Recent\\CustomDestinations"
+      ],
+      "minAgeHours": 0,
+      "risk": "Conditional"
+    },
+    {
+      "id": "thumbnail-cache",
+      "roots": [],
+      "files": [
+        "%LOCALAPPDATA%\\Microsoft\\Windows\\Explorer\\thumbcache_*.db",
+        "%LOCALAPPDATA%\\Microsoft\\Windows\\Explorer\\iconcache_*.db"
+      ],
+      "minAgeHours": 0,
+      "risk": "Safe"
+    }
   ]
 }

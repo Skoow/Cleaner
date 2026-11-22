@@ -117,4 +117,23 @@
   <data name="VT.Unknown" xml:space="preserve"><value>Inconnu de VirusTotal</value></data>
   <data name="VT.Stats" xml:space="preserve"><value>{0} / {1} antivirus</value></data>
   <data name="VT.Error" xml:space="preserve"><value>Erreur : {0}</value></data>
+  <data name="Scan.DefenderQuick.Title" xml:space="preserve"><value>Analyse antivirus rapide (Microsoft Defender)</value></data>
+  <data name="Scan.DefenderQuick.Explanation" xml:space="preserve"><value>Vérifie les endroits où les virus se cachent d'habitude. 5 à 15 minutes ; les menaces sont traitées par Defender.</value></data>
+  <data name="Scan.DefenderFull.Title" xml:space="preserve"><value>Analyse antivirus complète (Microsoft Defender)</value></data>
+  <data name="Scan.DefenderFull.Explanation" xml:space="preserve"><value>Vérifie tous les fichiers du PC. Peut durer une à plusieurs heures.</value></data>
+  <data name="Scan.SafetyScanner.Title" xml:space="preserve"><value>Seconde analyse : Microsoft Safety Scanner (détection)</value></data>
+  <data name="Scan.SafetyScanner.Explanation" xml:space="preserve"><value>Analyseur autonome de Microsoft, téléchargé chez Microsoft, signature vérifiée. Détection seule.</value></data>
+  <data name="Scan.AdwCleaner.Title" xml:space="preserve"><value>Recherche de logiciels publicitaires : Malwarebytes AdwCleaner (détection)</value></data>
+  <data name="Scan.AdwCleaner.Explanation" xml:space="preserve"><value>Trouve les logiciels publicitaires, barres d'outils et programmes indésirables. Détection seule : lisez son rapport dans l'Historique.</value></data>
+  <data name="Scan.AdwCleanerClean.Title" xml:space="preserve"><value>Supprimer les logiciels publicitaires avec AdwCleaner</value></data>
+  <data name="Scan.AdwCleanerClean.Explanation" xml:space="preserve"><value>AdwCleaner supprime ce qu'il trouve. Il signale parfois des outils utiles : les éléments vont dans sa quarantaine, restaurable en ouvrant AdwCleaner.</value></data>
+  <data name="Scan.KasperskyVrt.Title" xml:space="preserve"><value>Analyse et suppression des virus : Kaspersky Virus Removal Tool</value></data>
+  <data name="Scan.KasperskyVrt.Explanation" xml:space="preserve"><value>Analyseur gratuit de Kaspersky (environ 200 Mo), téléchargé chez Kaspersky, signature vérifiée, lancé sans fenêtre. Les menaces trouvées vont dans sa quarantaine.</value></data>
+  <data name="SecondOpinion.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner (suppression)</value></data>
+  <data name="SecondOpinion.KasperskyVrt" xml:space="preserve"><value>Kaspersky Virus Removal Tool</value></data>
+  <data name="SecondOpinion.Running.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner : analyse et suppression…</value></data>
+  <data name="SecondOpinion.Running.KasperskyVrt" xml:space="preserve"><value>Kaspersky : téléchargement (environ 200 Mo) et analyse, peut durer une heure…</value></data>
+  <data name="Security.Scans" xml:space="preserve"><value>Analyses antivirus</value></data>
+  <data name="Security.Scans.Intro" xml:space="preserve"><value>Lancez une ou plusieurs analyses : elles s'enchaînent, avec un point de restauration avant celles qui suppriment.</value></data>
+  <data name="Security.Scans.Run" xml:space="preserve"><value>Lancer les analyses cochées</value></data>
 </root>

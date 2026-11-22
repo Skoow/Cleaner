@@ -43,4 +43,20 @@
   <data name="Column.Size" xml:space="preserve"><value>Size</value></data>
   <data name="Column.Risk" xml:space="preserve"><value>Risk</value></data>
   <data name="Column.File" xml:space="preserve"><value>File</value></data>
+  <data name="Cleanup.chrome-cookies.Title" xml:space="preserve"><value>Chrome cookies</value></data>
+  <data name="Cleanup.chrome-cookies.Explanation" xml:space="preserve"><value>Sites forget you: you will have to sign in again everywhere. Chrome must be closed.</value></data>
+  <data name="Cleanup.chrome-history.Title" xml:space="preserve"><value>Chrome history</value></data>
+  <data name="Cleanup.chrome-history.Explanation" xml:space="preserve"><value>Visited sites and most-visited tiles. Bookmarks and passwords are kept. Chrome must be closed.</value></data>
+  <data name="Cleanup.edge-cookies.Title" xml:space="preserve"><value>Edge cookies</value></data>
+  <data name="Cleanup.edge-cookies.Explanation" xml:space="preserve"><value>Sites forget you: you will have to sign in again everywhere. Edge must be closed.</value></data>
+  <data name="Cleanup.edge-history.Title" xml:space="preserve"><value>Edge history</value></data>
+  <data name="Cleanup.edge-history.Explanation" xml:space="preserve"><value>Visited sites and most-visited tiles. Favorites and passwords are kept. Edge must be closed.</value></data>
+  <data name="Cleanup.firefox-cookies.Title" xml:space="preserve"><value>Firefox cookies</value></data>
+  <data name="Cleanup.firefox-cookies.Explanation" xml:space="preserve"><value>Sites forget you: you will have to sign in again everywhere. Firefox must be closed. History and bookmarks are kept.</value></data>
+  <data name="Cleanup.recent-files.Title" xml:space="preserve"><value>Recent files list</value></data>
+  <data name="Cleanup.recent-files.Explanation" xml:space="preserve"><value>Empties "Recent" in File Explorer and Start. Your files themselves are not touched.</value></data>
+  <data name="Cleanup.jump-lists.Title" xml:space="preserve"><value>Jump lists</value></data>
+  <data name="Cleanup.jump-lists.Explanation" xml:space="preserve"><value>Recent items shown when right-clicking a taskbar icon. Items pinned in these lists are removed too.</value></data>
+  <data name="Cleanup.thumbnail-cache.Title" xml:space="preserve"><value>Thumbnail cache</value></data>
+  <data name="Cleanup.thumbnail-cache.Explanation" xml:space="preserve"><value>Windows recreates the picture previews when needed. Files in use are skipped.</value></data>
 </root>

@@ -122,6 +122,11 @@ public sealed class CleanupEngine(
             yield break; // une mise à jour est en cours : ses fichiers ne sont pas touchés
         }
 
+        if (c.RequiresClosed?.Any(guards.IsRunning) == true)
+        {
+            yield break; // navigateur ouvert : ses cookies et son historique sont en cours d'utilisation
+        }
+
         var limit = clock.Now.AddHours(-c.MinAgeHours);
         foreach (var root in ResolveRoots(c.Roots))
         {
@@ -145,12 +150,20 @@ public sealed class CleanupEngine(
             }
         }
 
+        // Fichiers précis : « * » permis dans les dossiers (profils) et dans le nom (thumbcache_*.db, *.lnk).
         foreach (var file in c.Files.Select(Resolve).OfType<string>())
         {
-            var parent = file[..file.LastIndexOf('\\')];
-            foreach (var f in files.EnumerateFiles(parent, recursive: false).Where(f => f.Path.Equals(file, StringComparison.OrdinalIgnoreCase)))
+            var cut = file.LastIndexOf('\\');
+            var pattern = file[(cut + 1)..];
+            var folder = file[..cut];
+            // Le fichier lui-même a été vérifié par Resolve ; son dossier peut être une racine autorisée (C:\Windows\MEMORY.DMP).
+            IEnumerable<string> parents = folder.Contains('*', StringComparison.Ordinal) ? ResolveRoots([folder]) : files.DirectoryExists(folder) ? [folder] : [];
+            foreach (var parent in parents)
             {
-                yield return (parent, f);
+                foreach (var f in files.EnumerateFiles(parent, recursive: false).Where(f => NameMatches(f.Path[(f.Path.LastIndexOf('\\') + 1)..], pattern)))
+                {
+                    yield return (parent, f);
+                }
             }
         }
     }
@@ -180,6 +193,15 @@ public sealed class CleanupEngine(
         }
     }
 
+    internal static bool NameMatches(string name, string pattern)
+    {
+        var star = pattern.IndexOf('*', StringComparison.Ordinal);
+        return star < 0
+            ? name.Equals(pattern, StringComparison.OrdinalIgnoreCase)
+            : name.Length >= pattern.Length - 1 && name.StartsWith(pattern[..star], StringComparison.OrdinalIgnoreCase)
+              && name.EndsWith(pattern[(star + 1)..], StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>Premier sous-dossier sous la racine (null pour un fichier posé directement dans la racine).</summary>
     private static string? TopFolder(string root, string path)
     {
@@ -190,12 +212,15 @@ public sealed class CleanupEngine(
 
     private string LocalAppData => profiles.Resolve().ProfilePath.TrimEnd('\\') + @"\AppData\Local";
 
+    private string RoamingAppData => profiles.Resolve().ProfilePath.TrimEnd('\\') + @"\AppData\Roaming";
+
     /// <summary>Seules trois variables sont connues, toutes issues de sources de confiance.</summary>
     private string Expand(string raw) => raw
         .Replace("%SystemRoot%", known.Windows, StringComparison.OrdinalIgnoreCase)
         .Replace("%windir%", known.Windows, StringComparison.OrdinalIgnoreCase)
         .Replace("%ProgramData%", known.ProgramData, StringComparison.OrdinalIgnoreCase)
-        .Replace("%LOCALAPPDATA%", LocalAppData, StringComparison.OrdinalIgnoreCase);
+        .Replace("%LOCALAPPDATA%", LocalAppData, StringComparison.OrdinalIgnoreCase)
+        .Replace("%APPDATA%", RoamingAppData, StringComparison.OrdinalIgnoreCase);
 
     private string? Resolve(string raw)
     {
@@ -206,12 +231,12 @@ public sealed class CleanupEngine(
             return null;
         }
 
-        return IsAllowed(path.Replace(@"\*", @"\x", StringComparison.Ordinal)) ? path : null;
+        return IsAllowed(path.Replace("*", "x", StringComparison.Ordinal)) ? path : null;
     }
 
     private bool IsAllowed(string path)
     {
-        var allowed = new[] { known.Windows, known.ProgramData, LocalAppData };
+        var allowed = new[] { known.Windows, known.ProgramData, LocalAppData, RoamingAppData };
         return allowed.Any(a => !string.IsNullOrEmpty(a) && !a.Contains('%', StringComparison.Ordinal) && IsUnder(path, a.TrimEnd('\\')));
     }
 

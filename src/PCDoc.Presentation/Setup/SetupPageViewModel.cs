@@ -273,15 +273,18 @@ public sealed partial class SetupPageViewModel : ObservableObject
             await Task.WhenAll(privacy, security, optimize, apps, updates, cleanup).ConfigureAwait(true);
 
             Steps.Clear();
-            Add("privacy", privacy.Result.Where(s => s.Available && !s.Applied && s.Tweak.Profiles.Contains("recommended")).Select(TweakFixer.FindingFor));
+            // Ordre logique d'une préparation : faire de la place, retirer l'inutile, chercher les virus, protéger,
+            // régler la confidentialité et les performances, puis tout mettre à jour.
+            Add("cleanup", cleanup.Result?.Categories.Where(c => c.Bytes > 0).Select(c => CleanupFixer.FindingFor(c.Id, c.Risk, c.Bytes, c.Files)) ?? []);
+            Add("bloatware", apps.Result?.Apps.Where(a => a.IsBloat && a.CanUninstall).Select(UninstallFixer.FindingFor) ?? []);
+            Add("antivirus", [ScanFixer.FindingFor(ScanKind.DefenderQuick), ScanFixer.FindingFor(ScanKind.AdwCleaner)]);
             Add("security", security.Result?.Findings.Where(f => f.FixAvailable && !f.Id.StartsWith("security.usb.", StringComparison.Ordinal)) ?? []);
+            Add("privacy", privacy.Result.Where(s => s.Available && !s.Applied && s.Tweak.Profiles.Contains("recommended")).Select(TweakFixer.FindingFor));
             _optimizeStates = optimize.Result;
             Add("optimize", OptimizeFindings());
-            Add("bloatware", apps.Result?.Apps.Where(a => a.IsBloat && a.CanUninstall).Select(UninstallFixer.FindingFor) ?? []);
             // Les définitions de l'antivirus passent par l'étape Sécurité (Defender) : pas deux fois.
             Add("windows", updates.Result?.Windows.Where(w => !IsDefenderDefinitions(w)).Select(UpdateFixer.ForWindows) ?? []);
             Add("software", updates.Result?.Software.Select(UpdateFixer.ForUpgrade) ?? []);
-            Add("cleanup", cleanup.Result?.Categories.Where(c => c.Bytes > 0).Select(c => CleanupFixer.FindingFor(c.Id, c.Risk, c.Bytes, c.Files)) ?? []);
             _current = new SetupSnapshot(
                 SafeFree(), Steps.Sum(s => s.Findings.Count), apps.Result?.Apps.Count ?? 0, updates.Result?.Windows.Count ?? 0,
                 updates.Result?.Software.Count ?? 0, cleanup.Result?.Categories.Sum(c => c.Bytes) ?? 0);
@@ -316,9 +319,7 @@ public sealed partial class SetupPageViewModel : ObservableObject
 
         if (!Steps.Any(s => s.Id == "software" && s.IsSelected))
         {
-            var cleanupIndex = findings.FindIndex(f => f.Module == "cleanup");
-            var installs = Software.Where(s => s.IsSelected).Select(s => UpdateFixer.ForInstall(s.Package)).ToList();
-            findings.InsertRange(cleanupIndex < 0 ? findings.Count : cleanupIndex, installs);
+            findings.AddRange(Software.Where(s => s.IsSelected).Select(s => UpdateFixer.ForInstall(s.Package))); // en dernier
         }
 
         if (findings.Count > 0)

@@ -278,6 +278,22 @@ public sealed class KnownFolders : IKnownFolders
 /// <summary>Une mise à jour est en cours si Windows Update ou TrustedInstaller tourne, ou si un redémarrage est attendu.</summary>
 public sealed class CleanupGuards(IWmiQuery wmi, IRegistryReader registry) : ICleanupGuards
 {
+    public bool IsRunning(string processName)
+    {
+        if (string.IsNullOrWhiteSpace(processName) || processName.IndexOfAny(['\\', '/', '.']) >= 0)
+        {
+            return true; // nom invalide : prudence
+        }
+
+        var running = System.Diagnostics.Process.GetProcessesByName(processName);
+        foreach (var p in running)
+        {
+            p.Dispose();
+        }
+
+        return running.Length > 0;
+    }
+
     public bool IsWindowsUpdateBusy()
     {
         try

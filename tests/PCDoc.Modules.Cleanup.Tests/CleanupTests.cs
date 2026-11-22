@@ -28,9 +28,11 @@ public class CleanupTests
         public string ProgramData => @"C:\ProgramData";
     }
 
-    internal sealed class Guards(bool updateBusy = false) : ICleanupGuards
+    internal sealed class Guards(bool updateBusy = false, params string[] running) : ICleanupGuards
     {
         public bool IsWindowsUpdateBusy() => updateBusy;
+
+        public bool IsRunning(string processName) => running.Contains(processName);
     }
 
     internal sealed class Probe : IFileProbe
@@ -64,6 +66,25 @@ public class CleanupTests
 
         temp.Bytes.Should().Be(60 * MB);
         temp.Files.Should().Be(2);
+    }
+
+    [Fact]
+    public void Traces_CookiesSkippedWhileBrowserOpen_FilePatternsMatched()
+    {
+        const string roaming = @"C:\Users\Lea\AppData\Roaming";
+        var fs = new FakeFileSystem()
+            .File($@"{Local}\Google\Chrome\User Data\Default\Network\Cookies", 2 * MB, Now)
+            .File($@"{Local}\Google\Chrome\User Data\Profile 2\Network\Cookies", 3 * MB, Now)
+            .File($@"{roaming}\Microsoft\Windows\Recent\report.docx.lnk", 1 * MB, Now)
+            .File($@"{roaming}\Microsoft\Windows\Recent\desktop.ini", 1 * MB, Now)
+            .File($@"{Local}\Microsoft\Windows\Explorer\thumbcache_256.db", 4 * MB, Now);
+
+        var closed = Engine(fs).Analyze().Categories;
+        closed.Single(c => c.Id == "chrome-cookies").Bytes.Should().Be(5 * MB);
+        closed.Single(c => c.Id == "recent-files").Bytes.Should().Be(1 * MB, "seulement les raccourcis .lnk");
+        closed.Single(c => c.Id == "thumbnail-cache").Bytes.Should().Be(4 * MB);
+
+        Engine(fs, guards: new Guards(false, "chrome")).Analyze().Categories.Single(c => c.Id == "chrome-cookies").Bytes.Should().Be(0, "Chrome ouvert");
     }
 
     [Fact]

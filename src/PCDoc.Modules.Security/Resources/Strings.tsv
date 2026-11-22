@@ -112,3 +112,22 @@ VT.Done	{0} programs checked, {1} flagged by at least one antivirus.	{0} program
 VT.Unknown	Unknown to VirusTotal	Inconnu de VirusTotal
 VT.Stats	{0} / {1} antivirus engines	{0} / {1} antivirus
 VT.Error	Error: {0}	Erreur : {0}
+Scan.DefenderQuick.Title	Quick antivirus scan (Microsoft Defender)	Analyse antivirus rapide (Microsoft Defender)
+Scan.DefenderQuick.Explanation	Checks the places where viruses usually hide. 5 to 15 minutes; threats are handled by Defender.	Vérifie les endroits où les virus se cachent d'habitude. 5 à 15 minutes ; les menaces sont traitées par Defender.
+Scan.DefenderFull.Title	Full antivirus scan (Microsoft Defender)	Analyse antivirus complète (Microsoft Defender)
+Scan.DefenderFull.Explanation	Checks every file on the PC. Can take one to several hours.	Vérifie tous les fichiers du PC. Peut durer une à plusieurs heures.
+Scan.SafetyScanner.Title	Second opinion: Microsoft Safety Scanner (detection)	Seconde analyse : Microsoft Safety Scanner (détection)
+Scan.SafetyScanner.Explanation	Microsoft's standalone scanner, downloaded from Microsoft, signature checked. Detection only.	Analyseur autonome de Microsoft, téléchargé chez Microsoft, signature vérifiée. Détection seule.
+Scan.AdwCleaner.Title	Adware scan: Malwarebytes AdwCleaner (detection)	Recherche de logiciels publicitaires : Malwarebytes AdwCleaner (détection)
+Scan.AdwCleaner.Explanation	Finds adware, toolbars and unwanted programs. Detection only: read its report in History.	Trouve les logiciels publicitaires, barres d'outils et programmes indésirables. Détection seule : lisez son rapport dans l'Historique.
+Scan.AdwCleanerClean.Title	Remove adware with AdwCleaner	Supprimer les logiciels publicitaires avec AdwCleaner
+Scan.AdwCleanerClean.Explanation	AdwCleaner removes what it finds. It sometimes flags useful tools: items go to its quarantine, which can be restored by opening AdwCleaner.	AdwCleaner supprime ce qu'il trouve. Il signale parfois des outils utiles : les éléments vont dans sa quarantaine, restaurable en ouvrant AdwCleaner.
+Scan.KasperskyVrt.Title	Virus scan and removal: Kaspersky Virus Removal Tool	Analyse et suppression des virus : Kaspersky Virus Removal Tool
+Scan.KasperskyVrt.Explanation	Free Kaspersky scanner (about 200 MB), downloaded from Kaspersky, signature checked, run without any window. Threats it finds are moved to its quarantine.	Analyseur gratuit de Kaspersky (environ 200 Mo), téléchargé chez Kaspersky, signature vérifiée, lancé sans fenêtre. Les menaces trouvées vont dans sa quarantaine.
+SecondOpinion.AdwCleanerClean	AdwCleaner (removal)	AdwCleaner (suppression)
+SecondOpinion.KasperskyVrt	Kaspersky Virus Removal Tool	Kaspersky Virus Removal Tool
+SecondOpinion.Running.AdwCleanerClean	AdwCleaner: scan and removal…	AdwCleaner : analyse et suppression…
+SecondOpinion.Running.KasperskyVrt	Kaspersky: download (about 200 MB) and scan, can take one hour…	Kaspersky : téléchargement (environ 200 Mo) et analyse, peut durer une heure…
+Security.Scans	Antivirus scans	Analyses antivirus
+Security.Scans.Intro	Run one or several scans: they go one after another, with a restore point before those that remove items.	Lancez une ou plusieurs analyses : elles s'enchaînent, avec un point de restauration avant celles qui suppriment.
+Security.Scans.Run	Run the selected scans	Lancer les analyses cochées

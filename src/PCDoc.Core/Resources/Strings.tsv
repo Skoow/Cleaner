@@ -155,20 +155,20 @@ Setup.Analyzing	Analyzing the PC… Windows Update can take a few minutes.	Analy
 Setup.Done	Preparation finished. Export the report from History, and restart the PC if updates ask for it.	Préparation terminée. Exportez le rapport depuis l'Historique, et redémarrez le PC si des mises à jour le demandent.
 Setup.NothingToDo	Nothing to do	Rien à faire
 Setup.Count	{0} actions	{0} actions
-Setup.privacy.Title	1. Privacy	1. Confidentialité
+Setup.privacy.Title	5. Privacy	5. Confidentialité
 Setup.privacy.Explanation	Recommended profile: telemetry reduced, advertising and suggestions off, no more apps installed by themselves.	Profil recommandé : télémétrie réduite, publicité et suggestions coupées, plus d'applications installées toutes seules.
-Setup.security.Title	2. Security	2. Sécurité
+Setup.security.Title	4. Security	4. Sécurité
 Setup.security.Explanation	Firewall, UAC, AutoRun, SmartScreen, antivirus definitions and other safe fixes (the others stay on the Security page).	Pare-feu, UAC, exécution automatique, SmartScreen, définitions de l'antivirus et autres corrections sûres (les autres restent dans la page Sécurité).
-Setup.optimize.Title	3. Optimization	3. Optimisation
+Setup.optimize.Title	6. Optimization	6. Optimisation
 Setup.optimize.Explanation	Settings of the chosen profile (power plan, game mode, start-up delay…).	Réglages du profil choisi (mode d'alimentation, mode Jeu, délai au démarrage…).
-Setup.bloatware.Title	4. Preinstalled apps	4. Applications préinstallées
+Setup.bloatware.Title	2. Preinstalled apps	2. Applications préinstallées
 Setup.bloatware.Explanation	Removes the useless apps added by Microsoft or the manufacturer (only the safe ones in novice mode).	Retire les applications inutiles ajoutées par Microsoft ou le fabricant (seulement les sûres en mode novice).
-Setup.windows.Title	5. Windows updates	5. Mises à jour de Windows
+Setup.windows.Title	7. Windows updates	7. Mises à jour de Windows
 Setup.windows.Explanation	Security and quality updates from Windows Update (drivers in expert mode).	Mises à jour de sécurité et de qualité de Windows Update (pilotes en mode expert).
-Setup.software.Title	6. Software updates and installation	6. Mises à jour et installation de logiciels
+Setup.software.Title	8. Software updates and installation	8. Mises à jour et installation de logiciels
 Setup.software.Explanation	Updates installed software through winget, then installs the software chosen below.	Met à jour les logiciels installés via winget, puis installe les logiciels choisis ci-dessous.
-Setup.cleanup.Title	7. Cleanup	7. Nettoyage
-Setup.cleanup.Explanation	Deletes temporary files and caches found during the analysis (files from the last 24 hours are kept; run a cleanup again after restarting).	Supprime les fichiers temporaires et les caches trouvés pendant l'analyse (ceux des dernières 24 h sont gardés ; refaites un nettoyage après le redémarrage).
+Setup.cleanup.Title	1. Cleanup	1. Nettoyage
+Setup.cleanup.Explanation	Frees space first: temporary files, caches, error reports (files from the last 24 hours are kept). Cookies and history are only cleaned from the Cleanup page.	Libère d'abord de la place : fichiers temporaires, caches, rapports d'erreurs (ceux des dernières 24 h sont gardés). Les cookies et l'historique ne sont nettoyés que depuis la page Nettoyage.
 App.BusyClosing	Please wait: changes are in progress. PCDoc can be closed once they are finished.	Patientez : des modifications sont en cours. PCDoc pourra être fermé quand elles seront terminées.
 Setup.Compare.Title	Before → after the preparation	Avant → après la préparation
 Setup.Compare.Free	Free space on the Windows disk: {0} → {1}	Espace libre sur le disque de Windows : {0} → {1}
@@ -217,3 +217,11 @@ Portable.Failed	PCDoc could not be copied to the drive.	PCDoc n'a pas pu être c
 Search.Placeholder	Search a feature…	Rechercher une fonction…
 Search.Results	Search results	Résultats de la recherche
 Search.None	Nothing found	Aucun résultat
+
+Setup.antivirus.Title	3. Antivirus scan	3. Analyse antivirus
+Setup.antivirus.Explanation	Quick Microsoft Defender scan, then an AdwCleaner adware search (detection: its report is in History).	Analyse rapide Microsoft Defender, puis recherche de logiciels publicitaires AdwCleaner (détection : son rapport est dans l'Historique).
+Nav.Group.Start	GET STARTED	DÉMARRER
+Nav.Group.Clean	CLEAN	NETTOYER
+Nav.Group.Protect	PROTECT	PROTÉGER
+Nav.Group.Update	UPDATE AND SPEED UP	METTRE À JOUR ET ACCÉLÉRER
+Nav.Group.Tools	TOOLS	OUTILS

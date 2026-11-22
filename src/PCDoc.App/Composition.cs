@@ -182,6 +182,8 @@ internal static class Composition
         services.AddSingleton<IBrowserExtensions, BrowserExtensions>();
         services.AddSingleton(sp => new ExtensionBlockFixer(sp.GetRequiredService<IRegistryReader>(), sp.GetRequiredService<IRegistryValueWriter>()));
         services.AddSingleton<IFixer>(sp => sp.GetRequiredService<ExtensionBlockFixer>());
+        services.AddSingleton(sp => new ScanFixer(sp.GetRequiredService<SecurityEngine>(), sp.GetRequiredService<ISecondOpinion>()));
+        services.AddSingleton<IFixer>(sp => sp.GetRequiredService<ScanFixer>());
         services.AddSingleton<ISecondOpinion>(sp => new SecondOpinion(sp.GetRequiredService<ISignatureVerifier>(),
             sp.GetRequiredService<PCDoc.Core.Activity.IReportWriter>()));
         services.AddSingleton<IVirusTotal>(_ => new VirusTotalClient(Path.Combine(AppPaths.DataRoot, "virustotal.key")));
@@ -284,6 +286,7 @@ internal static class Composition
         var fixes = NewFixPanel(services);
         return new SecurityPageViewModel(services.GetRequiredService<ISecuritySource>(), services.GetRequiredService<ILocalizer>(), fixes, Mode(services))
         {
+            ScanTools = services.GetRequiredService<ScanFixer>(),
             Tools = new SecurityToolsViewModel(services.GetRequiredService<INetworkConnections>(), services.GetRequiredService<IBrowserExtensions>(),
                 services.GetRequiredService<ExtensionBlockFixer>(), services.GetRequiredService<ISecondOpinion>(), services.GetRequiredService<IVirusTotal>(),
                 new VirusTotalCheck(services.GetRequiredService<IAutorunSource>(), services.GetRequiredService<IVirusTotal>()),

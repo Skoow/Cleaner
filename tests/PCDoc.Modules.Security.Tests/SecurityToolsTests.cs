@@ -92,4 +92,24 @@ public sealed class SecurityToolsTests
             File.Delete(file);
         }
     }
+
+    private sealed class Opinion : ISecondOpinion
+    {
+        public List<SecondOpinionTool> Runs { get; } = [];
+
+        public Task<SecondOpinionResult> RunAsync(SecondOpinionTool tool, Action<string>? onOutput, CancellationToken cancellationToken)
+        {
+            Runs.Add(tool);
+            return Task.FromResult(new SecondOpinionResult(0, ["log line"]));
+        }
+    }
+
+    [Fact]
+    public void ScanFixer_RemovingScansAreConditional_AndFindingsAreRevalidated()
+    {
+        ScanFixer.FindingFor(ScanKind.AdwCleaner).Risk.Should().Be(RiskLevel.Safe);
+        ScanFixer.FindingFor(ScanKind.AdwCleanerClean).Risk.Should().Be(RiskLevel.Conditional);
+        ScanFixer.FindingFor(ScanKind.KasperskyVrt).Risk.Should().Be(RiskLevel.Conditional);
+        PCDoc.Core.Findings.FixPolicy.NeedsStrongConfirmation(ScanFixer.FindingFor(ScanKind.KasperskyVrt)).Should().BeTrue();
+    }
 }

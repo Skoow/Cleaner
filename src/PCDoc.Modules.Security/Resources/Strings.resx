@@ -117,4 +117,23 @@
   <data name="VT.Unknown" xml:space="preserve"><value>Unknown to VirusTotal</value></data>
   <data name="VT.Stats" xml:space="preserve"><value>{0} / {1} antivirus engines</value></data>
   <data name="VT.Error" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="Scan.DefenderQuick.Title" xml:space="preserve"><value>Quick antivirus scan (Microsoft Defender)</value></data>
+  <data name="Scan.DefenderQuick.Explanation" xml:space="preserve"><value>Checks the places where viruses usually hide. 5 to 15 minutes; threats are handled by Defender.</value></data>
+  <data name="Scan.DefenderFull.Title" xml:space="preserve"><value>Full antivirus scan (Microsoft Defender)</value></data>
+  <data name="Scan.DefenderFull.Explanation" xml:space="preserve"><value>Checks every file on the PC. Can take one to several hours.</value></data>
+  <data name="Scan.SafetyScanner.Title" xml:space="preserve"><value>Second opinion: Microsoft Safety Scanner (detection)</value></data>
+  <data name="Scan.SafetyScanner.Explanation" xml:space="preserve"><value>Microsoft's standalone scanner, downloaded from Microsoft, signature checked. Detection only.</value></data>
+  <data name="Scan.AdwCleaner.Title" xml:space="preserve"><value>Adware scan: Malwarebytes AdwCleaner (detection)</value></data>
+  <data name="Scan.AdwCleaner.Explanation" xml:space="preserve"><value>Finds adware, toolbars and unwanted programs. Detection only: read its report in History.</value></data>
+  <data name="Scan.AdwCleanerClean.Title" xml:space="preserve"><value>Remove adware with AdwCleaner</value></data>
+  <data name="Scan.AdwCleanerClean.Explanation" xml:space="preserve"><value>AdwCleaner removes what it finds. It sometimes flags useful tools: items go to its quarantine, which can be restored by opening AdwCleaner.</value></data>
+  <data name="Scan.KasperskyVrt.Title" xml:space="preserve"><value>Virus scan and removal: Kaspersky Virus Removal Tool</value></data>
+  <data name="Scan.KasperskyVrt.Explanation" xml:space="preserve"><value>Free Kaspersky scanner (about 200 MB), downloaded from Kaspersky, signature checked, run without any window. Threats it finds are moved to its quarantine.</value></data>
+  <data name="SecondOpinion.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner (removal)</value></data>
+  <data name="SecondOpinion.KasperskyVrt" xml:space="preserve"><value>Kaspersky Virus Removal Tool</value></data>
+  <data name="SecondOpinion.Running.AdwCleanerClean" xml:space="preserve"><value>AdwCleaner: scan and removal…</value></data>
+  <data name="SecondOpinion.Running.KasperskyVrt" xml:space="preserve"><value>Kaspersky: download (about 200 MB) and scan, can take one hour…</value></data>
+  <data name="Security.Scans" xml:space="preserve"><value>Antivirus scans</value></data>
+  <data name="Security.Scans.Intro" xml:space="preserve"><value>Run one or several scans: they go one after another, with a restore point before those that remove items.</value></data>
+  <data name="Security.Scans.Run" xml:space="preserve"><value>Run the selected scans</value></data>
 </root>

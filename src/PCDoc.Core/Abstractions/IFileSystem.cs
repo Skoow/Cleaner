@@ -20,6 +20,9 @@ public interface IKnownFolders
 public interface ICleanupGuards
 {
     bool IsWindowsUpdateBusy();
+
+    /// <summary>Vrai si un programme de ce nom (sans .exe) est ouvert (navigateur : ses fichiers sont verrouillés ou en cours d'écriture).</summary>
+    bool IsRunning(string processName) => false;
 }
 
 /// <summary>

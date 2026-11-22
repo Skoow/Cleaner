@@ -60,9 +60,10 @@ public sealed class SetupPageViewModelTests
 
         await vm.AnalyzeCommand.ExecuteAsync(null);
 
-        vm.Steps.Select(s => s.Id).Should().Equal("privacy", "security", "optimize", "bloatware", "windows", "software", "cleanup");
+        vm.Steps.Select(s => s.Id).Should().Equal("cleanup", "bloatware", "antivirus", "security", "privacy", "optimize", "windows", "software");
         vm.Steps.Single(s => s.Id == "privacy").Findings.Should().OnlyContain(f => f.Risk == RiskLevel.Safe && f.Module == "privacy").And.NotBeEmpty();
         vm.Steps.Single(s => s.Id == "security").IsSelected.Should().BeFalse("module en échec : étape vide");
+        vm.Steps.Single(s => s.Id == "antivirus").Findings.Select(f => f.Id).Should().Equal("security.scan.defenderquick", "security.scan.adwcleaner");
         vm.Steps.Single(s => s.Id == "bloatware").Findings.Should().ContainSingle();
         vm.Steps.Single(s => s.Id == "windows").Findings.Should().ContainSingle("pilote 🟠 exclu en mode novice");
         vm.Steps.Single(s => s.Id == "cleanup").Findings.Should().ContainSingle();

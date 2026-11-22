@@ -41,12 +41,27 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <StackPanel Orientation="Horizontal" Margin="0,6,0,16">
-              <Button Content="{app:T Security.QuickScan}" Command="{Binding QuickScanCommand}" Margin="0,0,8,0" MinWidth="130"
-                      AutomationProperties.Name="{app:T Security.QuickScan}" />
-              <Button Content="{app:T Security.FullScan}" Command="{Binding FullScanCommand}" MinWidth="130"
-                      AutomationProperties.Name="{app:T Security.FullScan}" />
-            </StackPanel>
+            <TextBlock Text="{app:T Security.Scans}" FontWeight="SemiBold" Margin="0,12,0,2" />
+            <TextBlock Text="{app:T Security.Scans.Intro}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,6" />
+            <ItemsControl ItemsSource="{Binding Scans}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type s:ScanRow}">
+                  <Border Style="{StaticResource Pcdoc.Card}" Margin="0,0,0,4" Padding="10">
+                    <DockPanel>
+                      <TextBlock DockPanel.Dock="Right" Text="{Binding RiskLabel}" Style="{StaticResource Pcdoc.Muted}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                      <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanSelect}" AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Margin="4,0,0,0">
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Explanation}" Style="{StaticResource Pcdoc.Muted}" FontSize="12" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </CheckBox>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="{app:T Security.Scans.Run}" Command="{Binding RunSelectedScansCommand}" HorizontalAlignment="Left" Margin="0,6,0,16"
+                    MinWidth="200" AutomationProperties.Name="{app:T Security.Scans.Run}" />
             <TextBlock Text="{app:T Security.Detections}" FontWeight="SemiBold" Margin="0,0,0,6" />
             <DataGrid ItemsSource="{Binding Detections}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       GridLinesVisibility="None" AutomationProperties.Name="{app:T Security.Detections}" MaxHeight="260">
@@ -174,22 +189,9 @@
           </DataGrid>
         </DockPanel>
       </TabItem>
-      <TabItem Header="{app:T Security.Tab.SecondOpinion}" DataContext="{Binding Tools}">
+      <TabItem Header="VirusTotal" DataContext="{Binding Tools}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
           <StackPanel Margin="0,12,0,0">
-            <TextBlock Text="{app:T SecondOpinion.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-              <Button Content="{app:T SecondOpinion.SafetyScanner}" Command="{Binding RunSafetyScannerCommand}" Margin="0,0,8,0" MinWidth="200"
-                      AutomationProperties.Name="{app:T SecondOpinion.SafetyScanner}" />
-              <Button Content="{app:T SecondOpinion.AdwCleaner}" Command="{Binding RunAdwCleanerCommand}" Margin="0,0,8,0" MinWidth="200"
-                      AutomationProperties.Name="{app:T SecondOpinion.AdwCleaner}" />
-              <Button Content="{app:T Security.CancelScan}" Command="{Binding CancelToolCommand}" AutomationProperties.Name="{app:T Security.CancelScan}"
-                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
-            </StackPanel>
-            <TextBlock Text="{Binding ToolStatus}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,6" AutomationProperties.LiveSetting="Polite"
-                       Visibility="{Binding ToolStatus, Converter={StaticResource NotNullToVisibility}}" />
-            <TextBox Style="{StaticResource Pcdoc.Tech}" Text="{Binding ToolOutput, Mode=OneWay}" Height="140" VerticalScrollBarVisibility="Auto"
-                     TextWrapping="Wrap" AutomationProperties.Name="{app:T Diag.RepairOutput}" />
             <TextBlock Text="VirusTotal" Style="{StaticResource Pcdoc.SectionTitle}" Margin="0,16,0,4" />
             <TextBlock Text="{app:T VT.Intro}" Style="{StaticResource Pcdoc.Muted}" TextWrapping="Wrap" Margin="0,0,0,8" />
             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">

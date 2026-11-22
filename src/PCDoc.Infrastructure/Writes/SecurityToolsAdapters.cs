@@ -313,7 +313,8 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
     // Noms exacts des éditeurs (certificat de signature) et domaines de téléchargement acceptés.
     private static readonly HashSet<string> Microsoft = new(StringComparer.Ordinal) { "Microsoft Corporation" };
     private static readonly HashSet<string> Malwarebytes = new(StringComparer.Ordinal) { "Malwarebytes Inc.", "Malwarebytes Inc", "Malwarebytes Corporation" };
-    private static readonly string[] AllowedHosts = ["microsoft.com", "malwarebytes.com", "mbamupdates.com"];
+    private static readonly HashSet<string> Kaspersky = new(StringComparer.Ordinal) { "AO Kaspersky Lab", "Kaspersky Lab JSC" };
+    private static readonly string[] AllowedHosts = ["microsoft.com", "malwarebytes.com", "mbamupdates.com", "kaspersky-labs.com", "kaspersky.com"];
 
     private static readonly HttpClient Http = new(new HttpClientHandler { AllowAutoRedirect = true, MaxAutomaticRedirections = 10 })
     {
@@ -327,6 +328,11 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
             // Analyse seule (/scan, /N) : rien n'est supprimé sans retour possible ; l'utilisateur décide ensuite.
             SecondOpinionTool.AdwCleaner => ("https://downloads.malwarebytes.com/file/adwcleaner", "adwcleaner.exe", Malwarebytes, "/eula /scan /noreboot /path \"{0}\"",
                 TimeSpan.FromHours(1)),
+            // Nettoyage : dossier de travail permanent et protégé, pour que la quarantaine d'AdwCleaner reste restaurable.
+            SecondOpinionTool.AdwCleanerClean => ("https://downloads.malwarebytes.com/file/adwcleaner", "adwcleaner.exe", Malwarebytes,
+                "/eula /clean /noreboot /path \"{1}\"", TimeSpan.FromHours(1)),
+            SecondOpinionTool.KasperskyVrt => ("https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe", "KVRT.exe", Kaspersky,
+                "-accepteula -silent -adinsilent -processlevel 2 -dontencrypt -d \"{1}\"", TimeSpan.FromHours(4)),
             _ => (RuntimeInformation.OSArchitecture == Architecture.X86 ? "https://go.microsoft.com/fwlink/?LinkId=212733" : "https://go.microsoft.com/fwlink/?LinkId=212732",
                 "msert.exe", Microsoft, "/Q /N", TimeSpan.FromHours(3)),
         };
@@ -349,9 +355,15 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
             }
 
             onOutput?.Invoke($"Signature OK: {signature.Publisher}");
-            var exit = await RunHiddenAsync(exe, string.Format(System.Globalization.CultureInfo.InvariantCulture, arguments, folder), onOutput, timeout, cancellationToken)
+            var data = tool switch
+            {
+                SecondOpinionTool.AdwCleanerClean => SecureFolders.EnsureChild("adwcleaner"),
+                SecondOpinionTool.KasperskyVrt => SecureFolders.EnsureChild("kvrt"),
+                _ => folder,
+            };
+            var exit = await RunHiddenAsync(exe, string.Format(System.Globalization.CultureInfo.InvariantCulture, arguments, folder, data), onOutput, timeout, cancellationToken)
                 .ConfigureAwait(false);
-            var log = ReadLog(tool, folder);
+            var log = ReadLog(tool, data);
             if (log.Count > 0)
             {
                 try
@@ -460,11 +472,15 @@ public sealed class SecondOpinion(ISignatureVerifier signatures, IReportWriter? 
     {
         try
         {
-            var file = tool == SecondOpinionTool.AdwCleaner
-                ? new DirectoryInfo(Path.Combine(folder, "AdwCleaner", "Logs")) is { Exists: true } logs
-                    ? logs.EnumerateFiles("*.txt").OrderByDescending(f => f.LastWriteTimeUtc).FirstOrDefault()?.FullName
-                    : null
-                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "debug", "msert.log");
+            static string? Newest(string dir, string pattern) => new DirectoryInfo(dir) is { Exists: true } d
+                ? d.EnumerateFiles(pattern, SearchOption.AllDirectories).OrderByDescending(f => f.LastWriteTimeUtc).FirstOrDefault()?.FullName
+                : null;
+            var file = tool switch
+            {
+                SecondOpinionTool.AdwCleaner or SecondOpinionTool.AdwCleanerClean => Newest(Path.Combine(folder, "AdwCleaner", "Logs"), "*.txt"),
+                SecondOpinionTool.KasperskyVrt => Newest(Path.Combine(folder, "Reports"), "*.txt") ?? Newest(folder, "*.log"),
+                _ => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "debug", "msert.log"),
+            };
             if (file is null || !File.Exists(file) || new FileInfo(file).Length > 8 * 1024 * 1024)
             {
                 return [];

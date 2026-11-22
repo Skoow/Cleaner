@@ -32,8 +32,14 @@ public enum SecondOpinionTool
     /// <summary>Microsoft Safety Scanner (msert.exe), analyse rapide et nettoyage automatique.</summary>
     SafetyScanner,
 
-    /// <summary>Malwarebytes AdwCleaner, logiciels publicitaires et programmes indésirables.</summary>
+    /// <summary>Malwarebytes AdwCleaner, logiciels publicitaires et programmes indésirables (analyse seule).</summary>
     AdwCleaner,
+
+    /// <summary>AdwCleaner avec suppression : quarantaine gardée dans %ProgramData%\PCDoc\adwcleaner (restaurable avec AdwCleaner).</summary>
+    AdwCleanerClean,
+
+    /// <summary>Kaspersky Virus Removal Tool : virus et chevaux de Troie ; les menaces vont dans sa quarantaine (%ProgramData%\PCDoc\kvrt).</summary>
+    KasperskyVrt,
 }
 
 /// <param name="LogLines">Dernières lignes du journal de l'outil (aussi copiées dans les rapports).</param>
